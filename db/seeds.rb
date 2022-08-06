@@ -19,6 +19,7 @@
   viewer.save!
 end
 
+
 user = User.new(
   email: 'test_user@gmail.com',
   name: 'オーナー',
