@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     case resource
     when Viewer
       viewers_dash_boards_path
-    when System_admin
+    when SystemAdmin
       system_admins_dash_boards_path
     when User
       users_dash_boards_path
