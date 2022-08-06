@@ -3,26 +3,26 @@
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
-  # admin関連=========================================================
-  devise_for :admins, controllers: {
-    sessions: 'admins/sessions'
+  # system_admin関連=========================================================
+  devise_for :system_admins, controllers: {
+    sessions: 'system_admins/sessions'
   }
 
   # =================================================================
 
-  # user関連==========================================================
-  devise_scope :user do
-    root 'users/sessions#new'
+  # viewer関連==========================================================
+  devise_scope :viewer do
+    root 'viewers/sessions#new'
   end
 
-  devise_for :users, controllers: {
-    sessions:      'users/sessions',
-    passwords:     'users/passwords',
-    confirmations: 'users/confirmations',
-    registrations: 'users/registrations'
+  devise_for :viewers, controllers: {
+    sessions:      'viewers/sessions',
+    passwords:     'viewers/passwords',
+    confirmations: 'viewers/confirmations',
+    registrations: 'viewers/registrations'
   }
 
-  namespace :users do
+  namespace :viewers do
     resources :dash_boards, only: [:index]
     resources :articles, only: %i[index show]
     resource :profile, except: %i[create new]
@@ -30,12 +30,12 @@ Rails.application.routes.draw do
 
   # =================================================================
 
-  # manager関連=======================================================
-  devise_for :managers, controllers: {
-    sessions:      'managers/sessions',
-    passwords:     'managers/passwords',
+  # user関連=======================================================
+  devise_for :users, controllers: {
+    sessions:      'users/sessions',
+    passwords:     'users/passwords',
     confirmations: 'users/confirmations',
-    registrations: 'managers/registrations'
+    registrations: 'users/registrations'
   }
   # =================================================================
 

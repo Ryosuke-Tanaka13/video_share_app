@@ -9,30 +9,30 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 50.times do |i|
-  user = User.new(
-    email: "test_user#{i}@gmail.com", # sample: test_user1@gmail.com
-    name: "テストuser#{i}",
+  viewer = Viewer.new(
+    email: "test_viewer#{i}@gmail.com", # sample: test_viewer1@gmail.com
+    name: "テストviewer#{i}",
     password: 'password'
   )
 
-  user.skip_confirmation! # deviseの確認メールをスキップ
-  user.save!
+  viewer.skip_confirmation! # deviseの確認メールをスキップ
+  viewer.save!
 end
 
-manager = Manager.new(
-  email: 'test_manager@gmail.com',
-  name: 'テストmanager1',
+user = User.new(
+  email: 'test_user@gmail.com',
+  name: 'テストuser1',
   password: 'password'
 )
 
-manager.skip_confirmation! # deviseの確認メールをスキップ
-manager.save!
+user.skip_confirmation! # deviseの確認メールをスキップ
+user.save!
 
-admin = Admin.new(
-  email: 'test_admin@gmail.com',
-  name: 'テストadmin1',
+system_admin = SystemAdmin.new(
+  email: 'test_,system_admin@gmail.com',
+  name: 'テストsystem_admin1',
   password: 'password'
 )
 
-admin.skip_confirmation! # deviseの確認メールをスキップ
-admin.save!
+system_admin.skip_confirmation! # deviseの確認メールをスキップ
+system_admin.save!

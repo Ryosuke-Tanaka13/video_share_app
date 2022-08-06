@@ -121,8 +121,8 @@ Layout/HashAlignment:
 Layout/LineLength:
   Max: 140
   Exclude:
-    - 'app/admin/**/*'                  # ActiveAdminのDSL
-    - 'app/libs/admins/components/**/*' # ActiveAdminのコンポーネントDSL
+    - 'app/system_admin/**/*'                  # ActiveSystemAdminのDSL
+    - 'app/libs/system_admins/components/**/*' # ActiveSystemAdminのコンポーネントDSL
   IgnoredPatterns:
     - "'.+'"                                                               # 文字リテラルが含まれる行
     - '".+"'                                                               # 文字リテラルが含まれる行

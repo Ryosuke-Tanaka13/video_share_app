@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :article do
-    association :user
+    association :viewer
 
     title { 'railsエンジニアのブログ記事' }
     sub_title { 'railsエンジニアのためのブログ記事を書きました！' }
