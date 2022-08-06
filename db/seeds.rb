@@ -11,7 +11,7 @@
 50.times do |i|
   viewer = Viewer.new(
     email: "test_viewer#{i}@gmail.com", # sample: test_viewer1@gmail.com
-    name: "テストviewer#{i}",
+    name: "視聴者#{i}",
     password: 'password'
   )
 
@@ -21,7 +21,7 @@ end
 
 user = User.new(
   email: 'test_user@gmail.com',
-  name: 'テストuser1',
+  name: 'オーナー',
   password: 'password'
 )
 
@@ -30,7 +30,7 @@ user.save!
 
 system_admin = SystemAdmin.new(
   email: 'test_,system_admin@gmail.com',
-  name: 'テストsystem_admin1',
+  name: '小松和貴',
   password: 'password'
 )
 
