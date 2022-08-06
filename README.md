@@ -1,4 +1,4 @@
-# README
+# README 
 ## 🌟リポジトリの所有者が行うこと
 1. このリポジトリをコピーして別のリポジトリを作成する方法
    1.  https://github.com/shotaimai66/readme-develop/blob/main/%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%AE%E3%82%B3%E3%83%94%E3%83%BC%E6%96%B9%E6%B3%95.md
