@@ -2,7 +2,7 @@
 
 module Viewers
   class Base < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_viewer!
     layout 'viewers'
   end
 end
