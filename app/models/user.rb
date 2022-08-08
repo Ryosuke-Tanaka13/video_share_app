@@ -6,4 +6,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable,
     :confirmable
+
+    enum role: { video_contributor: 0, owner: 1 }
 end

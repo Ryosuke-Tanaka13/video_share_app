@@ -8,7 +8,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-50.times do |i|
+5.times do |i|
   viewer = Viewer.new(
     email: "test_viewer#{i}@gmail.com", # sample: test_viewer1@gmail.com
     name: "視聴者#{i}",
