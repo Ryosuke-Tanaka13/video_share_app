@@ -6,12 +6,12 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     case resource
+    when Viewer
+      viewers_path
+    when SystemAdmin
+      system_admin_path(action: 'show', id: 1)
     when User
-      users_dash_boards_path
-    when Admin
-      admins_dash_boards_path
-    when Manager
-      managers_dash_boards_path
+      users_path
     end
   end
 

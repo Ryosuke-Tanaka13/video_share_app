@@ -1,0 +1,21 @@
+<% provide(:title, "システム管理者詳細") %>
+
+<div class="card">
+  <div class="card-body table-responsive p-0">
+    <table class="table table-hover text-nowrap">
+      <tbody>
+        <tr>
+          <th><%= "名前" %></th>
+          <td><%= @system_admin.name %></td>
+        </tr>
+        <tr>
+          <th><%= "メールアドレス" %></th>
+          <td><%= @system_admin.email %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer">
+    <%= link_to "編集", edit_system_admin_path, class: "btn btn-md btn-block btn-success" %>
+  </div>
+</div>

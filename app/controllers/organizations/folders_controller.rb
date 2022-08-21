@@ -52,7 +52,7 @@ class Organizations::FoldersController < ApplicationController
   def ensure_owner
     if current_user.role != 'owner'
       flash[:danger] = '権限がありません'
-      redirect_to users_dash_boards_path
+      redirect_to users_path
     end
   end
 end

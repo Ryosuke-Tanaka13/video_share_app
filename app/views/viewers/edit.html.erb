@@ -1,0 +1,14 @@
+<% provide(:title, "視聴者編集") %>
+<% provide(:btn_text, "更新") %>
+
+<div class="card">
+  <div class="card-body">
+    <%= form_with model: @viewer, url: viewer_path, method: :patch, local: true do |f| %>
+      <%= render partial: "/shared/form", locals: { f: f, viewer: @viewer } %>
+      
+      <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-success" %>
+      <%= link_to "詳細画面へ", viewer_path(@viewer), class: "btn btn-md btn-block btn-default" %>
+      <%= link_to "一覧画面へ", viewers_path, class: "btn btn-md btn-block btn-default" %>
+    <% end %>
+  </div>
+</div> 

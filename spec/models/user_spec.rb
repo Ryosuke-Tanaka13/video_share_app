@@ -122,54 +122,5 @@ RSpec.describe User, type: :model do
         end
       end
     end
-
-    describe '#gender' do
-      context '存在しない場合' do
-        before :each do
-          subject.gender = nil
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-    end
-
-    describe '#age' do
-      context '存在しない場合' do
-        before :each do
-          subject.age = nil
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-
-      context 'ageが9の時' do
-        before :each do
-          subject.age = 9
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('Ageは10以上の値にしてください')
-        end
-      end
-
-      context 'ageが10の時' do
-        before :each do
-          subject.age = 10
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-    end
   end
 end

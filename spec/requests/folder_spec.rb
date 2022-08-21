@@ -44,7 +44,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status ' 302'
-          expect(response).to redirect_to users_dash_boards_path
+          expect(response).to redirect_to users_path
         end
       end
     end

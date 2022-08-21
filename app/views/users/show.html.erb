@@ -1,0 +1,22 @@
+<% provide(:title, "投稿者詳細") %>
+
+<div class="card">
+  <div class="card-body table-responsive p-0">
+    <table class="table table-hover text-nowrap">
+      <tbody>
+        <tr>
+          <th><%= "名前" %></th>
+          <td><%= @user.name %></td>
+        </tr>
+        <tr>
+          <th><%= "メールアドレス" %></th>
+          <td><%= @user.email %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer">
+    <%= link_to "編集", edit_user_path, class: "btn btn-md btn-block btn-success" %>
+    <%= link_to "一覧画面へ", users_path, class: "btn btn-md btn-block btn-default" %>
+  </div>
+</div>
