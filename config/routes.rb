@@ -13,7 +13,6 @@ Rails.application.routes.draw do
   end
   # =================================================================
 
-  
   # system_admin関連=========================================================
   devise_for :system_admins, controllers: {
     sessions: 'system_admins/sessions'

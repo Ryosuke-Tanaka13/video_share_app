@@ -24,5 +24,4 @@ FactoryBot.define do
     organization_id { 1 }
     role { 0 }
   end
- 
 end
