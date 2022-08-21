@@ -3,18 +3,34 @@
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
-  # admin関連=========================================================
-  devise_for :admins, controllers: {
-    sessions: 'admins/sessions'
+  # system_admin関連=========================================================
+  devise_for :system_admins, controllers: {
+    sessions: 'system_admins/sessions'
   }
+
+  resources :system_admins, only: %i[show edit update] do
+  end
 
   # =================================================================
 
-  # user関連==========================================================
-  devise_scope :user do
-    root 'users/sessions#new'
+  # viewer関連==========================================================
+  devise_for :viewers, controllers: {
+    sessions:      'viewers/sessions',
+    passwords:     'viewers/passwords',
+    confirmations: 'viewers/confirmations',
+    registrations: 'viewers/registrations'
+  }
+
+  namespace :viewers do
+    resources :dash_boards, only: [:index]
+    resource :profile, except: %i[create new]
   end
 
+  resources :viewers do
+  end
+  # =================================================================
+
+  # user関連=======================================================
   devise_for :users, controllers: {
     sessions:      'users/sessions',
     passwords:     'users/passwords',
@@ -22,25 +38,16 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  namespace :users do
-    resources :dash_boards, only: [:index]
-    resources :articles, only: %i[index show]
-    resource :profile, except: %i[create new]
+  resources :users do
   end
 
-  # =================================================================
-
-  # manager関連=======================================================
-  devise_for :managers, controllers: {
-    sessions:      'managers/sessions',
-    passwords:     'managers/passwords',
-    confirmations: 'users/confirmations',
-    registrations: 'managers/registrations'
-  }
+  post 'users_create', to: 'users#create'
   # =================================================================
 
   # 共通==============================================================
   # 利用規約
   get 'use' => 'use#index'
+  # トップページ
+  root 'use#top'
   # =================================================================
 end
