@@ -8,6 +8,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
   let(:user) { create(:user, organization_id: organization.id) }
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
+  let(:folder_other_owner) { create(:folder_other_owner, organization_id: another_user_owner.organization_id) }
 
   before(:each) do
     organization
@@ -17,6 +18,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
     user
     folder_celeb
     folder_tech
+    folder_other_owner
   end
 
   describe '正常' do
@@ -40,6 +42,14 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
           page.driver.browser.switch_to.alert.accept
           expect(page).to have_content 'フォルダを削除しました'
         }.to change(Folder, :count).by(-1)
+      end
+
+      it 'フォルダ削除キャンセル' do
+        find(:xpath, '//*[@id="organizations-folders-index"]/div[1]/div[1]/div[2]/div/table[2]/tbody/tr[2]/th/a').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
+          page.driver.browser.switch_to.alert.dismiss
+        }.not_to change(Folder, :count)
       end
     end
 
@@ -113,6 +123,10 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
         login(user_owner)
         current_user(user_owner)
         visit folders_path
+      end
+
+      it '他の組織のフォルダは見れない' do
+        expect(page).not_to have_text 'IT'
       end
 
       it '名前が空白で更新できない' do

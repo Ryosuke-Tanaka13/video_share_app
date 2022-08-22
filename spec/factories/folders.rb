@@ -10,4 +10,10 @@ FactoryBot.define do
     organization_id { 1 }
     video_folder_id { 1 }
   end
+
+  factory :folder_other_owner, class: 'Folder' do
+    name { 'IT' }
+    organization_id { 1 }
+    video_folder_id { 1 }
+  end
 end

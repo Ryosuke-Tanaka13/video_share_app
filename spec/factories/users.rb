@@ -5,6 +5,7 @@ FactoryBot.define do
     name           { 'owner' }
     email          { 'test_spec@example.com' }
     password         { 'password' }
+    organization
     organization_id { 1 }
     role           { 1 }
   end
@@ -13,6 +14,7 @@ FactoryBot.define do
     name           { 'owner' }
     email          { 'test_spec1@example.com' }
     password         { 'password' }
+    organization
     organization_id { 2 }
     role           { 1 }
   end
@@ -21,6 +23,7 @@ FactoryBot.define do
     name           { 'user' }
     email          { 'test_spec2@example.com' }
     password         { 'password' }
+    organization
     organization_id { 1 }
     role { 0 }
   end
