@@ -82,6 +82,9 @@ group :test do
 
   # N+1問題検出ツール
   gem 'bullet'
+
+  # request specツール
+  gem 'rails-controller-testing'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
