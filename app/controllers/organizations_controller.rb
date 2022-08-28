@@ -12,6 +12,7 @@ class OrganizationsController < ApplicationController
     form = Organizations::Form.new(params_permitted)
     @organization = Organization.build(form.params)
       if @organization.save!
+        User.last.update(role: 1)
         flash[:success] = '送られてくるメールの認証URLからアカウントの認証をしてください。'
         redirect_to new_user_session_path
       else
