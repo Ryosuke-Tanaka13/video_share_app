@@ -89,13 +89,15 @@ ja:
         video: ビデオ
         audience_rate: 視聴率
         open_period: 公開期間
-        range: 動画公開期間
+        range: 動画公開範囲
         comment_public: コメント公開範囲
         login_set: ログイン有無設定
         popup_before_video: 動画視聴開始時ポップアップ表示
         popup_after_video: 動画視聴終了時ポップアップ表示
         organization_id: 組織ID
+        organization: 組織
         user_id: 動画投稿者ID
+        user: 投稿者
         created_at: 作成日
         updated_at: 更新日
     models:
