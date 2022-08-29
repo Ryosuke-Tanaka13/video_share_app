@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_13_072827) do
+ActiveRecord::Schema.define(version: 2022_08_14_152201) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -38,23 +38,6 @@ ActiveRecord::Schema.define(version: 2022_08_13_072827) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
-
-  create_table "videos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "title"
-    t.integer "audience_rate"
-    t.datetime "open_period"
-    t.boolean "range", default: false
-    t.boolean "comment_public", default: false
-    t.boolean "login_set", default: false
-    t.boolean "popup_before_video", default: false
-    t.boolean "popup_after_video", default: false
-    t.bigint "organization_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["organization_id"], name: "index_videos_on_organization_id"
-    t.index ["user_id"], name: "index_videos_on_user_id"
   end
 
   create_table "loginless_viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -135,6 +118,23 @@ ActiveRecord::Schema.define(version: 2022_08_13_072827) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+  end
+
+  create_table "videos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title"
+    t.integer "audience_rate"
+    t.datetime "open_period"
+    t.boolean "range", default: false
+    t.boolean "comment_public", default: false
+    t.boolean "login_set", default: false
+    t.boolean "popup_before_video", default: false
+    t.boolean "popup_after_video", default: false
+    t.bigint "organization_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["organization_id"], name: "index_videos_on_organization_id"
+    t.index ["user_id"], name: "index_videos_on_user_id"
   end
 
   create_table "viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
