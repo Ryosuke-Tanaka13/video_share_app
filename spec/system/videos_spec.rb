@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'VideosSystem', type: :system do
+RSpec.describe 'VideosSystem', type: :system, js:true do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
