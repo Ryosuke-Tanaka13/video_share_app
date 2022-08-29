@@ -1,10 +1,14 @@
+<% provide(:title,  "ビデオ一覧") %>
 <div class="content">
 <h1>ビデオ一覧</h1>
-<% @videos.each do |video| %>
-<video class="video-index" controls>
-  <source src="<%= url_for(video.video) %>">
-</video><br>
-  <%= link_to video.title, video_path(video) %>
-  <%= link_to "削除", video_path(video), method: :delete, data:{confirm:"「#{video.title}」を削除します。よろしいですか？"} %>
-<% end %>
+  <% @organization_videos.each do |organization_video| %>
+    <video class="video-index" controls>
+      <source src="<%= url_for(organization_video.video) %>"> 
+    </video><br>
+    <%= link_to organization_video.title, video_path(organization_video) %>
+      <% if current_user.role == 'owner' %>
+        <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？"} %><br>
+      <% end %>
+  <% end %>
 </div>
+
