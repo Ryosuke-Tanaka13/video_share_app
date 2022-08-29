@@ -1,42 +1,66 @@
 require 'rails_helper'
 
 RSpec.describe Video, type: :model do
-  # pending "add some examples to (or delete) #{__FILE__}"
-
-  it 'タイトル、ビデオ、公開期間、動画公開範囲、コメント公開範囲、ログイン有無設定、動画視聴開始時ポップアップ表示、動画視聴終了時ポップアップ表示、組織idがある場合、動画投稿者idがある場合に有効である。' do
-    # videoの投稿時に、organization_idとuser_idも必要なので、それぞれのインスタンスをDBに登録
-    FactoryBot.create(:organization)
-    FactoryBot.create(:user)
-    video = FactoryBot.create(:video)
-
-    expect(video).to be_valid
+  let(:organization) { create(:organization) }
+  let(:user_owner) { create(:user_owner, organization_id: organization.id) }
+  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+  
+  before(:each) do
+    organization
+    user_owner
+    video_sample
+    sleep 0.1
   end
 
-  it 'タイトルがない場合、無効である' do
-    FactoryBot.create(:organization)
-    FactoryBot.create(:user)
-    # validaかinvalidかの判断はDB登録以前に行うのでcreateではなくbuild
-    video = FactoryBot.build(:video, title: nil)
-    video.valid?
-    # expect(video).to be_invalid
-    expect(video.errors[:title]).to include('を入力してください')
+  describe '正常' do
+    it '正常値で保存可能' do
+      video = Video.create(title:"サンプルビデオ2", organization_id: 1, user_id: 1 )
+      video.video.attach(io: File.open('spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov'), filename: '画面収録 2022-08-30 3.57.50.mov', content_type: 'video/mov')
+      expect(video.valid?).to eq(true)
+    end
   end
 
-  it 'ビデオがない場合、無効である' do
-    FactoryBot.create(:organization)
-    FactoryBot.create(:user)
-    video = Video.new(id: 1,
-      title: 'あああ',
-      open_period: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
-      range: false,
-      comment_public: false,
-      popup_before_video: false,
-      popup_after_video: false,
-      organization_id: 1,
-      user_id: 1
-    )
-    video.valid?
-    # expect(video).to be_invalid
-    expect(video.errors[:video]).to include('を入力してください')
+  describe 'バリデーション' do
+    describe 'タイトル' do
+      it '空白' do
+        video = Video.create(title: nil, organization_id: 1, user_id: 1 ) 
+        video.video.attach(io: File.open('spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov'), filename: '画面収録 2022-08-30 3.57.50.mov', content_type: 'video/mov')
+        video.valid?
+        expect(video.errors.full_messages).to include('タイトルを入力してください')
+      end
+
+      it '重複' do
+        video = Video.create(title: "サンプルビデオ", organization_id: 1, user_id: 1 ) 
+        video.video.attach(io: File.open('spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov'), filename: '画面収録 2022-08-30 3.57.50.mov', content_type: 'video/mov')
+        video.valid?
+        expect(video.errors.full_messages).to include('タイトルはすでに存在します')
+      end
+    end
+    
+    describe '組織ID' do
+      it '空白' do
+        video = Video.create(title: "サンプルビデオ2", organization_id: nil, user_id: 1 ) 
+        video.video.attach(io: File.open('spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov'), filename: '画面収録 2022-08-30 3.57.50.mov', content_type: 'video/mov')
+        video.valid?
+        expect(video.errors.full_messages).to include('組織を入力してください')
+      end
+    end
+    
+    describe '投稿者ID' do
+      it '空白' do
+        video = Video.create(title: "サンプルビデオ2", organization_id: 1, user_id: nil ) 
+        video.video.attach(io: File.open('spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov'), filename: '画面収録 2022-08-30 3.57.50.mov', content_type: 'video/mov')
+        video.valid?
+        expect(video.errors.full_messages).to include('投稿者を入力してください')
+      end
+    end
+
+    describe 'ビデオ' do
+      it '空白' do
+        video = Video.create(title: "サンプルビデオ2", organization_id: 1, user_id: 1 ) 
+        video.valid?
+        expect(video.errors.full_messages).to include('ビデオを入力してください')
+      end
+    end
   end
 end
