@@ -6,9 +6,9 @@
       <source src="<%= url_for(organization_video.video) %>"> 
     </video><br>
     <%= link_to organization_video.title, video_path(organization_video) %>
-      <% if current_user.role == 'owner' %>
-        <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？"} %><br>
-      <% end %>
+    <% if current_user.role == 'owner' %> 
+      <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？"} %><br> 
+    <% end %>
   <% end %>
 </div>
 
