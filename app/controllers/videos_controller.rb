@@ -3,7 +3,7 @@ class VideosController < ApplicationController
   before_action :set_video, only: %i[show edit update destroy]
   # 投稿者本人またはオーナー→edit, update(追加予定)
   before_action :ensure_owner, only: %i[destroy]
-  
+
   def index
     # n+1問題対応.includes([:video_blob])
     @organization_videos = Video.includes([:video_blob]).current_owner_has(current_user)

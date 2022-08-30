@@ -1,13 +1,15 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'VideosSystem', type: :system, js:true do
+RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
   let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id, confirmed_at: Time.now) }
   let(:user) { create(:user, organization_id: organization.id, confirmed_at: Time.now) }
-  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id:user_owner.id) }
-  let(:video_other_owner) { create(:video_other_owner, organization_id: another_user_owner.organization.id, user_id:another_user_owner.id) }
+  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+  let(:video_other_owner) do
+    create(:video_other_owner, organization_id: another_user_owner.organization.id, user_id: another_user_owner.id)
+  end
 
   before(:each) do
     organization
@@ -30,7 +32,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
         expect(page).to have_link 'サンプルビデオ', href: video_path(video_sample)
         expect(page).to have_link '削除', href: video_path(video_sample)
       end
-      
+
       it '動画削除' do
         find(:xpath, '/html/body/a[2]').click
         expect {
@@ -39,7 +41,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
           expect(page).to have_content '動画を削除しました'
         }.to change(Video, :count).by(-1)
       end
-      
+
       it '動画削除キャンセル' do
         find(:xpath, '/html/body/a[2]').click
         expect {
@@ -53,12 +55,11 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
       before(:each) do
         visit video_path(video_sample)
       end
-  
+
       it 'レイアウト' do
         expect(page).to have_text 'サンプルビデオ'
       end
     end
-  
 
     describe '動画投稿画面' do
       before(:each) do
@@ -67,7 +68,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
       end
 
       it 'レイアウト' do
-        expect(page).to have_button '新規投稿'   
+        expect(page).to have_button '新規投稿'
         expect(page).to have_field 'title'
         expect(page).to have_field 'post'
         expect(page).to have_selector '#range'
@@ -87,7 +88,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
         click_button '新規投稿'
-        expect(current_path).to eq videos_path
+        expect(page).to have_current_path videos_path, ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
@@ -109,7 +110,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
       before(:each) do
         visit video_path(video_sample)
       end
-  
+
       it 'レイアウト' do
         expect(page).to have_text 'サンプルビデオ'
       end
@@ -122,7 +123,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
       end
 
       it 'レイアウト' do
-        expect(page).to have_button '新規投稿'   
+        expect(page).to have_button '新規投稿'
         expect(page).to have_field 'title'
         expect(page).to have_field 'post'
         expect(page).to have_selector '#range'
@@ -142,7 +143,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
         click_button '新規投稿'
-        expect(current_path).to eq videos_path
+        expect(page).to have_current_path videos_path, ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
@@ -154,7 +155,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
         sign_in user
         visit new_video_path
       end
-    
+
       it 'タイトル空白' do
         fill_in 'title', with: ''
         fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
@@ -175,19 +176,10 @@ RSpec.xdescribe 'VideosSystem', type: :system, js:true do
         expect(page).to have_text 'ビデオを入力してください'
       end
     end
-    
+
     describe '動画一覧画面' do
       before(:each) do
         sign_in user
-        visit videos_path
-      end
-    
-      it '他の組織の動画は見れない' do
-        expect(page).not_to have_text 'ITビデオ'
-      end
-
-      before(:each) do
-        sign_in user_owner
         visit videos_path
       end
 

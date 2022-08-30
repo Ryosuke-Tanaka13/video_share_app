@@ -10,7 +10,7 @@ FactoryBot.define do
     user_id { 1 }
     organization
     user
-    
+
     after(:build) do |video_sample|
       video_sample.video.attach(io: File.open('spec/fixtures/files/rec.webm'), filename: 'rec.webm', content_type: 'video/webm')
     end
