@@ -7,7 +7,7 @@ RSpec.describe 'Videos', type: :request do
   let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id, confirmed_at: Time.now) }
   let(:user) { create(:user, organization_id: organization.id, confirmed_at: Time.now) }
   let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-  
+
   before(:each) do
     organization
     another_organization
@@ -140,7 +140,7 @@ RSpec.describe 'Videos', type: :request do
                 popup_after_video:  false
               }
             })
-        ).to redirect_to folders_path
+        ).to redirect_to videos_path
       end
     end
 
@@ -180,7 +180,7 @@ RSpec.describe 'Videos', type: :request do
                 popup_after_video:  false
               }
             })
-        ).to redirect_to folders_path
+        ).to redirect_to videos_path
       end
     end
 
@@ -194,8 +194,8 @@ RSpec.describe 'Videos', type: :request do
           post videos_path,
             params: {
               video: {
-                title:           '',
-                video:           fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
+                title: '',
+                video: fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
               }
             }
         }.not_to change(Video, :count)
@@ -206,8 +206,8 @@ RSpec.describe 'Videos', type: :request do
           post videos_path,
             params: {
               video: {
-                title:           'サンプルビデオ',
-                video:           fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
+                title: 'サンプルビデオ',
+                video: fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
               }
             }
         }.not_to change(Video, :count)
@@ -218,7 +218,7 @@ RSpec.describe 'Videos', type: :request do
           post videos_path,
             params: {
               video: {
-                title:           'サンプルビデオ2'
+                title: 'サンプルビデオ2'
               }
             }
         }.not_to change(Video, :count)
@@ -229,8 +229,8 @@ RSpec.describe 'Videos', type: :request do
           post videos_path,
             params: {
               video: {
-                title:           'サンプルビデオ2',
-                video:           fixture_file_upload('/default.png')
+                title: 'サンプルビデオ2',
+                video: fixture_file_upload('/default.png')
               }
             }
         }.not_to change(Video, :count)
