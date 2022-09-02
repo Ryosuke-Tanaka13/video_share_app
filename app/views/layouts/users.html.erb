@@ -13,7 +13,13 @@
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
     <div class="wrapper">
       <%= render "layouts/header" %>
-      <%= render "layouts/users/side" %>
+      <!-- Content side_bar(model) -->
+      <%if current_system_admin.present?%>
+        <%= render "layouts/system_admins/side" %>
+      <%else%>
+        <%= render "layouts/users/side" %>
+      <%end%>
+      <!-- /Content side_bar(model) -->
       <div class="content-wrapper">
         <%= render "layouts/flash" %>
         <!-- Content Header (Page header) -->

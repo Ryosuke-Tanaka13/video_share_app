@@ -43,26 +43,49 @@
             </p>
           <% end %>
         </li>
-        <li class="nav-item">
-          <%= link_to "#", class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
-            <p>
-              動画一覧
-            </p>
-          <% end %>
-        </li>
+
+        <!-- オーナと動画投稿者の条件分岐 -->
+        <!-- オーナ -->
         <% if current_user.role == 'owner' %>
           <li class="nav-item">
-            <%= link_to "#", class:"nav-link" do %>
+            <%= link_to folders_path, class:"nav-link" do %>
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                動画一覧
+              </p>
+            <% end %>
+          </li>
+          <li class="nav-item">
+            <%= link_to users_path, class:"nav-link" do %>
               <i class="nav-icon fas fa-th"></i>
               <p>
                 組織ユーザ一覧
               </p>
+          <% end %>
+          </li>
+          
+        <!-- 動画投稿者 -->
+        <% else %>
+          <li class="nav-item">
+            <%= link_to "#", class:"nav-link" do %>
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                動画一覧
+              </p>
             <% end %>
           </li>
         <% end %>
+        <!-- /オーナと動画投稿者の条件分岐 -->
         <li class="nav-item">
-          <%= link_to "#", class:"nav-link" do %>
+          <%= link_to viewers_path, class:"nav-link" do %>
+            <i class="nav-icon fas fa-th"></i>
+            <p>
+              ユーザ一覧
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to edit_user_path(current_user), class:"nav-link" do %>
             <i class="nav-icon fas fa-th"></i>
             <p>
               アカウント編集
