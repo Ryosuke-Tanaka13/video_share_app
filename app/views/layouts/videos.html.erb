@@ -13,6 +13,7 @@
   </head>
   <body>
     <%= render "layouts/flash" %>
+    <h1 class="m-0"><%= yield(:title) %></h1>
     <%= render template: "layouts/application" %>
     <%= debug(params) if Rails.env.development? %> 
   </body>

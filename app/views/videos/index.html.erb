@@ -1,6 +1,5 @@
 <% provide(:title,  "ビデオ一覧") %>
 <div class="content">
-<h1>ビデオ一覧</h1>
   <% @organization_videos.each do |organization_video| %>
     <video class="video-index" controls>
       <source src="<%= url_for(organization_video.video) %>"> 
