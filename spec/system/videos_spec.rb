@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'VideosSystem', type: :system, js: true do
+RSpec.describe 'VideosSystem', type: :system do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
@@ -34,7 +34,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
 
       it '動画削除' do
-        find(:xpath, '/html/body/a[2]').click
+        find(:xpath, '/html/body/div[1]/a[2]').click
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
           page.driver.browser.switch_to.alert.accept
@@ -43,7 +43,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
 
       it '動画削除キャンセル' do
-        find(:xpath, '/html/body/a[2]').click
+        find(:xpath, '/html/body/div[1]/a[2]').click
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
           page.driver.browser.switch_to.alert.dismiss
@@ -71,8 +71,10 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_button '新規投稿'
         expect(page).to have_field 'title'
         expect(page).to have_field 'post'
+        expect(page).to have_field 'open_period'
         expect(page).to have_selector '#range'
         expect(page).to have_selector '#comment_public'
+        expect(page).to have_selector '#login_set'
         expect(page).to have_selector '#popup_before_video'
         expect(page).to have_selector '#popup_after_video'
       end
@@ -82,13 +84,14 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         fill_in 'title', with: 'サンプルビデオ２'
         # spec/fixtures/filesフォルダに入れたビデオをアップロード
         attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov')
-        fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
+        # fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
         expect(page).to have_selector '#range', text: false
         expect(page).to have_selector '#comment_public', text: false
+        expect(page).to have_selector '#login_set', text: false
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
         click_button '新規投稿'
-        expect(page).to have_current_path videos_path, ignore_query: true
+        expect(page).to have_current_path folders_path, ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
@@ -126,8 +129,10 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_button '新規投稿'
         expect(page).to have_field 'title'
         expect(page).to have_field 'post'
+        expect(page).to have_field 'open_period'
         expect(page).to have_selector '#range'
         expect(page).to have_selector '#comment_public'
+        expect(page).to have_selector '#login_set'
         expect(page).to have_selector '#popup_before_video'
         expect(page).to have_selector '#popup_after_video'
       end
@@ -137,13 +142,14 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         fill_in 'title', with: 'サンプルビデオ２'
         # spec/fixtures/filesフォルダに入れたビデオをアップロード
         attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov')
-        fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
+        # fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
         expect(page).to have_selector '#range', text: false
         expect(page).to have_selector '#comment_public', text: false
+        expect(page).to have_selector '#login_set', text: false
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
         click_button '新規投稿'
-        expect(page).to have_current_path videos_path, ignore_query: true
+        expect(page).to have_current_path folders_path, ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
@@ -158,14 +164,14 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
       it 'タイトル空白' do
         fill_in 'title', with: ''
-        fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
+        attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov')
         click_button '新規投稿'
         expect(page).to have_text 'タイトルを入力してください'
       end
 
       it 'タイトル重複' do
         fill_in 'title', with: 'サンプルビデオ'
-        fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
+        attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov')
         click_button '新規投稿'
         expect(page).to have_text 'タイトルはすでに存在します'
       end
@@ -174,6 +180,13 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         fill_in 'title', with: 'サンプルビデオ2'
         click_button '新規投稿'
         expect(page).to have_text 'ビデオを入力してください'
+      end
+
+      it 'ビデオ以外のファイル' do
+        fill_in 'title', with: 'サンプルビデオ2'
+        attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/default.png')
+        click_button '新規投稿'
+        expect(page).to have_text 'ビデオのファイル形式が不正です。'
       end
     end
 
