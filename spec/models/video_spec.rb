@@ -51,13 +51,18 @@ RSpec.describe Video, type: :model do
       end
     end
 
-    # describe 'ビデオ' do
-    #   it '空白' do
-    #     # factorybotを利用して、添付ビデオなしのインスタンスを作る方法がわからず、新たに生成することで対応
-    #     video_not_have = Video.new(title: '添付ビデオなし', organization_id: 1, user_id: 1)
-    #     expect(video_not_have.valid?).to eq(false)
-    #     expect(video_not_have.errors.full_messages).to include('ビデオを入力してください')
-    #   end
-    # end
+    describe 'ビデオ' do
+      it '空白' do
+        video_sample.video = nil
+        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.errors.full_messages).to include('ビデオを入力してください')
+      end
+
+      it 'ビデオファイル以外' do
+        video_sample.video = fixture_file_upload('/default.png')
+        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.errors.full_messages).to include('ビデオのファイル形式が不正です。')
+      end
+    end
   end
 end
