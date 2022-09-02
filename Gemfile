@@ -39,6 +39,9 @@ gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
 
+# 追記
+gem 'activestorage-validator'
+
 group :development, :test do
   # ERD生成
   gem 'rails-erd'
