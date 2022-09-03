@@ -91,7 +91,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
         click_button '新規投稿'
-        expect(page).to have_current_path folders_path, ignore_query: true
+        expect(page).to have_current_path videos_path, ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
@@ -149,7 +149,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
         click_button '新規投稿'
-        expect(page).to have_current_path folders_path, ignore_query: true
+        expect(page).to have_current_path videos_path, ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
