@@ -17,7 +17,12 @@ class Organizations::FoldersController < ApplicationController
   def create
     @folder = Folder.new(folder_params)
     if @folder.create(current_user)
-      redirect_to folders_path, flash: { success: 'フォルダを作成しました！' }
+      case URI(request.referer.to_s).path
+      when folders_path
+        redirect_to folders_path, flash: { success: 'フォルダを作成しました！' }
+      when new_video_path
+        redirect_to new_video_path, flash: { success: 'フォルダを作成しました！' }
+      end
     else
       render 'new'
     end
