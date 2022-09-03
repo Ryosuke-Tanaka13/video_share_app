@@ -4,7 +4,7 @@
     <video class="video-index" controls>
       <source src="<%= url_for(video.video) %>"><br>  
     </video><br>
-    <%= video.title %>
+    <%= link_to video.title, video_path(video) %>
   <% end %>
 </div>
 
