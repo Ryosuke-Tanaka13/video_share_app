@@ -1,0 +1,11 @@
+<% provide(:title,  "フォルダ詳細") %>
+<div class="content">
+  <% @folder.videos.each do |video| %>
+    <video class="video-index" controls>
+      <source src="<%= url_for(video.video) %>"><br>  
+    </video><br>
+    <%= video.title %>
+  <% end %>
+</div>
+
+
