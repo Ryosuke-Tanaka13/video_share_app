@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_21_125509) do
+ActiveRecord::Schema.define(version: 2022_09_03_051211) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -128,6 +128,15 @@ ActiveRecord::Schema.define(version: 2022_08_21_125509) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  create_table "video_folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "video_id", null: false
+    t.bigint "folder_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["folder_id"], name: "index_video_folders_on_folder_id"
+    t.index ["video_id"], name: "index_video_folders_on_video_id"
+  end
+
   create_table "videos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.integer "audience_rate"
@@ -179,6 +188,8 @@ ActiveRecord::Schema.define(version: 2022_08_21_125509) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "video_folders", "folders"
+  add_foreign_key "video_folders", "videos"
   add_foreign_key "videos", "organizations"
   add_foreign_key "videos", "users"
 end

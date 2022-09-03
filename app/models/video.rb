@@ -3,12 +3,15 @@ class Video < ApplicationRecord
 
   belongs_to :organization
   belongs_to :user
+  has_many :video_folders, dependent: :destroy
+  has_many :folders, through: :video_folders
 
   has_one_attached :video
 
   validates :title, presence: true, uniqueness: { scope: :organization }
   # videoのuniqueness設定は別の方法が必要
   validates :video, presence: true, blob: { content_type: :video }
+  validates :folders, presence: true
 
   scope :current_owner_has, ->(current_user) { where(organization_id: current_user.organization_id) }
 
