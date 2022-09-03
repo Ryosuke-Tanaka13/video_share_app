@@ -1,14 +1,17 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'VideosSystem', type: :system, js: true do
+RSpec.describe 'VideosSystem', type: :system do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
   let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id, confirmed_at: Time.now) }
   let(:user) { create(:user, organization_id: organization.id, confirmed_at: Time.now) }
-  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+  let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
+  let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
+  let(:folder_other_owner) { create(:folder_other_owner, organization_id: another_user_owner.organization_id) }
+  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders:[folder_celeb, folder_tech]) }
   let(:video_other_owner) do
-    create(:video_other_owner, organization_id: another_user_owner.organization.id, user_id: another_user_owner.id)
+    create(:video_other_owner, organization_id: another_user_owner.organization.id, user_id: another_user_owner.id, folders:[folder_other_owner])
   end
 
   before(:each) do
@@ -17,6 +20,9 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
     user_owner
     another_user_owner
     user
+    folder_celeb
+    folder_tech
+    folder_other_owner
     video_sample
     video_other_owner
   end
@@ -30,6 +36,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
       it 'レイアウト' do
         expect(page).to have_link 'サンプルビデオ', href: video_path(video_sample)
+        # expect(page).to have_field 'セレブエンジニア'
         expect(page).to have_link '削除', href: video_path(video_sample)
       end
 
@@ -77,6 +84,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#login_set'
         expect(page).to have_selector '#popup_before_video'
         expect(page).to have_selector '#popup_after_video'
+        expect(page).to have_field 'セレブエンジニア'
+        expect(page).to have_field 'テックリーダーズ'
       end
 
       it '新規作成で動画が作成される' do
@@ -90,8 +99,9 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#login_set', text: false
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
+        check "video_folder_ids_1"
         click_button '新規投稿'
-        expect(page).to have_current_path videos_path, ignore_query: true
+        expect(page).to have_current_path folders_path, ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
@@ -135,6 +145,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#login_set'
         expect(page).to have_selector '#popup_before_video'
         expect(page).to have_selector '#popup_after_video'
+        expect(page).to have_field 'セレブエンジニア'
+        expect(page).to have_field 'テックリーダーズ'
       end
 
       it '新規作成で動画が作成される' do
@@ -148,8 +160,9 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#login_set', text: false
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
+        check "video_folder_ids_1"
         click_button '新規投稿'
-        expect(page).to have_current_path videos_path, ignore_query: true
+        expect(page).to have_current_path folders_path, ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
@@ -187,6 +200,13 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/default.png')
         click_button '新規投稿'
         expect(page).to have_text 'ビデオのファイル形式が不正です。'
+      end
+
+      it 'フォルダー割り振りなし' do
+        fill_in 'title', with: 'サンプルビデオ2'
+        attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov')
+        click_button '新規投稿'
+        expect(page).to have_text 'フォルダー割り振りを入力してください'
       end
     end
 

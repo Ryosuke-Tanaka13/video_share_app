@@ -3,12 +3,16 @@ require 'rails_helper'
 RSpec.describe Video, type: :model do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
-  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-  let(:video_test) { create(:video_test, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+  let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
+  let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
+  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders:[folder_celeb, folder_tech]) }
+  let(:video_test) { create(:video_test, organization_id: user_owner.organization.id, user_id: user_owner.id, folders:[folder_celeb]) }
 
   before(:each) do
     organization
     user_owner
+    folder_celeb
+    folder_tech
     video_sample
     video_test
     sleep 0.1
@@ -62,6 +66,14 @@ RSpec.describe Video, type: :model do
         video_sample.video = fixture_file_upload('/default.png')
         expect(video_sample.valid?).to eq(false)
         expect(video_sample.errors.full_messages).to include('ビデオのファイル形式が不正です。')
+      end
+    end
+
+    describe 'フォルダー割り振り' do
+      it '選択なし' do
+        video_sample.folders = []
+        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.errors.full_messages).to include('フォルダー割り振りを入力してください')
       end
     end
   end
