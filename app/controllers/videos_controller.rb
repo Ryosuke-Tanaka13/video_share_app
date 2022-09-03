@@ -21,7 +21,7 @@ class VideosController < ApplicationController
       # ConvertVideoJob.perform_later(@video.id)
       # snip response boilerplate
       flash[:success] = '動画を投稿しました。'
-      redirect_to videos_url
+      redirect_to folders_url
     else
       render :new
     end
