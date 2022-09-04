@@ -3,7 +3,7 @@
   <%= form_with(model: @video, url:videos_path, local:true ) do |f| %>
     <%= render '/shared/error_messages', object: f.object %>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-7">
         <div class="field">
           <%= f.label :video %><br>
           <%= f.file_field :video, accept: "video/*", id:"post" %> 
@@ -13,7 +13,7 @@
         <!--ここにプレビュー表示-->
         <div id="show"></div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div class="field">
           <%= f.label :title, class: "video-label" %><br>
           <%= f.text_field :title, id: "title" %><br>

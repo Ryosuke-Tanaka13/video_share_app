@@ -15,17 +15,21 @@
     <div class="wrapper">
       <%
 =begin%>
- <%= render "layouts/header" %> 
+ <%= render "layouts/header" %>  
 <%
 =end%>
       <!-- Content side_bar(model) -->
-      <%if current_system_admin.present? %>
-        <%= render "layouts/system_admins/side" %>
-      <%elsif current_user.present? %>
+      <%
+=begin%>
+ <% if current_system_admin.present? %> 
+        <%= render "layouts/system_admins/side" %> 
+      <% elsif current_user.present? %>
         <%= render "layouts/users/side" %>
       <% else %>
         <%= render "layouts/viewers/side" %>
-      <%end%>
+      <%end%> 
+<%
+=end%>
       <!-- /Content side_bar(model) -->
       <div class="content-wrapper">
         <%= render "layouts/flash" %>
