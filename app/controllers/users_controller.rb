@@ -2,7 +2,12 @@ class UsersController < ApplicationController
   before_action :set_user, except: %i[index new create]
 
   def index
+    if current_system_admin
     @users = User.all
+      render :layout => 'system_admins'
+    else
+      @users = User.current_owner_has(current_user).unsubscribe
+    end
   end
 
   def new

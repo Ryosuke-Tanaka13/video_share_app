@@ -1,8 +1,14 @@
 class LoginlessViewersController < ApplicationController
   before_action :set_loginless_viewer, except: %i[index new create]
+  layout 'loginless_viewers_auth'
 
   def index
     @loginless_viewers = LoginlessViewer.all
+    if current_system_admin
+      render :layout => 'system_admins'
+    elsif current_user
+      render :layout => 'users'
+    end
   end
 
   def new

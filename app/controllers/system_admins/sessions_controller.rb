@@ -2,6 +2,7 @@
 
 module SystemAdmins
   class SessionsController < Devise::SessionsController
+    layout 'system_admins_auth'
     # before_action :configure_sign_in_params, only: [:create]
 
     # GET /resource/sign_in

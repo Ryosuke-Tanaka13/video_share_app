@@ -7,7 +7,7 @@ class OrganizationsController < ApplicationController
     render :layout => 'system_admins'
   end
 
-  def new
+  def new 
     @organization = Organization.new
     @user = User.new
   end
@@ -30,9 +30,21 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    if current_system_admin
+      render :layout => 'system_admins'
+    else
+      render :layout => 'organizations'
+    end
+  end
 
-  def edit; end
+  def edit
+    if current_system_admin
+      render :layout => 'system_admins'
+    else
+      render :layout => 'organizations'
+    end
+  end
 
   def update
     if @organization.update(organization_params)
