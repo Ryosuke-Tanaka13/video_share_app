@@ -5,10 +5,8 @@ Rails.application.routes.draw do
 
   # organization関連==================================================
   resources :organizations do
-    collection do
-      scope module: :organizations do
-        resources :folders
-      end
+    scope module: :organizations do
+      resources :folders
     end
   end
   # =================================================================

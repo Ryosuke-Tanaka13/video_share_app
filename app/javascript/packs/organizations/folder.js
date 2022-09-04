@@ -4,6 +4,7 @@ jQuery(function($){
     if(!$(this).hasClass('on')){
       $(this).addClass('on');
       var txt = $(this).text();
+      const OrganizationId = $(this).attr('id');
       const folderId = $(this).attr('class');
       $(this).html('<input type="text" value='+txt+' style="width: 150px;">');
       $('th > input').focus().blur(function(){
@@ -14,7 +15,7 @@ jQuery(function($){
         $(this).parent().removeClass('on').text(inputVal);
 
         $.ajax({                         
-          url: '/organizations/folders/' + folderId,
+          url: '/organizations/'+OrganizationId+'/folders/' + folderId,
           type: 'PATCH',                
           data: {                        
             folder: {
