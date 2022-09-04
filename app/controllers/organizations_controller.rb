@@ -1,5 +1,11 @@
 class OrganizationsController < ApplicationController
-  before_action :set_organization, except: %i[new create]
+  before_action :set_organization, except: %i[index new create]
+  layout 'organizations_auth'
+
+  def index
+    @organizations = Organization.all
+    render :layout => 'system_admins'
+  end
 
   def new
     @organization = Organization.new
