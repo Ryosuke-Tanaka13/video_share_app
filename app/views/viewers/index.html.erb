@@ -7,6 +7,7 @@
           <tr align="center">
             <td><%= link_to viewer.name, viewer_path(viewer) %></td>
             <td><%= viewer.email %></td>
+            <td><%= viewer.is_valid %></td>
             <td><%= link_to "削除", viewer_path(viewer), method: :delete, data: { confirm: "#{viewer.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
           </tr>
           <% end %>

@@ -38,7 +38,6 @@ Rails.application.routes.draw do
   namespace :viewers do
     resources :dash_boards, only: [:index]
     resource :profile, except: %i[create new]
-    resources :unsubscribe, only: %i[show update] 
   end
 
   resources :viewers do

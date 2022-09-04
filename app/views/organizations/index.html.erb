@@ -8,6 +8,7 @@
           <tr align="center">
             <td><%= link_to organization.name, organization_path(organization) %></td>
             <td><%= organization.email %></td>
+            <td><%= organization.is_valid %></td>
             <td><%= link_to "削除", organization_path(organization), method: :delete, data: { confirm: "#{organization.name}の組織情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
           </tr>
           <% end %>
