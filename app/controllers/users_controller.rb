@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def index
     if current_system_admin
-    @users = User.all
+      @users = User.all
       render :layout => 'system_admins'
     else
       @users = User.current_owner_has(current_user).unsubscribe
@@ -17,6 +17,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
+      @user.update(organization_id: current_user.organization_id)
       flash[:success] = "#{@user.name}の作成に成功しました"
       redirect_to users_url
     else
