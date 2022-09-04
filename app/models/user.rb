@@ -16,4 +16,5 @@ class User < ApplicationRecord
   validates :name,  presence: true, uniqueness: true, length: { in: 3..10 }
 
   scope :current_owner_has, ->(current_user) { where(organization_id: current_user.organization_id) }
+  scope :unsubscribe, -> { where(is_valid: true) }
 end

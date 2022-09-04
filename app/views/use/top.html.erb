@@ -1,2 +1,21 @@
-<%= link_to "投稿者はこちら", new_user_session_path, class: "btn btn-md btn-block btn-default" %>
-<%= link_to "視聴者はこちら", new_viewer_session_path, class: "btn btn-md btn-block btn-default" %>
+<div class="container py-4">
+    <h2>レコブル</h2>
+    <p>アカウントを選択してください</p>
+    <div class="card-deck">
+        <div class="card">
+          <div class="card-body">
+            <%= link_to "システム管理者", new_system_admin_session_path, class: "btn btn-lg btn-block btn-default" %>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <%= link_to "投稿者", new_user_session_path, class: "btn btn-lg btn-block btn-default" %>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <%= link_to "視聴者", new_viewer_session_path, class: "btn btn-lg btn-block btn-default" %>
+          </div>
+        </div>
+    </div>
+</div>
