@@ -9,6 +9,8 @@
           <tr align="center">
             <td><%= link_to user.name, user_path(user) %></td>
             <td><%= user.email %></td>
+            <td><%= user.organization_id %></td>
+            <td><%= user.role %></td>
             <td><%= link_to "削除", user_path(user), method: :delete, data: { confirm: "#{user.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
           </tr>
           <% end %>
