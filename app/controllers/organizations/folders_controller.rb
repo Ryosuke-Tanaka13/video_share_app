@@ -3,7 +3,7 @@ class Organizations::FoldersController < ApplicationController
 
   before_action :access_right
   before_action :ensure_system_admin_or_owner, only: %i[destroy]
-  before_action :owner, only: %i[create update ]
+  before_action :ensure_user, only: %i[create update]
   before_action :set_folder, only: %i[show update destroy]
   
 
@@ -63,15 +63,15 @@ class Organizations::FoldersController < ApplicationController
 
   #system_adminかownerのみ許可
   def ensure_system_admin_or_owner
-    if current_user.presnt? && current_user.role != 'owner'
+    if current_user.present? && current_user.role != 'owner'
       flash[:danger] = '権限がありません'
       redirect_to users_path
     end
   end
 
-  #ownerのみ許可
-  def ensure_owner
-    if current_system_admin.presnt?
+  #owner,動画投稿者のみ許可
+  def ensure_user
+    if current_system_admin.present?
       flash[:danger] = '権限がありません'
       redirect_to users_path
     end

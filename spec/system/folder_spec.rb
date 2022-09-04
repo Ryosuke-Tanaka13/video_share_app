@@ -26,7 +26,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
       end
 
       it 'レイアウト' do
@@ -57,7 +57,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
         click_link('フォルダ新規作成')
       end
 
@@ -83,7 +83,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
       end
 
       it '名前を更新する' do
@@ -101,7 +101,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
         click_link('フォルダ新規作成')
       end
 
@@ -122,7 +122,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
       end
 
       it '他の組織のフォルダは見れない' do

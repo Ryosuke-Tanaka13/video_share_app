@@ -12,8 +12,12 @@
 
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
     <div class="wrapper">
-      <%= render "layouts/organizations/header" %>
-      <%= render "layouts/organizations/side" %>
+      <%= render "layouts/users/header" %>
+      <%if current_system_admin.present?%>
+        <%= render "layouts/system_admins/side" %>
+      <%else%>
+        <%= render "layouts/users/side" %>
+      <%end%>
       <div class="content-wrapper">
         <%= render "layouts/flash" %>
         <!-- Content Header (Page header) -->
@@ -34,6 +38,6 @@
         </div>
         <%= render template: "layouts/application" %>
     </div>
-    <%= render "layouts/organizations/control_side" %>
+ 
   </body>
 </html>

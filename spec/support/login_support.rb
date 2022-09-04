@@ -8,10 +8,19 @@ module LoginSupport
   end
 
   def login_session(user)
-    allow_any_instance_of(ActionDispatch::Request).to receive(:session) { { user_id: user.id } }
+    allow_any_instance_of(ActionDispatch::Request).to receive(:session) { { id: user.id } }
   end
+  
 
   def current_user(user)
     allow_any_instance_of(ApplicationController).to receive(:current_user) { user }
+  end
+
+  def current_system_admin(system_admin)
+    allow_any_instance_of(ApplicationController).to receive(:current_system_admin) { system_admin }
+  end
+
+  def current_viewer(current_viewer)
+    allow_any_instance_of(ApplicationController).to receive(:current_viewer) { viewer }
   end
 end
