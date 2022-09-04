@@ -1,5 +1,4 @@
 <h2><%= t('.sign_up') %></h2>
-<%= notice %>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
@@ -26,15 +25,6 @@
     <%= f.label :password_confirmation %><br />
     <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
   </div>
-
-  <%= f.fields_for :organizations do |organization_fields| %>
-    <%= organization_fields.label :組織名 %><br />
-    <%= organization_fields.text_field :name %><br />
-    
-    <%= organization_fields.label :組織のEメール %><br />
-    <%= organization_fields.text_field :email %><br />
-    
-  <% end %>
 
   <div class="actions">
     <%= f.submit t('.sign_up') %>
