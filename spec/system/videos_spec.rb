@@ -105,6 +105,32 @@ RSpec.describe 'VideosSystem', type: :system do
         expect(page).to have_text '動画を投稿しました'
       end
     end
+
+    # モーダルテスト追加
+    describe 'モーダル画面' do
+      before(:each) do
+        sign_in user_owner
+        visit new_video_path
+        click_link('フォルダ新規作成はこちら')
+      end
+
+      it 'モーダルが表示されていること' do
+        expect(page).to have_selector('.modal')
+      end
+
+      it 'レイアウト' do
+        expect(page).to have_link '新規作成'
+        expect(page).to have_button '閉じる'
+        expect(page).to have_field '名前'
+      end
+
+      it '新規作成でフォルダが作成される' do
+        fill_in '名前', with: 'プログラミング'
+        click_button '新規作成'
+        expect(page).to have_text 'フォルダを作成しました！'
+        expect(page).to have_text 'プログラミング'
+      end
+    end
   end
 
   describe '正常(動画投稿者)' do
@@ -166,6 +192,32 @@ RSpec.describe 'VideosSystem', type: :system do
         expect(page).to have_text '動画を投稿しました'
       end
     end
+
+    # モーダルテスト追加
+    describe 'モーダル画面' do
+      before(:each) do
+        sign_in user
+        visit new_video_path
+        click_link('フォルダ新規作成はこちら')
+      end
+
+      it 'モーダルが表示されていること' do
+        expect(page).to have_selector('.modal')
+      end
+
+      it 'レイアウト' do
+        expect(page).to have_link '新規作成'
+        expect(page).to have_button '閉じる'
+        expect(page).to have_field '名前'
+      end
+
+      it '新規作成でフォルダが作成される' do
+        fill_in '名前', with: 'プログラミング'
+        click_button '新規作成'
+        expect(page).to have_text 'フォルダを作成しました！'
+        expect(page).to have_text 'プログラミング'
+      end
+    end
   end
 
   describe '異常' do
@@ -207,6 +259,27 @@ RSpec.describe 'VideosSystem', type: :system do
         attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/画面収録 2022-08-30 3.57.50.mov')
         click_button '新規投稿'
         expect(page).to have_text 'フォルダー割り振りを入力してください'
+      end
+    end
+    
+    # モーダルテスト追加
+    describe 'モーダル画面' do
+      before(:each) do
+        sign_in user
+        visit new_video_path
+        click_link('フォルダ新規作成はこちら')
+      end
+  
+      it '名前重複' do
+        fill_in '名前', with: 'セレブエンジニア'
+        click_button '新規作成'
+        expect(page).to have_text '名前はすでに存在します'
+      end
+  
+      it '名前空白' do
+        fill_in '名前', with: ''
+        click_button '新規作成'
+        expect(page).to have_text '名前を入力してください'
       end
     end
 
