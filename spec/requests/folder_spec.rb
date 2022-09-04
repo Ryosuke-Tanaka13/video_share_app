@@ -51,7 +51,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
         it 'レスポンスに成功する' do
           expect(response).to be_successful
         end
-  
+
         it '正常値レスポンス' do
           expect(response).to have_http_status '200'
         end
@@ -67,7 +67,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
         it 'レスポンスに成功する' do
           expect(response).to be_successful
         end
-  
+
         it '正常値レスポンス' do
           expect(response).to have_http_status '200'
         end
@@ -81,6 +81,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
           current_viewer(viewer)
           get organization_folders_path(organization_id: organization.id)
         end
+
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status ' 302'
           expect(response).to redirect_to root_path
@@ -91,7 +92,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
 
   describe 'POST #create' do
     describe '正常' do
-      describe '組織管理者' do 
+      describe '組織管理者' do
         before(:each) do
           current_user(user_owner)
         end
@@ -119,7 +120,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
         end
       end
 
-      describe '動画投稿者' do 
+      describe '動画投稿者' do
         before(:each) do
           current_user(user)
         end
