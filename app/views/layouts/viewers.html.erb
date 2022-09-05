@@ -12,7 +12,13 @@
 
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
     <div class="wrapper">
-      <%= render "layouts/header" %>
+      <%if current_system_admin.present?%>
+        <%= render "layouts/system_admins/header" %>
+      <%elsif current_user.present?%>
+        <%= render "layouts/users/header" %>
+      <%else%>
+        <%= render "layouts/viewers/header" %>
+      <%end%> 
       <!-- Content side_bar(model) -->
       <%if current_system_admin.present?%>
         <%= render "layouts/system_admins/side" %>
