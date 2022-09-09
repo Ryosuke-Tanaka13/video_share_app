@@ -36,7 +36,7 @@ class ViewersController < ApplicationController
   def update
     if @viewer.update(viewer_params)
       flash[:success] = '更新しました'
-      redirect_to viewers_url
+      redirect_to viewer_url
     else
       render 'edit'
     end

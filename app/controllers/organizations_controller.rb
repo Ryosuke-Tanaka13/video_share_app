@@ -57,7 +57,7 @@ class OrganizationsController < ApplicationController
   def destroy
     @organization.destroy!
     flash[:danger] = "#{@organization.name}のユーザー情報を削除しました"
-    redirect_to organization_url
+    redirect_to organizations_url
   end
 
   private
