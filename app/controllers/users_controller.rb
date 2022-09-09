@@ -7,7 +7,11 @@ class UsersController < ApplicationController
 
   def index
     if current_system_admin
-      @users = User.all
+      unless params[:organization_id].nil?
+        @users = User.where(organization_id: params[:organization_id])
+      else
+        @users = User.all
+      end
       render :layout => 'system_admins'
     else
       @users = User.current_owner_has(current_user).unsubscribe
