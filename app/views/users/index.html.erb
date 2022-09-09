@@ -1,5 +1,7 @@
 <% provide(:title,  "投稿者一覧") %>
+<% if current_user&.role == 'owner'%>
 <%= link_to "視聴者新規作成画面へ", new_user_path, class: "btn btn-lg btn-block btn-outline-primary" %>
+<% end %>
 <br>
   <div class="card">
     <div class="card-body table-responsive p-0">
@@ -11,10 +13,17 @@
             <td><%= user.email %></td>
             <td><%= user.organization_id %></td>
             <td><%= user.role %></td>
-            <td><%= link_to "削除", user_path(user), method: :delete, data: { confirm: "#{user.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+            <% if current_system_admin || current_user&.role == "owner" %>
+              <td><%= link_to "削除", user_path(user), method: :delete, data: { confirm: "#{user.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+            <% end %>
           </tr>
           <% end %>
         </tbody>
       </table>
     </div>
+      <div class="card-footer">
+        <% if current_system_admin %>
+          <%= link_to "組織一覧", organizations_path, class: "btn btn-md btn-block btn-default" %>
+        <% end %>
+      </div>
   </div>

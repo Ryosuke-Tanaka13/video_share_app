@@ -16,7 +16,9 @@
     </table>
   </div>
   <div class="card-footer">
+  <% if current_user&.id == params[:id].to_i || current_user&.role == 'owner' %>
     <%= link_to "編集", edit_user_path, class: "btn btn-md btn-block btn-success" %>
-    <%= link_to "一覧画面へ", users_path, class: "btn btn-md btn-block btn-default" %>
+  <% end %>
+    <%= link_to "投稿者一覧", users_path, class: "btn btn-md btn-block btn-default" %>
   </div>
 </div>

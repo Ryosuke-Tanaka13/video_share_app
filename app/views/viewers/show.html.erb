@@ -16,7 +16,9 @@
     </table>
   </div>
   <div class="card-footer">
+  <% if current_viewer&.id == params[:id].to_i %>
     <%= link_to "編集", edit_viewer_path, class: "btn btn-md btn-block btn-success" %>
-    <%= link_to "一覧画面へ", viewers_path, class: "btn btn-md btn-block btn-default" %>
+  <% end %>
+    <%= link_to "視聴者一覧", viewers_path, class: "btn btn-md btn-block btn-default" %>
   </div>
 </div>
