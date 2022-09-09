@@ -49,7 +49,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user.destroy!
+    if current_system_admin
+      @user.destroy!
+    else
+      @user.update(is_valid: false)
+    end
     flash[:danger] = "#{@user.name}のユーザー情報を削除しました"
     redirect_to users_url
   end
