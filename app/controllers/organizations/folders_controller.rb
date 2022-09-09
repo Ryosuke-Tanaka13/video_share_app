@@ -52,7 +52,7 @@ class Organizations::FoldersController < ApplicationController
     @folder = Folder.find(params[:id])
   end
 
-  # system_admin、組織管理者、動画投稿者のみ許可
+  # システム管理者、組織管理者、動画投稿者のみ許可
   def access_right
     if current_system_admin.nil? && current_user.nil?
       flash[:danger] = '権限がありません'
@@ -60,7 +60,7 @@ class Organizations::FoldersController < ApplicationController
     end
   end
 
-  # system_adminかownerのみ許可
+  # システム管理者、組織管理者のみ許可
   def ensure_system_admin_or_owner
     if current_user.present? && current_user.role != 'owner'
       flash[:danger] = '権限がありません'
@@ -68,7 +68,7 @@ class Organizations::FoldersController < ApplicationController
     end
   end
 
-  # owner,動画投稿者のみ許可
+  # 組織管理者,動画投稿者のみ許可
   def ensure_user
     if current_system_admin.present?
       flash[:danger] = '権限がありません'
