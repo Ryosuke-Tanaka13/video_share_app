@@ -27,7 +27,7 @@ organization = Organization.new(
 organization.save!
 
 user = User.new(
-  email: 'test_user@gmail.com',
+  email: 'test_user_owner@gmail.com',
   name: 'オーナー',
   password: 'password',
   role: 1,
@@ -36,6 +36,18 @@ user = User.new(
 
 user.skip_confirmation! # deviseの確認メールをスキップ
 user.save!
+
+user = User.new(
+  email: 'test_user@gmail.com',
+  name: '投稿者',
+  password: 'password',
+  role: 0,
+  organization_id: 1      
+)
+
+user.skip_confirmation! # deviseの確認メールをスキップ
+user.save!
+
 
 system_admin = SystemAdmin.new(
   email: 'test_system_admin@gmail.com',
