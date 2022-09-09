@@ -7,7 +7,7 @@ class Organizations::FoldersController < ApplicationController
   before_action :set_folder, only: %i[show update destroy]
 
   def index
-    @organization = Organization.find_by(id: params[:organization_id])
+    @organization = Organization.find(params[:organization_id])
     @folders = @organization.folders
   end
 
