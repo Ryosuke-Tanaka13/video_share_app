@@ -7,9 +7,9 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     case resource
     when Viewer
-      viewers_path
+      viewer_path(action: 'show', id: current_viewer.id)
     when SystemAdmin
-      system_admin_path(action: 'show', id: 1)
+      organizations_path
     when User
       users_path
     end
