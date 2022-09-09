@@ -1,4 +1,6 @@
 class LoginlessViewersController < ApplicationController
+  before_action :logged_in_system_admin, only: %i[destroy]
+  before_action :admin_or_user, only: %i[index show]
   before_action :set_loginless_viewer, except: %i[index new create]
   layout 'loginless_viewers_auth'
 

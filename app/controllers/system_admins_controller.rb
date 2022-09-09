@@ -1,4 +1,5 @@
 class SystemAdminsController < ApplicationController
+  before_action :logged_in_system_admin
   before_action :set_system_admin, only: %i[show edit update]
 
   def show; end
