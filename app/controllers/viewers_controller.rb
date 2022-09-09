@@ -7,6 +7,8 @@ class ViewersController < ApplicationController
 
   def index
     @viewers = Viewer.all
+    render :layout => 'users' if current_user
+    render :layout => 'system_admins' if current_system_admin
   end
 
   def new
@@ -23,7 +25,11 @@ class ViewersController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    render :layout => 'viewers' if current_viewer
+    render :layout => 'users' if current_user
+    render :layout => 'system_admins' if current_system_admin
+  end
 
   def edit; end
 

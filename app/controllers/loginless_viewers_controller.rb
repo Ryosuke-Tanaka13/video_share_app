@@ -6,11 +6,8 @@ class LoginlessViewersController < ApplicationController
 
   def index
     @loginless_viewers = LoginlessViewer.all
-    if current_system_admin
-      render :layout => 'system_admins'
-    elsif current_user
-      render :layout => 'users'
-    end
+    render :layout => 'users' if current_user
+    render :layout => 'system_admins' if current_system_admin
   end
 
   def new
@@ -27,7 +24,10 @@ class LoginlessViewersController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    render :layout => 'users' if current_user
+    render :layout => 'system_admins' if current_system_admin
+  end
 
   def destroy
     @loginless_viewer.destroy!
