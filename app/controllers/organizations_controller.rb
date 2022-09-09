@@ -35,19 +35,13 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    if current_system_admin
-      render :layout => 'system_admins'
-    else
-      render :layout => 'organizations'
-    end
+    render :layout => 'users' if current_user
+    render :layout => 'system_admins' if current_system_admin
   end
 
   def edit
-    if current_system_admin
-      render :layout => 'system_admins'
-    else
-      render :layout => 'organizations'
-    end
+    render :layout => 'users' if current_user
+    render :layout => 'system_admins' if current_system_admin
   end
 
   def update
@@ -55,7 +49,8 @@ class OrganizationsController < ApplicationController
       flash[:success] = '更新しました'
       redirect_to organization_url
     else
-      render 'edit'
+      render 'edit', :layout => 'users' if current_user
+      render 'edit',  :layout => 'system_admins' if current_system_admin
     end
   end
 
