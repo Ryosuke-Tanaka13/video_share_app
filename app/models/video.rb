@@ -22,4 +22,10 @@ class Video < ApplicationRecord
 
     false
   end
+
+  def my_upload?(current_user)
+    return true if self.user_id == current_user.id
+
+    false
+  end
 end

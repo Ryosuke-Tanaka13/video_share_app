@@ -3,5 +3,8 @@
   <video class="video-show" controls>
     <source src="<%= url_for(@video.video) %>"><br>  
   </video><br>
-  <%= @video.title %>
+  <%= @video.title %><br>
+  <%= link_to "設定", edit_video_path(@video), remote: true  if user_signed_in? || system_admin_signed_in? %>
 </div>
+
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
