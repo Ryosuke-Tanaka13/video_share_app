@@ -460,7 +460,7 @@ RSpec.describe 'Videos', type: :request do
       describe '異常' do
         it '動画投稿者は削除できない' do
           expect {
-            delete video_path(video_test), params: { id: video_test.id }
+            delete video_path(video_sample), params: { id: video_sample.id }
           }.not_to change(Video, :count)
         end
       end

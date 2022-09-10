@@ -46,7 +46,9 @@ class VideosController < ApplicationController
   def destroy
     if (current_system_admin.present? || @video.owner_has?(current_user)) && @video.destroy
       flash[:danger] = '動画を削除しました'
-      redirect_to videos_url(organization_id:@video.organization.id)
+      redirect_to videos_path(organization_id:@video.organization.id)
+    else
+      redirect_to videos_path(organization_id:@video.organization.id)
     end
   end
 
@@ -72,7 +74,7 @@ class VideosController < ApplicationController
   def ensure_user
     if current_user.nil?
       flash[:danger] = '権限がありません'
-      redirect_to root_url
+      redirect_to root_path
     end
   end
   
@@ -96,8 +98,7 @@ class VideosController < ApplicationController
 
   def ensure_system_admin_or_owner
     if current_user.present? && current_user.role != 'owner'
-      redirect_to users_path, flash: { danger: '権限がありません' }
-      redirect_to videos_path(organization_id: current_user.organization.id)
+      redirect_to videos_path(organization_id: current_user.organization.id), flash: { danger: '権限がありません' }
     end
   end
 end
