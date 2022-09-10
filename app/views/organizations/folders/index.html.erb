@@ -1,6 +1,8 @@
 <% provide(:title,  "動画フォルダ一覧") %>
 <div class="content">
+<%if current_user.present?%>
   <%= link_to "フォルダ新規作成", new_organization_folder_path, remote: true, class: "btn btn-success" %>
+<%end%>
   <div style="text-align:center">
       <%@folders.each do |folder|%>
         <table style="float:left;margin:15px;">
@@ -14,9 +16,11 @@
           <tr>
             <th id = "<%=folder.organization_id%>" class = "<%=folder.id%>">
               <%=folder.name%> &nbsp;
-              <%= link_to organization_folder_path(folder.organization_id, folder.id), method: :delete, data: {confirm: "削除しますか？"} do%>
-                <i class="far fa-trash-alt" color=red></i>
-              <% end %>
+              <%if current_system_admin.present? || current_user.role == 'owner'%>
+                <%= link_to organization_folder_path(folder.organization_id, folder.id), method: :delete, data: {confirm: "削除しますか？"} do%>
+                  <i class="far fa-trash-alt" color=red></i>
+                <% end %>
+              <%end%>
             </th>
           </tr>
         </table>
