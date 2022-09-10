@@ -1,13 +1,13 @@
 class Organizations::FoldersController < ApplicationController
   layout 'organizations'
 
+  before_action :set_organization
   before_action :access_right
   before_action :ensure_system_admin_or_owner, only: %i[destroy]
   before_action :ensure_user, only: %i[create update]
   before_action :set_folder, only: %i[show update destroy]
 
   def index
-    @organization = Organization.find(params[:organization_id])
     @folders = @organization.folders
   end
 
@@ -27,7 +27,7 @@ class Organizations::FoldersController < ApplicationController
   end
 
   def update
-    if @folder.owner_has?(current_user) && @folder.update(folder_params)
+    if @folder.update(folder_params)
       redirect_to organization_folders_path
     else
       redirect_to organization_folders_path, flash: { danger: 'フォルダ名が空欄、もしくは同じフォルダ名があります。' }
@@ -35,7 +35,7 @@ class Organizations::FoldersController < ApplicationController
   end
 
   def destroy
-    if (current_system_admin.present? || @folder.owner_has?(current_user)) && @folder.destroy
+    if @folder.destroy
       redirect_to organization_folders_path, flash: { danger: 'フォルダを削除しました' }
     else
       redirect_to organization_folders_path
@@ -52,27 +52,28 @@ class Organizations::FoldersController < ApplicationController
     @folder = Folder.find(params[:id])
   end
 
-  # システム管理者、組織管理者、動画投稿者のみ許可
+  def set_organization
+    @organization = Organization.find(params[:organization_id])
+  end
+
+  # システム管理者、自組織の組織管理者、自組織の動画投稿者のみ許可
   def access_right
-    if current_system_admin.nil? && current_user.nil?
-      flash[:danger] = '権限がありません'
-      redirect_to root_path
+    if current_viewer.present? || (current_user.present? && current_user.organization_id != @organization.id)
+      redirect_to root_path, flash: { danger: '権限がありません' }
     end
   end
 
   # システム管理者、組織管理者のみ許可
   def ensure_system_admin_or_owner
     if current_user.present? && current_user.role != 'owner'
-      flash[:danger] = '権限がありません'
-      redirect_to users_path
+      redirect_to users_path, flash: { danger: '権限がありません' }
     end
   end
 
   # 組織管理者,動画投稿者のみ許可
   def ensure_user
     if current_system_admin.present?
-      flash[:danger] = '権限がありません'
-      redirect_to users_path
+      redirect_to users_path, flash: { danger: '権限がありません' }
     end
   end
 end

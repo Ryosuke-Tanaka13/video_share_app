@@ -7,6 +7,13 @@ module LoginSupport
     click_button 'ログイン'
   end
 
+  def login_system_admin(system_admin)
+    visit '/system_admins/sign_in'
+    fill_in 'Eメール', with: system_admin.email
+    fill_in 'パスワード', with: system_admin.password
+    click_button 'ログイン'
+  end
+
   def login_session(user)
     allow_any_instance_of(ActionDispatch::Request).to receive(:session) { { id: user.id } }
   end

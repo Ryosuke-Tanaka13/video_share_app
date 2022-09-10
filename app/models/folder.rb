@@ -7,10 +7,4 @@ class Folder < ApplicationRecord
     self.organization_id = current_user.organization_id
     self.save
   end
-
-  def owner_has?(current_user)
-    return true if self.organization_id == current_user.organization_id
-
-    false
-  end
 end

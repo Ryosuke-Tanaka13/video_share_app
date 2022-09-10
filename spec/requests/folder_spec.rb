@@ -87,6 +87,19 @@ RSpec.describe 'Organizations::Folders', type: :request do
           expect(response).to redirect_to root_path
         end
       end
+
+      describe '別組織の組織管理者' do
+        before(:each) do
+          login_session(another_user_owner)
+          current_viewer(another_user_owner)
+          get organization_folders_path(organization_id: organization.id)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
+      end
     end
   end
 

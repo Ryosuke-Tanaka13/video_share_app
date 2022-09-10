@@ -54,7 +54,7 @@
         </li>
 
         <li class="nav-item">
-          <%= link_to "#", class:"nav-link" do %>
+          <%= link_to organization_folders_path(current_user.organization_id), class:"nav-link" do %>
             <i class="nav-icon fas fa-th"></i>
             <p>
               動画フォルダ一覧
@@ -88,14 +88,6 @@
             <i class="nav-icon fas fa-th"></i>
             <p>
               アカウント編集
-            </p>
-          <% end %>
-        </li>
-        <li class="nav-item">
-          <%= link_to organization_folders_path(organization_id: current_user.organization_id), class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
-            <p>
-              動画フォルダ一覧
             </p>
           <% end %>
         </li>
