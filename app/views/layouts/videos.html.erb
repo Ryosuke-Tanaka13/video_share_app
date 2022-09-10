@@ -13,23 +13,24 @@
   </head>
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
     <div class="wrapper">
-      <%
-=begin%>
- <%= render "layouts/header" %>  
-<%
-=end%>
+      <% if current_system_admin.present? %> 
+        <%= render "layouts/system_admins/header" %> 
+      <% elsif current_user.present? %>
+        <%= render "layouts/users/header" %>
+      <% else %>
+        <%= render "layouts/viewers/header" %>
+      <%end%> 
+
       <!-- Content side_bar(model) -->
-      <%
-=begin%>
- <% if current_system_admin.present? %> 
+      
+      <% if current_system_admin.present? %> 
         <%= render "layouts/system_admins/side" %> 
       <% elsif current_user.present? %>
         <%= render "layouts/users/side" %>
       <% else %>
         <%= render "layouts/viewers/side" %>
       <%end%> 
-<%
-=end%>
+
       <!-- /Content side_bar(model) -->
       <div class="content-wrapper">
         <%= render "layouts/flash" %>
@@ -45,11 +46,7 @@
         </div>
         <%= render template: "layouts/application" %>
       </div>
-    <%
-=begin%>
- <%= render "layouts/footer" %> 
-<%
-=end%>
+      <%= render "layouts/footer" %> 
     </div>
   </body>
 </html>
