@@ -9,7 +9,7 @@ describe 'ログイン処理', type: :request do
       expect(response).to have_http_status(:success)
       post user_session_path, params: { user: { email: user.email, password: user.password } }
       expect(response).to have_http_status(:found)
-      expect(response).to redirect_to 'http://www.example.com/users/dash_boards'
+      expect(response).to redirect_to 'http://www.example.com/users'
     end
   end
 end
