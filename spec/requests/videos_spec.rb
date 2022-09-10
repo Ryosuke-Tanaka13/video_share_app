@@ -7,6 +7,7 @@ RSpec.describe 'Videos', type: :request do
   let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id, confirmed_at: Time.now) }
   let(:user) { create(:user, organization_id: organization.id, confirmed_at: Time.now) }
   let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+  let(:video_test) { create(:video_test, organization_id: user.organization.id, user_id: user.id) }
 
   before(:each) do
     organization
@@ -15,13 +16,14 @@ RSpec.describe 'Videos', type: :request do
     another_user_owner
     user
     video_sample
+    video_test
   end
 
   describe 'GET #index' do
     describe '正常(動画投稿者)' do
       before(:each) do
         sign_in user
-        get videos_path
+        get videos_path(organization_id: organization.id)
       end
 
       it 'レスポンスに成功する' do
@@ -36,7 +38,7 @@ RSpec.describe 'Videos', type: :request do
     describe '正常(オーナー)' do
       before(:each) do
         sign_in user_owner
-        get videos_path
+        get videos_path(organization_id: organization.id)
       end
 
       it 'レスポンスに成功する' do
@@ -50,12 +52,13 @@ RSpec.describe 'Videos', type: :request do
 
     describe '異常' do
       before(:each) do
-        get videos_path
+        sign_in user_owner
+        get videos_path(organization_id: another_organization.id)
       end
 
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status ' 302'
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -98,7 +101,7 @@ RSpec.describe 'Videos', type: :request do
 
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status ' 302'
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -140,7 +143,7 @@ RSpec.describe 'Videos', type: :request do
                 popup_after_video:  false
               }
             })
-        ).to redirect_to videos_path
+        ).to redirect_to folders_path
       end
     end
 
@@ -180,7 +183,7 @@ RSpec.describe 'Videos', type: :request do
                 popup_after_video:  false
               }
             })
-        ).to redirect_to videos_path
+        ).to redirect_to folders_path
       end
     end
 
@@ -250,8 +253,9 @@ RSpec.describe 'Videos', type: :request do
   end
 
   describe 'GET #show' do
-    describe '正常' do
+    describe '正常(動画投稿者)' do
       before(:each) do
+        sign_in user
         get video_path(video_sample)
       end
 
@@ -263,9 +267,169 @@ RSpec.describe 'Videos', type: :request do
         expect(response).to have_http_status '200'
       end
     end
+
+    describe '正常(オーナー)' do
+      before(:each) do
+        sign_in user_owner
+        get video_path(video_sample)
+      end
+
+      it 'レスポンスに成功する' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it '正常値レスポンス' do
+        expect(response).to have_http_status '200'
+      end
+    end
+    
+    describe '異常' do
+      before(:each) do
+        sign_in another_user_owner
+        get video_path(video_sample)
+      end
+
+      it 'アクセス権限なしのためリダイレクト' do
+        expect(response).to have_http_status ' 302'
+        expect(response).to redirect_to videos_path(organization_id: another_organization.id)
+      end
+    end
   end
 
-  # editとupdateは、アクションの処理を未作成なのでテスト未実施
+  describe 'PATCH #update' do
+    describe 'オーナーが現在のログインユーザ' do
+      before(:each) do
+        sign_in user_owner 
+      end
+
+      describe '正常' do
+        it 'フォルダ名がアップデートされる' do
+          expect {
+            patch video_path(video_sample),
+              params: {
+                video: {
+                  title: 'サンプルビデオ2'
+                }
+              }
+          }.to change { Video.find(video_sample.id).title }.from(video_sample.title).to('サンプルビデオ2')
+        end
+
+        it 'showにリダイレクトされる' do
+          expect(
+            patch(video_path(video_sample),
+              params: {
+                video: {
+                  title: 'サンプルビデオ２'
+                }
+              })
+          ).to redirect_to video_path(video_sample)
+        end
+      end
+
+      describe '異常' do
+        it 'ビデオ名が空白でアップデートされない' do
+          expect {
+            patch video_path(video_sample),
+              params: {
+                video: {
+                  title: ''
+                }, format: :js
+              }
+          }.not_to change { Video.find(video_sample.id).title }
+        end
+
+        it 'ビデオ名が重複してアップデートされない' do
+          expect {
+            patch video_path(video_test),
+              params: {
+                video: {
+                  title: 'サンプルビデオ'
+                }, format: :js
+              }
+          }.not_to change { Video.find(video_test.id).title }
+        end
+
+        it '登録失敗するとモーダル上でエラーを出す' do
+          expect(
+            patch(video_path(video_test),
+              params: {
+                video: {
+                  title: ''
+                }, format: :js
+              })
+          ).to render_template :edit
+        end
+      end
+    end
+
+    describe '動画投稿者本人が現在のログインユーザ' do
+      before(:each) do
+        sign_in user
+      end
+
+      describe '正常' do
+        it '動画情報がアップデートされる' do
+          expect {
+            patch video_path(video_test),
+              params: {
+                video: {
+                  title: 'テストビデオ2'
+                }
+              }
+          }.to change { Video.find(video_test.id).title }.from(video_test.title).to('テストビデオ2')
+        end
+
+        it 'showにリダイレクトされる' do
+          expect(
+            patch(video_path(video_test),
+              params: {
+                video: {
+                  title: 'テストビデオ２'
+                }
+              })
+          ).to redirect_to video_path(video_test)
+        end
+      end
+    end
+
+    describe '本人以外の動画投稿者が現在のログインユーザ' do
+      before(:each) do
+        sign_in user
+      end
+
+      describe '異常' do
+        it '本人以外はアップデートできない' do
+          expect {
+            patch video_path(video_sample),
+              params: {
+                video: {
+                  title: 'サンプルビデオ２'
+                }
+              }
+          }.not_to change { Video.find(video_sample.id).title }
+        end
+      end
+    end
+
+    describe 'オーナー以外の別組織オーナが現在のログインユーザ' do
+      before(:each) do
+        current_user(another_user_owner)
+      end
+
+      describe '異常' do
+        it '別組織のオーナはアップデートできない' do
+          expect {
+            patch video_path(video_sample),
+              params: {
+                video: {
+                  title: 'サンプルビデオ２'
+                }
+              }
+          }.not_to change { Video.find(video_sample.id).title }
+        end
+      end
+    end
+  end
 
   describe 'DELETE #destroy' do
     describe 'オーナーが現在のログインユーザー' do
@@ -283,7 +447,21 @@ RSpec.describe 'Videos', type: :request do
         it 'indexにリダイレクトされる' do
           expect(
             delete(video_path(video_sample), params: { id: video_sample.id })
-          ).to redirect_to videos_path
+          ).to redirect_to videos_path(organization_id: organization.id)
+        end
+      end
+    end
+
+    describe '動画投稿者が現在のログインユーザ' do
+      before(:each) do
+        sign_in user
+      end
+
+      describe '異常' do
+        it '動画投稿者は削除できない' do
+          expect {
+            delete video_path(video_test), params: { id: video_test.id }
+          }.not_to change(Video, :count)
         end
       end
     end

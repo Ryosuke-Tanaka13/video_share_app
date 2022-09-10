@@ -3,8 +3,9 @@ require 'rails_helper'
 RSpec.describe Video, type: :model do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
+  let(:user) { create(:user, organization_id: organization.id) }
   let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-  let(:video_test) { create(:video_test, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+  let(:video_test) { create(:video_test, organization_id: user.organization.id, user_id: user.id) }
 
   before(:each) do
     organization

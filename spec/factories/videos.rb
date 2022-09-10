@@ -24,7 +24,7 @@ FactoryBot.define do
     popup_before_video { false }
     popup_after_video { false }
     organization_id { 1 }
-    user_id { 1 }
+    user_id { 3 }
     organization
     user
 
