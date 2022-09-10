@@ -58,7 +58,7 @@ class Organizations::FoldersController < ApplicationController
 
   # システム管理者、自組織の組織管理者、自組織の動画投稿者のみ許可
   def access_right
-    if current_viewer.present? || (current_user.present? && current_user.organization_id != @organization.id)
+    if (current_system_admin.nil? && current_user.nil?) || (current_user.present? && current_user.organization_id != @organization.id)
       redirect_to root_path, flash: { danger: '権限がありません' }
     end
   end
@@ -72,7 +72,7 @@ class Organizations::FoldersController < ApplicationController
 
   # 組織管理者,動画投稿者のみ許可
   def ensure_user
-    if current_system_admin.present?
+    if current_user.nil?
       redirect_to users_path, flash: { danger: '権限がありません' }
     end
   end
