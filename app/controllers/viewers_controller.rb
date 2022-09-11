@@ -2,7 +2,8 @@ class ViewersController < ApplicationController
   before_action :logged_in_account
   before_action :logged_in_system_admin, only: %i[destroy]
   before_action :admin_or_user, only: %i[index]
-  before_action :admin_or_user_or_correct_viewer, only: %i[show edit update]
+  before_action :admin_or_user_or_correct_viewer, only: %i[show]
+  before_action :correct_viewer, only: %i[edit update]
   before_action :set_viewer, except: %i[index new create]
 
   def index

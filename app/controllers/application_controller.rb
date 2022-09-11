@@ -52,9 +52,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def correct
+    if (current_system_admin&.id == params[:id].to_i) || (current_user&.id == params[:id].to_i) || (current_viewer&.id == params[:id].to_i)
+      flash[:danger] = "権限がありません。"
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
   def owner_or_correct_user
     @user = User.find(params[:id]) if @user.blank?
-    unless current_user&.role == "owner" || current_user == @user
+    @organization = Organization.find(@user.organization_id) if @organization.blank?
+    unless (current_user&.role == "owner" && current_user.organization_id == @organization.id) || current_user == @user
       flash[:danger] = "権限がありません。"
       redirect_back(fallback_location: root_path)
     end  
@@ -62,7 +70,16 @@ class ApplicationController < ActionController::Base
 
   def admin_or_owner_or_correct_user
     @user = User.find(params[:id]) if @user.blank?
-    unless !current_system_admin.nil? || current_user&.role == "owner" || current_user == @user
+    @organization = Organization.find(@user.organization_id) if @organization.blank?
+    unless !current_system_admin.nil? || (current_user&.role == "owner" && current_user.organization_id == @organization.id) || current_user == @user
+      flash[:danger] = "権限がありません。"
+      redirect_back(fallback_location: root_path)
+    end  
+  end
+
+  def admin_or_correct_organization_user
+    @organization = Organization.find(params[:id]) if @organization.blank?
+    unless !current_system_admin.nil? || current_user&.organization_id == @organization.id
       flash[:danger] = "権限がありません。"
       redirect_back(fallback_location: root_path)
     end  
@@ -91,8 +108,10 @@ class ApplicationController < ActionController::Base
   end
 
   def admin_or_correct_owner
+    @user = User.find(params[:id]) if @user.blank?
+    @organization = Organization.find(@user.organization_id) if @organization.blank?
     unless !current_system_admin.nil? ||
-           (current_user&.role == "owner" && current_user.organization_id == params[:id].to_i)
+           (current_user&.role == "owner" && current_user.organization_id == @organization.id)
       flash[:danger] = "権限がありません。"
       redirect_back(fallback_location: root_path)
     end  
@@ -100,6 +119,13 @@ class ApplicationController < ActionController::Base
 
   def correct_owner
     unless (current_user&.role == "owner" && current_user.organization_id == params[:id].to_i)
+      flash[:danger] = "権限がありません。"
+      redirect_back(fallback_location: root_path)
+    end  
+  end
+
+  def correct_viewer
+    unless  current_viewer&.id == params[:id].to_i
       flash[:danger] = "権限がありません。"
       redirect_back(fallback_location: root_path)
     end  
