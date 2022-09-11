@@ -2,7 +2,7 @@ module LoginSupport
   def login(user)
     visit '/users/sign_in'
 
-    fill_in 'Eメール', with: user.email
+    fill_in 'メールアドレス', with: user.email
     fill_in 'パスワード', with: user.password
     click_button 'ログイン'
   end

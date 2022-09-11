@@ -1,36 +1,48 @@
 require 'rails_helper'
 
 RSpec.describe 'User', type: :request do
-  # let!(:user) { FactoryBot.create(:user, password: 'password', confirmed_at: Time.now) }
   let(:organization) { create(:organization) }
+  let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
+  let(:user) { create(:user, confirmed_at: Time.now) }
+  let(:user1) { create(:user1, confirmed_at: Time.now) }
+
   let(:another_organization) { create(:another_organization) }
-  let(:user_owner) { create(:user_owner, name: 'owner1', organization_id: organization.id) }
-  let(:another_user_owner) { create(:another_user_owner, name: 'owner2', organization_id: another_organization.id) }
-  let(:user) { create(:user, name: 'user', email: 'sample@email.com', password: 'password', organization_id: organization.id, confirmed_at: Time.now) }
-  # let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
-  # let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
+  let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
+  let(:another_user) { create(:another_user, confirmed_at: Time.now) }
+
+  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
+  let(:viewer) { create(:viewer, confirmed_at: Time.now) }
+  
 
   before(:each) do
     organization
-    another_organization
     user_owner
-    another_user_owner
     user
-    # folder_celeb
-    # folder_tech
+    user1
+    another_organization
+    another_user_owner
+    another_user
+    system_admin
+    viewer
   end
 
-  # describe '管理者がログインできることを確認' do
-  #   it do
-  #     get new_user_session_path
-  #     expect(response).to have_http_status(:success)
-  #     post user_session_path, params: { user: { email: user.email, password: user.password } }
-  #     expect(response).to have_http_status(:found)
-  #     expect(response).to redirect_to 'http://www.example.com/users'
-  #   end
-  # end
-
   describe 'GET #index' do
+    describe '正常(システム管理者)' do
+      before(:each) do
+        login_session(system_admin)
+        current_system_admin(system_admin)
+        get users_path(system_admin)
+      end
+  
+      it 'レスポンスに成功する' do
+        expect(response).to be_successful
+      end
+  
+      it '正常値レスポンス' do
+        expect(response).to have_http_status '200'
+      end
+    end
+
     describe '正常(オーナー)' do
       before(:each) do
         login_session(user_owner)
@@ -47,7 +59,7 @@ RSpec.describe 'User', type: :request do
       end
     end
 
-    describe '正常(投稿者)' do
+    describe '正常(スタッフ)' do
       before(:each) do
         login_session(user)
         current_user(user)
@@ -63,7 +75,20 @@ RSpec.describe 'User', type: :request do
       end
     end
 
-    describe '異常' do
+    describe '異常(viewer)' do
+      before(:each) do
+        login_session(viewer)
+        current_viewer(viewer)
+        get users_path(viewer)
+      end
+
+      it 'アクセス権限なしのためリダイレクト' do
+        expect(response).to have_http_status ' 302'
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    describe '異常(ログインなし)' do
       before(:each) do
         get users_path
       end
@@ -100,7 +125,7 @@ RSpec.describe 'User', type: :request do
         .and change(User, :count).by(1)
       end
 
-      it 'sign_inにリダイレクトされる' do
+      it 'ログイン画面にリダイレクトされる' do
         expect(
           post(organizations_path,
             params: {
@@ -125,7 +150,7 @@ RSpec.describe 'User', type: :request do
         new_organization_path
       end
 
-      it '名前が空白だと新規作成されない' do
+      it '入力が不十分だと新規作成されない' do
         expect {
           post organizations_path,
             params: {
@@ -134,25 +159,6 @@ RSpec.describe 'User', type: :request do
                 email: 'sample1@email.com',
                 users: {
                   name: ' ',
-                  email: 'sample1@email.com',
-                  password: 'password',
-                  password_confirmation: 'password'
-                }
-              }
-            }
-        }.to change(Organization, :count).by(0)
-        .and change(User, :count).by(0)
-      end
-
-      it '名前が重複していると新規作成されない' do
-        expect {
-          post organizations_path,
-            params: {
-              organization: {
-                name: '組織1',
-                email: 'sample1@email.com',
-                users: {
-                  name: 'user',
                   email: 'sample1@email.com',
                   password: 'password',
                   password_confirmation: 'password'
@@ -185,122 +191,696 @@ RSpec.describe 'User', type: :request do
   end
 
   describe 'PATCH #update' do
-    describe 'フォルダ作成者が現在のログインユーザ' do
-      before(:each) do
-        current_user(user_owner)
-      end
-
-      describe '正常' do
-        it 'フォルダ名がアップデートされる' do
-          expect {
-            patch folder_path(folder_celeb),
-              params: {
-                folder: {
-                  name: 'セレブ'
-                }
-              }
-          }.to change { Folder.find(folder_celeb.id).name }.from(folder_celeb.name).to('セレブ')
+    describe 'オーナー情報の編集' do
+      describe '本人の場合' do
+        before(:each) do
+          current_user(user_owner)
         end
-
-        it 'indexにリダイレクトされる' do
-          expect(
-            patch(folder_path(folder_celeb),
-              params: {
-                folder: {
-                  name: 'セレブ'
+  
+        describe '正常' do
+          it '同組織のオーナはアップデートできる' do
+            expect {
+              patch user_path(user_owner),
+                params: {
+                  user: {
+                    name: 'ユーザー',
+                    email: 'test_spec@example.com'
+                  }
                 }
-              })
-          ).to redirect_to folders_path
+            }.to change { User.find(user_owner.id).name }.from(user_owner.name).to('ユーザー')
+          end
         end
       end
-
-      describe '異常' do
-        it 'フォルダ名が空白でアップデートされない' do
-          expect {
-            patch folder_path(folder_celeb),
-              params: {
-                folder: {
-                  name: ''
-                }
-              }
-          }.not_to change { Folder.find(folder_celeb.id).name }
+    
+      describe '別組織のオーナーの場合' do
+        before(:each) do
+          current_user(another_user_owner)
         end
-
-        it 'フォルダ名が重複してアップデートされない' do
-          expect {
-            patch folder_path(folder_tech),
-              params: {
-                folder: {
-                  name: 'セレブエンジニア'
+  
+        describe '異常' do
+          it '別組織のオーナはアップデートできない' do
+            expect {
+              patch user_path(user_owner),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
                 }
-              }
-          }.not_to change { Folder.find(folder_celeb.id).name }
+            }.not_to change { User.find(user_owner.id).name }
+          end
         end
+      end
 
-        it 'indexにリダイレクトされる' do
-          expect(
-            patch(folder_path(folder_celeb),
-              params: {
-                folder: {
-                  name: ''
+      describe 'スタッフの場合' do
+        before(:each) do
+          current_user(user)
+        end
+  
+        describe '異常' do
+          it '別組織のオーナはアップデートできない' do
+            expect {
+              patch user_path(user_owner),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
                 }
-              })
-          ).to redirect_to folders_path
+            }.not_to change { User.find(user_owner.id).name }
+          end
+        end
+      end
+
+      describe 'システム管理者の場合' do
+        before(:each) do
+          current_system_admin(system_admin)
+        end
+  
+        describe '異常' do
+          it 'アップデートできない' do
+            expect {
+              patch user_path(user_owner),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user_owner.id).name }
+          end
+        end
+      end
+
+      describe '視聴者の場合' do
+        before(:each) do
+          current_viewer(viewer)
+        end
+  
+        describe '異常' do
+          it '視聴者はアップデートできない' do
+            expect {
+              patch user_path(user_owner),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user_owner.id).name }
+          end
+        end
+      end
+
+      describe 'ログインなしの場合' do
+        describe '異常' do
+          it 'ログインなしはアップデートできない' do
+            expect {
+              patch user_path(user_owner),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user_owner.id).name }
+          end
         end
       end
     end
 
-    describe 'フォルダ作成者以外の別組織オーナが現在のログインユーザ' do
-      before(:each) do
-        current_user(another_user_owner)
+    describe 'スタッフ情報の編集' do
+      describe '本人の場合' do
+        before(:each) do
+          edit_user_path(user)
+          current_user(user)
+        end
+  
+        describe '正常' do
+          # emailの更新については認証が必要
+          it '名前がアップデートされる' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'ユーザー',
+                    email: 'sample@email.com'
+                  }
+                }
+            }.to change { User.find(user.id).name }.from(user.name).to('ユーザー')
+          end
+  
+          it 'indexにリダイレクトされる' do
+            expect(
+              patch(user_path(user),
+                params: {
+                  user: {
+                    name: 'ユーザー'
+                  }
+                })
+            ).to redirect_to users_path
+          end
+        end
+  
+        describe '異常' do
+          it '名前が空白でアップデートされない' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: ' ',
+                    email: 'sample@email.com'
+                  }
+                }
+            }.not_to change { User.find(user.id).name }
+          end
+  
+          it 'email更新時、認証なしではアップデートされない' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user.id).name }
+          end
+  
+          it '登録失敗するとエラーを出す' do
+            expect(
+              patch(user_path(user),
+                params: {
+                  user: {
+                    name: ' '
+                  }
+                })
+            ).to render_template :edit
+          end
+        end
       end
 
-      describe '異常' do
-        it '別組織のオーナはアップデートできない' do
-          expect {
-            patch folder_path(folder_celeb),
-              params: {
-                folder: {
-                  name: 'セレブ'
+      describe '同組織の他スタッフの場合' do
+        before(:each) do
+          edit_user_path(user1)
+          current_user(user1)
+        end
+
+        describe '異常' do
+          it '同組織の他スタッフはアップデートできない' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
                 }
-              }
-          }.not_to change { Folder.find(folder_celeb.id).name }
+            }.not_to change { User.find(user.id).name }
+          end
+        end
+      end
+
+      describe '別組織のスタッフの場合' do
+        before(:each) do
+          current_user(another_user)
+        end
+  
+        describe '異常' do
+          it '他のスタッフはアップデートできない' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user.id).name }
+          end
+        end
+      end
+
+      describe '同組織のオーナーの場合' do
+        before(:each) do
+          current_user(user_owner)
+        end
+  
+        describe '正常' do
+          it '同組織のオーナはアップデートできる' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'ユーザー',
+                    email: 'sample@email.com'
+                  }
+                }
+            }.to change { User.find(user.id).name }.from(user.name).to('ユーザー')
+          end
+        end
+      end
+    
+      describe '別組織のオーナーの場合' do
+        before(:each) do
+          current_user(another_user_owner)
+        end
+  
+        describe '異常' do
+          it '別組織のオーナはアップデートできない' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user.id).name }
+          end
+        end
+      end
+
+      describe 'システム管理者の場合' do
+        before(:each) do
+          current_system_admin(system_admin)
+        end
+  
+        describe '異常' do
+          it 'アップデートできない' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user.id).name }
+          end
+        end
+      end
+
+      describe '視聴者の場合' do
+        before(:each) do
+          current_viewer(viewer)
+        end
+  
+        describe '異常' do
+          it '視聴者はアップデートできない' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user.id).name }
+          end
+        end
+      end
+
+      describe 'ログインなしの場合' do
+        describe '異常' do
+          it 'ログインなしはアップデートできない' do
+            expect {
+              patch user_path(user),
+                params: {
+                  user: {
+                    name: 'user',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { User.find(user.id).name }
+          end
+        end
+      end
+    end
+  end
+
+  describe 'GET #show' do
+    describe 'オーナー詳細' do
+      describe 'システム管理者の場合' do
+        describe '正常' do
+          before(:each) do
+            current_system_admin(system_admin)
+            get user_path(user_owner)
+          end
+    
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+    
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
+          end
+        end
+      end
+      
+      describe '本人の場合' do
+        describe '正常' do
+          before(:each) do
+            current_user(user_owner)
+            get user_path(user_owner)
+          end
+    
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+    
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
+          end
+        end
+      end
+
+      describe '同組織のスタッフの場合' do
+        describe '異常' do
+          before(:each) do
+            current_user(user)
+            get user_path(user_owner)
+          end
+    
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+
+      describe '別組織のオーナーの場合' do
+        describe '異常' do
+          before(:each) do
+            current_user(another_user_owner)
+            get user_path(user_owner)
+          end
+    
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+      
+      describe '別組織のスタッフの場合' do
+        describe '異常' do
+          before(:each) do
+            current_user(another_user)
+            get user_path(user_owner)
+          end
+    
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+
+      describe '動画視聴者の場合' do
+        describe '異常' do
+          before(:each) do
+            current_viewer(viewer)
+            get user_path(user_owner)
+          end
+    
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+
+      describe 'ログインなしの場合' do
+        describe '異常' do
+          before(:each) do
+            get user_path(user_owner)
+          end
+
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+    end
+
+    describe 'スタッフ詳細' do
+      describe 'システム管理者の場合' do
+        describe '正常' do
+          before(:each) do
+            current_system_admin(system_admin)
+            get user_path(user)
+          end
+    
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+    
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
+          end
+        end
+      end
+      
+      describe '本人の場合' do
+        describe '正常' do
+          before(:each) do
+            current_user(user)
+            get user_path(user)
+          end
+    
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+    
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
+          end
+        end
+      end
+      
+      describe '同組織のオーナーの場合' do
+        describe '正常' do
+          before(:each) do
+            current_user(user_owner)
+            get user_path(user)
+          end
+    
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+    
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
+          end
+        end
+      end
+
+      describe '同組織の他スタッフの場合' do
+        describe '異常' do
+          before(:each) do
+            current_user(another_user)
+            get user_path(user)
+          end
+    
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+
+      describe '別組織のオーナーの場合' do
+        describe '異常' do
+          before(:each) do
+            current_user(another_user_owner)
+            get user_path(user)
+          end
+    
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+      
+      describe '別組織のスタッフの場合' do
+        describe '異常' do
+          before(:each) do
+            current_user(another_user)
+            get user_path(user)
+          end
+    
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+
+      describe '動画視聴者の場合' do
+        describe '異常' do
+          before(:each) do
+            current_viewer(viewer)
+            get user_path(user)
+          end
+    
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+      end
+
+      describe 'ログインなしの場合' do
+        describe '異常' do
+          before(:each) do
+            get user_path(user)
+          end
+
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
         end
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    describe 'フォルダ作成者が現在のログインユーザ' do
+    describe 'システム管理者の場合' do
+      before(:each) do
+        current_system_admin(system_admin)
+      end
+
+      describe '正常' do
+        it 'ユーザーを削除する' do
+          expect {
+            delete user_path(user), params: { id: user.id }
+          }.to change(User, :count).by(-1)
+        end
+
+        it 'indexにリダイレクトされる' do
+          expect(
+            delete user_path(user), params: { id: user.id }
+          ).to redirect_to users_path
+        end
+      end
+    end
+
+    describe '自組織のオーナーの場合' do
       before(:each) do
         current_user(user_owner)
       end
 
       describe '正常' do
-        it 'フォルダを削除する' do
+        it 'ユーザーを論理削除する' do
           expect {
-            delete folder_path(folder_celeb), params: { id: folder_celeb.id }
-          }.to change(Folder, :count).by(-1)
+            delete user_path(user), params: { id: user.id }
+          }.to change { User.find(user.id).is_valid }.from(user.is_valid).to(false)
         end
 
         it 'indexにリダイレクトされる' do
           expect(
-            delete(folder_path(folder_celeb), params: { id: folder_celeb.id })
-          ).to redirect_to folders_path
+            delete user_path(user), params: { id: user.id }
+          ).to redirect_to users_path
         end
       end
     end
 
-    describe 'フォルダ作成者以外の別組織オーナが現在のログインユーザ' do
+    describe '他組織のオーナーの場合' do
       before(:each) do
         current_user(another_user_owner)
       end
 
       describe '異常' do
-        it '別組織のオーナは削除できない' do
+        it '削除できない' do
           expect {
-            delete folder_path(folder_celeb), params: { id: folder_celeb.id }
-          }.not_to change(Folder, :count)
+            delete user_path(user), params: { id: user.id }
+          }.not_to change(User, :count)
+        end
+
+        it 'rootにリダイレクトされる' do
+          expect(
+            delete user_path(user), params: { id: user.id }
+          ).to redirect_to root_path
+        end
+      end
+    end
+
+    describe '本人の場合' do
+      before(:each) do
+        current_user(user)
+      end
+
+      describe '異常' do
+        it '削除できない' do
+          expect {
+            delete user_path(user), params: { id: user.id }
+          }.not_to change(User, :count)
+        end
+
+        it 'rootにリダイレクトされる' do
+          expect(
+            delete user_path(user), params: { id: user.id }
+          ).to redirect_to root_path
+        end
+      end
+    end
+
+    describe '同組織の他スタッフの場合' do
+      before(:each) do
+        current_user(user1)
+      end
+
+      describe '異常' do
+        it '削除できない' do
+          expect {
+            delete user_path(user), params: { id: user.id }
+          }.not_to change(User, :count)
+        end
+
+        it 'rootにリダイレクトされる' do
+          expect(
+            delete user_path(user), params: { id: user.id }
+          ).to redirect_to root_path
+        end
+      end
+    end
+
+    describe '他組織のスタッフの場合' do
+      before(:each) do
+        current_user(another_user)
+      end
+
+      describe '異常' do
+        it '削除できない' do
+          expect {
+            delete user_path(user), params: { id: user.id }
+          }.not_to change(User, :count)
+        end
+
+        it 'rootにリダイレクトされる' do
+          expect(
+            delete user_path(user), params: { id: user.id }
+          ).to redirect_to root_path
+        end
+      end
+    end
+
+    describe 'ログインなしの場合' do
+      describe '異常' do
+        it '削除できない' do
+          expect {
+            delete user_path(user), params: { id: user.id }
+          }.not_to change(User, :count)
+        end
+
+        it 'rootにリダイレクトされる' do
+          expect(
+            delete user_path(user), params: { id: user.id }
+          ).to redirect_to root_path
         end
       end
     end

@@ -1,17 +1,32 @@
 require 'rails_helper'
 
-RSpec.describe 'UserSessions', type: :system do
+RSpec.describe 'UserSystem', type: :system do
   let(:organization) { create(:organization) }
-  let(:user_owner) { create(:user_owner, organization_id: organization.id) }
-  let(:user) { create(:user, organization_id: organization.id) }
+  let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
+  let(:user) { create(:user, confirmed_at: Time.now) }
+  let(:user1) { create(:user1, confirmed_at: Time.now) }
+
+  let(:another_organization) { create(:another_organization) }
+  let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
+  let(:another_user) { create(:another_user, confirmed_at: Time.now) }
+
+  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
+  let(:viewer) { create(:viewer, confirmed_at: Time.now) }
+  
+
+  before(:each) do
+    organization
+    user_owner
+    user
+    user1
+    another_organization
+    another_user_owner
+    another_user
+    system_admin
+    viewer
+  end
 
   context 'サイドバーの項目/遷移確認' do
-    before(:each) do
-      organization
-      user_owner
-      user
-    end
-
     describe 'オーナ' do
       before(:each) do
         login(user_owner)
@@ -88,6 +103,257 @@ RSpec.describe 'UserSessions', type: :system do
       it 'アカウント編集への遷移' do
         click_link 'アカウント編集'
         expect(page).to have_current_path edit_user_path(user), ignore_query: true
+      end
+    end
+  end
+
+  context 'User操作' do
+    describe '正常' do
+      describe '投稿者一覧ページ' do
+        before(:each) do
+          login(user_owner)
+          current_user(user_owner)
+          visit users_path
+        end
+  
+        it 'レイアウト' do
+          expect(page).to have_link '視聴者新規作成画面へ', href: new_user_path
+          expect(page).to have_link user_owner.name, href: user_path(user_owner)
+          expect(page).to have_link user.name, href: user_path(user)
+          expect(page).to have_link '削除', href: user_path(user)
+        end
+
+        it '視聴者新規作成画面への遷移' do
+          click_link '視聴者新規作成画面へ'
+          expect(page).to have_current_path new_user_path, ignore_query: true
+        end
+
+        it 'user_owner詳細への遷移' do
+          click_link user_owner.name, match: :first
+          expect(page).to have_current_path user_path(user_owner), ignore_query: true
+        end
+
+        it 'user詳細への遷移' do
+          click_link user.name
+          expect(page).to have_current_path user_path(user), ignore_query: true
+        end
+  
+        it 'スタッフ論理削除' do
+          find(:xpath, '//*[@id="users-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[4]/a').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'userの視聴者情報を削除します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.accept
+            expect(page).to have_content 'userのユーザー情報を削除しました'
+          }.to change { User.find(user.id).is_valid }.from(user.is_valid).to(false)
+        end
+  
+        it 'スタッフ論理削除キャンセル' do
+          find(:xpath, '//*[@id="users-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[4]/a').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'userの視聴者情報を削除します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.dismiss
+          }.not_to change { User.find(user.id).is_valid }
+        end
+      end
+
+      describe 'オーナー詳細' do
+        before(:each) do
+          login(user_owner)
+          current_user(user_owner)
+          visit user_path(user_owner)
+        end
+  
+        it 'レイアウト' do
+          expect(page).to have_text user_owner.email
+          expect(page).to have_text user_owner.name
+          expect(page).to have_text organization.name
+          expect(page).to have_link '編集', href: edit_user_path(user_owner)
+          expect(page).to have_link '戻る', href: users_path(organization_id: organization.id)
+        end
+
+        it '編集への遷移' do
+          click_link '編集'
+          expect(page).to have_current_path edit_user_path(user_owner), ignore_query: true
+        end
+
+        it '戻るへの遷移' do
+          click_link '戻る'
+          expect(page).to have_current_path users_path, ignore_query: true
+        end
+
+      end
+
+      describe 'オーナー編集' do
+        before(:each) do
+          login(user_owner)
+          current_user(user_owner)
+          visit edit_user_path(user_owner)
+        end
+  
+        it 'レイアウト' do
+          expect(page).to have_field 'Name'
+          expect(page).to have_field 'Eメール'
+          expect(page).to have_button '更新'
+          expect(page).to have_link '詳細画面へ'
+          expect(page).to have_link '一覧画面へ'
+        end
+        
+        it '更新で登録情報が更新される' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: 'sample@email.com'
+          click_button '更新'
+          expect(page).to have_current_path users_path, ignore_query: true
+          expect(page).to have_text '更新しました'
+        end
+      end
+
+      describe 'スタッフ新規作成' do
+        before(:each) do
+          login(user_owner)
+          current_user(user_owner)
+          visit new_user_path(user_owner)
+        end
+  
+        it 'レイアウト' do
+          expect(page).to have_field 'Name'
+          expect(page).to have_field 'Eメール'
+          expect(page).to have_field 'パスワード'
+          expect(page).to have_field 'パスワード（確認用）'
+          expect(page).to have_button '登録'
+          expect(page).to have_link '一覧画面へ'
+        end
+        
+        it '登録でスタッフが新規作成される' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: 'sample@email.com'
+          fill_in 'パスワード', with: 'password'
+          fill_in 'パスワード（確認用）', with: 'password'
+          click_button '登録'
+          expect(page).to have_current_path users_path, ignore_query: true
+          expect(page).to have_text 'testの作成に成功しました'
+        end
+      end
+    end
+
+    describe '異常' do
+      describe '投稿者一覧ページ' do
+        before(:each) do
+          login(user_owner)
+          current_user(user_owner)
+          visit users_path
+        end
+  
+        it '別組織の投稿者は表示されない' do
+          expect(page).not_to have_link another_user_owner.name, href: user_path(another_user_owner)
+          expect(page).not_to have_link another_user.name, href: user_path(another_user)
+        end
+      end
+
+      describe 'オーナー編集' do
+        before(:each) do
+          login(user_owner)
+          current_user(user_owner)
+          visit edit_user_path(user_owner)
+        end
+  
+        it 'Name空白' do
+          fill_in 'Name', with: ''
+          fill_in 'Eメール', with: 'sample@email.com'
+          click_button '更新'
+          expect(page).to have_text 'Nameを入力してください'
+        end
+
+        it 'Name10文字以上' do
+          fill_in 'Name', with: 'a' * 11
+          fill_in 'Eメール', with: 'sample@email.com'
+          click_button '更新'
+          expect(page).to have_text 'Nameは10文字以内で入力してください'
+        end
+  
+        it 'Eメール空白' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: ''
+          click_button '更新'
+          expect(page).to have_text 'Eメールを入力してください'
+        end
+
+        it 'Eメール重複' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: 'test_spec2@example.com'
+          click_button '更新'
+          expect(page).to have_text 'Eメールはすでに存在します'
+        end
+      end
+
+      describe 'スタッフ新規作成' do
+        before(:each) do
+          login(user_owner)
+          current_user(user_owner)
+          visit new_user_path(user_owner)
+        end
+        
+        it 'Name空白' do
+          fill_in 'Name', with: ''
+          fill_in 'Eメール', with: 'sample@email.com'
+          fill_in 'パスワード', with: 'password'
+          fill_in 'パスワード（確認用）', with: 'password'
+          click_button '登録'
+          expect(page).to have_text 'Nameを入力してください'
+        end
+
+        it 'Name10文字以上' do
+          fill_in 'Name', with: 'a' * 11
+          fill_in 'Eメール', with: 'sample@email.com'
+          fill_in 'パスワード', with: 'password'
+          fill_in 'パスワード（確認用）', with: 'password'
+          click_button '登録'
+          expect(page).to have_text 'Nameは10文字以内で入力してください'
+        end
+
+        it 'Eメール空白' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: ''
+          fill_in 'パスワード', with: 'password'
+          fill_in 'パスワード（確認用）', with: 'password'
+          click_button '登録'
+          expect(page).to have_text 'Eメールを入力してください'
+        end
+
+        it 'Eメール存在' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: 'test_spec2@example.com'
+          fill_in 'パスワード', with: 'password'
+          fill_in 'パスワード（確認用）', with: 'password'
+          click_button '登録'
+          expect(page).to have_text 'Eメールはすでに存在します'
+        end
+
+        it 'パスワード空白' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: 'test_spec2@example.com'
+          fill_in 'パスワード', with: ''
+          fill_in 'パスワード（確認用）', with: 'password'
+          click_button '登録'
+          expect(page).to have_text 'パスワードを入力してください'
+        end
+
+        it 'パスワード5文字' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: 'test_spec2@example.com'
+          fill_in 'パスワード', with: 'a' * 5
+          fill_in 'パスワード（確認用）', with: 'a' * 5
+          click_button '登録'
+          expect(page).to have_text 'パスワードは6文字以上で入力してください'
+        end
+
+        it 'パスワード（確認用）不一致' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: 'test_spec2@example.com'
+          fill_in 'パスワード', with: 'a' * 5
+          fill_in 'パスワード（確認用）', with: ''
+          click_button '登録'
+          expect(page).to have_text 'パスワード（確認用）とパスワードの入力が一致しません'
+        end
       end
     end
   end

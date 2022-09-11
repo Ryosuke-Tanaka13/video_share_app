@@ -87,9 +87,9 @@ RSpec.describe Viewer, type: :model do
         end
       end
 
-      context '文字数が3文字の場合' do
+      context '文字数が1文字の場合' do
         before :each do
-          subject.name = 'a' * 3
+          subject.name = 'a' * 1
         end
 
         it 'バリデーションが通ること' do
@@ -122,9 +122,9 @@ RSpec.describe Viewer, type: :model do
         end
       end
 
-      context '文字数が2文字の場合' do
+      context '空白の場合' do
         before :each do
-          subject.name = 'a' * 2
+          subject.name = ' '
         end
 
         it 'バリデーションに落ちること' do
@@ -133,23 +133,7 @@ RSpec.describe Viewer, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Nameは3文字以上で入力してください')
-        end
-      end
-
-      context 'uniqueでない場合' do
-        before :each do
-          viewer = create(:viewer)
-          subject.name = viewer.name
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('Nameはすでに存在します')
+          expect(subject.errors.full_messages).to include('Nameを入力してください')
         end
       end
     end

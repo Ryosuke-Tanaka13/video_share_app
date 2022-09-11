@@ -26,7 +26,7 @@ RSpec.describe Organization, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Eメールを入力してください')
+          expect(subject.errors.full_messages).to include('組織のEメールは不正な値です')
         end
       end
 
@@ -42,7 +42,7 @@ RSpec.describe Organization, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Eメールはすでに存在します')
+          expect(subject.errors.full_messages).to include('組織のEメールはすでに存在します')
         end
       end
 
@@ -63,7 +63,7 @@ RSpec.describe Organization, type: :model do
 
           it 'バリデーションのエラーが正しいこと' do
             subject.valid?
-            expect(subject.errors.full_messages).to include('Eメールは不正な値です')
+            expect(subject.errors.full_messages).to include('組織のEメールは不正な値です')
           end
         end
       end
@@ -81,13 +81,13 @@ RSpec.describe Organization, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Nameを入力してください')
+          expect(subject.errors.full_messages).to include('組織名は1文字以上で入力してください')
         end
       end
 
-      context '文字数が3文字の場合' do
+      context '文字数が1文字の場合' do
         before :each do
-          subject.name = 'a' * 3
+          subject.name = 'a' * 1
         end
 
         it 'バリデーションが通ること' do
@@ -116,13 +116,13 @@ RSpec.describe Organization, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Nameは10文字以内で入力してください')
+          expect(subject.errors.full_messages).to include('組織名は10文字以内で入力してください')
         end
       end
 
-      context '文字数が2文字の場合' do
+      context '空白の場合' do
         before :each do
-          subject.name = 'a' * 2
+          subject.name = ' '
         end
 
         it 'バリデーションに落ちること' do
@@ -131,23 +131,7 @@ RSpec.describe Organization, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Nameは3文字以上で入力してください')
-        end
-      end
-
-      context 'uniqueでない場合' do
-        before :each do
-          organization = create(:organization)
-          subject.name = organization.name
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('Nameはすでに存在します')
+          expect(subject.errors.full_messages).to include('組織名を入力してください')
         end
       end
     end
