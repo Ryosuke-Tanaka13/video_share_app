@@ -4,11 +4,10 @@ class OrganizationsController < ApplicationController
   before_action :admin_or_correct_organization_user, only: %i[show]
   before_action :correct_owner, only: %i[edit update]
   before_action :set_organization, except: %i[index new create]
-  layout 'organizations_auth'
+  layout 'organizations_auth', only: %i[new create]
 
   def index
     @organizations = Organization.all
-    render :layout => 'system_admins'
   end
 
   def new 
@@ -35,22 +34,17 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    render :layout => 'users' if current_user
-    render :layout => 'system_admins' if current_system_admin
   end
 
   def edit
-    render :layout => 'users' if current_user
-    render :layout => 'system_admins' if current_system_admin
   end
 
   def update
     if @organization.update(organization_params)
-      flash[:success] = '更新しました'
-      redirect_to organization_url
+       flash[:success] = '更新しました'
+       redirect_to organization_url
     else
-      render 'edit', :layout => 'users' if current_user
-      render 'edit',  :layout => 'system_admins' if current_system_admin
+      render 'edit'
     end
   end
 

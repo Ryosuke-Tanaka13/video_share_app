@@ -36,7 +36,6 @@ class UsersController < ApplicationController
   end
 
   def show
-    render :layout => 'system_admins' if current_system_admin
   end
 
   def edit; end
