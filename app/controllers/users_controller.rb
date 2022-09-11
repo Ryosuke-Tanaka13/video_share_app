@@ -11,10 +11,10 @@ class UsersController < ApplicationController
     if current_system_admin
       unless params[:organization_id].nil?
         @users = User.where(organization_id: params[:organization_id])
+        @organization = Organization.find(params[:organization_id])
       else
         @users = User.all
       end
-      render :layout => 'system_admins'
     else
       @users = User.current_owner_has(current_user).unsubscribe
     end
