@@ -6,19 +6,26 @@
       <tbody>
         <tr>
           <th><%= "名前" %></th>
-          <td><%= @user.name %></td>
+          <td>
+            <%= @user.name %>
+            <% if @user.is_valid == false %>(退会)<% end %>
+          </td>
         </tr>
         <tr>
           <th><%= "メールアドレス" %></th>
           <td><%= @user.email %></td>
+        </tr>
+        <tr>
+          <th><%= "所属組織名" %></th>
+          <td><%= @organization.name %></td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="card-footer">
   <% if current_user&.id == params[:id].to_i || current_user&.role == 'owner' %>
-    <%= link_to "編集", edit_user_path, class: "btn btn-md btn-block btn-success" %>
+    <%= link_to "編集", edit_user_path, class: "btn btn-md btn-block btn-success" %><br>
   <% end %>
-    <%= link_to "投稿者一覧", users_path, class: "btn btn-md btn-block btn-default" %>
+    <%= link_to "戻る", users_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-secondary" %>
   </div>
 </div>

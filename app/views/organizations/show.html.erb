@@ -17,10 +17,12 @@
   </div>
     <div class="card-footer">
     <% if current_user&.role == 'owner' %>
-      <%= link_to "編集", edit_organization_path, class: "btn btn-md btn-block btn-success" %>
-    <% elsif current_system_admin %>
-      <%= link_to "組織一覧", organizations_path, class: "btn btn-md btn-block btn-default" %>
+      <%= link_to "編集", edit_organization_path, class: "btn btn-md btn-block btn-success" %><br>
     <% end %>
     <%= link_to "投稿者一覧", users_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>
+    <%= link_to "フォルダ一覧", folders_path, class: "btn btn-md btn-block btn-default" %>
+    <% if current_system_admin %>
+      <br><%= link_to "戻る", organizations_path, class: "btn btn-md btn-block btn-secondary" %>
+    <% end %>
     </div>
 </div>

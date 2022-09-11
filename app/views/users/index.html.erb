@@ -1,4 +1,4 @@
-<% provide(:title,  "投稿者一覧") %>
+<% provide(:title,  "#{@organization&.name}投稿者一覧") %>
 <% if current_user&.role == 'owner'%>
 <%= link_to "視聴者新規作成画面へ", new_user_path, class: "btn btn-lg btn-block btn-outline-primary" %>
 <% end %>
@@ -7,23 +7,34 @@
     <div class="card-body table-responsive p-0">
       <table class="table table-hover text-nowrap"> 
         <tbody>
+          <tr align="center">
+            <td>名前</td>
+            <td>メールアドレス</td>
+            <td>役職</td>
+            <td></td>
+          </tr>
           <% @users.each do |user| %>
           <tr align="center">
-            <td><%= link_to user.name, user_path(user) %></td>
+            <td>
+              <%= link_to user.name, user_path(user) %>
+              <% if user.is_valid == false %>(退会)<% end %>
+            </td>
             <td><%= user.email %></td>
-            <td><%= user.organization_id %></td>
-            <td><%= user.role %></td>
-            <% if current_system_admin || current_user&.role == "owner" %>
+            <td>
+              <% if user.role == 'owner' %>
+                オーナー
+              <% else %>
+                スタッフ
+              <% end %>
+            </td>
+            <% if (current_system_admin || current_user&.role == "owner") && current_user&.id != user.id %>
               <td><%= link_to "削除", user_path(user), method: :delete, data: { confirm: "#{user.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+              <% else %>
+              <td></td>
             <% end %>
           </tr>
           <% end %>
         </tbody>
       </table>
     </div>
-      <div class="card-footer">
-        <% if current_system_admin %>
-          <%= link_to "組織一覧", organizations_path, class: "btn btn-md btn-block btn-default" %>
-        <% end %>
-      </div>
   </div>

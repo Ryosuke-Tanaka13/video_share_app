@@ -6,9 +6,9 @@
     <%= form_with model: @user, url: user_path, method: :patch, local: true do |f| %>
       <%= render partial: "/shared/form", locals: { f: f, user: @user } %>
       
-      <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-success" %>
-      <%= link_to "詳細画面へ", user_path(@user), class: "btn btn-md btn-block btn-default" %>
-      <%= link_to "一覧画面へ", users_path, class: "btn btn-md btn-block btn-default" %>
+      <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-success" %><br>
+      <%= link_to "詳細画面へ", user_path(@user), class: "btn btn-md btn-block btn-secondary" %>
+      <%= link_to "一覧画面へ", users_path, class: "btn btn-md btn-block btn-secondary" %>
     <% end %>
   </div>
 </div>
