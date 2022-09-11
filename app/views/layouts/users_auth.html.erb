@@ -12,7 +12,7 @@
 
   <body class="register-page" id="<%= page_body_id(params) %>">
     <%= render "layouts/flash" %>
-    <%= render "devise/shared/error_messages", resource: resource %>
+    <%= render "/shared/error_messages", object: @user %>
     <%= render template: "layouts/application" %>
   </body>
 </html>
