@@ -24,7 +24,7 @@ class VideosController < ApplicationController
       # snip response boilerplate
       flash[:success] = '動画を投稿しました。'
       # フォルダ一覧ページの最新のpathをまだmergeしていないので、当初のpathをいったん使用
-      redirect_to folders_path
+      redirect_to video_path
     else
       render :new
     end
@@ -37,7 +37,7 @@ class VideosController < ApplicationController
   def update
     if @video.owner_has?(current_user) && @video.update(video_params)
       flash[:success] = "動画情報を更新しました"
-      redirect_to video_url
+      redirect_to video_path
     else
       render 'edit'
     end

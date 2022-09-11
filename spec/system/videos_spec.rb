@@ -83,24 +83,24 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       it 'レイアウト' do
         expect(page).to have_link '設定を変更'
         expect(page).to have_button '閉じる'
-        expect(page).to have_field 'title'
-        expect(page).to have_field 'open_period'
-        expect(page).to have_selector '#range'
-        expect(page).to have_selector '#comment_public'
-        expect(page).to have_selector '#login_set'
-        expect(page).to have_selector '#popup_before_video'
-        expect(page).to have_selector '#popup_after_video'
+        expect(page).to have_field 'title_edit'
+        expect(page).to have_field 'open_period_edit'
+        expect(page).to have_selector '#range_edit'
+        expect(page).to have_selector '#comment_public_edit'
+        expect(page).to have_selector '#login_set_edit'
+        expect(page).to have_selector '#popup_before_video_edit'
+        expect(page).to have_selector '#popup_after_video_edit'
       end
 
       it '設定を変更で動画情報が更新される' do
         # fill_inの値は、ビューのフォームのfieldのid
-        fill_in 'title', with: 'サンプルビデオ２'
+        fill_in 'title_edit', with: 'サンプルビデオ２'
         # fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
-        expect(page).to have_selector '#range', text: false
-        expect(page).to have_selector '#comment_public', text: false
-        expect(page).to have_selector '#login_set', text: false
-        expect(page).to have_selector '#popup_before_video', text: false
-        expect(page).to have_selector '#popup_after_video', text: false
+        expect(page).to have_selector '#range_edit', text: false
+        expect(page).to have_selector '#comment_public_edit', text: false
+        expect(page).to have_selector '#login_set_edit', text: false
+        expect(page).to have_selector '#popup_before_video_edit', text: false
+        expect(page).to have_selector '#popup_after_video_edit', text: false
         click_button '設定を変更'
         expect(page).to have_text '動画情報を更新しました'
       end
@@ -136,7 +136,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#popup_before_video', text: false
         expect(page).to have_selector '#popup_after_video', text: false
         click_button '新規投稿'
-        expect(page).to have_current_path videos_path, ignore_query: true
+        expect(page).to have_current_path "/videos/4", ignore_query: true
         expect(page).to have_text '動画を投稿しました'
       end
     end
@@ -185,13 +185,13 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
 
       it 'タイトル重複' do
-        fill_in 'title', with: 'サンプルビデオ'
+        fill_in 'title_edit', with: 'サンプルビデオ'
         click_button '設定を変更'
         expect(page).to have_text 'タイトルはすでに存在します'
       end
 
       it 'タイトル空白' do
-        fill_in 'title', with: ''
+        fill_in 'title_edit', with: ''
         click_button '設定を変更'
         expect(page).to have_text 'タイトルを入力してください'
       end
@@ -222,13 +222,13 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
       it 'レイアウト' do
         expect(page).to have_button '閉じる'
-        expect(page).to have_field 'title'
-        expect(page).to have_field 'open_period'
-        expect(page).to have_selector '#range'
-        expect(page).to have_selector '#comment_public'
-        expect(page).to have_selector '#login_set'
-        expect(page).to have_selector '#popup_before_video'
-        expect(page).to have_selector '#popup_after_video'
+        expect(page).to have_field 'title_edit'
+        expect(page).to have_field 'open_period_edit'
+        expect(page).to have_selector '#range_edit'
+        expect(page).to have_selector '#comment_public_edit'
+        expect(page).to have_selector '#login_set_edit'
+        expect(page).to have_selector '#popup_before_video_edit'
+        expect(page).to have_selector '#popup_after_video_edit'
       end
     end
   end

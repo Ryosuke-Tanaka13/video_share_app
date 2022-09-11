@@ -170,7 +170,7 @@ RSpec.describe 'Videos', type: :request do
         }.to change(Video, :count).by(1)
         end
 
-        it 'folders#indexにリダイレクトされる' do
+        it 'showにリダイレクトされる' do
         expect(
           post(videos_path,
             params: {
@@ -184,7 +184,7 @@ RSpec.describe 'Videos', type: :request do
                 popup_after_video:  false
               }
             })
-        ).to redirect_to folders_path
+        ).to redirect_to "/videos/4"
         end
       end
     end
@@ -212,7 +212,7 @@ RSpec.describe 'Videos', type: :request do
         }.to change(Video, :count).by(1)
         end
 
-        it 'folders#indexにリダイレクトされる' do
+        it 'showにリダイレクトされる' do
         expect(
           post(videos_path,
             params: {
@@ -226,7 +226,7 @@ RSpec.describe 'Videos', type: :request do
                 popup_after_video:  false
               }
             })
-        ).to redirect_to folders_path
+        ).to redirect_to "/videos/4"
         end
       end
 
@@ -438,7 +438,8 @@ RSpec.describe 'Videos', type: :request do
               }
           }.not_to change { Video.find(video_test.id).title }
         end
-
+        
+        # jsのテストが通らない(できない)ので、コメントアウト
         # it '登録失敗するとモーダル上でエラーを出す' do
         #   expect(
         #     patch(video_path(video_sample),
