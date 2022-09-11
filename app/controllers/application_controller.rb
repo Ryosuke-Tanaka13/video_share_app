@@ -26,13 +26,8 @@ class ApplicationController < ActionController::Base
     !current_system_admin.nil? || !current_user.nil? || !current_viewer.nil?
   end
 
-  def store_location
-    session[:forwarding_url] = request.original_url if request.get?
-  end
-
   def logged_in_account
     unless logged_in?
-      store_location
       flash[:danger] = "ログインしてください。"
       redirect_to root_url
     end
