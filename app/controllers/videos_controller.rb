@@ -24,7 +24,7 @@ class VideosController < ApplicationController
       # snip response boilerplate
       flash[:success] = '動画を投稿しました。'
       # フォルダ一覧ページの最新のpathをまだmergeしていないので、当初のpathをいったん使用
-      redirect_to video_path
+      redirect_to @video
     else
       render :new
     end
