@@ -193,19 +193,19 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画一覧画面' do
+    describe '動画一覧画面(動画投稿者)' do
       before(:each) do
         sign_in user
         visit videos_path(organization_id: organization.id)
       end
-      
+
       it 'レイアウトに削除なし' do
         expect(page).to have_link 'サンプルビデオ', href: video_path(video_sample)
         expect(page).to have_link 'テストビデオ', href: video_path(video_test)
       end
     end
-    
-    describe 'モーダル画面' do
+
+    describe 'モーダル画面(オーナー、動画投稿者本人以外)' do
       before(:each) do
         sign_in user || system_admin
         visit video_path(video_sample)

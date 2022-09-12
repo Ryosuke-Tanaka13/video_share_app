@@ -154,37 +154,37 @@ RSpec.describe 'Videos', type: :request do
 
       describe '正常' do
         it '動画が新規作成される' do
-        expect {
-          post videos_path,
-            params: {
-              video: {
-                title:              'サンプルビデオ2',
-                video:              fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov'),
-                open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
-                range:              false,
-                comment_public:     false,
-                popup_before_video: false,
-                popup_after_video:  false
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title:              'サンプルビデオ2',
+                  video:              fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov'),
+                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  range:              false,
+                  comment_public:     false,
+                  popup_before_video: false,
+                  popup_after_video:  false
+                }
               }
-            }
-        }.to change(Video, :count).by(1)
+          }.to change(Video, :count).by(1)
         end
 
         it 'showにリダイレクトされる' do
-        expect(
-          post(videos_path,
-            params: {
-              video: {
-                title:              'サンプルビデオ2',
-                video:              fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov'),
-                open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
-                range:              false,
-                comment_public:     false,
-                popup_before_video: false,
-                popup_after_video:  false
-              }
-            })
-        ).to redirect_to video_path(Video.last)
+          expect(
+            post(videos_path,
+              params: {
+                video: {
+                  title:              'サンプルビデオ2',
+                  video:              fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov'),
+                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  range:              false,
+                  comment_public:     false,
+                  popup_before_video: false,
+                  popup_after_video:  false
+                }
+              })
+          ).to redirect_to video_path(Video.last)
         end
       end
     end
@@ -196,36 +196,36 @@ RSpec.describe 'Videos', type: :request do
 
       describe '正常' do
         it '動画が新規作成される' do
-        expect {
-          post videos_path,
-            params: {
-              video: {
-                title:              'サンプルビデオ2',
-                video:              fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov'),
-                open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
-                range:              false,
-                comment_public:     false,
-                popup_before_video: false,
-                popup_after_video:  false
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title:              'サンプルビデオ2',
+                  video:              fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov'),
+                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  range:              false,
+                  comment_public:     false,
+                  popup_before_video: false,
+                  popup_after_video:  false
+                }
               }
-            }
-        }.to change(Video, :count).by(1)
+          }.to change(Video, :count).by(1)
         end
 
         it 'showにリダイレクトされる' do
-        expect(
-          post(videos_path,
-            params: {
-              video: {
-                title:              'サンプルビデオ2',
-                video:              fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov'),
-                open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
-                range:              false,
-                comment_public:     false,
-                popup_before_video: false,
-                popup_after_video:  false
-              }
-            })
+          expect(
+            post(videos_path,
+              params: {
+                video: {
+                  title:              'サンプルビデオ2',
+                  video:              fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov'),
+                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  range:              false,
+                  comment_public:     false,
+                  popup_before_video: false,
+                  popup_after_video:  false
+                }
+              })
           ).to redirect_to video_path(Video.last)
         end
       end
@@ -236,61 +236,61 @@ RSpec.describe 'Videos', type: :request do
         end
 
         it 'タイトルが空白だと新規作成されない' do
-        expect {
-          post videos_path,
-            params: {
-              video: {
-                title: '',
-                video: fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title: '',
+                  video: fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
+                }
               }
-            }
-        }.not_to change(Video, :count)
+          }.not_to change(Video, :count)
         end
 
         it 'タイトルが重複していると新規作成されない' do
-        expect {
-          post videos_path,
-            params: {
-              video: {
-                title: 'サンプルビデオ',
-                video: fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title: 'サンプルビデオ',
+                  video: fixture_file_upload('/画面収録 2022-08-30 3.57.50.mov')
+                }
               }
-            }
-        }.not_to change(Video, :count)
+          }.not_to change(Video, :count)
         end
 
         it '動画が空白だと新規作成されない' do
-        expect {
-          post videos_path,
-            params: {
-              video: {
-                title: 'サンプルビデオ2'
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title: 'サンプルビデオ2'
+                }
               }
-            }
-        }.not_to change(Video, :count)
+          }.not_to change(Video, :count)
         end
 
         it '動画以外のファイルだと新規作成されない' do
-        expect {
-          post videos_path,
-            params: {
-              video: {
-                title: 'サンプルビデオ2',
-                video: fixture_file_upload('/default.png')
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title: 'サンプルビデオ2',
+                  video: fixture_file_upload('/default.png')
+                }
               }
-            }
-        }.not_to change(Video, :count)
+          }.not_to change(Video, :count)
         end
 
         it '登録失敗するとエラーを出す' do
-        expect(
-          post(videos_path,
-            params: {
-              video: {
-                title: ''
-              }
-            })
-        ).to render_template :new
+          expect(
+            post(videos_path,
+              params: {
+                video: {
+                  title: ''
+                }
+              })
+          ).to render_template :new
         end
       end
     end
@@ -315,7 +315,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_after_video:  false
                 }
               }
-           }.not_to change(Video, :count)
+          }.not_to change(Video, :count)
         end
       end
     end
@@ -336,7 +336,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_after_video:  false
                 }
               }
-           }.not_to change(Video, :count)
+          }.not_to change(Video, :count)
         end
       end
     end
@@ -372,7 +372,7 @@ RSpec.describe 'Videos', type: :request do
         expect(response).to have_http_status '200'
       end
     end
-    
+
     describe '異常(別組織のuser)' do
       before(:each) do
         sign_in another_user_owner
@@ -389,7 +389,7 @@ RSpec.describe 'Videos', type: :request do
   describe 'PATCH #update' do
     describe 'オーナーが現在のログインユーザ' do
       before(:each) do
-        sign_in user_owner 
+        sign_in user_owner
       end
 
       describe '正常' do
@@ -438,7 +438,7 @@ RSpec.describe 'Videos', type: :request do
               }
           }.not_to change { Video.find(video_test.id).title }
         end
-        
+
         # jsのテストが通らない(できない)ので、コメントアウト
         # it '登録失敗するとモーダル上でエラーを出す' do
         #   expect(
@@ -501,7 +501,7 @@ RSpec.describe 'Videos', type: :request do
         end
       end
     end
-    
+
     # jsのテストが通らない(できない)ので、コメントアウト
     # describe '別組織のオーナーが現在のログインユーザ' do
     #   before(:each) do
@@ -612,5 +612,3 @@ RSpec.describe 'Videos', type: :request do
     end
   end
 end
-
-
