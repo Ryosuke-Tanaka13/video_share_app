@@ -90,7 +90,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
       it '設定を変更で動画情報が更新される' do
         # fill_inの値は、ビューのフォームのfieldのid
-        fill_in 'title', with: 'サンプルビデオ２'
+        fill_in 'title_edit', with: 'テストビデオ２'
         # fill_in 'open_period_edit', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
         expect(page).to have_selector '#range_edit', text: false
         expect(page).to have_selector '#comment_public_edit', text: false
@@ -199,7 +199,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         visit videos_path(organization_id: organization.id)
       end
 
-      it 'レイアウトに削除なし' do
+      it 'レイアウトに削除リンクなし' do
         expect(page).to have_link 'サンプルビデオ', href: video_path(video_sample)
         expect(page).to have_link 'テストビデオ', href: video_path(video_test)
       end
@@ -216,7 +216,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector('.modal')
       end
 
-      it 'レイアウトに設定を変更なし' do
+      it 'レイアウトに設定を変更リンクなし' do
         expect(page).to have_button '閉じる'
         expect(page).to have_field 'title_edit'
         expect(page).to have_field 'open_period_edit'
