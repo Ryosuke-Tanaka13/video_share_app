@@ -1,8 +1,8 @@
 class OrganizationsController < ApplicationController
   before_action :logged_in_account, except: %i[new create]
   before_action :logged_in_system_admin, only: %i[index destroy]
-  before_action :admin_or_correct_organization_user, only: %i[show]
-  before_action :correct_owner, only: %i[edit update]
+  before_action :admin_or_same_org_user, only: %i[show]
+  before_action :same_org_owner, only: %i[edit update]
   before_action :set_organization, except: %i[index new create]
   layout 'organizations_auth', only: %i[new create]
 

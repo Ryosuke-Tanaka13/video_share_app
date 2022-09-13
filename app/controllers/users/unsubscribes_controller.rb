@@ -1,5 +1,5 @@
 class Users::UnsubscribesController < ApplicationController
-  before_action :owner_or_correct_user
+  before_action :same_org_owner_or_correct_user
   before_action :set_user
   layout 'users_auth'
 
