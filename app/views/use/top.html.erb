@@ -2,11 +2,13 @@
     <h2>レコブル</h2>
     <p>アカウントを選択してください</p>
     <div class="card-deck">
+      <% if Rails.env.development? %>
         <div class="card">
           <div class="card-body">
             <%= link_to "システム管理者", new_system_admin_session_path, class: "btn btn-lg btn-block btn-default" %>
           </div>
         </div>
+      <% end %>
         <div class="card">
           <div class="card-body">
             <%= link_to "投稿者", new_user_session_path, class: "btn btn-lg btn-block btn-default" %>
