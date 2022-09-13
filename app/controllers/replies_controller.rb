@@ -13,7 +13,7 @@ class RepliesController < ApplicationController
     # コメント返信したアカウントをセット
     set_replyer_id
     if @reply.save
-      flash.now[:success] = "コメント返信に成功しました。"
+      flash[:success] = "コメント返信に成功しました。"
       redirect_to video_url(@comment.video_id)
     else
       flash.now[:danger] = "コメント返信に失敗しました。"
@@ -28,7 +28,7 @@ class RepliesController < ApplicationController
       flash[:success] = "コメント返信編集に成功しました。"
       redirect_to video_url(@comment.video_id)
     else
-      flash[:danger] = "コメント返信編集に失敗しました。"
+      flash.now[:danger] = "コメント返信編集に失敗しました。"
       render template: "comments/index"
     end
   end
@@ -40,7 +40,7 @@ class RepliesController < ApplicationController
       flash[:success] = "コメント返信削除に成功しました。"
       redirect_to video_url(@comment.video_id)
     else
-      flash[:danger] = "コメント削除返信に失敗しました。"
+      flash.now[:danger] = "コメント削除返信に失敗しました。"
       render template: "comments/index"
     end
   end

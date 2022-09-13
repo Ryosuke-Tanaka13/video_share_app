@@ -1,2 +1,2 @@
-$("#comments_area").html("<%= j(render partial: 'comments/index', { comments: @comment.video.comments }) %>");
+$("#comments_area").html("<%= j(render 'comments/index', { comments: @comment.video.comments }) %>");
 $("textarea").val('');

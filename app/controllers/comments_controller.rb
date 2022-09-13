@@ -28,7 +28,7 @@ class CommentsController < ApplicationController
       flash[:success] = "コメント編集に成功しました。"
       redirect_to video_url(@video.id)
     else
-      flash[:danger] = "コメント編集に失敗しました。"
+      flash.now[:danger] = "コメント編集に失敗しました。"
       render :index
     end
   end
