@@ -1,5 +1,9 @@
 <!-- コメント入力フォーム ------------------------------------------------------------>
-<%= form_with(model: [@video, @comment], url: video_comments_path(@video.id), method: :post, remote: true ) do |f| %>
-  <%= f.text_area :comment, class: "input-mysize" %>
-  <%= f.submit "送信", class: "btn btn-outline-dark comment-submit float-right" %>
-<% end %>
+<div class="form-group">
+  <%= form_with(model: [@video, @comment], url: video_comments_path(@video.id), method: :post, local: false, id: "comment-form#{@comment.id}") do |f| %>
+    <%= f.text_area :comment, placeholder: "コメントを記載して下さい。", id: "comment-text", class: "form-control" %>
+    <div class="content-show-comment-bottom float-right">
+      <%= f.submit "送信", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

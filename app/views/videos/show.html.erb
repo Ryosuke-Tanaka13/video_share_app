@@ -3,16 +3,20 @@
 <h1>Videos#show</h1>
 <p>テスト画面です</p>
 
-<div class="row">
-  <div class="comment-create">
-    <h3 class="text-left">コメントを投稿する</h3>
-      <%= render partial: 'comments/form' %>
-  </div>
-  <hr>
-  <div class="comment-create">
-    <h3 class="text-left title">コメント</h3>
-  </div>
-  <div id="comments_area">
-    <%= render partial: 'comments/index' if @comments.present? %>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <div class="comment-create">
+        <h4 class="text-left">コメントを投稿する</h4>
+          <%= render partial: 'comments/form' %>
+      </div><br>
+      <hr>
+      <div class="comment-create">
+        <h4 class="text-left title">コメント</h4>
+      </div>
+      <div id="comments_area">
+        <%= render partial: 'comments/index' if @comments.present? %>
+      </div>
+    </div>
   </div>
 </div>

@@ -18,9 +18,9 @@
       <!-- アカウントの名前を表示 -->
       <div class="content-show-comment-bottom-top-user-name">
         <% if comment.user.present? && comment.user.name.present? %>
-          <%= comment.user.name %>
+          <%= comment.user.name %>さん
         <% elsif comment.viewer.present? && comment.viewer.name.present? %>
-          <%= comment.viewer.name %>
+          <%= comment.viewer.name %>さん
         <% else %>
           ゲストさん
         <% end %>
@@ -31,11 +31,11 @@
       </div>
       <!-- 返信ボタン、削除ボタンを表示 -->
       <div class="content-show-comment-bottom-top-icons">
-      <!-- ログイン済みかつコメントしたアカウント本人であれば返信ボタンと削除ボタンを表示 -->
+      <!-- ログイン済みかつコメントしたアカウント本人であれば削除ボタンを表示 -->
         <% if is_login? && (comment.user_id == @account.id || comment.viewer_id == @account.id) %>
           <div class="content-show-comment-bottom-top-icons-delete">
             <%= link_to video_comment_path(comment.video_id, comment.id), method: :delete, remote: true, data: { confirm: "削除しますか？" } do %>
-              <i class="fas fa-trash-alt"></i>
+              <i class="far fa-trash-alt" color=red></i>
             <% end %>
           </div>
         <% end %>              
@@ -44,9 +44,11 @@
   </div>
   <hr>
   <!-- 返信 ---------------------------------------------------------------------------------------------------------------------->
-  <div class="content-show-comment-bottom-reply">
-    <%= render partial: 'replies/form', locals: { comment: comment } %>
-  </div> 
+  <% if is_login? %>
+    <div class="content-show-comment-bottom-reply">
+      <%= render partial: 'replies/form', locals: { comment: comment } %>
+    </div>
+  <% end %>
 
   <!-- 返信の件数を表示 -->
   <div class="content-show-comment-bottom-view-btn">
@@ -58,7 +60,7 @@
   </div>
 
   <!-- 返信部分 -->
-  <% if comment.replies.present? %> 
+  <% if comment.replies.present? %>
     <% comment.replies.each do |reply| %>
       <div class="content-show-comment-bottom-view-reply">
         <div class="content-show-comment-bottom-view-reply-top">
@@ -75,9 +77,9 @@
             <!-- アカウントの名前を表示 -->
             <div class="content-show-comment-bottom-view-reply-top-user-name">
               <% if reply.user.present? && reply.user.name.present? %>
-                <%= reply.user.name %>
+                <%= reply.user.name %>さん
               <% elsif reply.viewer.present? && reply.viewer.name.present? %> 
-                <%= reply.viewer.name %>
+                <%= reply.viewer.name %>さん
               <% else %>
                 ゲストさん
               <% end %>
@@ -85,10 +87,10 @@
             <!-- 返信削除ボタンを表示 -->
             <div class="content-show-comment-bottom-view-reply-top-icons">
               <!-- ログイン済みかつ返信したアカウントの場合、削除ボタンを表示 -->
-              <% if is_login? &&  (reply.user_id == @account.id || reply.viewer_id == @account.id) %>
+              <% if is_login? && (reply.user_id == @account.id || reply.viewer_id == @account.id) %>
                 <div class="content-show-comment-bottom-view-reply-top-icons-delete">
                   <%= link_to video_comment_reply_path(comment.video_id, reply.comment_id, reply.id), method: :delete, remote: true, data: { confirm: "削除しますか？" } do %>
-                    <i class="fas fa-trash-alt"></i>
+                    <i class="far fa-trash-alt" color=red></i>
                   <% end %>
                 </div>
               <% end %>

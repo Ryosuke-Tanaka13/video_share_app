@@ -1,6 +1,6 @@
 class RepliesController < ApplicationController
   before_action :set_account
-  helper_method :is_login?
+  helper_method :is_login?, :correct_replyer?
   protect_from_forgery :except => [:destroy]
 
   def create
@@ -40,7 +40,7 @@ class RepliesController < ApplicationController
       flash[:success] = "コメント返信削除に成功しました。"
       redirect_to video_url(@comment.video_id)
     else
-      flash.now[:danger] = "コメント削除返信に失敗しました。"
+      flash.now[:danger] = "コメント返信削除に失敗しました。"
       render template: "comments/index"
     end
   end
