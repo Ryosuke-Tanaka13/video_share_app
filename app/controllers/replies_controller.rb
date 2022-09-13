@@ -1,5 +1,6 @@
 class RepliesController < ApplicationController
   before_action :set_account
+  helper_method :is_login?
   protect_from_forgery :except => [:destroy]
 
   def create
