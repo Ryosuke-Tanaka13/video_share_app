@@ -10,16 +10,16 @@ class OrganizationsController < ApplicationController
     @organizations = Organization.all
   end
 
-  def new 
+  def new
     @organization = Organization.new
     @user = User.new
   end
 
   def create
     ActiveRecord::Base.transaction do
-    @user = User.new(user_params)
-    form = Organizations::Form.new(params_permitted)
-    @organization = Organization.build(form.params)
+      @user = User.new(user_params)
+      form = Organizations::Form.new(params_permitted)
+      @organization = Organization.build(form.params)
       if @organization.save!
         User.last.update(role: 1)
         flash[:success] = '送られてくるメールの認証URLからアカウントの認証をしてください。'
@@ -28,21 +28,19 @@ class OrganizationsController < ApplicationController
         render :new
       end
     rescue ActiveRecord::RecordInvalid
-      flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+      flash[:danger] = '無効な入力データがあった為、更新をキャンセルしました。'
       render :new
     end
   end
 
-  def show
-  end
+  def show; end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @organization.update(organization_params)
-       flash[:success] = '更新しました'
-       redirect_to organization_url
+      flash[:success] = '更新しました'
+      redirect_to organization_url
     else
       render 'edit'
     end
@@ -65,13 +63,10 @@ class OrganizationsController < ApplicationController
   end
 
   def params_permitted
-    params.require(:organization).permit(:name, :email, users: [:name, :email, :password, :password_confirmation])
+    params.require(:organization).permit(:name, :email, users: %i[name email password password_confirmation])
   end
 
   def user_params
-    params.require(:organization).permit(users: [:name, :email, :password, :password_confirmation])[:users]
+    params.require(:organization).permit(users: %i[name email password password_confirmation])[:users]
   end
-
 end
-
-

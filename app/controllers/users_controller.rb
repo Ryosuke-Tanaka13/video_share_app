@@ -9,11 +9,11 @@ class UsersController < ApplicationController
 
   def index
     if current_system_admin
-      unless params[:organization_id].nil?
+      if params[:organization_id].nil?
+        @users = User.all
+      else
         @users = User.where(organization_id: params[:organization_id])
         @organization = Organization.find(params[:organization_id])
-      else
-        @users = User.all
       end
     else
       @users = User.current_owner_has(current_user).unsubscribe
@@ -35,8 +35,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def show
-  end
+  def show; end
 
   def edit; end
 

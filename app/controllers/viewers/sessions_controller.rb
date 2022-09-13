@@ -29,11 +29,9 @@ module Viewers
     # end
     def reject_inactive_viewer
       @viewer = Viewer.find_by(email: params[:viewer][:email])
-      if @viewer
-        if @viewer.valid_password?(params[:viewer][:password]) && !@viewer.is_valid
-          flash[:notice] = "Eメールまたはパスワードが違います。"
-          redirect_to new_viewer_session_path
-        end
+      if @viewer && (@viewer.valid_password?(params[:viewer][:password]) && !@viewer.is_valid)
+        flash[:notice] = 'Eメールまたはパスワードが違います。'
+        redirect_to new_viewer_session_path
       end
     end
   end

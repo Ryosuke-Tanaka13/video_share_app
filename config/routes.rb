@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     end
     member do
       scope module: :organizations do
-        resource :unsubscribe, only: %i[show update] ,as: :organizations_unsubscribe
+        resource :unsubscribe, only: %i[show update], as: :organizations_unsubscribe
       end
     end
   end
@@ -43,7 +43,7 @@ Rails.application.routes.draw do
   resources :viewers do
     member do
       scope module: :viewers do
-        resource :unsubscribe, only: %i[show update] ,as: :viewers_unsubscribe
+        resource :unsubscribe, only: %i[show update], as: :viewers_unsubscribe
       end
     end
   end
@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   resources :users do
     member do
       scope module: :users do
-        resource :unsubscribe, only: %i[show update] ,as: :users_unsubscribe
+        resource :unsubscribe, only: %i[show update], as: :users_unsubscribe
       end
     end
   end

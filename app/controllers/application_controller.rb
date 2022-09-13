@@ -28,28 +28,28 @@ class ApplicationController < ActionController::Base
 
   def logged_in_account
     unless logged_in?
-      flash[:danger] = "ログインしてください。"
+      flash[:danger] = 'ログインしてください。'
       redirect_to root_url
     end
   end
-  
-  def logged_in_system_admin
-    unless !current_system_admin.nil?
-      flash[:danger] = "権限がありません。"
-      redirect_back(fallback_location: root_path)
-    end  
-  end
 
-  def correct_user
-    unless current_user.id == params[:id].to_i
-      flash[:danger] = "権限がありません。"
+  def logged_in_system_admin
+    if current_system_admin.nil?
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end
   end
 
+  # def correct_user
+  #   unless current_user.id == params[:id].to_i
+  #     flash[:danger] = '権限がありません。'
+  #     redirect_back(fallback_location: root_path)
+  #   end
+  # end
+
   def correct
     if (current_system_admin&.id == params[:id].to_i) || (current_user&.id == params[:id].to_i) || (current_viewer&.id == params[:id].to_i)
-      flash[:danger] = "権限がありません。"
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end
   end
@@ -57,72 +57,72 @@ class ApplicationController < ActionController::Base
   def owner_or_correct_user
     @user = User.find(params[:id]) if @user.blank?
     @organization = Organization.find(@user.organization_id) if @organization.blank?
-    unless (current_user&.role == "owner" && current_user.organization_id == @organization.id) || current_user == @user
-      flash[:danger] = "権限がありません。"
+    unless (current_user&.role == 'owner' && current_user.organization_id == @organization.id) || current_user == @user
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
-    end  
+    end
   end
 
   def admin_or_owner_or_correct_user
     @user = User.find(params[:id]) if @user.blank?
     @organization = Organization.find(@user.organization_id) if @organization.blank?
-    unless !current_system_admin.nil? || (current_user&.role == "owner" && current_user.organization_id == @organization.id) || current_user == @user
-      flash[:danger] = "権限がありません。"
+    unless !current_system_admin.nil? || (current_user&.role == 'owner' && current_user.organization_id == @organization.id) || current_user == @user
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
-    end  
+    end
   end
 
   def admin_or_correct_organization_user
     @organization = Organization.find(params[:id]) if @organization.blank?
     unless !current_system_admin.nil? || current_user&.organization_id == @organization.id
-      flash[:danger] = "権限がありません。"
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
-    end  
+    end
   end
 
-  def admin_or_owner
-    unless !current_system_admin.nil? || current_user&.role == "owner"
-      flash[:danger] = "権限がありません。"
-      redirect_back(fallback_location: root_path)
-    end  
-  end
+  # def admin_or_owner
+  #   unless !current_system_admin.nil? || current_user&.role == 'owner'
+  #     flash[:danger] = '権限がありません。'
+  #     redirect_back(fallback_location: root_path)
+  #   end
+  # end
 
   def admin_or_user
     unless !current_system_admin.nil? || !current_user.nil?
-      flash[:danger] = "権限がありません。"
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
-    end  
+    end
   end
-  
+
   def admin_or_user_or_correct_viewer
     @viewer = Viewer.find(params[:id]) if @viewer.blank?
     unless  !current_system_admin.nil? || !current_user.nil? || current_viewer == @viewer
-      flash[:danger] = "権限がありません。"
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
-    end  
+    end
   end
 
   def admin_or_correct_owner
     @user = User.find(params[:id]) if @user.blank?
     @organization = Organization.find(@user.organization_id) if @organization.blank?
     unless !current_system_admin.nil? ||
-           (current_user&.role == "owner" && current_user.organization_id == @organization.id)
-      flash[:danger] = "権限がありません。"
+           (current_user&.role == 'owner' && current_user.organization_id == @organization.id)
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
-    end  
+    end
   end
 
   def correct_owner
-    unless (current_user&.role == "owner" && current_user.organization_id == params[:id].to_i)
-      flash[:danger] = "権限がありません。"
+    unless current_user&.role == 'owner' && current_user.organization_id == params[:id].to_i
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
-    end  
+    end
   end
 
   def correct_viewer
-    unless  current_viewer&.id == params[:id].to_i
-      flash[:danger] = "権限がありません。"
+    unless current_viewer&.id == params[:id].to_i
+      flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
-    end  
+    end
   end
 end

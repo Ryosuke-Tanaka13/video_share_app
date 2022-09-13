@@ -21,8 +21,7 @@ class LoginlessViewersController < ApplicationController
     end
   end
 
-  def show
-  end
+  def show; end
 
   def destroy
     @loginless_viewer.destroy!
