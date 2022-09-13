@@ -1,4 +1,5 @@
 class Organizations::UnsubscribesController < ApplicationController
+  before_action :correct_owner
   before_action :set_organization
   layout 'organizations_auth'
   

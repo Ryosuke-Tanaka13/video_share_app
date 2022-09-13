@@ -1,4 +1,5 @@
 class Viewers::UnsubscribesController < ApplicationController
+  before_action :correct_viewer
   before_action :set_viewer
   layout 'viewers_auth'
   
