@@ -8,7 +8,6 @@ RSpec.describe 'ViewerSystem', type: :system do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
-  
 
   before(:each) do
     organization
@@ -51,7 +50,7 @@ RSpec.describe 'ViewerSystem', type: :system do
           current_system_admin(system_admin)
           visit viewers_path
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_link viewer.name, href: viewer_path(viewer)
           expect(page).to have_link viewer.name, href: viewer_path(viewer1)
@@ -68,7 +67,7 @@ RSpec.describe 'ViewerSystem', type: :system do
           click_link viewer1.name
           expect(page).to have_current_path viewer_path(viewer1), ignore_query: true
         end
-  
+
         it 'viewer削除' do
           find(:xpath, '//*[@id="viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[1]/td[4]/a').click
           expect {
@@ -77,7 +76,7 @@ RSpec.describe 'ViewerSystem', type: :system do
             expect(page).to have_content 'viewerのユーザー情報を削除しました'
           }.to change(Viewer, :count).by(-1)
         end
-  
+
         it 'viewer削除キャンセル' do
           find(:xpath, '//*[@id="viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[1]/td[4]/a').click
           expect {
@@ -94,7 +93,7 @@ RSpec.describe 'ViewerSystem', type: :system do
             expect(page).to have_content 'viewer1のユーザー情報を削除しました'
           }.to change(Viewer, :count).by(-1)
         end
-  
+
         it 'viewer1削除キャンセル' do
           find(:xpath, '//*[@id="viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[2]/td[4]/a').click
           expect {
@@ -103,14 +102,14 @@ RSpec.describe 'ViewerSystem', type: :system do
           }.not_to change(Viewer, :count)
         end
       end
-      
+
       describe '視聴者詳細' do
         before(:each) do
           login(viewer)
           current_viewer(viewer)
           visit viewer_path(viewer)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_text viewer.email
           expect(page).to have_text viewer.name
@@ -127,7 +126,6 @@ RSpec.describe 'ViewerSystem', type: :system do
           click_link '戻る'
           expect(page).to have_current_path viewers_path, ignore_query: true
         end
-
       end
 
       describe '視聴者編集' do
@@ -136,7 +134,7 @@ RSpec.describe 'ViewerSystem', type: :system do
           current_viewer(viewer)
           visit edit_viewer_path(viewer)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_field 'Name'
           expect(page).to have_field 'Eメール'
@@ -144,7 +142,7 @@ RSpec.describe 'ViewerSystem', type: :system do
           expect(page).to have_link '詳細画面へ'
           expect(page).to have_link '一覧画面へ'
         end
-        
+
         it '更新で登録情報が更新される' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: 'sample@email.com'
@@ -162,7 +160,7 @@ RSpec.describe 'ViewerSystem', type: :system do
           current_viewer(viewer)
           visit edit_viewer_path(viewer)
         end
-  
+
         it 'Name空白' do
           fill_in 'Name', with: ''
           fill_in 'Eメール', with: 'sample@email.com'
@@ -176,7 +174,7 @@ RSpec.describe 'ViewerSystem', type: :system do
           click_button '更新'
           expect(page).to have_text 'Nameは10文字以内で入力してください'
         end
-  
+
         it 'Eメール空白' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: ''

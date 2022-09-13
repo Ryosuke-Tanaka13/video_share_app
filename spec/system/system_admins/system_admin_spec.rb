@@ -7,7 +7,6 @@ RSpec.describe 'UserSessions', type: :system do
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
-  
 
   before(:each) do
     organization
@@ -59,7 +58,7 @@ RSpec.describe 'UserSessions', type: :system do
           current_system_admin(system_admin)
           visit system_admin_path(system_admin)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_text system_admin.email
           expect(page).to have_text system_admin.name
@@ -78,14 +77,14 @@ RSpec.describe 'UserSessions', type: :system do
           current_system_admin(system_admin)
           visit edit_system_admin_path(system_admin)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_field 'Name'
           expect(page).to have_field 'Eメール'
           expect(page).to have_button '更新'
           expect(page).to have_link '詳細画面へ'
         end
-        
+
         it '更新で登録情報が更新される' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: 'sample@email.com'
@@ -103,7 +102,7 @@ RSpec.describe 'UserSessions', type: :system do
           current_system_admin(system_admin)
           visit edit_system_admin_path(system_admin)
         end
-  
+
         it 'Name空白' do
           fill_in 'Name', with: ''
           fill_in 'Eメール', with: 'sample@email.com'
@@ -117,7 +116,7 @@ RSpec.describe 'UserSessions', type: :system do
           click_button '更新'
           expect(page).to have_text 'Nameは10文字以内で入力してください'
         end
-  
+
         it 'Eメール空白' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: ''

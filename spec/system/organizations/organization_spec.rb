@@ -11,7 +11,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
-  
 
   before(:each) do
     organization
@@ -141,7 +140,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
           current_system_admin(system_admin)
           visit organizations_path
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_link organization.name, href: organization_path(organization)
           expect(page).to have_link another_organization.name, href: organization_path(another_organization)
@@ -156,7 +155,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
           click_link another_organization.name
           expect(page).to have_current_path organization_path(another_organization), ignore_query: true
         end
-  
+
         it 'organization削除' do
           find(:xpath, '//*[@id="organizations-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[2]/td[4]/a').click
           expect {
@@ -165,7 +164,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
             expect(page).to have_content 'セレブエンジニアを削除しました'
           }.to change(Organization, :count).by(-1)
         end
-  
+
         it 'another_organization削除キャンセル' do
           find(:xpath, '//*[@id="organizations-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[4]/a').click
           expect {
@@ -181,7 +180,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
           current_user(user_owner)
           visit organization_path(organization)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_text organization.name
           expect(page).to have_text organization.email
@@ -204,7 +203,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
         #   click_link '動画フォルダ一覧'
         #   expect(page).to have_current_path folders_path, ignore_query: true
         # end
-
       end
 
       describe '組織編集' do
@@ -213,14 +211,14 @@ RSpec.describe 'OrganizationSystem', type: :system do
           current_user(user_owner)
           visit edit_organization_path(organization)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_field '組織名'
           expect(page).to have_field '組織のEメール'
           expect(page).to have_button '更新'
           expect(page).to have_link '詳細画面へ'
         end
-        
+
         it '更新で登録情報が更新される' do
           fill_in '組織名', with: 'test'
           fill_in '組織のEメール', with: 'sample@email.com'
@@ -238,7 +236,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
           current_user(user_owner)
           visit edit_organization_path(organization)
         end
-  
+
         it '組織名空白' do
           fill_in '組織名', with: ''
           fill_in '組織のEメール', with: 'sample@email.com'
@@ -252,7 +250,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
           click_button '更新'
           expect(page).to have_text '組織名は10文字以内で入力してください'
         end
-  
+
         it '組織のEメール空白' do
           fill_in '組織名', with: 'test'
           fill_in '組織のEメール', with: ''

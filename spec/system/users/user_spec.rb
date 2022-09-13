@@ -12,7 +12,6 @@ RSpec.describe 'UserSystem', type: :system do
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
-  
 
   before(:each) do
     organization
@@ -115,7 +114,7 @@ RSpec.describe 'UserSystem', type: :system do
           current_user(user_owner)
           visit users_path
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_link '視聴者新規作成画面へ', href: new_user_path
           expect(page).to have_link user_owner.name, href: user_path(user_owner)
@@ -137,7 +136,7 @@ RSpec.describe 'UserSystem', type: :system do
           click_link user.name
           expect(page).to have_current_path user_path(user), ignore_query: true
         end
-  
+
         it 'スタッフ論理削除' do
           find(:xpath, '//*[@id="users-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[4]/a').click
           expect {
@@ -146,7 +145,7 @@ RSpec.describe 'UserSystem', type: :system do
             expect(page).to have_content 'userのユーザー情報を削除しました'
           }.to change { User.find(user.id).is_valid }.from(user.is_valid).to(false)
         end
-  
+
         it 'スタッフ論理削除キャンセル' do
           find(:xpath, '//*[@id="users-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[4]/a').click
           expect {
@@ -162,7 +161,7 @@ RSpec.describe 'UserSystem', type: :system do
           current_user(user_owner)
           visit user_path(user_owner)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_text user_owner.email
           expect(page).to have_text user_owner.name
@@ -180,7 +179,6 @@ RSpec.describe 'UserSystem', type: :system do
           click_link '戻る'
           expect(page).to have_current_path users_path, ignore_query: true
         end
-
       end
 
       describe 'オーナー編集' do
@@ -189,7 +187,7 @@ RSpec.describe 'UserSystem', type: :system do
           current_user(user_owner)
           visit edit_user_path(user_owner)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_field 'Name'
           expect(page).to have_field 'Eメール'
@@ -197,7 +195,7 @@ RSpec.describe 'UserSystem', type: :system do
           expect(page).to have_link '詳細画面へ'
           expect(page).to have_link '一覧画面へ'
         end
-        
+
         it '更新で登録情報が更新される' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: 'sample@email.com'
@@ -213,7 +211,7 @@ RSpec.describe 'UserSystem', type: :system do
           current_user(user_owner)
           visit new_user_path(user_owner)
         end
-  
+
         it 'レイアウト' do
           expect(page).to have_field 'Name'
           expect(page).to have_field 'Eメール'
@@ -222,7 +220,7 @@ RSpec.describe 'UserSystem', type: :system do
           expect(page).to have_button '登録'
           expect(page).to have_link '一覧画面へ'
         end
-        
+
         it '登録でスタッフが新規作成される' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: 'sample@email.com'
@@ -242,7 +240,7 @@ RSpec.describe 'UserSystem', type: :system do
           current_user(user_owner)
           visit users_path
         end
-  
+
         it '別組織の投稿者は表示されない' do
           expect(page).not_to have_link another_user_owner.name, href: user_path(another_user_owner)
           expect(page).not_to have_link another_user.name, href: user_path(another_user)
@@ -255,7 +253,7 @@ RSpec.describe 'UserSystem', type: :system do
           current_user(user_owner)
           visit edit_user_path(user_owner)
         end
-  
+
         it 'Name空白' do
           fill_in 'Name', with: ''
           fill_in 'Eメール', with: 'sample@email.com'
@@ -269,7 +267,7 @@ RSpec.describe 'UserSystem', type: :system do
           click_button '更新'
           expect(page).to have_text 'Nameは10文字以内で入力してください'
         end
-  
+
         it 'Eメール空白' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: ''
@@ -291,7 +289,7 @@ RSpec.describe 'UserSystem', type: :system do
           current_user(user_owner)
           visit new_user_path(user_owner)
         end
-        
+
         it 'Name空白' do
           fill_in 'Name', with: ''
           fill_in 'Eメール', with: 'sample@email.com'

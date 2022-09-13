@@ -12,7 +12,6 @@ RSpec.describe 'User', type: :request do
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
-  
 
   before(:each) do
     organization
@@ -33,11 +32,11 @@ RSpec.describe 'User', type: :request do
         current_system_admin(system_admin)
         get users_path(system_admin)
       end
-  
+
       it 'レスポンスに成功する' do
         expect(response).to be_successful
       end
-  
+
       it '正常値レスポンス' do
         expect(response).to have_http_status '200'
       end
@@ -111,18 +110,18 @@ RSpec.describe 'User', type: :request do
           post organizations_path,
             params: {
               organization: {
-                name: '組織1',
+                name:  '組織1',
                 email: 'sample1@email.com',
                 users: {
-                  name: 'オーナー1',
-                  email: 'sample1@email.com',
-                  password: 'password',
+                  name:                  'オーナー1',
+                  email:                 'sample1@email.com',
+                  password:              'password',
                   password_confirmation: 'password'
                 }
               }
             }
         }.to change(Organization, :count).by(1)
-        .and change(User, :count).by(1)
+          .and change(User, :count).by(1)
       end
 
       it 'ログイン画面にリダイレクトされる' do
@@ -130,12 +129,12 @@ RSpec.describe 'User', type: :request do
           post(organizations_path,
             params: {
               organization: {
-                name: '組織1',
+                name:  '組織1',
                 email: 'sample1@email.com',
                 users: {
-                  name: 'オーナー1',
-                  email: 'sample1@email.com',
-                  password: 'password',
+                  name:                  'オーナー1',
+                  email:                 'sample1@email.com',
+                  password:              'password',
                   password_confirmation: 'password'
                 }
               }
@@ -155,18 +154,18 @@ RSpec.describe 'User', type: :request do
           post organizations_path,
             params: {
               organization: {
-                name: '組織1',
+                name:  '組織1',
                 email: 'sample1@email.com',
                 users: {
-                  name: ' ',
-                  email: 'sample1@email.com',
-                  password: 'password',
+                  name:                  ' ',
+                  email:                 'sample1@email.com',
+                  password:              'password',
                   password_confirmation: 'password'
                 }
               }
             }
         }.to change(Organization, :count).by(0)
-        .and change(User, :count).by(0)
+          .and change(User, :count).by(0)
       end
 
       it '登録失敗するとエラーを出す' do
@@ -174,12 +173,12 @@ RSpec.describe 'User', type: :request do
           post(organizations_path,
             params: {
               organization: {
-                name: '',
+                name:  '',
                 email: '',
                 users: {
-                  name: '',
-                  email: '',
-                  password: '',
+                  name:                  '',
+                  email:                 '',
+                  password:              '',
                   password_confirmation: ''
                 }
               }
@@ -192,18 +191,18 @@ RSpec.describe 'User', type: :request do
 
   describe 'PATCH #update' do
     describe 'オーナー情報の編集' do
-      describe '本人の場合' do
+      describe '本人の場合（オーナー編集）' do
         before(:each) do
           current_user(user_owner)
         end
-  
+
         describe '正常' do
           it '同組織のオーナはアップデートできる' do
             expect {
               patch user_path(user_owner),
                 params: {
                   user: {
-                    name: 'ユーザー',
+                    name:  'ユーザー',
                     email: 'test_spec@example.com'
                   }
                 }
@@ -211,19 +210,19 @@ RSpec.describe 'User', type: :request do
           end
         end
       end
-    
-      describe '別組織のオーナーの場合' do
+
+      describe '別組織のオーナーの場合（オーナー編集）' do
         before(:each) do
           current_user(another_user_owner)
         end
-  
+
         describe '異常' do
           it '別組織のオーナはアップデートできない' do
             expect {
               patch user_path(user_owner),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -232,18 +231,18 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe 'スタッフの場合' do
+      describe 'スタッフの場合（オーナー編集）' do
         before(:each) do
           current_user(user)
         end
-  
+
         describe '異常' do
           it '別組織のオーナはアップデートできない' do
             expect {
               patch user_path(user_owner),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -252,18 +251,18 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe 'システム管理者の場合' do
+      describe 'システム管理者の場合（オーナー編集）' do
         before(:each) do
           current_system_admin(system_admin)
         end
-  
+
         describe '異常' do
           it 'アップデートできない' do
             expect {
               patch user_path(user_owner),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -272,18 +271,18 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '視聴者の場合' do
+      describe '視聴者の場合（オーナー編集）' do
         before(:each) do
           current_viewer(viewer)
         end
-  
+
         describe '異常' do
           it '視聴者はアップデートできない' do
             expect {
               patch user_path(user_owner),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -292,14 +291,14 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      describe 'ログインなしの場合（オーナー編集）' do
         describe '異常' do
           it 'ログインなしはアップデートできない' do
             expect {
               patch user_path(user_owner),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -310,12 +309,12 @@ RSpec.describe 'User', type: :request do
     end
 
     describe 'スタッフ情報の編集' do
-      describe '本人の場合' do
+      describe '本人の場合（スタッフ編集）' do
         before(:each) do
           edit_user_path(user)
           current_user(user)
         end
-  
+
         describe '正常' do
           # emailの更新については認証が必要
           it '名前がアップデートされる' do
@@ -323,13 +322,13 @@ RSpec.describe 'User', type: :request do
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'ユーザー',
+                    name:  'ユーザー',
                     email: 'sample@email.com'
                   }
                 }
             }.to change { User.find(user.id).name }.from(user.name).to('ユーザー')
           end
-  
+
           it 'indexにリダイレクトされる' do
             expect(
               patch(user_path(user),
@@ -341,32 +340,32 @@ RSpec.describe 'User', type: :request do
             ).to redirect_to users_path
           end
         end
-  
+
         describe '異常' do
           it '名前が空白でアップデートされない' do
             expect {
               patch user_path(user),
                 params: {
                   user: {
-                    name: ' ',
+                    name:  ' ',
                     email: 'sample@email.com'
                   }
                 }
             }.not_to change { User.find(user.id).name }
           end
-  
+
           it 'email更新時、認証なしではアップデートされない' do
             expect {
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
             }.not_to change { User.find(user.id).name }
           end
-  
+
           it '登録失敗するとエラーを出す' do
             expect(
               patch(user_path(user),
@@ -380,7 +379,7 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '同組織の他スタッフの場合' do
+      describe '同組織の他スタッフの場合（スタッフ編集）' do
         before(:each) do
           edit_user_path(user1)
           current_user(user1)
@@ -392,7 +391,7 @@ RSpec.describe 'User', type: :request do
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -401,18 +400,18 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '別組織のスタッフの場合' do
+      describe '別組織のスタッフの場合（スタッフ編集）' do
         before(:each) do
           current_user(another_user)
         end
-  
+
         describe '異常' do
           it '他のスタッフはアップデートできない' do
             expect {
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -421,18 +420,18 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '同組織のオーナーの場合' do
+      describe '同組織のオーナーの場合（スタッフ編集）' do
         before(:each) do
           current_user(user_owner)
         end
-  
+
         describe '正常' do
           it '同組織のオーナはアップデートできる' do
             expect {
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'ユーザー',
+                    name:  'ユーザー',
                     email: 'sample@email.com'
                   }
                 }
@@ -440,19 +439,19 @@ RSpec.describe 'User', type: :request do
           end
         end
       end
-    
-      describe '別組織のオーナーの場合' do
+
+      describe '別組織のオーナーの場合（スタッフ編集）' do
         before(:each) do
           current_user(another_user_owner)
         end
-  
+
         describe '異常' do
           it '別組織のオーナはアップデートできない' do
             expect {
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -461,18 +460,18 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe 'システム管理者の場合' do
+      describe 'システム管理者の場合（スタッフ編集）' do
         before(:each) do
           current_system_admin(system_admin)
         end
-  
+
         describe '異常' do
           it 'アップデートできない' do
             expect {
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -481,18 +480,18 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '視聴者の場合' do
+      describe '視聴者の場合（スタッフ編集）' do
         before(:each) do
           current_viewer(viewer)
         end
-  
+
         describe '異常' do
           it '視聴者はアップデートできない' do
             expect {
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -501,14 +500,14 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      describe 'ログインなしの場合（スタッフ編集）' do
         describe '異常' do
           it 'ログインなしはアップデートできない' do
             expect {
               patch user_path(user),
                 params: {
                   user: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -521,47 +520,47 @@ RSpec.describe 'User', type: :request do
 
   describe 'GET #show' do
     describe 'オーナー詳細' do
-      describe 'システム管理者の場合' do
+      describe 'システム管理者の場合（オーナー詳細）' do
         describe '正常' do
           before(:each) do
             current_system_admin(system_admin)
             get user_path(user_owner)
           end
-    
+
           it 'レスポンスに成功する' do
             expect(response).to have_http_status(:success)
           end
-    
+
           it '正常値レスポンス' do
             expect(response).to have_http_status '200'
           end
         end
       end
-      
-      describe '本人の場合' do
+
+      describe '本人の場合（オーナー詳細）' do
         describe '正常' do
           before(:each) do
             current_user(user_owner)
             get user_path(user_owner)
           end
-    
+
           it 'レスポンスに成功する' do
             expect(response).to have_http_status(:success)
           end
-    
+
           it '正常値レスポンス' do
             expect(response).to have_http_status '200'
           end
         end
       end
 
-      describe '同組織のスタッフの場合' do
+      describe '同組織のスタッフの場合（オーナー詳細）' do
         describe '異常' do
           before(:each) do
             current_user(user)
             get user_path(user_owner)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
@@ -569,27 +568,27 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '別組織のオーナーの場合' do
+      describe '別組織のオーナーの場合（オーナー詳細）' do
         describe '異常' do
           before(:each) do
             current_user(another_user_owner)
             get user_path(user_owner)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
           end
         end
       end
-      
-      describe '別組織のスタッフの場合' do
+
+      describe '別組織のスタッフの場合（オーナー詳細）' do
         describe '異常' do
           before(:each) do
             current_user(another_user)
             get user_path(user_owner)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
@@ -597,13 +596,13 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '動画視聴者の場合' do
+      describe '動画視聴者の場合（オーナー詳細）' do
         describe '異常' do
           before(:each) do
             current_viewer(viewer)
             get user_path(user_owner)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
@@ -611,7 +610,7 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      describe 'ログインなしの場合（オーナー詳細）' do
         describe '異常' do
           before(:each) do
             get user_path(user_owner)
@@ -626,64 +625,64 @@ RSpec.describe 'User', type: :request do
     end
 
     describe 'スタッフ詳細' do
-      describe 'システム管理者の場合' do
+      describe 'システム管理者の場合（スタッフ詳細）' do
         describe '正常' do
           before(:each) do
             current_system_admin(system_admin)
             get user_path(user)
           end
-    
+
           it 'レスポンスに成功する' do
             expect(response).to have_http_status(:success)
           end
-    
+
           it '正常値レスポンス' do
             expect(response).to have_http_status '200'
           end
         end
       end
-      
-      describe '本人の場合' do
+
+      describe '本人の場合（スタッフ詳細）' do
         describe '正常' do
           before(:each) do
             current_user(user)
             get user_path(user)
           end
-    
+
           it 'レスポンスに成功する' do
             expect(response).to have_http_status(:success)
           end
-    
+
           it '正常値レスポンス' do
             expect(response).to have_http_status '200'
           end
         end
       end
-      
-      describe '同組織のオーナーの場合' do
+
+      describe '同組織のオーナーの場合（スタッフ詳細）' do
         describe '正常' do
           before(:each) do
             current_user(user_owner)
             get user_path(user)
           end
-    
+
           it 'レスポンスに成功する' do
             expect(response).to have_http_status(:success)
           end
-    
+
           it '正常値レスポンス' do
             expect(response).to have_http_status '200'
           end
         end
       end
 
-      describe '同組織の他スタッフの場合' do
+      describe '同組織の他スタッフの場合（スタッフ詳細）' do
         describe '異常' do
           before(:each) do
-            current_user(another_user)
+            current_user(user1)
             get user_path(user)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
@@ -691,27 +690,27 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '別組織のオーナーの場合' do
+      describe '別組織のオーナーの場合（スタッフ詳細）' do
         describe '異常' do
           before(:each) do
             current_user(another_user_owner)
             get user_path(user)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
           end
         end
       end
-      
-      describe '別組織のスタッフの場合' do
+
+      describe '別組織のスタッフの場合（スタッフ詳細）' do
         describe '異常' do
           before(:each) do
             current_user(another_user)
             get user_path(user)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
@@ -719,13 +718,13 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe '動画視聴者の場合' do
+      describe '動画視聴者の場合（スタッフ詳細）' do
         describe '異常' do
           before(:each) do
             current_viewer(viewer)
             get user_path(user)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
@@ -733,7 +732,7 @@ RSpec.describe 'User', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      describe 'ログインなしの場合（スタッフ詳細）' do
         describe '異常' do
           before(:each) do
             get user_path(user)
@@ -749,7 +748,7 @@ RSpec.describe 'User', type: :request do
   end
 
   describe 'DELETE #destroy' do
-    describe 'システム管理者の場合' do
+    describe 'システム管理者の場合（スタッフ削除）' do
       before(:each) do
         current_system_admin(system_admin)
       end
@@ -763,13 +762,13 @@ RSpec.describe 'User', type: :request do
 
         it 'indexにリダイレクトされる' do
           expect(
-            delete user_path(user), params: { id: user.id }
+            delete(user_path(user), params: { id: user.id })
           ).to redirect_to users_path
         end
       end
     end
 
-    describe '自組織のオーナーの場合' do
+    describe '自組織のオーナーの場合（スタッフ削除）' do
       before(:each) do
         current_user(user_owner)
       end
@@ -783,13 +782,13 @@ RSpec.describe 'User', type: :request do
 
         it 'indexにリダイレクトされる' do
           expect(
-            delete user_path(user), params: { id: user.id }
+            delete(user_path(user), params: { id: user.id })
           ).to redirect_to users_path
         end
       end
     end
 
-    describe '他組織のオーナーの場合' do
+    describe '他組織のオーナーの場合（スタッフ削除）' do
       before(:each) do
         current_user(another_user_owner)
       end
@@ -803,13 +802,13 @@ RSpec.describe 'User', type: :request do
 
         it 'rootにリダイレクトされる' do
           expect(
-            delete user_path(user), params: { id: user.id }
+            delete(user_path(user), params: { id: user.id })
           ).to redirect_to root_path
         end
       end
     end
 
-    describe '本人の場合' do
+    describe '本人の場合（スタッフ削除）' do
       before(:each) do
         current_user(user)
       end
@@ -823,13 +822,13 @@ RSpec.describe 'User', type: :request do
 
         it 'rootにリダイレクトされる' do
           expect(
-            delete user_path(user), params: { id: user.id }
+            delete(user_path(user), params: { id: user.id })
           ).to redirect_to root_path
         end
       end
     end
 
-    describe '同組織の他スタッフの場合' do
+    describe '同組織の他スタッフの場合（スタッフ削除）' do
       before(:each) do
         current_user(user1)
       end
@@ -843,13 +842,13 @@ RSpec.describe 'User', type: :request do
 
         it 'rootにリダイレクトされる' do
           expect(
-            delete user_path(user), params: { id: user.id }
+            delete(user_path(user), params: { id: user.id })
           ).to redirect_to root_path
         end
       end
     end
 
-    describe '他組織のスタッフの場合' do
+    describe '他組織のスタッフの場合（スタッフ削除）' do
       before(:each) do
         current_user(another_user)
       end
@@ -863,13 +862,13 @@ RSpec.describe 'User', type: :request do
 
         it 'rootにリダイレクトされる' do
           expect(
-            delete user_path(user), params: { id: user.id }
+            delete(user_path(user), params: { id: user.id })
           ).to redirect_to root_path
         end
       end
     end
 
-    describe 'ログインなしの場合' do
+    describe 'ログインなしの場合（スタッフ削除）' do
       describe '異常' do
         it '削除できない' do
           expect {
@@ -879,7 +878,7 @@ RSpec.describe 'User', type: :request do
 
         it 'rootにリダイレクトされる' do
           expect(
-            delete user_path(user), params: { id: user.id }
+            delete(user_path(user), params: { id: user.id })
           ).to redirect_to root_path
         end
       end

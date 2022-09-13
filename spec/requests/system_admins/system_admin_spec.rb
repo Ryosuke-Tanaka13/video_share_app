@@ -7,7 +7,6 @@ RSpec.describe 'SystemAdmin', type: :request do
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
-  
 
   before(:each) do
     organization
@@ -23,14 +22,14 @@ RSpec.describe 'SystemAdmin', type: :request do
         before(:each) do
           current_system_admin(system_admin)
         end
-  
+
         describe '正常' do
           it '同組織のオーナはアップデートできる' do
             expect {
               patch system_admin_path(system_admin),
                 params: {
                   system_admin: {
-                    name: 'ユーザー',
+                    name:  'ユーザー',
                     email: 'test_spec@example.com'
                   }
                 }
@@ -38,19 +37,19 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
       end
-    
+
       describe 'オーナーの場合' do
         before(:each) do
           current_user(user_owner)
         end
-  
+
         describe '異常' do
           it '別組織のオーナはアップデートできない' do
             expect {
               patch system_admin_path(system_admin),
                 params: {
                   system_admin: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -63,14 +62,14 @@ RSpec.describe 'SystemAdmin', type: :request do
         before(:each) do
           current_user(user)
         end
-  
+
         describe '異常' do
           it '別組織のオーナはアップデートできない' do
             expect {
               patch system_admin_path(system_admin),
                 params: {
                   system_admin: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -83,14 +82,14 @@ RSpec.describe 'SystemAdmin', type: :request do
         before(:each) do
           current_viewer(viewer)
         end
-  
+
         describe '異常' do
           it '視聴者はアップデートできない' do
             expect {
               patch system_admin_path(system_admin),
                 params: {
                   system_admin: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -106,7 +105,7 @@ RSpec.describe 'SystemAdmin', type: :request do
               patch system_admin_path(system_admin),
                 params: {
                   system_admin: {
-                    name: 'user',
+                    name:  'user',
                     email: 'sample_u@email.com'
                   }
                 }
@@ -125,11 +124,11 @@ RSpec.describe 'SystemAdmin', type: :request do
             current_system_admin(system_admin)
             get system_admin_path(system_admin)
           end
-    
+
           it 'レスポンスに成功する' do
             expect(response).to have_http_status(:success)
           end
-    
+
           it '正常値レスポンス' do
             expect(response).to have_http_status '200'
           end
@@ -142,21 +141,21 @@ RSpec.describe 'SystemAdmin', type: :request do
             current_user(user_owner)
             get system_admin_path(system_admin)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
           end
         end
       end
-      
+
       describe 'スタッフの場合' do
         describe '異常' do
           before(:each) do
             current_user(user)
             get system_admin_path(system_admin)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path
@@ -170,7 +169,7 @@ RSpec.describe 'SystemAdmin', type: :request do
             current_viewer(viewer)
             get system_admin_path(system_admin)
           end
-    
+
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
             expect(response).to redirect_to root_path

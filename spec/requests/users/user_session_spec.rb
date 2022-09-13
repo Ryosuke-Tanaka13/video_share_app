@@ -5,13 +5,12 @@ RSpec.describe 'UserSession', type: :request do
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user) { create(:user, confirmed_at: Time.now) }
 
-  
   describe 'オーナーがログインできることを確認' do
     before(:each) do
       organization
       user_owner
     end
-      
+
     it do
       get new_user_session_path
       expect(response).to have_http_status(:success)
@@ -29,7 +28,7 @@ RSpec.describe 'UserSession', type: :request do
       current_user(user_owner)
       get users_path(user_owner)
     end
-      
+
     it do
       delete destroy_user_session_path
       expect(response).to redirect_to 'http://www.example.com/'
@@ -41,7 +40,7 @@ RSpec.describe 'UserSession', type: :request do
       organization
       user
     end
-      
+
     it do
       get new_user_session_path
       expect(response).to have_http_status(:success)
@@ -59,7 +58,7 @@ RSpec.describe 'UserSession', type: :request do
       current_user(user)
       get users_path(user)
     end
-      
+
     it do
       delete destroy_user_session_path
       expect(response).to redirect_to 'http://www.example.com/'

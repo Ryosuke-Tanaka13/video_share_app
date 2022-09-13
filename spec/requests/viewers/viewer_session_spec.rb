@@ -3,12 +3,11 @@ require 'rails_helper'
 RSpec.describe 'ViewerSession', type: :request do
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
 
-  
   describe '視聴者がログインできることを確認' do
     before(:each) do
       viewer
     end
-      
+
     it do
       get new_viewer_session_path
       expect(response).to have_http_status(:success)
@@ -25,7 +24,7 @@ RSpec.describe 'ViewerSession', type: :request do
       current_viewer(viewer)
       get viewer_path(viewer)
     end
-      
+
     it do
       delete destroy_viewer_session_path
       expect(response).to redirect_to 'http://www.example.com/'
