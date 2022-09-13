@@ -17,7 +17,7 @@
         </tr>
         <tr>
           <th><%= "所属組織名" %></th>
-          <td><%= @organization.name %></td>
+          <td><%= link_to @organization.name, organization_path(@organization) %></td>
         </tr>
       </tbody>
     </table>
@@ -27,5 +27,8 @@
     <%= link_to "編集", edit_user_path, class: "btn btn-md btn-block btn-success" %><br>
   <% end %>
     <%= link_to "戻る", users_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-secondary" %>
+  <% if current_user&.id == params[:id].to_i %>
+    <br><br><%= link_to "退会ページ", users_unsubscribe_path(@user), class: "btn btn-md btn-block btn-danger" %><br>
+  <% end %>
   </div>
 </div>
