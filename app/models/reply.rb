@@ -4,4 +4,7 @@ class Reply < ApplicationRecord
   belongs_to :viewer, optional: true
   belongs_to :comment
 
+  # バリデーション
+  validates :reply, presence: true
+
 end

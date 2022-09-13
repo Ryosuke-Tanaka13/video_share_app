@@ -1,18 +1,18 @@
+<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
 <h1>Videos#show</h1>
 <p>テスト画面です</p>
 
 <div class="row">
-  <ul>
-    <li class="comment-create">
-      <h3 class="text-left title">コメント</h3>
-    </li>
-    <li id="comments_area">
-      <%= render partial: 'comments/index' if @comments.present? %>
-    </li>
-  </ul>
-  <hr>
   <div class="comment-create">
     <h3 class="text-left">コメントを投稿する</h3>
       <%= render partial: 'comments/form' %>
+  </div>
+  <hr>
+  <div class="comment-create">
+    <h3 class="text-left title">コメント</h3>
+  </div>
+  <div id="comments_area">
+    <%= render partial: 'comments/index' if @comments.present? %>
   </div>
 </div>
