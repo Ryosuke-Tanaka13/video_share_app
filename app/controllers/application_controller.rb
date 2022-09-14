@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
   end
 
   # 同組織オーナー　のみ
-  def same_org_owner
+  def same_organization_owner
     unless current_user&.role == 'owner' && current_user.organization_id == params[:id].to_i
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
   end
 
   # 同組織オーナー　投稿者本人　のみ
-  def same_org_owner_or_correct_user
+  def same_organization_owner_or_correct_user
     @user = User.find(params[:id]) if @user.blank?
     @organization = Organization.find(@user.organization_id) if @organization.blank?
     unless (current_user&.role == 'owner' && current_user.organization_id == @organization.id) || current_user == @user
@@ -86,7 +86,7 @@ class ApplicationController < ActionController::Base
   end
 
   # システム管理者　同組織オーナー　のみ
-  def admin_or_same_org_owner
+  def admin_or_same_organization_owner
     @user = User.find(params[:id]) if @user.blank?
     @organization = Organization.find(@user.organization_id) if @organization.blank?
     unless !current_system_admin.nil? ||
@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
   end
 
   # システム管理者　同組織オーナー　投稿者本人 のみ
-  def admin_or_same_org_owner_or_correct_user
+  def admin_or_same_organization_owner_or_correct_user
     @user = User.find(params[:id]) if @user.blank?
     @organization = Organization.find(@user.organization_id) if @organization.blank?
     unless !current_system_admin.nil? || (current_user&.role == 'owner' && current_user.organization_id == @organization.id) || current_user == @user
@@ -107,7 +107,7 @@ class ApplicationController < ActionController::Base
   end
 
   # システム管理者　同組織投稿者　のみ
-  def admin_or_same_org_user
+  def admin_or_same_organization_user
     @organization = Organization.find(params[:id]) if @organization.blank?
     unless !current_system_admin.nil? || current_user&.organization_id == @organization.id
       flash[:danger] = '権限がありません。'

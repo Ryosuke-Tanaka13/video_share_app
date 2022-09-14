@@ -2,9 +2,9 @@ class UsersController < ApplicationController
   before_action :logged_in_account
   before_action :other_the_person, only: %i[destroy]
   before_action :admin_or_user, only: %i[index]
-  before_action :admin_or_same_org_owner, only: %i[destroy]
-  before_action :admin_or_same_org_owner_or_correct_user, only: %i[show]
-  before_action :same_org_owner_or_correct_user, only: %i[edit update]
+  before_action :admin_or_same_organization_owner, only: %i[destroy]
+  before_action :admin_or_same_organization_owner_or_correct_user, only: %i[show]
+  before_action :same_organization_owner_or_correct_user, only: %i[edit update]
   before_action :set_user, except: %i[index new create]
 
   def index
