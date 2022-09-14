@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     when SystemAdmin
       organizations_path
     when User
-      users_path
+      folders_path
     end
   end
 
