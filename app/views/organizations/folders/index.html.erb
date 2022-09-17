@@ -1,31 +1,30 @@
 <% provide(:title,  "動画フォルダ一覧") %>
 <div class="content">
-<%if current_user.present?%>
-  <%= link_to "フォルダ新規作成", new_organization_folder_path, remote: true, class: "btn btn-success" %>
-<%end%>
+  <%if current_user.present?%>
+    <%= link_to "フォルダ新規作成", new_organization_folder_path, remote: true, class: "btn btn-success" %>
+  <%end%>
   <div style="text-align:center">
-      <%@folders.each do |folder|%>
-        <table style="float:left;margin:15px;">
-          <tr>
-            <td>
-              <%= link_to organization_folder_path(folder.organization_id, folder.id) ,method: :get do %>
-                <i class="far fa-folder fa-8x"></i>
+    <%@folders.each do |folder|%>
+      <table style="float:left;margin:15px;">
+        <tr id = "<%=current_user&.id%>">
+          <td>
+            <%= link_to organization_folder_path(folder.organization_id, folder.id) ,method: :get do %>
+              <i class="far fa-folder fa-8x"></i>
+            <% end %>
+          </td>
+        </tr>
+        <tr id = "<%=current_user&.id%>">
+          <th id = "<%=folder.organization_id%>" class = "<%=folder.id%>">
+            <%=folder.name%> &nbsp;
+            <%if current_system_admin.present? || current_user.role == 'owner'%>
+              <%= link_to organization_folder_path(folder.organization_id, folder.id), method: :delete, data: {confirm: "削除しますか？"} do%>
+                <i class="far fa-trash-alt" color=red></i>
               <% end %>
-            </td>
-          </tr>
-          <tr>
-            <th id = "<%=folder.organization_id%>" class = "<%=folder.id%>">
-              <%=folder.name%> &nbsp;
-              <%if current_system_admin.present? || current_user.role == 'owner'%>
-                <%= link_to organization_folder_path(folder.organization_id, folder.id), method: :delete, data: {confirm: "削除しますか？"} do%>
-                  <i class="far fa-trash-alt" color=red></i>
-                <% end %>
-              <%end%>
-            </th>
-          </tr>
-        </table>
-      <%end%>
-    </div>
+            <%end%>
+          </th>
+        </tr>
+      </table>
+    <%end%>
   </div>
 </div>
 
