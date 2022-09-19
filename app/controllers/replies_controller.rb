@@ -1,7 +1,7 @@
 class RepliesController < ApplicationController
   include CommentReply
   before_action :set_account
-  helper_method :is_login?, :correct_replyer?
+  helper_method :account_logged_in?
   protect_from_forgery :except => [:destroy]
 
   def create
