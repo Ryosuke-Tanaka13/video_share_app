@@ -17,12 +17,6 @@ class Video < ApplicationRecord
     self.user_id = current_user.id
   end
 
-  def owner_has?(current_user)
-    return true if self.organization_id == current_user.organization_id
-
-    false
-  end
-
   def my_upload?(current_user)
     return true if self.user_id == current_user.id
 
