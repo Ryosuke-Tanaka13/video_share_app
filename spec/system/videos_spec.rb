@@ -91,7 +91,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       it '設定を変更で動画情報が更新される' do
         # fill_inの値は、ビューのフォームのfieldのid
         fill_in 'title_edit', with: 'テストビデオ２'
-        # fill_in 'open_period_edit', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
+        # fill_in 'open_period_edit', with: 'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00'
         expect(page).to have_selector '#range_edit', text: false
         expect(page).to have_selector '#comment_public_edit', text: false
         expect(page).to have_selector '#login_set_edit', text: false
@@ -227,5 +227,16 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#popup_after_video_edit'
       end
     end
+
+    describe '動画詳細(非ログイン)' do
+      before(:each) do
+        visit video_path(video_sample)
+      end
+
+      it 'レイアウトに設定リンクなし' do
+        expect(page).to have_text 'サンプルビデオ'
+      end
+    end
+
   end
 end

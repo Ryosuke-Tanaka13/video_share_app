@@ -75,7 +75,7 @@ RSpec.describe 'Videos', type: :request do
 
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status ' 302'
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to videos_path(organization_id: organization.id)
       end
     end
 
@@ -322,7 +322,7 @@ RSpec.describe 'Videos', type: :request do
 
     describe '非ログイン' do
       describe '異常' do
-        it 'システム管理者は作成できない' do
+        it '非ログインでは作成できない' do
           expect {
             post videos_path,
               params: {
@@ -373,6 +373,20 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
+    describe '正常(非ログイン)' do
+      before(:each) do
+        get video_path(video_sample)
+      end
+
+      it 'レスポンスに成功する' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it '正常値レスポンス' do
+        expect(response).to have_http_status '200'
+      end
+    end
+
     describe '異常(別組織のuser)' do
       before(:each) do
         sign_in another_user_owner
@@ -382,6 +396,17 @@ RSpec.describe 'Videos', type: :request do
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status ' 302'
         expect(response).to redirect_to videos_path(organization_id: another_organization.id)
+      end
+    end
+
+    describe '異常(非ログイン)' do
+      before(:each) do
+        get video_path(video_test)
+      end
+
+      it 'アクセス権限なしのためリダイレクト' do
+        expect(response).to have_http_status ' 302'
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -398,7 +423,13 @@ RSpec.describe 'Videos', type: :request do
             patch video_path(video_sample),
               params: {
                 video: {
-                  title: 'サンプルビデオ2'
+                  title: 'サンプルビデオ2',
+                  open_period: 'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00' ,
+                  range: true,
+                  comment_public: true,
+                  login_set: true,
+                  popup_before_video: true,
+                  popup_after_video: true
                 }
               }
           }.to change { Video.find(video_sample.id).title }.from(video_sample.title).to('サンプルビデオ2')
@@ -604,6 +635,16 @@ RSpec.describe 'Videos', type: :request do
 
       describe '異常' do
         it '別組織のオーナは削除できない' do
+          expect {
+            delete video_path(video_sample), params: { id: video_sample.id }
+          }.not_to change(Video, :count)
+        end
+      end
+    end
+
+    describe '非ログイン' do
+      describe '異常' do
+        it '非ログインでは削除できない' do
           expect {
             delete video_path(video_sample), params: { id: video_sample.id }
           }.not_to change(Video, :count)
