@@ -423,13 +423,13 @@ RSpec.describe 'Videos', type: :request do
             patch video_path(video_sample),
               params: {
                 video: {
-                  title: 'サンプルビデオ2',
-                  open_period: 'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00' ,
-                  range: true,
-                  comment_public: true,
-                  login_set: true,
+                  title:              'サンプルビデオ2',
+                  open_period:        'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00',
+                  range:              true,
+                  comment_public:     true,
+                  login_set:          true,
                   popup_before_video: true,
-                  popup_after_video: true
+                  popup_after_video:  true
                 }
               }
           }.to change { Video.find(video_sample.id).title }.from(video_sample.title).to('サンプルビデオ2')

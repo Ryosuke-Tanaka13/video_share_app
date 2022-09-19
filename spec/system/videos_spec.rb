@@ -237,6 +237,5 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_text 'サンプルビデオ'
       end
     end
-
   end
 end

@@ -6,7 +6,7 @@ class VideosController < ApplicationController
   before_action :ensure_user, only: %i[new create update]
   before_action :ensure_owner_or_correct_user, only: %i[update]
   before_action :ensure_system_admin_or_owner, only: %i[destroy]
-  before_action :ensure_my_organization, exept: [:new, :create]
+  before_action :ensure_my_organization, exept: %i[new create]
   # 視聴者がログインしている場合、表示されているビデオの視聴グループ＝現在の視聴者の視聴グループでなければ、締め出す下記のメソッド追加予定
   # before_action :limited_viewer, only: %i[show]
   before_action :ensure_logged_in_viewer, only: %i[show]
@@ -75,7 +75,7 @@ class VideosController < ApplicationController
 
   def ensure_admin_or_user
     if current_system_admin.nil? && current_user.nil?
-      flash[:danger] = "権限がありません"
+      flash[:danger] = '権限がありません'
       redirect_to root_path
     end
   end
@@ -128,8 +128,8 @@ class VideosController < ApplicationController
   end
 
   def ensure_logged_in_viewer
-   if !logged_in? && @video.login_set != false
-      flash[:danger] = "視聴者ログインしてください"
+    if !logged_in? && @video.login_set != false
+      flash[:danger] = '視聴者ログインしてください'
       redirect_to root_path
     end
   end
