@@ -17,7 +17,7 @@
         <%= render "layouts/system_admins/header" %> 
       <% elsif current_user.present? %>
         <%= render "layouts/users/header" %>
-      <% else %>
+      <% elsif current_viewer.present? %>
         <%= render "layouts/viewers/header" %>
       <%end%> 
 
@@ -27,7 +27,7 @@
         <%= render "layouts/system_admins/side" %> 
       <% elsif current_user.present? %>
         <%= render "layouts/users/side" %>
-      <% else %>
+      <% elsif current_viewer.present? %>
         <%= render "layouts/viewers/side" %>
       <%end%> 
 
