@@ -129,8 +129,8 @@ class VideosController < ApplicationController
 
   def ensure_logged_in_viewer
     if !logged_in? && @video.login_set != false
-      flash[:danger] = '視聴者ログインしてください'
-      redirect_to root_path
+      flash[:danger] = '視聴者でログインしてください'
+      redirect_to new_viewer_session_path
     end
   end
 end

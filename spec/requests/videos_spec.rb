@@ -406,7 +406,7 @@ RSpec.describe 'Videos', type: :request do
 
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status ' 302'
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to new_viewer_session_path
       end
     end
   end
