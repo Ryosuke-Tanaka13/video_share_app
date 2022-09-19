@@ -1,22 +1,22 @@
 module VideosHelper
-  def selected_before1
-    return 1 if @video.range == true
+  def selected_before_range
+    return ['限定公開',1] if @video.range == true
   end
 
-  def selected_before2
-    return 1 if @video.comment_public == true
+  def selected_before_comment_public
+    return ['非公開',1] if @video.comment_public == true
   end
 
-  def selected_before3
-    return 1 if @video.login_set == true
+  def selected_before_login_set
+    return ['ログイン必要',1] if @video.login_set == true
   end
 
-  def selected_before4
-    return 1 if @video.popup_before_video == true
+  def selected_before_popup_before_video 
+    return ['動画視聴開始時ポップアップ非表示',1] if @video.popup_before_video == true
   end
 
-  def selected_before5
-    return 1 if @video.popup_after_video == true
+  def selected_before_popup_after_video
+    return ['動画視聴終了時ポップアップ非表示',1] if @video.popup_after_video == true
   end
 
   def my_upload?(current_user)
