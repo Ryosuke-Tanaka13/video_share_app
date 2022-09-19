@@ -1,5 +1,6 @@
 class CommentsController < ApplicationController
-  before_action :set_account
+  include CommentReply
+  before_action :
   helper_method :is_login?
   protect_from_forgery :except => [:destroy]
   

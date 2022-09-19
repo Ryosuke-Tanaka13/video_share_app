@@ -21,19 +21,5 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit :account_update, keys: added_attrs
     devise_parameter_sanitizer.permit :sign_in, keys: added_attrs
   end
-
-  # 現在ログインしているアカウントをセット
-  def set_account
-    if current_user.present?
-      @account = current_user
-    elsif current_viewer.present?
-      @account = current_viewer
-    end
-  end
-
-  # ログインしているか判定
-  def is_login?
-    current_user.present? || current_viewer.present?
-  end
-
+  
 end
