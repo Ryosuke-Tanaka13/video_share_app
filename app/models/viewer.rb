@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Viewer < ApplicationRecord
-  has_many :organization_viewers
+  has_many :organization_viewers, dependent: :destroy
 
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
