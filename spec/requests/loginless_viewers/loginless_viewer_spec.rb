@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'loginless_viewer', type: :request do
+RSpec.describe 'LoginlessViewer', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -19,13 +19,9 @@ RSpec.describe 'loginless_viewer', type: :request do
 
   let(:organization_viewer) { create(:organization_viewer) }
   let(:organization_viewer1) { create(:organization_viewer1) }
-  let(:organization_viewer2) { create(:organization_viewer2) }
-  let(:organization_viewer3) { create(:organization_viewer3) }
 
   let(:organization_loginless_viewer) { create(:organization_loginless_viewer) }
   let(:organization_loginless_viewer1) { create(:organization_loginless_viewer1) }
-  let(:organization_loginless_viewer2) { create(:organization_loginless_viewer2) }
-  let(:organization_loginless_viewer3) { create(:organization_loginless_viewer3) }
 
   before(:each) do
     system_admin
@@ -43,18 +39,14 @@ RSpec.describe 'loginless_viewer', type: :request do
     another_loginless_viewer
     organization_viewer
     organization_viewer1
-    organization_viewer2
-    organization_viewer3
     organization_loginless_viewer
     organization_loginless_viewer1
-    organization_loginless_viewer2
-    organization_loginless_viewer3
   end
 
   # システム管理者　投稿者　のみ許可
   describe 'GET #index' do
     describe '正常' do
-      describe 'システム管理者の場合（視聴者一覧）' do
+      context 'システム管理者の場合（視聴者一覧）' do
         before(:each) do
           login_session(system_admin)
           current_system_admin(system_admin)
@@ -70,7 +62,7 @@ RSpec.describe 'loginless_viewer', type: :request do
         end
       end
 
-      describe 'オーナーの場合（視聴者一覧）' do
+      context 'オーナーの場合（視聴者一覧）' do
         before(:each) do
           login_session(user_owner)
           current_user(user_owner)
@@ -86,7 +78,7 @@ RSpec.describe 'loginless_viewer', type: :request do
         end
       end
 
-      describe 'スタッフの場合（視聴者一覧）' do
+      context 'スタッフの場合（視聴者一覧）' do
         before(:each) do
           login_session(user_staff)
           current_user(user_staff)
@@ -178,9 +170,9 @@ RSpec.describe 'loginless_viewer', type: :request do
 
   # システム管理者　set_loginless_viewerと同組織オーナー　のみ許可
   describe 'GET #show' do
-    describe '視聴者詳細' do
+    context '視聴者詳細' do
       describe '正常' do
-        describe 'システム管理者の場合' do
+        context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
             get loginless_viewer_path(loginless_viewer)
@@ -195,7 +187,7 @@ RSpec.describe 'loginless_viewer', type: :request do
           end
         end
 
-        describe '同組織オーナーの場合' do
+        context '同組織オーナー' do
           before(:each) do
             current_user(user_owner)
             get loginless_viewer_path(loginless_viewer)
@@ -212,7 +204,7 @@ RSpec.describe 'loginless_viewer', type: :request do
       end
 
       describe '異常' do
-        describe '別組織のオーナーの場合' do
+        context '別組織のオーナー' do
           before(:each) do
             current_user(another_user_owner)
             get loginless_viewer_path(loginless_viewer)
@@ -224,7 +216,7 @@ RSpec.describe 'loginless_viewer', type: :request do
           end
         end
 
-        describe '同組織のスタッフの場合' do
+        context '同組織のスタッフ' do
           before(:each) do
             current_user(user_staff)
             get loginless_viewer_path(loginless_viewer)
@@ -236,7 +228,7 @@ RSpec.describe 'loginless_viewer', type: :request do
           end
         end
 
-        describe '別組織のスタッフの場合' do
+        context '別組織のスタッフ' do
           before(:each) do
             current_user(another_user_staff)
             get loginless_viewer_path(loginless_viewer)
@@ -248,7 +240,7 @@ RSpec.describe 'loginless_viewer', type: :request do
           end
         end
 
-        describe '同組織の視聴者の場合' do
+        context '同組織視聴者' do
           before(:each) do
             current_viewer(viewer)
             get loginless_viewer_path(loginless_viewer)
@@ -260,7 +252,7 @@ RSpec.describe 'loginless_viewer', type: :request do
           end
         end
 
-        describe '他組織の視聴者の場合' do
+        context '他組織視聴者' do
           before(:each) do
             current_viewer(another_viewer)
             get loginless_viewer_path(loginless_viewer)
@@ -272,7 +264,7 @@ RSpec.describe 'loginless_viewer', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           before(:each) do
             get loginless_viewer_path(loginless_viewer)
           end
@@ -292,8 +284,8 @@ RSpec.describe 'loginless_viewer', type: :request do
 
   # システム管理者　のみ許可
   describe 'DELETE #destroy' do
-    describe '正常' do
-      describe 'システム管理者の場合' do
+    context '正常' do
+      context 'システム管理者の場合' do
         before(:each) do
           current_system_admin(system_admin)
         end
@@ -312,8 +304,8 @@ RSpec.describe 'loginless_viewer', type: :request do
       end
     end
 
-    describe '異常' do
-      describe '同組織オーナーの場合' do
+    context '異常' do
+      context '同組織オーナーの場合' do
         before(:each) do
           current_user(user_owner)
         end
@@ -331,7 +323,7 @@ RSpec.describe 'loginless_viewer', type: :request do
         end
       end
 
-      describe '同組織スタッフの場合' do
+      context '同組織スタッフの場合' do
         before(:each) do
           current_user(user_staff)
         end
@@ -349,7 +341,7 @@ RSpec.describe 'loginless_viewer', type: :request do
         end
       end
 
-      describe '他組織オーナーの場合' do
+      context '他組織オーナーの場合' do
         before(:each) do
           current_user(another_user_owner)
         end
@@ -367,7 +359,7 @@ RSpec.describe 'loginless_viewer', type: :request do
         end
       end
 
-      describe '他組織スタッフの場合' do
+      context '他組織スタッフの場合' do
         before(:each) do
           current_user(another_user_staff)
         end
@@ -385,7 +377,7 @@ RSpec.describe 'loginless_viewer', type: :request do
         end
       end
 
-      describe '同組織の他視聴者の場合' do
+      context '同組織の他視聴者の場合' do
         before(:each) do
           current_viewer(viewer1)
         end
@@ -403,7 +395,7 @@ RSpec.describe 'loginless_viewer', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      context 'ログインなしの場合' do
         it '削除できない' do
           expect {
             delete loginless_viewer_path(loginless_viewer), params: { id: loginless_viewer.id }

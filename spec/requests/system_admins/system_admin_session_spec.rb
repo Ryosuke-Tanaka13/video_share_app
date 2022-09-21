@@ -63,7 +63,7 @@ RSpec.describe 'SystemAdminSession', type: :request do
 
   describe '異常' do
     describe '他モデルアカウントとの重複ログインができない' do
-      describe '投稿者' do
+      context '投稿者' do
         before(:each) do
           login_session(user_owner)
           current_user(user_owner)
@@ -75,7 +75,7 @@ RSpec.describe 'SystemAdminSession', type: :request do
         end
       end
 
-      describe '視聴者' do
+      context '視聴者' do
         before(:each) do
           login_session(viewer)
           current_viewer(viewer)

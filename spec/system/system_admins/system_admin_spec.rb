@@ -21,7 +21,7 @@ RSpec.describe 'SystemAdmin', type: :system do
       system_admin
     end
 
-    describe 'システム管理者' do
+    context 'システム管理者' do
       before(:each) do
         login(system_admin)
         current_system_admin(system_admin)
@@ -52,7 +52,7 @@ RSpec.describe 'SystemAdmin', type: :system do
 
   context 'SystemAdmin操作' do
     describe '正常' do
-      describe 'システム管理者詳細' do
+      context 'システム管理者詳細' do
         before(:each) do
           login(system_admin)
           current_system_admin(system_admin)
@@ -71,7 +71,7 @@ RSpec.describe 'SystemAdmin', type: :system do
         end
       end
 
-      describe 'システム管理者編集' do
+      context 'システム管理者編集' do
         before(:each) do
           login(system_admin)
           current_system_admin(system_admin)
@@ -96,7 +96,7 @@ RSpec.describe 'SystemAdmin', type: :system do
     end
 
     describe '異常' do
-      describe 'システム管理者編集' do
+      context 'システム管理者編集' do
         before(:each) do
           login(system_admin)
           current_system_admin(system_admin)

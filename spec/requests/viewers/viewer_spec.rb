@@ -39,7 +39,7 @@ RSpec.describe 'Viewer', type: :request do
   # システム管理者　投稿者　のみ許可
   describe 'GET #index' do
     describe '正常' do
-      describe 'システム管理者の場合' do
+      context 'システム管理者' do
         before(:each) do
           login_session(system_admin)
           current_system_admin(system_admin)
@@ -55,7 +55,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe 'オーナーの場合' do
+      context 'オーナー' do
         before(:each) do
           login_session(user_owner)
           current_user(user_owner)
@@ -71,7 +71,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe 'スタッフの場合' do
+      context 'スタッフ' do
         before(:each) do
           login_session(user_staff)
           current_user(user_staff)
@@ -89,7 +89,7 @@ RSpec.describe 'Viewer', type: :request do
     end
 
     describe '異常' do
-      describe '視聴者の場合' do
+      context '視聴者' do
         before(:each) do
           login_session(viewer)
           current_viewer(viewer)
@@ -102,7 +102,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      context 'ログインなし' do
         before(:each) do
           get viewers_path(organization_id: organization.id)
         end
@@ -121,9 +121,9 @@ RSpec.describe 'Viewer', type: :request do
 
   # システム管理者　set_viewerと同組織オーナー　視聴者本人　のみ許可
   describe 'GET #show' do
-    describe '視聴者詳細' do
+    context '視聴者詳細' do
       describe '正常' do
-        describe 'システム管理者の場合' do
+        context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
             get viewer_path(viewer)
@@ -138,7 +138,7 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '同組織オーナーの場合' do
+        context '同組織オーナー' do
           before(:each) do
             current_user(user_owner)
             get viewer_path(viewer)
@@ -153,7 +153,7 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '本人の場合' do
+        context '本人' do
           before(:each) do
             current_viewer(viewer)
             get viewer_path(viewer)
@@ -170,7 +170,7 @@ RSpec.describe 'Viewer', type: :request do
       end
 
       describe '異常' do
-        describe '別組織のオーナーの場合' do
+        context '別組織オーナー' do
           before(:each) do
             current_user(another_user_owner)
             get viewer_path(viewer)
@@ -182,7 +182,7 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '同組織のスタッフの場合' do
+        context '同組織スタッフ' do
           before(:each) do
             current_user(user_staff)
             get viewer_path(viewer)
@@ -194,7 +194,7 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '別組織のスタッフの場合' do
+        context '別組織スタッフ' do
           before(:each) do
             current_user(another_user_staff)
             get viewer_path(viewer)
@@ -206,7 +206,7 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '同組織の他視聴者の場合' do
+        context '同組織他視聴者' do
           before(:each) do
             current_viewer(viewer1)
             get viewer_path(viewer)
@@ -218,7 +218,7 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '他組織の視聴者の場合' do
+        context '他組織視聴者' do
           before(:each) do
             current_viewer(another_viewer)
             get viewer_path(viewer)
@@ -230,7 +230,7 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           before(:each) do
             get viewer_path(viewer)
           end
@@ -247,7 +247,7 @@ RSpec.describe 'Viewer', type: :request do
   # 視聴者本人　のみ許可
   describe 'GET #edit' do
     describe '正常' do
-      describe '本人の場合' do
+      context '本人' do
         before(:each) do
           current_viewer(viewer)
           get edit_viewer_path(viewer)
@@ -264,7 +264,7 @@ RSpec.describe 'Viewer', type: :request do
     end
 
     describe '異常' do
-      describe 'システム管理者の場合' do
+      context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
           get edit_viewer_path(viewer)
@@ -276,7 +276,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '同組織のオーナーの場合' do
+      context '同組織オーナー' do
         before(:each) do
           current_user(user_owner)
           get edit_viewer_path(viewer)
@@ -288,7 +288,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '同組織のスタッフの場合' do
+      context '同組織スタッフ' do
         before(:each) do
           current_user(user_staff)
           get edit_viewer_path(viewer)
@@ -300,7 +300,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '別組織のオーナーの場合' do
+      context '別組織オーナー' do
         before(:each) do
           current_user(another_user_owner)
           get edit_viewer_path(viewer)
@@ -312,7 +312,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '別組織のスタッフの場合' do
+      context '別組織スタッフ' do
         before(:each) do
           current_user(another_user_staff)
           get edit_viewer_path(viewer)
@@ -324,7 +324,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '同組織の他視聴者の場合' do
+      context '同組織他視聴者' do
         before(:each) do
           current_viewer(viewer1)
           get edit_viewer_path(viewer)
@@ -336,7 +336,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '他組織の視聴者の場合' do
+      context '他組織視聴者' do
         before(:each) do
           current_viewer(another_viewer)
           get edit_viewer_path(viewer)
@@ -348,7 +348,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      context 'ログインなし' do
         before(:each) do
           get edit_viewer_path(viewer)
         end
@@ -363,14 +363,14 @@ RSpec.describe 'Viewer', type: :request do
 
   # 視聴者本人　のみ許可
   describe 'PATCH #update' do
-    describe '視聴者更新（権限チェック）' do
+    context '視聴者更新（権限チェック）' do
       describe '正常' do
-        describe '本人の場合' do
+        context '本人' do
           before(:each) do
             current_viewer(viewer)
           end
 
-          describe '正常' do
+          context '正常' do
             it '本人はアップデートできる' do
               expect {
                 patch viewer_path(viewer),
@@ -387,12 +387,12 @@ RSpec.describe 'Viewer', type: :request do
       end
 
       describe '異常' do
-        describe 'システム管理者の場合' do
+        context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
           end
 
-          describe '異常' do
+          context '異常' do
             it 'オーナはアップデートできない' do
               expect {
                 patch viewer_path(viewer),
@@ -407,12 +407,12 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '同組織オーナーの場合' do
+        context '同組織オーナー' do
           before(:each) do
             current_user(user_owner)
           end
 
-          describe '異常' do
+          context '異常' do
             it 'オーナはアップデートできない' do
               expect {
                 patch viewer_path(viewer),
@@ -427,12 +427,12 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '同組織スタッフの場合' do
+        context '同組織スタッフ' do
           before(:each) do
             current_user(user_staff)
           end
 
-          describe '異常' do
+          context '異常' do
             it 'オーナはアップデートできない' do
               expect {
                 patch viewer_path(viewer),
@@ -447,12 +447,12 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '他組織オーナーの場合' do
+        context '他組織オーナー' do
           before(:each) do
             current_user(another_user_owner)
           end
 
-          describe '異常' do
+          context '異常' do
             it 'オーナはアップデートできない' do
               expect {
                 patch viewer_path(viewer),
@@ -467,12 +467,12 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '他組織スタッフの場合' do
+        context '他組織スタッフ' do
           before(:each) do
             current_user(another_user_staff)
           end
 
-          describe '異常' do
+          context '異常' do
             it 'オーナはアップデートできない' do
               expect {
                 patch viewer_path(viewer),
@@ -487,12 +487,12 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '同組織の他視聴者の場合' do
+        context '同組織他視聴者' do
           before(:each) do
             current_viewer(viewer1)
           end
 
-          describe '異常' do
+          context '異常' do
             it 'オーナはアップデートできない' do
               expect {
                 patch viewer_path(viewer),
@@ -507,12 +507,12 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '他組織の視聴者の場合' do
+        context '他組織視聴者' do
           before(:each) do
             current_viewer(another_viewer)
           end
 
-          describe '異常' do
+          context '異常' do
             it 'オーナはアップデートできない' do
               expect {
                 patch viewer_path(viewer),
@@ -527,8 +527,8 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
-          describe '異常' do
+        context 'ログインなし' do
+          context '異常' do
             it 'オーナはアップデートできない' do
               expect {
                 patch viewer_path(viewer),
@@ -545,8 +545,8 @@ RSpec.describe 'Viewer', type: :request do
       end
     end
 
-    describe '視聴者更新（動作チェック）' do
-      describe '本人の場合' do
+    context '視聴者更新（動作）' do
+      context '本人' do
         before(:each) do
           edit_viewer_path(viewer)
           current_viewer(viewer)
@@ -621,7 +621,7 @@ RSpec.describe 'Viewer', type: :request do
   # システム管理者　のみ許可
   describe 'DELETE #destroy' do
     describe '正常' do
-      describe 'システム管理者の場合' do
+      context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
         end
@@ -641,7 +641,7 @@ RSpec.describe 'Viewer', type: :request do
     end
 
     describe '異常' do
-      describe '同組織オーナーの場合' do
+      context '同組織オーナー' do
         before(:each) do
           current_user(user_owner)
         end
@@ -659,7 +659,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '同組織スタッフの場合' do
+      context '同組織スタッフ' do
         before(:each) do
           current_user(user_staff)
         end
@@ -677,7 +677,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '他組織オーナーの場合' do
+      context '他組織オーナー' do
         before(:each) do
           current_user(another_user_owner)
         end
@@ -695,7 +695,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '他組織スタッフの場合' do
+      context '他組織スタッフ' do
         before(:each) do
           current_user(another_user_staff)
         end
@@ -713,7 +713,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '本人の場合' do
+      context '本人' do
         before(:each) do
           current_viewer(viewer)
         end
@@ -731,7 +731,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '同組織の他視聴者の場合' do
+      context '同組織他視聴者' do
         before(:each) do
           current_viewer(viewer1)
         end
@@ -749,7 +749,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      context 'ログインなし' do
         it '削除できない' do
           expect {
             delete viewer_path(viewer), params: { id: viewer.id }

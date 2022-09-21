@@ -39,7 +39,7 @@ RSpec.describe 'Organization', type: :request do
   # システム管理者　のみ許可
   describe 'GET #index' do
     describe '正常' do
-      describe 'システム管理者の場合' do
+      context 'システム管理者' do
         before(:each) do
           login_session(system_admin)
           current_system_admin(system_admin)
@@ -57,7 +57,7 @@ RSpec.describe 'Organization', type: :request do
     end
 
     describe '異常' do
-      describe 'オーナーの場合' do
+      context 'オーナー' do
         before(:each) do
           login_session(user_owner)
           current_user(user_owner)
@@ -70,7 +70,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe 'スタッフの場合' do
+      context 'スタッフ' do
         before(:each) do
           login_session(user_staff)
           current_user(user_staff)
@@ -83,7 +83,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe '視聴者の場合' do
+      context '視聴者' do
         before(:each) do
           login_session(viewer)
           current_viewer(viewer)
@@ -96,7 +96,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      context 'ログインなし' do
         before(:each) do
           get organizations_path
         end
@@ -111,9 +111,9 @@ RSpec.describe 'Organization', type: :request do
 
   # 規制なし
   describe 'GET #new' do
-    describe '組織作成とオーナー同時作成' do
+    context '組織作成' do
       describe '正常' do
-        describe 'システム管理者の場合' do
+        context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
             get new_organization_path
@@ -128,7 +128,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'オーナーの場合' do
+        context 'オーナー' do
           before(:each) do
             current_user(user_owner)
             get new_organization_path
@@ -143,7 +143,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'スタッフの場合' do
+        context 'スタッフ' do
           before(:each) do
             current_user(user_staff)
             get new_organization_path
@@ -158,7 +158,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '視聴者の場合' do
+        context '視聴者' do
           before(:each) do
             current_viewer(viewer)
             get new_organization_path
@@ -173,7 +173,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           before(:each) do
             get new_organization_path
           end
@@ -194,7 +194,7 @@ RSpec.describe 'Organization', type: :request do
 
   # 規制なし
   describe 'POST #create' do
-    describe '組織とオーナー同時生成（動作チェック）' do
+    context '組織生成（動作）' do
       describe '正常' do
         before(:each) do
           new_organization_path
@@ -284,9 +284,9 @@ RSpec.describe 'Organization', type: :request do
       end
     end
 
-    describe '組織とオーナー同時生成（権限チェック）' do
+    describe '組織生成（権限）' do
       describe '正常' do
-        describe 'システム管理者の場合' do
+        context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
             new_organization_path
@@ -312,7 +312,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'オーナーの場合' do
+        context 'オーナー' do
           before(:each) do
             current_user(user_owner)
             new_organization_path
@@ -338,7 +338,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'スタッフの場合' do
+        context 'スタッフ' do
           before(:each) do
             current_user(user_staff)
             new_organization_path
@@ -364,7 +364,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '視聴者の場合' do
+        context '視聴者' do
           before(:each) do
             current_viewer(viewer)
             new_organization_path
@@ -390,7 +390,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           before(:each) do
             new_organization_path
           end
@@ -422,9 +422,9 @@ RSpec.describe 'Organization', type: :request do
 
   # システム管理者　set_userと同組織投稿者　のみ許可
   describe 'GET #show' do
-    describe '組織詳細(権限チェック)' do
+    context '組織詳細(権限)' do
       describe '正常' do
-        describe 'システム管理者の場合' do
+        context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
             get organization_path(organization)
@@ -439,7 +439,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '所属オーナーの場合' do
+        context '所属オーナー' do
           before(:each) do
             current_user(user_owner)
             get organization_path(organization)
@@ -454,7 +454,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '所属スタッフの場合' do
+        context '所属スタッフ' do
           before(:each) do
             current_user(user_staff)
             get organization_path(organization)
@@ -471,7 +471,7 @@ RSpec.describe 'Organization', type: :request do
       end
 
       describe '異常' do
-        describe '別組織のオーナーの場合' do
+        context '別組織のオーナー' do
           before(:each) do
             current_user(another_user_owner)
             get organization_path(organization)
@@ -483,7 +483,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '別組織のスタッフの場合' do
+        context '別組織のスタッフ' do
           before(:each) do
             current_user(another_user_staff)
             get organization_path(organization)
@@ -495,7 +495,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '動画視聴者の場合' do
+        context '動画視聴者' do
           before(:each) do
             current_viewer(viewer)
             get organization_path(organization)
@@ -507,7 +507,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           before(:each) do
             get organization_path(organization)
           end
@@ -523,9 +523,9 @@ RSpec.describe 'Organization', type: :request do
 
   # set_organizationのオーナー　のみ許可
   describe 'GET #edit' do
-    describe '組織編集（権限チェック）' do
+    context '組織編集（権限）' do
       describe '正常' do
-        describe '所属オーナーの場合' do
+        context '所属オーナー' do
           before(:each) do
             current_user(user_owner)
             get edit_user_path(user_owner)
@@ -542,7 +542,7 @@ RSpec.describe 'Organization', type: :request do
       end
 
       describe '異常' do
-        describe 'システム管理者の場合' do
+        context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
             get edit_user_path(user_owner)
@@ -554,7 +554,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '同組織のスタッフの場合' do
+        context '同組織スタッフ' do
           before(:each) do
             current_user(user_staff)
             get edit_user_path(user_owner)
@@ -566,7 +566,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '別組織のオーナーの場合（組織編集）' do
+        context '別組織オーナー' do
           before(:each) do
             current_user(another_user_owner)
             get edit_user_path(user_owner)
@@ -578,7 +578,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '別組織のスタッフの場合（組織編集）' do
+        context '別組織スタッフ' do
           before(:each) do
             current_user(another_user_staff)
             get edit_user_path(user_owner)
@@ -590,7 +590,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '動画視聴者の場合（組織編集）' do
+        context '動画視聴者場合' do
           before(:each) do
             current_viewer(viewer)
             get edit_user_path(user_owner)
@@ -602,7 +602,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'ログインなしの場合（組織編集）' do
+        context 'ログインなし場合' do
           before(:each) do
             get edit_user_path(user_owner)
           end
@@ -618,9 +618,9 @@ RSpec.describe 'Organization', type: :request do
 
   # set_organizationのオーナー　のみ許可
   describe 'PATCH #update' do
-    describe '組織更新（権限チェック）' do
+    context '組織更新（権限）' do
       describe '正常' do
-        describe '所属オーナーの場合' do
+        context '所属オーナー' do
           before(:each) do
             current_user(user_owner)
           end
@@ -640,7 +640,7 @@ RSpec.describe 'Organization', type: :request do
       end
 
       describe '異常' do
-        describe 'システム管理者の場合' do
+        context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
           end
@@ -658,7 +658,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '所属スタッフの場合' do
+        context '所属スタッフ' do
           before(:each) do
             current_user(user_staff)
           end
@@ -676,7 +676,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '別組織のオーナーの場合' do
+        context '別組織のオーナー' do
           before(:each) do
             current_user(another_user_owner)
           end
@@ -694,7 +694,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '別組織のスタッフの場合' do
+        context '別組織のスタッフ' do
           before(:each) do
             current_user(another_user_staff)
           end
@@ -712,7 +712,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '視聴者の場合' do
+        context '視聴者' do
           before(:each) do
             current_viewer(viewer)
           end
@@ -730,7 +730,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           it 'ログインなしはアップデートできない' do
             expect {
               patch organization_path(organization),
@@ -746,8 +746,8 @@ RSpec.describe 'Organization', type: :request do
       end
     end
 
-    describe '組織更新（動作チェック）' do
-      describe '所属オーナーの場合' do
+    context '組織更新（動作）' do
+      context '所属オーナー' do
         before(:each) do
           current_user(user_owner)
         end
@@ -811,7 +811,7 @@ RSpec.describe 'Organization', type: :request do
   # システム管理者　のみ許可
   describe 'DELETE #destroy' do
     describe '正常' do
-      describe 'システム管理者の場合' do
+      context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
         end
@@ -831,7 +831,7 @@ RSpec.describe 'Organization', type: :request do
     end
 
     describe '異常' do
-      describe '所属オーナーの場合' do
+      context '所属オーナー' do
         before(:each) do
           current_user(user_owner)
         end
@@ -849,7 +849,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe '他組織のオーナーの場合' do
+      context '他組織のオーナー' do
         before(:each) do
           current_user(another_user_owner)
         end
@@ -867,7 +867,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe '所属スタッフの場合' do
+      context '所属スタッフ' do
         before(:each) do
           current_user(user_staff)
         end
@@ -885,7 +885,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe '他組織のスタッフの場合' do
+      context '他組織のスタッフ' do
         before(:each) do
           current_user(another_user_staff)
         end
@@ -903,7 +903,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe 'ログインなしの場合' do
+      context 'ログインなし' do
         it '削除できない' do
           expect {
             delete organization_path(organization), params: { id: organization.id }

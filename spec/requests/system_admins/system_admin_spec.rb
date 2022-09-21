@@ -44,9 +44,9 @@ RSpec.describe 'SystemAdmin', type: :request do
 
   # システム管理者　のみ許可
   describe 'GET #show' do
-    describe 'システム管理者詳細（権限チェック）' do
+    context 'システム管理者詳細（権限）' do
       describe '正常' do
-        describe '本人の場合' do
+        context '本人' do
           before(:each) do
             current_system_admin(system_admin)
             get system_admin_path(system_admin)
@@ -63,7 +63,7 @@ RSpec.describe 'SystemAdmin', type: :request do
       end
 
       describe '異常' do
-        describe 'オーナーの場合' do
+        context 'オーナー' do
           before(:each) do
             current_user(user_owner)
             get system_admin_path(system_admin)
@@ -75,7 +75,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe 'スタッフの場合' do
+        context 'スタッフ' do
           before(:each) do
             current_user(user_staff)
             get system_admin_path(system_admin)
@@ -87,7 +87,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe '視聴者の場合' do
+        context '視聴者' do
           before(:each) do
             current_viewer(viewer)
             get system_admin_path(system_admin)
@@ -99,7 +99,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           before(:each) do
             get system_admin_path(system_admin)
           end
@@ -115,9 +115,9 @@ RSpec.describe 'SystemAdmin', type: :request do
 
   # システム管理者　のみ許可
   describe 'GET #edit' do
-    describe 'システム管理者編集（権限チェック）' do
+    context 'システム管理者編集（権限）' do
       describe '正常' do
-        describe '本人の場合' do
+        context '本人' do
           before(:each) do
             current_system_admin(system_admin)
             get edit_system_admin_path(system_admin)
@@ -134,7 +134,7 @@ RSpec.describe 'SystemAdmin', type: :request do
       end
 
       describe '異常' do
-        describe 'オーナーの場合' do
+        context 'オーナー' do
           before(:each) do
             current_user(user_owner)
             get edit_system_admin_path(system_admin)
@@ -146,7 +146,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe 'スタッフの場合' do
+        context 'スタッフ' do
           before(:each) do
             current_user(user_staff)
             get edit_system_admin_path(system_admin)
@@ -158,7 +158,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe '動画視聴者の場合' do
+        context '動画視聴者' do
           before(:each) do
             current_viewer(viewer)
             get edit_system_admin_path(system_admin)
@@ -170,7 +170,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           before(:each) do
             get edit_system_admin_path(system_admin)
           end
@@ -186,9 +186,9 @@ RSpec.describe 'SystemAdmin', type: :request do
 
   # システム管理者　のみ許可
   describe 'PATCH #update' do
-    describe 'システム管理者更新（権限チェック）' do
+    context 'システム管理者更新' do
       describe '正常' do
-        describe '本人の場合' do
+        context '本人' do
           before(:each) do
             current_system_admin(system_admin)
           end
@@ -208,7 +208,7 @@ RSpec.describe 'SystemAdmin', type: :request do
       end
 
       describe '異常' do
-        describe 'オーナーの場合' do
+        context 'オーナー' do
           before(:each) do
             current_user(user_owner)
           end
@@ -226,7 +226,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe 'スタッフの場合' do
+        context 'スタッフ' do
           before(:each) do
             current_user(user_staff)
           end
@@ -244,7 +244,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe '視聴者の場合' do
+        context '視聴者' do
           before(:each) do
             current_viewer(viewer)
           end
@@ -262,7 +262,7 @@ RSpec.describe 'SystemAdmin', type: :request do
           end
         end
 
-        describe 'ログインなしの場合' do
+        context 'ログインなし' do
           it 'ログインなしはアップデートできない' do
             expect {
               patch system_admin_path(system_admin),
@@ -278,8 +278,8 @@ RSpec.describe 'SystemAdmin', type: :request do
       end
     end
 
-    describe 'システム管理者更新（動作チェック）' do
-      describe '本人の場合' do
+    context 'システム管理者更新（動作）' do
+      context '本人' do
         before(:each) do
           edit_system_admin_path(system_admin)
           current_system_admin(system_admin)

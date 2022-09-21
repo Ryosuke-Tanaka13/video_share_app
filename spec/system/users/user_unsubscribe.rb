@@ -36,9 +36,9 @@ RSpec.describe 'UserUnsubscribeSystem', type: :system do
     organization_viewer3
   end
 
-  describe 'オーナー退会' do
+  context 'オーナー退会' do
     describe '正常～異常' do
-      describe '本人操作' do
+      context '本人操作' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)

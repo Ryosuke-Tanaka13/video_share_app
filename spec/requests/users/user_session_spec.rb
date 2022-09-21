@@ -37,7 +37,7 @@ RSpec.describe 'UserSession', type: :request do
   end
 
   describe '正常' do
-    describe 'オーナーがログインできることを確認' do
+    context 'オーナーがログインできることを確認' do
       it do
         get new_user_session_path
         expect(response).to have_http_status(:success)
@@ -47,7 +47,7 @@ RSpec.describe 'UserSession', type: :request do
       end
     end
 
-    describe 'オーナーがログアウトできることを確認' do
+    context 'オーナーがログアウトできることを確認' do
       before(:each) do
         login_session(user_owner)
         current_user(user_owner)
@@ -60,7 +60,7 @@ RSpec.describe 'UserSession', type: :request do
       end
     end
 
-    describe 'スタッフがログインできることを確認' do
+    context 'スタッフがログインできることを確認' do
       it do
         get new_user_session_path
         expect(response).to have_http_status(:success)
@@ -70,7 +70,7 @@ RSpec.describe 'UserSession', type: :request do
       end
     end
 
-    describe 'スタッフがログアウトできることを確認' do
+    context 'スタッフがログアウトできることを確認' do
       before(:each) do
         login_session(user_staff)
         current_user(user_staff)
@@ -85,8 +85,8 @@ RSpec.describe 'UserSession', type: :request do
   end
 
   describe '異常' do
-    describe '他モデルアカウントとの重複ログインができない' do
-      describe 'システム管理者' do
+    context '他モデルアカウントとの重複ログインができない' do
+      context 'システム管理者' do
         before(:each) do
           login_session(system_admin)
           current_system_admin(system_admin)
@@ -98,7 +98,7 @@ RSpec.describe 'UserSession', type: :request do
         end
       end
 
-      describe '視聴者' do
+      context '視聴者' do
         before(:each) do
           login_session(viewer)
           current_viewer(viewer)

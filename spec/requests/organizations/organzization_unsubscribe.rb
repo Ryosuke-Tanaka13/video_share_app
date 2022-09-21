@@ -36,9 +36,9 @@ RSpec.describe 'OrganizationUnsubscribe', type: :request do
     organization_viewer3
   end
 
-  describe '組織退会' do
+  context '組織退会' do
     describe '正常～異常' do
-      describe '所属オーナー操作' do
+      context '所属オーナー' do
         before(:each) do
           current_user(user_owner)
         end
@@ -58,7 +58,7 @@ RSpec.describe 'OrganizationUnsubscribe', type: :request do
     end
 
     describe '異常' do
-      describe 'システム管理者操作' do
+      context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
         end
@@ -70,7 +70,7 @@ RSpec.describe 'OrganizationUnsubscribe', type: :request do
         end
       end
 
-      describe '同組織のスタッフ操作' do
+      context '同組織スタッフ' do
         before(:each) do
           current_user(user_staff)
         end
@@ -82,7 +82,7 @@ RSpec.describe 'OrganizationUnsubscribe', type: :request do
         end
       end
 
-      describe '他組織のオーナー操作' do
+      context '他組織オーナー' do
         before(:each) do
           current_user(another_user_owner)
         end
@@ -94,7 +94,7 @@ RSpec.describe 'OrganizationUnsubscribe', type: :request do
         end
       end
 
-      describe '他組織のスタッフ操作' do
+      context '他組織スタッフ' do
         before(:each) do
           current_user(another_user_staff)
         end
@@ -106,7 +106,7 @@ RSpec.describe 'OrganizationUnsubscribe', type: :request do
         end
       end
 
-      describe '視聴者操作' do
+      context '視聴者' do
         before(:each) do
           current_viewer(viewer)
         end
@@ -118,7 +118,7 @@ RSpec.describe 'OrganizationUnsubscribe', type: :request do
         end
       end
 
-      describe 'ログインなし操作' do
+      context 'ログインなし' do
         it '退会できない' do
           expect {
             patch organizations_unsubscribe_path(organization)

@@ -108,7 +108,7 @@ RSpec.describe 'UserSystem', type: :system do
 
   context 'User操作' do
     describe '正常' do
-      describe '投稿者一覧ページ' do
+      context '投稿者一覧ページ' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -155,7 +155,7 @@ RSpec.describe 'UserSystem', type: :system do
         end
       end
 
-      describe 'オーナー詳細' do
+      context 'オーナー詳細' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -181,7 +181,7 @@ RSpec.describe 'UserSystem', type: :system do
         end
       end
 
-      describe 'オーナー編集' do
+      context 'オーナー編集' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -205,7 +205,7 @@ RSpec.describe 'UserSystem', type: :system do
         end
       end
 
-      describe 'スタッフ新規作成' do
+      context 'スタッフ新規作成' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -234,7 +234,7 @@ RSpec.describe 'UserSystem', type: :system do
     end
 
     describe '異常' do
-      describe '投稿者一覧ページ' do
+      context '投稿者一覧ページ' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -247,7 +247,7 @@ RSpec.describe 'UserSystem', type: :system do
         end
       end
 
-      describe 'オーナー編集' do
+      context 'オーナー編集' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -283,7 +283,7 @@ RSpec.describe 'UserSystem', type: :system do
         end
       end
 
-      describe 'スタッフ新規作成' do
+      context 'スタッフ新規作成' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)

@@ -19,13 +19,9 @@ RSpec.describe 'LoginlessViewerUnsubscribe', type: :request do
 
   let(:organization_viewer) { create(:organization_viewer) }
   let(:organization_viewer1) { create(:organization_viewer1) }
-  let(:organization_viewer2) { create(:organization_viewer2) }
-  let(:organization_viewer3) { create(:organization_viewer3) }
 
   let(:organization_loginless_viewer) { create(:organization_loginless_viewer) }
   let(:organization_loginless_viewer1) { create(:organization_loginless_viewer1) }
-  let(:organization_loginless_viewer2) { create(:organization_loginless_viewer2) }
-  let(:organization_loginless_viewer3) { create(:organization_loginless_viewer3) }
 
   before(:each) do
     system_admin
@@ -43,17 +39,13 @@ RSpec.describe 'LoginlessViewerUnsubscribe', type: :request do
     another_loginless_viewer
     organization_viewer
     organization_viewer1
-    organization_viewer2
-    organization_viewer3
     organization_loginless_viewer
     organization_loginless_viewer1
-    organization_loginless_viewer2
-    organization_loginless_viewer3
   end
 
-  describe '視聴者退会' do
+  context '視聴者退会' do
     describe '正常' do
-      describe '同組織オーナー操作' do
+      context '同組織オーナー' do
         before(:each) do
           current_user(user_owner)
         end
@@ -67,7 +59,7 @@ RSpec.describe 'LoginlessViewerUnsubscribe', type: :request do
     end
 
     describe '異常' do
-      describe 'システム管理者操作' do
+      context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
         end
@@ -79,7 +71,7 @@ RSpec.describe 'LoginlessViewerUnsubscribe', type: :request do
         end
       end
 
-      describe '他組織オーナー操作' do
+      context '他組織オーナー' do
         before(:each) do
           current_user(another_user_owner)
         end
@@ -91,7 +83,7 @@ RSpec.describe 'LoginlessViewerUnsubscribe', type: :request do
         end
       end
 
-      describe '同組織スタッフ操作' do
+      context '同組織スタッフ' do
         before(:each) do
           current_user(user_staff)
         end
@@ -103,7 +95,7 @@ RSpec.describe 'LoginlessViewerUnsubscribe', type: :request do
         end
       end
 
-      describe '他組織スタッフ操作' do
+      context '他組織スタッフ' do
         before(:each) do
           current_user(another_user_staff)
         end
@@ -115,7 +107,7 @@ RSpec.describe 'LoginlessViewerUnsubscribe', type: :request do
         end
       end
 
-      describe '他視聴者操作' do
+      context '他視聴者' do
         before(:each) do
           current_viewer(viewer1)
         end
@@ -127,7 +119,7 @@ RSpec.describe 'LoginlessViewerUnsubscribe', type: :request do
         end
       end
 
-      describe 'ログインなし操作' do
+      context 'ログインなし' do
         it '退会できない' do
           expect {
             patch loginless_viewers_unsubscribe_path(loginless_viewer)

@@ -50,7 +50,7 @@ RSpec.describe 'ViewerSystem', type: :system do
 
   context 'Viewer操作' do
     describe '正常' do
-      describe '視聴者一覧ページ' do
+      context '視聴者一覧ページ' do
         before(:each) do
           login(system_admin)
           current_system_admin(system_admin)
@@ -109,7 +109,7 @@ RSpec.describe 'ViewerSystem', type: :system do
         end
       end
 
-      describe '視聴者詳細' do
+      context '視聴者詳細' do
         before(:each) do
           login(viewer)
           current_viewer(viewer)
@@ -134,7 +134,7 @@ RSpec.describe 'ViewerSystem', type: :system do
         end
       end
 
-      describe '視聴者編集' do
+      context '視聴者編集' do
         before(:each) do
           login(viewer)
           current_viewer(viewer)
@@ -160,7 +160,7 @@ RSpec.describe 'ViewerSystem', type: :system do
     end
 
     describe '異常' do
-      describe '視聴者編集' do
+      context '視聴者編集' do
         before(:each) do
           login(viewer)
           current_viewer(viewer)

@@ -136,7 +136,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
 
   context 'Organization操作' do
     describe '正常' do
-      describe '組織一覧ページ' do
+      context '組織一覧ページ' do
         before(:each) do
           login(system_admin)
           current_system_admin(system_admin)
@@ -176,7 +176,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
         end
       end
 
-      describe '組織詳細' do
+      context '組織詳細' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -208,7 +208,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
         # end
       end
 
-      describe '組織編集' do
+      context '組織編集' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -233,7 +233,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
     end
 
     describe '異常' do
-      describe '組織編集' do
+      context '組織編集' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)

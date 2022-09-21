@@ -12,15 +12,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
   let(:loginless_viewer1) { create(:loginless_viewer1) }
 
   let(:another_organization) { create(:another_organization) }
-  let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
-  let(:another_user_staff) { create(:another_user_staff, confirmed_at: Time.now) }
-  let(:another_viewer) { create(:another_viewer, confirmed_at: Time.now) }
   let(:another_loginless_viewer) { create(:another_loginless_viewer) }
-
-  let(:organization_viewer) { create(:organization_viewer) }
-  let(:organization_viewer1) { create(:organization_viewer1) }
-  let(:organization_viewer2) { create(:organization_viewer2) }
-  let(:organization_viewer3) { create(:organization_viewer3) }
 
   let(:organization_loginless_viewer) { create(:organization_loginless_viewer) }
   let(:organization_loginless_viewer1) { create(:organization_loginless_viewer1) }
@@ -37,14 +29,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
     loginless_viewer
     loginless_viewer1
     another_organization
-    another_user_owner
-    another_user_staff
-    another_viewer
     another_loginless_viewer
-    organization_viewer
-    organization_viewer1
-    organization_viewer2
-    organization_viewer3
     organization_loginless_viewer
     organization_loginless_viewer1
     organization_loginless_viewer2
@@ -53,7 +38,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
 
   context 'オーナー操作' do
     describe '正常' do
-      describe 'ログインなし視聴者一覧' do
+      context 'ログインなし視聴者一覧' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -112,7 +97,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
         end
       end
 
-      describe 'ログインなし視聴者詳細' do
+      context 'ログインなし視聴者詳細' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
