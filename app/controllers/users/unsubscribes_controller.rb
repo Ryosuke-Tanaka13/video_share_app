@@ -1,3 +1,4 @@
+class Users::UnsubscribesController < UsersController
   before_action :ensure_logged_in
   before_action :ensure_owner_in_same_organization_as_set_user_or_correct_user
   before_action :set_user
