@@ -10,11 +10,11 @@ class LoginlessViewersController < ApplicationController
   def index
     # system_adminが/loginless_viewersへ直接アクセスするとエラーになる仕様
     if current_system_admin
-      @loginless_viewers = LoginlessViewer.loginless_viewer_has(params[:organization_id])
+      @loginless_viewers = LoginlessViewer.includes(:organization_loginless_viewers).loginless_has(params[:organization_id])
       # 組織名を表示させるためのインスタンス変数
       @organization = Organization.find(params[:organization_id])
     else
-      @loginless_viewers = LoginlessViewer.current_owner_has(current_user).subscribed
+      @loginless_viewers = LoginlessViewer.includes(:organization_loginless_viewers).current_owner_has(current_user).subscribed
     end
   end
 
@@ -24,15 +24,13 @@ class LoginlessViewersController < ApplicationController
     @loginless_viewer = LoginlessViewer.new(loginless_viewer_params)
     if @loginless_viewer.save
       flash[:success] = "#{@loginless_viewer.name}の作成に成功しました"
-      redirect_to root_path
-    else
-      redirect_to root_path
     end
+    redirect_to root_path
   end
 
   def show
     # viewの所属組織名を表示させるために記載
-    @organizations = Organization.loginless_viewer_has(params[:id])
+    @organizations = Organization.includes(:organization_loginless_viewers).loginless_has(params[:id])
   end
 
   def destroy

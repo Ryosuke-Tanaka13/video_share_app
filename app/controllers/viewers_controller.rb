@@ -21,7 +21,7 @@ class ViewersController < ApplicationController
 
   def show
     # viewの所属組織名を表示させるために記載
-    @organizations = Organization.viewer_has(params[:id])
+    @organizations = Organization.includes(:organization_viewers).viewer_has(params[:id])
   end
 
   def edit; end
@@ -37,7 +37,7 @@ class ViewersController < ApplicationController
 
   def destroy
     # viewrが削除される前にorganization_idを保存しておく
-    organization_id = Organization.viewer_existence_confirmation(params[:id]).id
+    organization_id = Organization.includes(:organization_viewers).viewer_existence_confirmation(params[:id]).id
     @viewer.destroy!
     flash[:danger] = "#{@viewer.name}のユーザー情報を削除しました"
     redirect_to viewers_url(organization_id: organization_id)
