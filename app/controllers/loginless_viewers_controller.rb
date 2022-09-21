@@ -8,29 +8,37 @@ class LoginlessViewersController < ApplicationController
   before_action :set_loginless_viewer, except: %i[index create]
 
   def index
-    @loginless_viewers = LoginlessViewer.all
+    # system_adminが/loginless_viewersへ直接アクセスするとエラーになる仕様
+    if current_system_admin
+      @loginless_viewers = LoginlessViewer.loginless_viewer_has(params[:organization_id])
+      # 組織名を表示させるためのインスタンス変数
+      @organization = Organization.find(params[:organization_id])
+    else
+      @loginless_viewers = LoginlessViewer.current_owner_has(current_user).subscribed
+    end
   end
 
-  def new
-    @loginless_viewer = LoginlessViewer.new
-  end
+  # ポップアップでの作成の為、new なし
 
   def create
     @loginless_viewer = LoginlessViewer.new(loginless_viewer_params)
     if @loginless_viewer.save
       flash[:success] = "#{@loginless_viewer.name}の作成に成功しました"
-      redirect_to loginless_viewers_url
+      redirect_to root_path
     else
-      render :new
+      redirect_to root_path
     end
   end
 
-  def show; end
+  def show;
+    # viewの所属組織名を表示させるために記載
+    @organizations = Organization.loginless_viewer_has(params[:id])
+  end
 
   def destroy
     @loginless_viewer.destroy!
     flash[:danger] = "#{@loginless_viewer.name}のユーザー情報を削除しました"
-    redirect_to loginless_viewers_url
+    redirect_to organizations_url
   end
 
   private

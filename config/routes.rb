@@ -20,32 +20,11 @@ Rails.application.routes.draw do
 
   # system_admin関連=========================================================
   devise_for :system_admins, controllers: {
-    sessions: 'system_admins/sessions'
+    sessions:  'system_admins/sessions',
+    passwords: 'system_admins/passwords'
   }
 
   resources :system_admins, only: %i[show edit update] do
-  end
-  # =================================================================
-
-  # viewer関連==========================================================
-  devise_for :viewers, controllers: {
-    sessions:      'viewers/sessions',
-    passwords:     'viewers/passwords',
-    confirmations: 'viewers/confirmations',
-    registrations: 'viewers/registrations'
-  }
-
-  namespace :viewers do
-    resources :dash_boards, only: [:index]
-    resource :profile, except: %i[create new]
-  end
-
-  resources :viewers do
-    member do
-      scope module: :viewers do
-        resource :unsubscribe, only: %i[show update], as: :viewers_unsubscribe
-      end
-    end
   end
   # =================================================================
 
@@ -67,8 +46,31 @@ Rails.application.routes.draw do
 
   post 'users_create', to: 'users#create'
   # =================================================================
+
+  # viewer関連==========================================================
+  devise_for :viewers, controllers: {
+    sessions:      'viewers/sessions',
+    passwords:     'viewers/passwords',
+    confirmations: 'viewers/confirmations',
+    registrations: 'viewers/registrations'
+  }
+
+  resources :viewers do
+    member do
+      scope module: :viewers do
+        resource :unsubscribe, only: %i[show update], as: :viewers_unsubscribe
+      end
+    end
+  end
+  # =================================================================
+
   # loginless_viewer関連==============================================================
-  resources :loginless_viewers, except: :edit do
+  resources :loginless_viewers, except: %i[new edit update] do
+    member do
+      scope module: :loginless_viewers do
+        resource :unsubscribe, only: %i[update], as: :loginless_viewers_unsubscribe
+      end
+    end
   end
   # =================================================================
 

@@ -6,16 +6,22 @@
       <tbody>
         <tr>
           <th><%= "名前" %></th>
-          <td><%= @loginless_viewer.name %></td>
+          <td>
+            <%= @loginless_viewer.name %>
+            <% if @loginless_viewer.is_valid == false %>(退会)<% end %>
+          </td>
         </tr>
         <tr>
           <th><%= "メールアドレス" %></th>
           <td><%= @loginless_viewer.email %></td>
         </tr>
+        <% @organizations.each.with_index(1) do |organization, i| %>
+        <tr>
+          <th><%= "所属組織名#{i}" %></th>
+          <td><%= link_to organization.name, organization_path(organization) %></td>
+        </tr>
+        <% end %>
       </tbody>
     </table>
-  </div>
-  <div class="card-footer">
-    <%= link_to "一覧画面へ", loginless_viewers_path, class: "btn btn-md btn-block btn-default" %>
   </div>
 </div>

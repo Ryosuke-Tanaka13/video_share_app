@@ -1,14 +1,26 @@
-<% provide(:title,  "ログインなし視聴者一覧") %>
+<% provide(:title,  "#{@organization&.name}ログインなし視聴者一覧") %>
   <div class="card">
     <div class="card-body table-responsive p-0">
       <table class="table table-hover text-nowrap"> 
         <tbody>
+          <tr align="center">
+            <td>名前</td>
+            <td>メールアドレス</td>
+            <td></td>
+          </tr>
           <% @loginless_viewers.each do |loginless_viewer| %>
           <tr align="center">
-            <td><%= link_to loginless_viewer.name, loginless_viewer_path(loginless_viewer) %></td>
+            <td>
+              <%= link_to loginless_viewer.name, loginless_viewer_path(loginless_viewer) %>
+              <% if loginless_viewer.is_valid == false %>(退会)<% end %>
+            </td>
             <td><%= loginless_viewer.email %></td>
             <% if current_system_admin %>
-            <td><%= link_to "削除", loginless_viewer_path(loginless_viewer), method: :delete, data: { confirm: "#{loginless_viewer.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+              <td><%= link_to "削除", loginless_viewer_path(loginless_viewer), method: :delete, data: { confirm: "#{loginless_viewer.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+            <% elsif current_user %>
+              <td><%= link_to "削除", loginless_viewers_unsubscribe_path(loginless_viewer), method: :patch, data: { confirm: "#{loginless_viewer.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+            <% else %>
+              <td></td>
             <% end %>
           </tr>
           <% end %>
