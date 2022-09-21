@@ -8,15 +8,13 @@ class UsersController < ApplicationController
   before_action :set_user, except: %i[index new create]
 
   def index
+    # system_adminが/usersへ直接アクセスするとエラーになる仕様
     if current_system_admin
-      if params[:organization_id].nil?
-        @users = User.all
-      else
-        @users = User.where(organization_id: params[:organization_id])
-        @organization = Organization.find(params[:organization_id])
-      end
+      @users = User.user_has(params[:organization_id])
+      # 組織名を表示させるためのインスタンス変数
+      @organization = Organization.find(params[:organization_id])
     else
-      @users = User.current_owner_has(current_user).unsubscribe
+      @users = User.current_owner_has(current_user).subscribed
     end
   end
 
