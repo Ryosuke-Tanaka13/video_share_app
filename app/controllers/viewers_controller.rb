@@ -55,7 +55,7 @@ class ViewersController < ApplicationController
 
   # 視聴者本人　のみ許可
   def ensure_correct_viewer
-    if !correct_viewer?
+    unless correct_viewer?
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end

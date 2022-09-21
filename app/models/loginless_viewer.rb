@@ -10,8 +10,8 @@ class LoginlessViewer < ApplicationRecord
                               includes(:organization_loginless_viewers).where(organization_loginless_viewers: { organization_id: current_user.organization_id })
                             }
   scope :loginless_viewer_has, lambda { |organization_id|
-                       includes(:organization_loginless_viewers).where(organization_loginless_viewers: { organization_id: organization_id })
-                     }
+                                 includes(:organization_loginless_viewers).where(organization_loginless_viewers: { organization_id: organization_id })
+                               }
   # 退会者は省く絞り込み
   scope :subscribed, -> { where(is_valid: true) }
 end

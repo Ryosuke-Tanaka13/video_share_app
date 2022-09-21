@@ -85,7 +85,7 @@ class ApplicationController < ActionController::Base
 
   # ログイン中　のみ許可
   def ensure_logged_in
-    if !logged_in?
+    unless logged_in?
       flash[:danger] = 'ログインしてください。'
       redirect_to root_url
     end
@@ -101,7 +101,7 @@ class ApplicationController < ActionController::Base
 
   # システム管理者　のみ許可
   def ensure_admin
-    if !current_system_admin?
+    unless current_system_admin?
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end

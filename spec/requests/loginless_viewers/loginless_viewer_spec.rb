@@ -140,8 +140,8 @@ RSpec.describe 'loginless_viewer', type: :request do
           post loginless_viewers_path,
             params: {
               loginless_viewer: {
-                name:                  'test',
-                email:                 'test@email.com'
+                name:  'test',
+                email: 'test@email.com'
               }
             }
         }.to change(LoginlessViewer, :count).by(1)
@@ -152,8 +152,8 @@ RSpec.describe 'loginless_viewer', type: :request do
           post(loginless_viewers_path,
             params: {
               loginless_viewer: {
-                name:                  'test',
-                email:                 'test@email.com'
+                name:  'test',
+                email: 'test@email.com'
               }
             }
           )
@@ -167,8 +167,8 @@ RSpec.describe 'loginless_viewer', type: :request do
           post loginless_viewers_path,
             params: {
               loginless_viewer: {
-                name:                  '',
-                email:                 'test@email.com'
+                name:  '',
+                email: 'test@email.com'
               }
             }
         }.to change(LoginlessViewer, :count).by(0)
@@ -288,7 +288,7 @@ RSpec.describe 'loginless_viewer', type: :request do
 
   # 'GET #edit' なし
 
-  #'PATCH #update' なし
+  # 'PATCH #update' なし
 
   # システム管理者　のみ許可
   describe 'DELETE #destroy' do

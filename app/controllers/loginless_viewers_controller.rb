@@ -30,7 +30,7 @@ class LoginlessViewersController < ApplicationController
     end
   end
 
-  def show;
+  def show
     # viewの所属組織名を表示させるために記載
     @organizations = Organization.loginless_viewer_has(params[:id])
   end
@@ -53,7 +53,7 @@ class LoginlessViewersController < ApplicationController
 
   # set_loginless_viewerと同組織オーナー　のみ許可
   def owner_in_same_organization_as_set_loginless_viewer
-    if !owner_in_same_organization_as_set_loginless_viewer?
+    unless owner_in_same_organization_as_set_loginless_viewer?
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end
