@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe 'UserSessions', type: :system do
+RSpec.describe 'SystemAdmin', type: :system do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
-  let(:user) { create(:user, confirmed_at: Time.now) }
+  let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
@@ -11,7 +11,7 @@ RSpec.describe 'UserSessions', type: :system do
   before(:each) do
     organization
     user_owner
-    user
+    user_staff
     system_admin
     viewer
   end
@@ -32,12 +32,12 @@ RSpec.describe 'UserSessions', type: :system do
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'
 
-        visit users_path
+        visit users_path(organization_id: organization.id)
 
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'
 
-        viewers_path
+        viewers_path(organization_id: organization.id)
 
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'

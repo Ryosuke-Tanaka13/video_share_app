@@ -32,7 +32,7 @@ organization = Organization.new(
 organization.save!
 
 # =================================================================
-# organization関連==================================================
+# user関連==================================================
 user = User.new(
   email: 'test_user_owner1@gmail.com',
   name: 'オーナー1',
@@ -45,7 +45,7 @@ user.save!
 
 user = User.new(
   email: 'test_user1@gmail.com',
-  name: '投稿者1',
+  name: 'スタッフ1',
   password: 'password',
   role: 1,
   organization_id: 1 
@@ -65,7 +65,7 @@ user.save!
 
 user = User.new(
   email: 'test_user2@gmail.com',
-  name: '投稿者2',
+  name: 'スタッフ2',
   password: 'password',
   role: 1,
   organization_id: 2

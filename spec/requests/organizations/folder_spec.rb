@@ -5,7 +5,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
   let(:another_organization) { create(:another_organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
   let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id) }
-  let(:user) { create(:user, organization_id: organization.id) }
+  let(:user_staff) { create(:user_staff, organization_id: organization.id) }
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
 
@@ -14,7 +14,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
     another_organization
     user_owner
     another_user_owner
-    user
+    user_staff
     folder_celeb
     folder_tech
   end
@@ -37,9 +37,9 @@ RSpec.describe 'Organizations::Folders', type: :request do
 
       describe '異常' do
         before(:each) do
-          login_session(user)
-          current_user(user)
-          get folders_path(user)
+          login_session(user_staff)
+          current_user(user_staff)
+          get folders_path(user_staff)
         end
 
         it 'アクセス権限なしのためリダイレクト' do

@@ -3,11 +3,12 @@ require 'rails_helper'
 RSpec.describe 'OrganizationSystem', type: :system do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
-  let(:user) { create(:user, confirmed_at: Time.now) }
+  let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
+  let(:user_staff1) { create(:user_staff1, confirmed_at: Time.now) }
 
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
-  let(:another_user) { create(:another_user, confirmed_at: Time.now) }
+  let(:another_user_staff) { create(:another_user_staff, confirmed_at: Time.now) }
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
@@ -15,10 +16,11 @@ RSpec.describe 'OrganizationSystem', type: :system do
   before(:each) do
     organization
     user_owner
-    user
+    user_staff
+    user_staff1
     another_organization
     another_user_owner
-    another_user
+    another_user_staff
     system_admin
     viewer
   end
@@ -35,12 +37,12 @@ RSpec.describe 'OrganizationSystem', type: :system do
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'
 
-        visit users_path
+        visit users_path(organization_id: organization.id)
 
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'
 
-        viewers_path
+        viewers_path(organization_id: organization.id)
 
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'
@@ -104,8 +106,8 @@ RSpec.describe 'OrganizationSystem', type: :system do
 
     describe '動画投稿者' do
       before(:each) do
-        login(user)
-        current_user(user)
+        login(user_staff)
+        current_user(user_staff)
         visit users_path
       end
 
@@ -127,7 +129,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
 
       it 'アカウント編集への遷移' do
         click_link 'アカウント編集'
-        expect(page).to have_current_path edit_user_path(user), ignore_query: true
+        expect(page).to have_current_path edit_user_path(user_staff), ignore_query: true
       end
     end
   end
@@ -199,6 +201,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
           expect(page).to have_current_path users_path, ignore_query: true
         end
 
+        # 現状の権限の都合上コメントアウト
         # it '動画フォルダ一覧への遷移' do
         #   click_link '動画フォルダ一覧'
         #   expect(page).to have_current_path folders_path, ignore_query: true
@@ -260,7 +263,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
 
         it '組織のEメール重複' do
           fill_in '組織名', with: 'test'
-          fill_in '組織のEメール', with: 'org2@example.com'
+          fill_in '組織のEメール', with: 'org_spec1@example.com'
           click_button '更新'
           expect(page).to have_text '組織のEメールはすでに存在します'
         end

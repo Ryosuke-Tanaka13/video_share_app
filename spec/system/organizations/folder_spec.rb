@@ -5,7 +5,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
   let(:another_organization) { create(:another_organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
   let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id) }
-  let(:user) { create(:user, organization_id: organization.id) }
+  let(:user_staff) { create(:user_staff, organization_id: organization.id) }
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
   let(:folder_other_owner) { create(:folder_other_owner, organization_id: another_user_owner.organization_id) }
@@ -15,7 +15,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
     another_organization
     user_owner
     another_user_owner
-    user
+    user_staff
     folder_celeb
     folder_tech
     folder_other_owner

@@ -1,293 +1,129 @@
 require 'rails_helper'
 
 RSpec.describe 'Viewer', type: :request do
+  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
+
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
-  let(:user) { create(:user, confirmed_at: Time.now) }
-
-  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
+  let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
 
+  let(:another_organization) { create(:another_organization) }
+  let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
+  let(:another_user_staff) { create(:another_user_staff, confirmed_at: Time.now) }
+  let(:another_viewer) { create(:another_viewer, confirmed_at: Time.now) }
+
+  let(:organization_viewer) { create(:organization_viewer) }
+  let(:organization_viewer1) { create(:organization_viewer1) }
+  let(:organization_viewer2) { create(:organization_viewer2) }
+  let(:organization_viewer3) { create(:organization_viewer3) }
+
   before(:each) do
+    system_admin
     organization
     user_owner
-    user
-    system_admin
+    user_staff
     viewer
     viewer1
+    another_organization
+    another_user_owner
+    another_user_staff
+    another_viewer
+    organization_viewer
+    organization_viewer1
+    organization_viewer2
+    organization_viewer3
   end
 
+  # システム管理者　投稿者　のみ許可
   describe 'GET #index' do
-    describe '正常(システム管理者)' do
-      before(:each) do
-        login_session(system_admin)
-        current_system_admin(system_admin)
-        get viewers_path(system_admin)
-      end
-
-      it 'レスポンスに成功する' do
-        expect(response).to be_successful
-      end
-
-      it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
-      end
-    end
-
-    describe '正常(オーナー)' do
-      before(:each) do
-        login_session(user_owner)
-        current_user(user_owner)
-        get viewers_path(user_owner)
-      end
-
-      it 'レスポンスに成功する' do
-        expect(response).to be_successful
-      end
-
-      it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
-      end
-    end
-
-    describe '正常(スタッフ)' do
-      before(:each) do
-        login_session(user)
-        current_user(user)
-        get viewers_path(user)
-      end
-
-      it 'レスポンスに成功する' do
-        expect(response).to be_successful
-      end
-
-      it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
-      end
-    end
-
-    describe '異常(viewer)' do
-      before(:each) do
-        login_session(viewer)
-        current_viewer(viewer)
-        get viewers_path(viewer)
-      end
-
-      it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
-        expect(response).to redirect_to root_path
-      end
-    end
-
-    describe '異常(ログインなし)' do
-      before(:each) do
-        get viewers_path
-      end
-
-      it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
-        expect(response).to redirect_to root_path
-      end
-    end
-  end
-
-  describe 'POST #create' do
     describe '正常' do
-      before(:each) do
-        new_viewer_path
-      end
-
-      it '視聴者が新規作成される' do
-        expect {
-          post viewers_path,
-            params: {
-              viewer: {
-                name:                  '視聴者1',
-                email:                 'sample1@email.com',
-                password:              'password',
-                password_confirmation: 'password'
-              }
-            }
-        }.to change(Viewer, :count).by(1)
-      end
-
-      it 'ログイン画面にリダイレクトされる' do
-        expect(
-          post(viewers_path,
-            params: {
-              viewer: {
-                name:                  'オーナー1',
-                email:                 'sample1@email.com',
-                password:              'password',
-                password_confirmation: 'password'
-              }
-            }
-          )
-        ).to redirect_to viewer_session_path
-      end
-    end
-
-    describe '異常' do
-      before(:each) do
-        new_viewer_path
-      end
-
-      it '入力が不十分だと新規作成されない' do
-        expect {
-          post viewers_path,
-            params: {
-              viewer: {
-                name:                  ' ',
-                email:                 'sample1@email.com',
-                password:              'password',
-                password_confirmation: 'password'
-              }
-            }
-        }.to change(Viewer, :count).by(0)
-      end
-
-      it '登録失敗するとエラーを出す' do
-        expect(
-          post(viewers_path,
-            params: {
-              viewers: {
-                name:                  '',
-                email:                 '',
-                password:              '',
-                password_confirmation: ''
-              }
-            }
-          )
-        ).to render_template :new
-      end
-    end
-  end
-
-  describe 'PATCH #update' do
-    describe '視聴者情報の編集' do
-      describe '本人の場合' do
+      describe 'システム管理者の場合' do
         before(:each) do
-          current_viewer(viewer)
+          login_session(system_admin)
+          current_system_admin(system_admin)
+          get viewers_path(organization_id: organization.id)
         end
 
-        describe '正常' do
-          it '本人はアップデートできる' do
-            expect {
-              patch viewer_path(viewer),
-                params: {
-                  viewer: {
-                    name:  'ユーザー',
-                    email: 'test_spec@example.com'
-                  }
-                }
-            }.to change { Viewer.find(viewer.id).name }.from(viewer.name).to('ユーザー')
-          end
+        it 'レスポンスに成功する' do
+          expect(response).to be_successful
+        end
+
+        it '正常値レスポンス' do
+          expect(response).to have_http_status '200'
         end
       end
 
       describe 'オーナーの場合' do
         before(:each) do
+          login_session(user_owner)
           current_user(user_owner)
+          get viewers_path(organization_id: organization.id)
         end
 
-        describe '異常' do
-          it 'オーナはアップデートできない' do
-            expect {
-              patch viewer_path(viewer),
-                params: {
-                  viewer: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
-                  }
-                }
-            }.not_to change { Viewer.find(viewer.id).name }
-          end
+        it 'レスポンスに成功する' do
+          expect(response).to be_successful
+        end
+
+        it '正常値レスポンス' do
+          expect(response).to have_http_status '200'
         end
       end
 
       describe 'スタッフの場合' do
         before(:each) do
-          current_user(user)
+          login_session(user_staff)
+          current_user(user_staff)
+          get viewers_path(organization_id: organization.id)
         end
 
-        describe '異常' do
-          it 'オーナはアップデートできない' do
-            expect {
-              patch viewer_path(viewer),
-                params: {
-                  viewer: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
-                  }
-                }
-            }.not_to change { Viewer.find(viewer.id).name }
-          end
+        it 'レスポンスに成功する' do
+          expect(response).to be_successful
+        end
+
+        it '正常値レスポンス' do
+          expect(response).to have_http_status '200'
         end
       end
+    end
 
-      describe 'システム管理者の場合' do
+    describe '異常' do
+      describe '視聴者の場合' do
         before(:each) do
-          current_system_admin(system_admin)
+          login_session(viewer)
+          current_viewer(viewer)
+          get viewers_path(organization_id: organization.id)
         end
 
-        describe '異常' do
-          it 'オーナはアップデートできない' do
-            expect {
-              patch viewer_path(viewer),
-                params: {
-                  viewer: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
-                  }
-                }
-            }.not_to change { Viewer.find(viewer.id).name }
-          end
-        end
-      end
-
-      describe '他視聴者の場合' do
-        before(:each) do
-          current_viewer(viewer1)
-        end
-
-        describe '異常' do
-          it 'オーナはアップデートできない' do
-            expect {
-              patch viewer_path(viewer),
-                params: {
-                  viewer: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
-                  }
-                }
-            }.not_to change { Viewer.find(viewer.id).name }
-          end
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
         end
       end
 
       describe 'ログインなしの場合' do
-        describe '異常' do
-          it 'オーナはアップデートできない' do
-            expect {
-              patch viewer_path(viewer),
-                params: {
-                  viewer: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
-                  }
-                }
-            }.not_to change { Viewer.find(viewer.id).name }
-          end
+        before(:each) do
+          get viewers_path(organization_id: organization.id)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
         end
       end
     end
   end
 
+  # GET #new deviseのみ
+
+  # POST #create deviseのみ
+
+  # システム管理者　set_viewerと同組織オーナー　視聴者本人　のみ許可
   describe 'GET #show' do
     describe '視聴者詳細' do
-      describe 'システム管理者の場合' do
-        describe '正常' do
+      describe '正常' do
+        describe 'システム管理者の場合' do
           before(:each) do
             current_system_admin(system_admin)
             get viewer_path(viewer)
@@ -301,10 +137,23 @@ RSpec.describe 'Viewer', type: :request do
             expect(response).to have_http_status '200'
           end
         end
-      end
 
-      describe '本人の場合' do
-        describe '正常' do
+        describe '同組織オーナーの場合' do
+          before(:each) do
+            current_user(user_owner)
+            get viewer_path(viewer)
+          end
+
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
+          end
+        end
+
+        describe '本人の場合' do
           before(:each) do
             current_viewer(viewer)
             get viewer_path(viewer)
@@ -320,42 +169,44 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe 'オーナーの場合' do
-        describe '異常' do
+      describe '異常' do
+        describe '別組織のオーナーの場合' do
           before(:each) do
-            current_user(user_owner)
+            current_user(another_user_owner)
             get viewer_path(viewer)
           end
 
-          it 'レスポンスに成功する' do
-            expect(response).to have_http_status(:success)
-          end
-
-          it '正常値レスポンス' do
-            expect(response).to have_http_status '200'
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
           end
         end
-      end
 
-      describe 'スタッフの場合' do
-        describe '異常' do
+        describe '同組織のスタッフの場合' do
           before(:each) do
-            current_user(user)
+            current_user(user_staff)
             get viewer_path(viewer)
           end
 
-          it 'レスポンスに成功する' do
-            expect(response).to have_http_status(:success)
-          end
-
-          it '正常値レスポンス' do
-            expect(response).to have_http_status '200'
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
           end
         end
-      end
 
-      describe '他視聴者の場合' do
-        describe '異常' do
+        describe '別組織のスタッフの場合' do
+          before(:each) do
+            current_user(another_user_staff)
+            get viewer_path(viewer)
+          end
+
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+
+        describe '同組織の他視聴者の場合' do
           before(:each) do
             current_viewer(viewer1)
             get viewer_path(viewer)
@@ -366,10 +217,20 @@ RSpec.describe 'Viewer', type: :request do
             expect(response).to redirect_to root_path
           end
         end
-      end
 
-      describe 'ログインなしの場合' do
-        describe '異常' do
+        describe '他組織の視聴者の場合' do
+          before(:each) do
+            current_viewer(another_viewer)
+            get viewer_path(viewer)
+          end
+
+          it 'アクセス権限なしのためリダイレクト' do
+            expect(response).to have_http_status ' 302'
+            expect(response).to redirect_to root_path
+          end
+        end
+
+        describe 'ログインなしの場合' do
           before(:each) do
             get viewer_path(viewer)
           end
@@ -383,13 +244,388 @@ RSpec.describe 'Viewer', type: :request do
     end
   end
 
-  describe 'DELETE #destroy' do
-    describe 'システム管理者の場合' do
-      before(:each) do
-        current_system_admin(system_admin)
+  # 視聴者本人　のみ許可
+  describe 'GET #edit' do
+    describe '正常' do
+      describe '本人の場合' do
+        before(:each) do
+          current_viewer(viewer)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'レスポンスに成功する' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it '正常値レスポンス' do
+          expect(response).to have_http_status '200'
+        end
+      end
+    end
+
+    describe '異常' do
+      describe 'システム管理者の場合' do
+        before(:each) do
+          current_system_admin(system_admin)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
       end
 
+      describe '同組織のオーナーの場合' do
+        before(:each) do
+          current_user(user_owner)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
+      end
+
+      describe '同組織のスタッフの場合' do
+        before(:each) do
+          current_user(user_staff)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
+      end
+
+      describe '別組織のオーナーの場合' do
+        before(:each) do
+          current_user(another_user_owner)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
+      end
+
+      describe '別組織のスタッフの場合' do
+        before(:each) do
+          current_user(another_user_staff)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
+      end
+
+      describe '同組織の他視聴者の場合' do
+        before(:each) do
+          current_viewer(viewer1)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
+      end
+
+      describe '他組織の視聴者の場合' do
+        before(:each) do
+          current_viewer(another_viewer)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
+      end
+
+      describe 'ログインなしの場合' do
+        before(:each) do
+          get edit_viewer_path(viewer)
+        end
+
+        it 'アクセス権限なしのためリダイレクト' do
+          expect(response).to have_http_status ' 302'
+          expect(response).to redirect_to root_path
+        end
+      end
+    end
+  end
+
+  # 視聴者本人　のみ許可
+  describe 'PATCH #update' do
+    describe '視聴者更新（権限チェック）' do
       describe '正常' do
+        describe '本人の場合' do
+          before(:each) do
+            current_viewer(viewer)
+          end
+
+          describe '正常' do
+            it '本人はアップデートできる' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'ユーザー',
+                      email: 'test_spec@example.com'
+                    }
+                  }
+              }.to change { Viewer.find(viewer.id).name }.from(viewer.name).to('ユーザー')
+            end
+          end
+        end
+      end
+
+      describe '異常' do
+        describe 'システム管理者の場合' do
+          before(:each) do
+            current_system_admin(system_admin)
+          end
+
+          describe '異常' do
+            it 'オーナはアップデートできない' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'user',
+                      email: 'sample_u@email.com'
+                    }
+                  }
+              }.not_to change { Viewer.find(viewer.id).name }
+            end
+          end
+        end
+
+        describe '同組織オーナーの場合' do
+          before(:each) do
+            current_user(user_owner)
+          end
+
+          describe '異常' do
+            it 'オーナはアップデートできない' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'user',
+                      email: 'sample_u@email.com'
+                    }
+                  }
+              }.not_to change { Viewer.find(viewer.id).name }
+            end
+          end
+        end
+
+        describe '同組織スタッフの場合' do
+          before(:each) do
+            current_user(user_staff)
+          end
+
+          describe '異常' do
+            it 'オーナはアップデートできない' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'user',
+                      email: 'sample_u@email.com'
+                    }
+                  }
+              }.not_to change { Viewer.find(viewer.id).name }
+            end
+          end
+        end
+
+        describe '他組織オーナーの場合' do
+          before(:each) do
+            current_user(another_user_owner)
+          end
+
+          describe '異常' do
+            it 'オーナはアップデートできない' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'user',
+                      email: 'sample_u@email.com'
+                    }
+                  }
+              }.not_to change { Viewer.find(viewer.id).name }
+            end
+          end
+        end
+
+        describe '他組織スタッフの場合' do
+          before(:each) do
+            current_user(another_user_staff)
+          end
+
+          describe '異常' do
+            it 'オーナはアップデートできない' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'user',
+                      email: 'sample_u@email.com'
+                    }
+                  }
+              }.not_to change { Viewer.find(viewer.id).name }
+            end
+          end
+        end
+
+        describe '同組織の他視聴者の場合' do
+          before(:each) do
+            current_viewer(viewer1)
+          end
+
+          describe '異常' do
+            it 'オーナはアップデートできない' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'user',
+                      email: 'sample_u@email.com'
+                    }
+                  }
+              }.not_to change { Viewer.find(viewer.id).name }
+            end
+          end
+        end
+
+        describe '他組織の視聴者の場合' do
+          before(:each) do
+            current_viewer(another_viewer)
+          end
+
+          describe '異常' do
+            it 'オーナはアップデートできない' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'user',
+                      email: 'sample_u@email.com'
+                    }
+                  }
+              }.not_to change { Viewer.find(viewer.id).name }
+            end
+          end
+        end
+
+        describe 'ログインなしの場合' do
+          describe '異常' do
+            it 'オーナはアップデートできない' do
+              expect {
+                patch viewer_path(viewer),
+                  params: {
+                    viewer: {
+                      name:  'user',
+                      email: 'sample_u@email.com'
+                    }
+                  }
+              }.not_to change { Viewer.find(viewer.id).name }
+            end
+          end
+        end
+      end
+    end
+
+    describe '視聴者更新（動作チェック）' do
+      describe '本人の場合' do
+        before(:each) do
+          edit_viewer_path(viewer)
+          current_viewer(viewer)
+        end
+
+        describe '正常' do
+          # emailの更新については認証が必要
+          it '名前がアップデートされる' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'ユーザー',
+                    email: 'sample@email.com'
+                  }
+                }
+            }.to change { Viewer.find(viewer.id).name }.from(viewer.name).to('ユーザー')
+          end
+
+          it 'indexにリダイレクトされる' do
+            expect(
+              patch(viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name: 'ユーザー'
+                  }
+                })
+            ).to redirect_to viewer_path(viewer)
+          end
+        end
+
+        describe '異常' do
+          it '名前が空白でアップデートされない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  ' ',
+                    email: 'sample@email.com'
+                  }
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
+          end
+
+          it 'email更新時、認証なしではアップデートされない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'viewer',
+                    email: 'sample_u@email.com'
+                  }
+                }
+            }.not_to change { Viewer.find(viewer.id).email }
+          end
+
+          it '登録失敗するとエラーを出す' do
+            expect(
+              patch(viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name: ' '
+                  }
+                })
+            ).to render_template :edit
+          end
+        end
+      end
+    end
+  end
+
+  # システム管理者　のみ許可
+  describe 'DELETE #destroy' do
+    describe '正常' do
+      describe 'システム管理者の場合' do
+        before(:each) do
+          current_system_admin(system_admin)
+        end
+
         it 'ユーザーを削除する' do
           expect {
             delete viewer_path(viewer), params: { id: viewer.id }
@@ -399,17 +635,17 @@ RSpec.describe 'Viewer', type: :request do
         it 'indexにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to viewers_path
+          ).to redirect_to viewers_path(organization_id: organization.id)
         end
       end
     end
 
-    describe 'オーナーの場合' do
-      before(:each) do
-        current_user(user_owner)
-      end
+    describe '異常' do
+      describe '同組織オーナーの場合' do
+        before(:each) do
+          current_user(user_owner)
+        end
 
-      describe '異常' do
         it '削除できない' do
           expect {
             delete viewer_path(viewer), params: { id: viewer.id }
@@ -422,14 +658,12 @@ RSpec.describe 'Viewer', type: :request do
           ).to redirect_to root_path
         end
       end
-    end
 
-    describe 'スタッフの場合' do
-      before(:each) do
-        current_user(user)
-      end
+      describe '同組織スタッフの場合' do
+        before(:each) do
+          current_user(user_staff)
+        end
 
-      describe '異常' do
         it '削除できない' do
           expect {
             delete viewer_path(viewer), params: { id: viewer.id }
@@ -442,14 +676,12 @@ RSpec.describe 'Viewer', type: :request do
           ).to redirect_to root_path
         end
       end
-    end
 
-    describe '本人の場合' do
-      before(:each) do
-        current_viewer(viewer)
-      end
+      describe '他組織オーナーの場合' do
+        before(:each) do
+          current_user(another_user_owner)
+        end
 
-      describe '異常' do
         it '削除できない' do
           expect {
             delete viewer_path(viewer), params: { id: viewer.id }
@@ -462,14 +694,12 @@ RSpec.describe 'Viewer', type: :request do
           ).to redirect_to root_path
         end
       end
-    end
 
-    describe '他視聴者の場合' do
-      before(:each) do
-        current_viewer(viewer1)
-      end
+      describe '他組織スタッフの場合' do
+        before(:each) do
+          current_user(another_user_staff)
+        end
 
-      describe '異常' do
         it '削除できない' do
           expect {
             delete viewer_path(viewer), params: { id: viewer.id }
@@ -482,10 +712,44 @@ RSpec.describe 'Viewer', type: :request do
           ).to redirect_to root_path
         end
       end
-    end
 
-    describe 'ログインなしの場合' do
-      describe '異常' do
+      describe '本人の場合' do
+        before(:each) do
+          current_viewer(viewer)
+        end
+
+        it '削除できない' do
+          expect {
+            delete viewer_path(viewer), params: { id: viewer.id }
+          }.not_to change(Viewer, :count)
+        end
+
+        it 'rootにリダイレクトされる' do
+          expect(
+            delete(viewer_path(viewer), params: { id: viewer.id })
+          ).to redirect_to root_path
+        end
+      end
+
+      describe '同組織の他視聴者の場合' do
+        before(:each) do
+          current_viewer(viewer1)
+        end
+
+        it '削除できない' do
+          expect {
+            delete viewer_path(viewer), params: { id: viewer.id }
+          }.not_to change(Viewer, :count)
+        end
+
+        it 'rootにリダイレクトされる' do
+          expect(
+            delete(viewer_path(viewer), params: { id: viewer.id })
+          ).to redirect_to root_path
+        end
+      end
+
+      describe 'ログインなしの場合' do
         it '削除できない' do
           expect {
             delete viewer_path(viewer), params: { id: viewer.id }

@@ -3,12 +3,12 @@ require 'rails_helper'
 RSpec.describe 'UserSystem', type: :system do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
-  let(:user) { create(:user, confirmed_at: Time.now) }
-  let(:user1) { create(:user1, confirmed_at: Time.now) }
+  let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
+  let(:user_staff1) { create(:user_staff1, confirmed_at: Time.now) }
 
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
-  let(:another_user) { create(:another_user, confirmed_at: Time.now) }
+  let(:another_user_staff) { create(:another_user_staff, confirmed_at: Time.now) }
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
@@ -16,11 +16,11 @@ RSpec.describe 'UserSystem', type: :system do
   before(:each) do
     organization
     user_owner
-    user
-    user1
+    user_staff
+    user_staff1
     another_organization
     another_user_owner
-    another_user
+    another_user_staff
     system_admin
     viewer
   end
@@ -78,8 +78,8 @@ RSpec.describe 'UserSystem', type: :system do
 
     describe '動画投稿者' do
       before(:each) do
-        login(user)
-        current_user(user)
+        login(user_staff)
+        current_user(user_staff)
         visit users_path
       end
 
@@ -101,7 +101,7 @@ RSpec.describe 'UserSystem', type: :system do
 
       it 'アカウント編集への遷移' do
         click_link 'アカウント編集'
-        expect(page).to have_current_path edit_user_path(user), ignore_query: true
+        expect(page).to have_current_path edit_user_path(user_staff), ignore_query: true
       end
     end
   end
@@ -112,14 +112,14 @@ RSpec.describe 'UserSystem', type: :system do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
-          visit users_path
+          visit users_path(organization_id: user_owner.organization_id)
         end
 
         it 'レイアウト' do
           expect(page).to have_link '視聴者新規作成画面へ', href: new_user_path
           expect(page).to have_link user_owner.name, href: user_path(user_owner)
-          expect(page).to have_link user.name, href: user_path(user)
-          expect(page).to have_link '削除', href: user_path(user)
+          expect(page).to have_link user_staff.name, href: user_path(user_staff)
+          expect(page).to have_link '削除', href: users_unsubscribe_path(user_staff)
         end
 
         it '視聴者新規作成画面への遷移' do
@@ -127,31 +127,31 @@ RSpec.describe 'UserSystem', type: :system do
           expect(page).to have_current_path new_user_path, ignore_query: true
         end
 
-        it 'user_owner詳細への遷移' do
+        it 'オーナー詳細への遷移' do
           click_link user_owner.name, match: :first
           expect(page).to have_current_path user_path(user_owner), ignore_query: true
         end
 
-        it 'user詳細への遷移' do
-          click_link user.name
-          expect(page).to have_current_path user_path(user), ignore_query: true
+        it 'スタッフ詳細への遷移' do
+          click_link user_staff.name
+          expect(page).to have_current_path user_path(user_staff), ignore_query: true
         end
 
         it 'スタッフ論理削除' do
-          find(:xpath, '//*[@id="users-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[4]/a').click
+          find(:xpath, '//*[@id="users-index"]/div[1]/div/div[2]/div/table/tbody/tr[3]/td[4]/a').click
           expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq 'userの視聴者情報を削除します。本当によろしいですか？'
+            expect(page.driver.browser.switch_to.alert.text).to eq 'スタッフの視聴者情報を削除します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.accept
-            expect(page).to have_content 'userのユーザー情報を削除しました'
-          }.to change { User.find(user.id).is_valid }.from(user.is_valid).to(false)
+            expect(page).to have_content 'スタッフのユーザー情報を削除しました'
+          }.to change { User.find(user_staff.id).is_valid }.from(user_staff.is_valid).to(false)
         end
 
         it 'スタッフ論理削除キャンセル' do
-          find(:xpath, '//*[@id="users-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[4]/a').click
+          find(:xpath, '//*[@id="users-index"]/div[1]/div/div[2]/div/table/tbody/tr[3]/td[4]/a').click
           expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq 'userの視聴者情報を削除します。本当によろしいですか？'
+            expect(page.driver.browser.switch_to.alert.text).to eq 'スタッフの視聴者情報を削除します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.dismiss
-          }.not_to change { User.find(user.id).is_valid }
+          }.not_to change { User.find(user_staff.id).is_valid }
         end
       end
 
@@ -243,7 +243,7 @@ RSpec.describe 'UserSystem', type: :system do
 
         it '別組織の投稿者は表示されない' do
           expect(page).not_to have_link another_user_owner.name, href: user_path(another_user_owner)
-          expect(page).not_to have_link another_user.name, href: user_path(another_user)
+          expect(page).not_to have_link another_user_staff.name, href: user_path(another_user_staff)
         end
       end
 
@@ -277,7 +277,7 @@ RSpec.describe 'UserSystem', type: :system do
 
         it 'Eメール重複' do
           fill_in 'Name', with: 'test'
-          fill_in 'Eメール', with: 'test_spec2@example.com'
+          fill_in 'Eメール', with: 'owner_spec1@example.com'
           click_button '更新'
           expect(page).to have_text 'Eメールはすでに存在します'
         end
@@ -319,7 +319,7 @@ RSpec.describe 'UserSystem', type: :system do
 
         it 'Eメール存在' do
           fill_in 'Name', with: 'test'
-          fill_in 'Eメール', with: 'test_spec2@example.com'
+          fill_in 'Eメール', with: 'owner_spec1@example.com'
           fill_in 'パスワード', with: 'password'
           fill_in 'パスワード（確認用）', with: 'password'
           click_button '登録'

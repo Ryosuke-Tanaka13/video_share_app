@@ -4,16 +4,16 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   let(:organization) { create(:organization) }
-  let(:user) { build(:user) }
+  let(:user_staff) { build(:user_staff) }
 
   before(:each) do
     organization
-    user
+    user_staff
   end
 
   describe 'バリデーションについて' do
     subject do
-      user
+      user_staff
     end
 
     it 'バリデーションが通ること' do
@@ -38,8 +38,8 @@ RSpec.describe User, type: :model do
 
       context 'uniqueでない場合' do
         before :each do
-          user = create(:user)
-          subject.email = user.email
+          user_staff = create(:user_staff)
+          subject.email = user_staff.email
         end
 
         it 'バリデーションに落ちること' do
