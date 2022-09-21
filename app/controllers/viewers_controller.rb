@@ -7,24 +7,22 @@ class ViewersController < ApplicationController
   before_action :set_viewer, except: %i[index]
 
   def index
-    @viewers = Viewer.all
-  end
-
-  def new
-    @viewer = Viewer.new
-  end
-
-  def create
-    @viewer = Viewer.new(viewer_params)
-    if @viewer.save
-      flash[:success] = "#{@viewer.name}の作成に成功しました"
-      redirect_to viewers_url
+    # system_adminが/viewersへ直接アクセスするとエラーになる仕様
+    if current_system_admin
+      @viewers = Viewer.viewer_has(params[:organization_id])
+      # 組織名を表示させるためのインスタンス変数
+      @organization = Organization.find(params[:organization_id])
     else
-      render :new
+      @viewers = Viewer.current_owner_has(current_user).subscribed
     end
   end
 
-  def show; end
+  # deviseのnewとcreateのみ使用可能
+
+  def show
+    # viewの所属組織名を表示させるために記載
+    @organizations = Organization.viewer_has(params[:id])
+  end
 
   def edit; end
 
@@ -38,9 +36,11 @@ class ViewersController < ApplicationController
   end
 
   def destroy
+    # viewrが削除される前にorganization_idを保存しておく
+    organization_id = Organization.viewer_existence_confirmation(params[:id]).id
     @viewer.destroy!
     flash[:danger] = "#{@viewer.name}のユーザー情報を削除しました"
-    redirect_to viewers_url
+    redirect_to viewers_url(organization_id: organization_id)
   end
 
   private

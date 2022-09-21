@@ -32,7 +32,10 @@ class UsersController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    # viewの所属組織名を表示させるために記載
+    @organization = Organization.find(@user.organization_id)
+  end
 
   def edit; end
 
@@ -46,11 +49,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    if current_system_admin
-      @user.destroy!
-    else
-      @user.update(is_valid: false)
-    end
+    @user.destroy!
     flash[:danger] = "#{@user.name}のユーザー情報を削除しました"
     redirect_to users_url
   end

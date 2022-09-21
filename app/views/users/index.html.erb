@@ -28,7 +28,7 @@
               <% end %>
             </td>
             <% if (current_system_admin || current_user&.role == "owner") && current_user&.id != user.id %>
-              <td><%= link_to "削除", user_path(user), method: :delete, data: { confirm: "#{user.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+              <td><%= link_to "削除", users_unsubscribe_path(user), method: :patch, data: { confirm: "#{user.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
               <% else %>
               <td></td>
             <% end %>

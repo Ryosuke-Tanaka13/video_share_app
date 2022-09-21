@@ -8,9 +8,14 @@ class Viewers::UnsubscribesController < ApplicationController
 
   def update
     @viewer.update(is_valid: false)
-    reset_session
-    flash[:notice] = '退会処理が完了しました。'
-    redirect_to root_path
+    if current_user&.role == 'owner'
+      flash[:notice] = "#{@viewer.name}のユーザー情報を削除しました"
+      redirect_to viewers_path
+    else # 本人の場合、セッションの解除
+      reset_session
+      flash[:notice] = '退会処理が完了しました。'
+      redirect_to root_path
+    end
   end
 
   private

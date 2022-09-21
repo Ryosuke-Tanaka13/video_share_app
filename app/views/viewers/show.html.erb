@@ -15,6 +15,12 @@
           <th><%= "メールアドレス" %></th>
           <td><%= @viewer.email %></td>
         </tr>
+        <% @organizations.each.with_index(1) do |organization, i| %>
+        <tr>
+          <th><%= "所属組織名#{i}" %></th>
+          <td><%= link_to organization.name, organization_path(organization) %></td>
+        </tr>
+        <% end %>
       </tbody>
     </table>
   </div>
@@ -22,8 +28,6 @@
   <% if current_viewer&.id == params[:id].to_i %>
     <%= link_to "編集", edit_viewer_path, class: "btn btn-md btn-block btn-success" %>
     <%= link_to "退会ページ", viewers_unsubscribe_path(@viewer), class: "btn btn-md btn-block btn-danger" %><br>
-  <% elsif current_user || current_system_admin %>
-    <%= link_to "戻る", viewers_path, class: "btn btn-md btn-block btn-secondary" %>
   <% end %>
   </div>
 </div>
