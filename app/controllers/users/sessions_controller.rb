@@ -3,6 +3,8 @@
 module Users
   class SessionsController < Devise::SessionsController
     layout 'users_auth'
+
+    before_action :ensure_logged_out, only: %i[new create]
     before_action :reject_inactive_user, only: [:create]
     # before_action :configure_sign_in_params, only: [:create]
 

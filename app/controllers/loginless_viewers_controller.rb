@@ -1,7 +1,11 @@
 class LoginlessViewersController < ApplicationController
-  before_action :logged_in_system_admin, only: %i[destroy]
-  before_action :admin_or_user, only: %i[index show]
-  before_action :set_loginless_viewer, except: %i[index new create]
+  layout 'organizations'
+
+  before_action :ensure_logged_in, except: %i[create]
+  before_action :ensure_admin, only: %i[destroy]
+  before_action :ensure_admin_or_user, only: %i[index]
+  before_action :ensure_admin_or_owner_in_same_organization_as_set_loginless_viewer, only: %i[show]
+  before_action :set_loginless_viewer, except: %i[index create]
 
   def index
     @loginless_viewers = LoginlessViewer.all
@@ -37,5 +41,21 @@ class LoginlessViewersController < ApplicationController
 
   def set_loginless_viewer
     @loginless_viewer = LoginlessViewer.find(params[:id])
+  end
+
+  # set_loginless_viewerと同組織オーナー　のみ許可
+  def owner_in_same_organization_as_set_loginless_viewer
+    if !owner_in_same_organization_as_set_loginless_viewer?
+      flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
+  # システム管理者　set_loginless_viewerと同組織オーナー　のみ許可
+  def ensure_admin_or_owner_in_same_organization_as_set_loginless_viewer
+    if !current_system_admin? && !owner_in_same_organization_as_set_loginless_viewer?
+      flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_path)
+    end
   end
 end

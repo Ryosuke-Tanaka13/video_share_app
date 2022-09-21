@@ -3,6 +3,8 @@
 module SystemAdmins
   class SessionsController < Devise::SessionsController
     layout 'system_admins_auth'
+
+    before_action :ensure_logged_out, only: %i[new create]
     # before_action :configure_sign_in_params, only: [:create]
 
     # GET /resource/sign_in

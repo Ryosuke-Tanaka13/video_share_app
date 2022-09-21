@@ -1,5 +1,5 @@
-class Users::UnsubscribesController < ApplicationController
-  before_action :same_organization_owner_or_correct_user
+  before_action :ensure_logged_in
+  before_action :ensure_owner_in_same_organization_as_set_user_or_correct_user
   before_action :set_user
   layout 'users_auth'
 
@@ -16,5 +16,13 @@ class Users::UnsubscribesController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+  end
+
+  # set_userと同組織投稿者　投稿者本人　のみ許可
+  def ensure_user_in_same_organization_as_set_user_or_correct_viewer
+    unless user_in_same_organization_as_set_user? || current_viewer?
+      flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_path)
+    end
   end
 end

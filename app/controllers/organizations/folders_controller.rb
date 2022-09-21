@@ -48,11 +48,4 @@ class Organizations::FoldersController < ApplicationController
   def set_folder
     @folder = Folder.find(params[:id])
   end
-
-  def ensure_owner
-    if current_user.role != 'owner'
-      flash[:danger] = '権限がありません'
-      redirect_to users_path
-    end
-  end
 end

@@ -1,5 +1,6 @@
-class Organizations::UnsubscribesController < ApplicationController
-  before_action :same_organization_owner
+class Organizations::UnsubscribesController < OrganizationsController
+  before_action :ensure_logged_in
+  before_action :ensure_owner_of_set_organization
   before_action :set_organization
   layout 'organizations_auth'
 

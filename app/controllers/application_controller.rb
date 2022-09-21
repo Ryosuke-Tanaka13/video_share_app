@@ -22,103 +22,101 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit :sign_in, keys: added_attrs
   end
 
-  # ログインしていない時、falseを返す
+  # アカウントのどれでもログインしていれば、trueを返す
   def logged_in?
     !current_system_admin.nil? || !current_user.nil? || !current_viewer.nil?
   end
 
-  # falseの場合アクセス禁止
-  def logged_in_account
-    unless logged_in?
+  # システム管理者がログインしていれば、trueを返す
+  def current_system_admin?
+    !current_system_admin.nil?
+  end
+
+  # システム管理者がログインしていれば、trueを返す
+  def current_user?
+    !current_user.nil?
+  end
+
+  # システム管理者がログインしていれば、trueを返す
+  def current_viewer?
+    !current_viewer.nil?
+  end
+
+  # 投稿者本人であればtrueを返す
+  def correct_user?
+    current_user == User.find(params[:id])
+  end
+
+  # 視聴者本人であればtrueを返す
+  def correct_viewer?
+    current_viewer == Viewer.find(params[:id])
+  end
+
+  # set_userと同組織投稿者であればtrueを返す
+  def user_in_same_organization_as_set_user?
+    current_user&.organization_id == User.find(params[:id]).organization_id
+  end
+
+  # set_userと同組織オーナーであればtrueを返す
+  def owner_in_same_organization_as_set_user?
+    current_user&.role == 'owner' && user_in_same_organization_as_set_user?
+  end
+
+  # set_viewerと同組織投稿者であればtrueを返す
+  def user_in_same_organization_as_set_viewer?
+    !OrganizationViewer.where(viewer_id: params[:id]).find_by(organization_id: current_user&.organization_id).nil?
+  end
+
+  # set_viewerと同組織オーナーであればtrueを返す
+  def owner_in_same_organization_as_set_viewer?
+    current_user&.role == 'owner' && user_in_same_organization_as_set_viewer?
+  end
+
+  # set_loginless_viewerと同組織投稿者であればtrueを返す
+  def user_in_same_organization_as_set_loginless_viewer?
+    !OrganizationLoginlessViewer.where(loginless_viewer_id: params[:id]).find_by(organization_id: current_user&.organization_id).nil?
+  end
+
+  # set_loginless_viewerと同組織オーナーであればtrueを返す
+  def owner_in_same_organization_as_set_loginless_viewer?
+    current_user&.role == 'owner' && user_in_same_organization_as_set_loginless_viewer?
+  end
+
+  # ログイン中　のみ許可
+  def ensure_logged_in
+    if !logged_in?
       flash[:danger] = 'ログインしてください。'
       redirect_to root_url
     end
   end
 
-  # システム管理者がログインしていない場合アクセス禁止
-  def logged_in_system_admin
-    if current_system_admin.nil?
+  # ログアウト中　のみ許可
+  def ensure_logged_out
+    if logged_in?
+      flash[:danger] = 'ログアウトしてください。'
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
+  # システム管理者　のみ許可
+  def ensure_admin
+    if !current_system_admin?
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end
   end
 
-  # 本人以外
-  def other_the_person
-    if (current_system_admin&.id == params[:id].to_i) || (current_user&.id == params[:id].to_i) || (current_viewer&.id == params[:id].to_i)
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+  # オーナー　のみ許可
+  def ensure_owner
+    if current_user&.role != 'owner'
+      flash[:danger] = '権限がありません'
+      redirect_to users_path
     end
   end
 
-  # 同組織オーナー　のみ
-  def same_organization_owner
-    unless current_user&.role == 'owner' && current_user.organization_id == params[:id].to_i
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
-  end
-
-  # 視聴者本人　のみ
-  def correct_viewer
-    unless current_viewer&.id == params[:id].to_i
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
-  end
-
-  # システム管理者　投稿者　のみ
-  def admin_or_user
-    unless !current_system_admin.nil? || !current_user.nil?
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
-  end
-
-  # 同組織オーナー　投稿者本人　のみ
-  def same_organization_owner_or_correct_user
-    @user = User.find(params[:id]) if @user.blank?
-    @organization = Organization.find(@user.organization_id) if @organization.blank?
-    unless (current_user&.role == 'owner' && current_user.organization_id == @organization.id) || current_user == @user
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
-  end
-
-  # システム管理者　同組織オーナー　のみ
-  def admin_or_same_organization_owner
-    @user = User.find(params[:id]) if @user.blank?
-    @organization = Organization.find(@user.organization_id) if @organization.blank?
-    unless !current_system_admin.nil? ||
-           (current_user&.role == 'owner' && current_user.organization_id == @organization.id)
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
-  end
-
-  # システム管理者　同組織オーナー　投稿者本人 のみ
-  def admin_or_same_organization_owner_or_correct_user
-    @user = User.find(params[:id]) if @user.blank?
-    @organization = Organization.find(@user.organization_id) if @organization.blank?
-    unless !current_system_admin.nil? || (current_user&.role == 'owner' && current_user.organization_id == @organization.id) || current_user == @user
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
-  end
-
-  # システム管理者　同組織投稿者　のみ
-  def admin_or_same_organization_user
-    @organization = Organization.find(params[:id]) if @organization.blank?
-    unless !current_system_admin.nil? || current_user&.organization_id == @organization.id
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
-  end
-
-  # システム管理者　投稿者　視聴者本人　のみ
-  def admin_or_user_or_correct_viewer
-    @viewer = Viewer.find(params[:id]) if @viewer.blank?
-    unless  !current_system_admin.nil? || !current_user.nil? || current_viewer == @viewer
+  # システム管理者　投稿者　のみ許可
+  def ensure_admin_or_user
+    if !current_system_admin? && !current_user?
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end
