@@ -7,7 +7,8 @@ class User < ApplicationRecord
     :recoverable, :rememberable, :validatable,
     :confirmable
 
-  enum role: { video_contributor: 0, owner: 1 }
+  # 初期値 owner
+  enum role: { owner: 0, staff: 1 }
 
   belongs_to :organization
 

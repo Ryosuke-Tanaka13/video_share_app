@@ -16,19 +16,13 @@ class OrganizationsController < ApplicationController
   end
 
   def create
-    ActiveRecord::Base.transaction do
-      @user = User.new(user_params)
-      form = Organizations::Form.new(params_permitted)
-      @organization = Organization.build(form.params)
-      if @organization.save!
-        User.last.update(role: 1)
-        flash[:success] = '送られてくるメールの認証URLからアカウントの認証をしてください。'
-        redirect_to new_user_session_path
-      else
-        render :new
-      end
-    rescue ActiveRecord::RecordInvalid
-      flash[:danger] = '無効な入力データがあった為、更新をキャンセルしました。'
+    @user = User.new(user_params)
+    form = Organizations::Form.new(params_permitted)
+    @organization = Organization.build(form.params)
+    if @organization.save
+      flash[:success] = '送られてくるメールの認証URLからアカウントの認証をしてください。'
+      redirect_to new_user_session_path
+    else
       render :new
     end
   end

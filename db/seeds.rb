@@ -49,7 +49,7 @@ user = User.new(
   email: 'test_user_owner1@gmail.com',
   name: 'オーナー1',
   password: 'password',
-  role: 1,
+  role: 0,
   organization_id: 1  
 )
 user.skip_confirmation! # deviseの確認メールをスキップ
@@ -59,7 +59,7 @@ user = User.new(
   email: 'test_user1@gmail.com',
   name: '投稿者1',
   password: 'password',
-  role: 0,
+  role: 1,
   organization_id: 1 
 )
 user.skip_confirmation! # deviseの確認メールをスキップ
@@ -69,7 +69,7 @@ user = User.new(
   email: 'test_user_owner2@gmail.com',
   name: 'オーナー2',
   password: 'password',
-  role: 1,
+  role: 0,
   organization_id: 2
 )
 user.skip_confirmation! # deviseの確認メールをスキップ
@@ -79,7 +79,7 @@ user = User.new(
   email: 'test_user2@gmail.com',
   name: '投稿者2',
   password: 'password',
-  role: 0,
+  role: 1,
   organization_id: 2
 )
 user.skip_confirmation! # deviseの確認メールをスキップ

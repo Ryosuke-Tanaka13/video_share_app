@@ -25,9 +25,8 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
+    @user = User.new(user_create_params)
     if @user.save
-      @user.update(organization_id: current_user.organization_id)
       flash[:success] = "#{@user.name}の作成に成功しました"
       redirect_to users_url
     else
@@ -40,7 +39,7 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
-    if @user.update(user_params)
+    if @user.update(user_update_params)
       flash[:success] = '更新しました'
       redirect_to users_url
     else
@@ -60,7 +59,12 @@ class UsersController < ApplicationController
 
   private
 
-  def user_params
+  # スタッフ作成時、オーナーと同組織にし、roleをstaffへ変更
+  def user_create_params
+    params.require(:user).permit(:name, :email, :password, :password_confirmation).merge(organization_id: current_user.organization_id, role: 'staff')
+  end
+
+  def user_update_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 
