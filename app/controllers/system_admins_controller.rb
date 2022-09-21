@@ -16,6 +16,10 @@ class SystemAdminsController < ApplicationController
     end
   end
 
+  # indexは一人しか存在しない為なし
+  # new createはseeds作成の為なし
+  # destroyはnew createが無いためなし
+
   private
 
   def system_admin_params
