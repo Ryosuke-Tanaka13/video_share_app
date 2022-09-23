@@ -17,8 +17,13 @@
         </tr>
         <% @organizations.each.with_index(1) do |organization, i| %>
         <tr>
-          <th><%= "所属組織名#{i}" %></th>
-          <td><%= link_to organization.name, organization_path(organization) %></td>
+          <% if current_system_admin %>
+            <th><%= "所属組織名#{i}" %></th>
+            <td><%= link_to organization.name, organization_path(organization) %></td>
+          <% elsif current_user&.organization_id == organization.id %>
+            <th><%= "所属組織名" %></th>
+            <td><%= link_to organization.name, organization_path(organization) %></td>
+          <% end %>
         </tr>
         <% end %>
       </tbody>
