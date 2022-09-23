@@ -4,8 +4,8 @@ module Viewers
   class SessionsController < Devise::SessionsController
     layout 'viewers_auth'
 
-    before_action :ensure_logged_out, only: %i[new create]
     before_action :reject_inactive_viewer, only: [:create]
+    before_action :ensure_logged_out, only: %i[new create]
     # before_action :configure_sign_in_params, only: [:create]
 
     # GET /resource/sign_in
