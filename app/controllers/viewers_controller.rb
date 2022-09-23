@@ -21,7 +21,7 @@ class ViewersController < ApplicationController
 
   def show
     # viewの所属組織名を表示させるために記載
-    @organizations = Organization.includes(:organization_viewers).viewer_has(params[:id])
+    @organizations = Organization.viewer_has(params[:id])
   end
 
   def edit; end

@@ -7,11 +7,13 @@ class Organizations::UnsubscribesController < OrganizationsController
   def show; end
 
   def update
-    @organization.update(is_valid: false)
-    User.includes([:organization]).update(is_valid: false)
-    reset_session
-    flash[:notice] = '退会処理が完了しました。'
-    redirect_to root_path
+    if Organization.bulk_update(params[:id])
+      reset_session
+      flash[:notice] = '退会処理が完了しました。'
+      redirect_to root_path
+    else
+      render :show
+    end
   end
 
   private

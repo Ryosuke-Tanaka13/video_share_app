@@ -6,7 +6,10 @@
       <tbody>
         <tr>
           <th><%= "名前" %></th>
-          <td><%= @organization.name %></td>
+          <td>
+            <%= @organization.name %>
+            <% if @organization.is_valid == false %>(退会)<% end %>
+          </td>
         </tr>
         <tr>
           <th><%= "メールアドレス" %></th>

@@ -10,7 +10,7 @@ class LoginlessViewersController < ApplicationController
   def index
     # system_adminが/loginless_viewersへ直接アクセスするとエラーになる仕様
     if current_system_admin
-      @loginless_viewers = LoginlessViewer.includes(:organization_loginless_viewers).loginless_has(params[:organization_id])
+      @loginless_viewers = LoginlessViewer.loginless_viewer_has(params[:organization_id])
       # 組織名を表示させるためのインスタンス変数
       @organization = Organization.find(params[:organization_id])
     else
@@ -30,7 +30,7 @@ class LoginlessViewersController < ApplicationController
 
   def show
     # viewの所属組織名を表示させるために記載
-    @organizations = Organization.includes(:organization_loginless_viewers).loginless_has(params[:id])
+    @organizations = Organization.loginless_viewer_has(params[:id])
   end
 
   def destroy
