@@ -1065,7 +1065,7 @@ RSpec.describe 'User', type: :request do
         it 'indexにリダイレクトされる' do
           expect(
             delete(user_path(user_staff), params: { id: user_staff.id })
-          ).to redirect_to users_path
+          ).to redirect_to users_path(organization_id: organization.id)
         end
       end
     end

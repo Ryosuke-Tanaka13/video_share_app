@@ -65,7 +65,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
         it 'ログインなし論理削除' do
           find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[2]/td[3]/a').click
           expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなしの視聴者情報を削除します。本当によろしいですか？'
+            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなしのユーザー情報を削除します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.accept
             expect(page).to have_content 'ログインなしのユーザー情報を削除しました'
           }.to change { LoginlessViewer.find(loginless_viewer.id).is_valid }.from(loginless_viewer.is_valid).to(false)
@@ -74,7 +74,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
         it 'ログインなし論理削除キャンセル' do
           find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[2]/td[3]/a').click
           expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなしの視聴者情報を削除します。本当によろしいですか？'
+            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなしのユーザー情報を削除します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.dismiss
           }.not_to change(LoginlessViewer, :count)
         end
@@ -82,7 +82,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
         it 'ログインなし1削除' do
           find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[3]/a').click
           expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなし1の視聴者情報を削除します。本当によろしいですか？'
+            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなし1のユーザー情報を削除します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.accept
             expect(page).to have_content 'ログインなし1のユーザー情報を削除しました'
           }.to change { LoginlessViewer.find(loginless_viewer1.id).is_valid }.from(loginless_viewer1.is_valid).to(false)
@@ -91,7 +91,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
         it 'ログインなし1削除キャンセル' do
           find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[3]/a').click
           expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなし1の視聴者情報を削除します。本当によろしいですか？'
+            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなし1のユーザー情報を削除します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.dismiss
           }.not_to change(LoginlessViewer, :count)
         end

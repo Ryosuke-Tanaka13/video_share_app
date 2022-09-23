@@ -11,14 +11,18 @@
           <% @viewers.each do |viewer| %>
           <tr align="center">
             <td>
-              <%= link_to viewer.name, viewer_path(viewer) %>
+              <% if current_user && current_user&.role != 'owner' %>
+                <%= viewer.name %>
+                <% else %>
+                <%= link_to viewer.name, viewer_path(viewer) %>
+                <% end %>
               <% if viewer.is_valid == false %>(退会)<% end %>
             </td>
             <td><%= viewer.email %></td>
             <% if current_system_admin %>
-              <td><%= link_to "削除", viewer_path(viewer), method: :delete, data: { confirm: "#{viewer.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+              <td><%= link_to "削除", viewer_path(viewer), method: :delete, data: { confirm: "#{viewer.name}のユーザー情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
             <% elsif current_user&.role == 'owner'  %>
-              <td><%= link_to "削除", viewers_unsubscribe_path(viewer), method: :patch, data: { confirm: "#{viewer.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+              <td><%= link_to "削除", viewers_unsubscribe_path(viewer), method: :patch, data: { confirm: "#{viewer.name}のユーザー情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
             <% else %>
               <td></td>
             <% end %>

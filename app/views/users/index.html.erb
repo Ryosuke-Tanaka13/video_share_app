@@ -16,8 +16,12 @@
           <% @users.each do |user| %>
           <tr align="center">
             <td>
-              <%= link_to user.name, user_path(user) %>
-              <% if user.is_valid == false %>(退会)<% end %>
+              <% if !current_system_admin && current_user != user && current_user&.role != 'owner'  %>
+                <%= user.name %>
+              <% else %>
+                <%= link_to user.name, user_path(user) %>
+              <% end %>
+                <% if user.is_valid == false %>(退会)<% end %>
             </td>
             <td><%= user.email %></td>
             <td>
@@ -27,8 +31,10 @@
                 スタッフ
               <% end %>
             </td>
-            <% if (current_system_admin || current_user&.role == "owner") && current_user&.id != user.id %>
-              <td><%= link_to "削除", users_unsubscribe_path(user), method: :patch, data: { confirm: "#{user.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+            <% if current_system_admin %>
+              <td><%= link_to "削除", user_path(user), method: :delete, data: { confirm: "#{user.name}のユーザー情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+              <% elsif current_user&.role == "owner" && current_user&.id != user.id %>
+              <td><%= link_to "削除", users_unsubscribe_path(user), method: :patch, data: { confirm: "#{user.name}のユーザー情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
               <% else %>
               <td></td>
             <% end %>

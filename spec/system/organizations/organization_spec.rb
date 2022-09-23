@@ -134,12 +134,15 @@ RSpec.describe 'OrganizationSystem', type: :system do
     end
   end
 
-  context 'Organization操作' do
+  context 'システム管理者操作' do
+    before(:each) do
+      login(system_admin)
+      current_system_admin(system_admin)
+    end
+
     describe '正常' do
       context '組織一覧ページ' do
         before(:each) do
-          login(system_admin)
-          current_system_admin(system_admin)
           visit organizations_path
         end
 
@@ -178,8 +181,57 @@ RSpec.describe 'OrganizationSystem', type: :system do
 
       context '組織詳細' do
         before(:each) do
-          login(user_owner)
-          current_user(user_owner)
+          visit organization_path(organization)
+        end
+
+        it 'レイアウト' do
+          expect(page).to have_text organization.name
+          expect(page).to have_text organization.email
+          expect(page).to have_link '投稿者一覧', href: users_path(organization_id: organization.id)
+          expect(page).to have_link '視聴者一覧', href: viewers_path(organization_id: organization.id)
+          expect(page).to have_link 'ログインなし視聴者一覧', href: loginless_viewers_path(organization_id: organization.id)
+          # expect(page).to have_link '動画フォルダ一覧', href: folders_path
+          expect(page).to have_link '戻る', href: organizations_path
+        end
+
+        it '投稿者一覧への遷移' do
+          click_link '投稿者一覧', match: :first
+          expect(page).to have_current_path users_path, ignore_query: true
+        end
+
+        it '視聴者一覧への遷移' do
+          click_link '視聴者一覧', match: :first
+          expect(page).to have_current_path viewers_path, ignore_query: true
+        end
+
+        it 'ログインなし視聴者一覧への遷移' do
+          click_link 'ログインなし視聴者一覧', match: :first
+          expect(page).to have_current_path loginless_viewers_path, ignore_query: true
+        end
+
+        # 現状の権限の都合上コメントアウト
+        # it '動画フォルダ一覧への遷移' do
+        #   click_link '動画フォルダ一覧'
+        #   expect(page).to have_current_path folders_path, ignore_query: true
+        # end
+
+        it '戻るの遷移' do
+          click_link '戻る', match: :first
+          expect(page).to have_current_path organizations_path, ignore_query: true
+        end
+      end
+    end
+  end
+
+  context 'オーナー操作' do
+    before(:each) do
+      login(user_owner)
+      current_user(user_owner)
+    end
+
+    describe '正常' do
+      context '組織詳細' do
+        before(:each) do
           visit organization_path(organization)
         end
 
@@ -187,7 +239,10 @@ RSpec.describe 'OrganizationSystem', type: :system do
           expect(page).to have_text organization.name
           expect(page).to have_text organization.email
           expect(page).to have_link '編集', href: edit_organization_path(organization)
-          expect(page).to have_link '投稿者一覧'
+          expect(page).to have_link '退会ページ', href: organizations_unsubscribe_path(organization)
+          expect(page).to have_link '投稿者一覧', href: users_path(organization_id: organization.id)
+          expect(page).to have_link '視聴者一覧', href: viewers_path(organization_id: organization.id)
+          expect(page).to have_link 'ログインなし視聴者一覧', href: loginless_viewers_path(organization_id: organization.id)
           expect(page).to have_link '動画フォルダ一覧'
         end
 
@@ -201,6 +256,16 @@ RSpec.describe 'OrganizationSystem', type: :system do
           expect(page).to have_current_path users_path, ignore_query: true
         end
 
+        it '視聴者一覧への遷移' do
+          click_link '視聴者一覧', match: :first
+          expect(page).to have_current_path viewers_path, ignore_query: true
+        end
+
+        it 'ログインなし視聴者一覧への遷移' do
+          click_link 'ログインなし視聴者一覧', match: :first
+          expect(page).to have_current_path loginless_viewers_path, ignore_query: true
+        end
+
         # 現状の権限の都合上コメントアウト
         # it '動画フォルダ一覧への遷移' do
         #   click_link '動画フォルダ一覧'
@@ -210,8 +275,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
 
       context '組織編集' do
         before(:each) do
-          login(user_owner)
-          current_user(user_owner)
           visit edit_organization_path(organization)
         end
 
@@ -235,8 +298,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
     describe '異常' do
       context '組織編集' do
         before(:each) do
-          login(user_owner)
-          current_user(user_owner)
           visit edit_organization_path(organization)
         end
 
@@ -267,6 +328,51 @@ RSpec.describe 'OrganizationSystem', type: :system do
           click_button '更新'
           expect(page).to have_text '組織のEメールはすでに存在します'
         end
+      end
+    end
+  end
+
+  context 'スタッフ操作' do
+    before(:each) do
+      login(user_staff)
+      current_user(user_staff)
+    end
+
+    describe '正常' do
+      context '組織詳細' do
+        before(:each) do
+          visit organization_path(organization)
+        end
+
+        it 'レイアウト' do
+          expect(page).to have_text organization.name
+          expect(page).to have_text organization.email
+          expect(page).to have_link '投稿者一覧', href: users_path(organization_id: organization.id)
+          expect(page).to have_link '視聴者一覧', href: viewers_path(organization_id: organization.id)
+          expect(page).to have_link 'ログインなし視聴者一覧', href: loginless_viewers_path(organization_id: organization.id)
+          expect(page).to have_link '動画フォルダ一覧'
+        end
+
+        it '投稿者一覧への遷移' do
+          click_link '投稿者一覧', match: :first
+          expect(page).to have_current_path users_path, ignore_query: true
+        end
+
+        it '視聴者一覧への遷移' do
+          click_link '視聴者一覧', match: :first
+          expect(page).to have_current_path viewers_path, ignore_query: true
+        end
+
+        it 'ログインなし視聴者一覧への遷移' do
+          click_link 'ログインなし視聴者一覧', match: :first
+          expect(page).to have_current_path loginless_viewers_path, ignore_query: true
+        end
+
+        # 現状の権限の都合上コメントアウト
+        # it '動画フォルダ一覧への遷移' do
+        #   click_link '動画フォルダ一覧'
+        #   expect(page).to have_current_path folders_path, ignore_query: true
+        # end
       end
     end
   end
