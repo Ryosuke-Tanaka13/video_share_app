@@ -36,12 +36,98 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
     organization_loginless_viewer3
   end
 
-  context 'オーナー操作' do
+  context 'システム管理者操作' do
+    before(:each) do
+      login(system_admin)
+      current_system_admin(system_admin)
+    end
+
     describe '正常' do
       context 'ログインなし視聴者一覧' do
         before(:each) do
-          login(user_owner)
-          current_user(user_owner)
+          visit loginless_viewers_path(organization_id: organization.id)
+        end
+
+        it 'レイアウト' do
+          expect(page).to have_link loginless_viewer.name, href: loginless_viewer_path(loginless_viewer)
+          expect(page).to have_link loginless_viewer1.name, href: loginless_viewer_path(loginless_viewer1)
+          expect(page).to have_link '削除', href: loginless_viewer_path(loginless_viewer)
+          expect(page).to have_link '削除', href: loginless_viewer_path(loginless_viewer1)
+        end
+
+        it 'ログインなし視聴者詳細への遷移' do
+          click_link loginless_viewer.name
+          expect(page).to have_current_path loginless_viewer_path(loginless_viewer), ignore_query: true
+        end
+
+        it 'ログインなし視聴者1詳細への遷移' do
+          click_link loginless_viewer1.name
+          expect(page).to have_current_path loginless_viewer_path(loginless_viewer1), ignore_query: true
+        end
+
+        it 'ログインなし削除' do
+          find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div/div[2]/div/table/tbody/tr[2]/td[3]/a').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなしのユーザー情報を削除します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.accept
+            expect(page).to have_content 'ログインなしのユーザー情報を削除しました'
+          }.to change(LoginlessViewer, :count).by(-1)
+        end
+
+        it 'ログインなし削除キャンセル' do
+          find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div/div[2]/div/table/tbody/tr[2]/td[3]/a').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなしのユーザー情報を削除します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.dismiss
+          }.not_to change(LoginlessViewer, :count)
+        end
+
+        it 'ログインなし1削除' do
+          find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div/div[2]/div/table/tbody/tr[3]/td[3]/a').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなし1のユーザー情報を削除します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.accept
+            expect(page).to have_content 'ログインなし1のユーザー情報を削除しました'
+          }.to change(LoginlessViewer, :count).by(-1)
+        end
+
+        it 'ログインなし1削除キャンセル' do
+          find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div/div[2]/div/table/tbody/tr[3]/td[3]/a').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなし1のユーザー情報を削除します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.dismiss
+          }.not_to change(LoginlessViewer, :count)
+        end
+      end
+
+      context 'ログインなし視聴者詳細' do
+        before(:each) do
+          visit loginless_viewer_path(loginless_viewer)
+        end
+
+        it 'レイアウト' do
+          expect(page).to have_text loginless_viewer.email
+          expect(page).to have_text loginless_viewer.name
+          expect(page).to have_link organization.name, href: organization_path(organization)
+        end
+
+        it '所属組織への遷移' do
+          click_link 'セレブエンジニア'
+          expect(page).to have_current_path organization_path(organization), ignore_query: true
+        end
+      end
+    end
+  end
+
+  context 'オーナー操作' do
+    before(:each) do
+      login(user_owner)
+      current_user(user_owner)
+    end
+
+    describe '正常' do
+      context 'ログインなし視聴者一覧' do
+        before(:each) do
           visit loginless_viewers_path(organization_id: organization.id)
         end
 
@@ -79,7 +165,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
           }.not_to change(LoginlessViewer, :count)
         end
 
-        it 'ログインなし1削除' do
+        it 'ログインなし1論理削除' do
           find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[3]/a').click
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなし1のユーザー情報を削除します。本当によろしいですか？'
@@ -88,7 +174,7 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
           }.to change { LoginlessViewer.find(loginless_viewer1.id).is_valid }.from(loginless_viewer1.is_valid).to(false)
         end
 
-        it 'ログインなし1削除キャンセル' do
+        it 'ログインなし1論理削除キャンセル' do
           find(:xpath, '//*[@id="loginless_viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[3]/a').click
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq 'ログインなし1のユーザー情報を削除します。本当によろしいですか？'
@@ -99,20 +185,38 @@ RSpec.describe 'LoginlessViewerSystem', type: :system do
 
       context 'ログインなし視聴者詳細' do
         before(:each) do
-          login(user_owner)
-          current_user(user_owner)
           visit loginless_viewer_path(loginless_viewer)
         end
 
         it 'レイアウト' do
           expect(page).to have_text loginless_viewer.email
           expect(page).to have_text loginless_viewer.name
-          expect(page).to have_text organization.name
+          expect(page).to have_link organization.name, href: organization_path(organization)
         end
 
         it '所属組織への遷移' do
           click_link 'セレブエンジニア'
           expect(page).to have_current_path organization_path(organization), ignore_query: true
+        end
+      end
+    end
+  end
+
+  context 'スタッフ操作' do
+    before(:each) do
+      login(user_staff)
+      current_user(user_staff)
+    end
+
+    describe '正常' do
+      context 'ログインなし視聴者一覧' do
+        before(:each) do
+          visit loginless_viewers_path(organization_id: organization.id)
+        end
+
+        it 'レイアウト' do
+          expect(page).to have_text loginless_viewer.name
+          expect(page).to have_text loginless_viewer1.name
         end
       end
     end
