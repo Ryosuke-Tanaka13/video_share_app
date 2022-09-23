@@ -49,9 +49,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    # userが削除される前にorganization_idを保存しておく
+    organization_id = @user.organization_id
     @user.destroy!
     flash[:danger] = "#{@user.name}のユーザー情報を削除しました"
-    redirect_to users_url
+    redirect_to users_url(organization_id: organization_id)
   end
 
   private
