@@ -1,7 +1,7 @@
 class OrganizationsController < ApplicationController
   before_action :ensure_logged_in, except: %i[new create]
   before_action :ensure_admin, only: %i[index destroy]
-  before_action :ensure_admin_or_user_in_same_organization_as_set_user, only: %i[show]
+  before_action :ensure_admin_or_user_in_same_organization_as_set_organization, only: %i[show]
   before_action :ensure_owner_of_set_organization, only: %i[edit update]
   before_action :set_organization, except: %i[index new create]
   layout 'organizations_auth', only: %i[new create]
@@ -66,15 +66,15 @@ class OrganizationsController < ApplicationController
 
   # set_organizationのオーナー　のみ許可
   def ensure_owner_of_set_organization
-    if current_user&.role != 'owner' || current_user&.organization_id != params[:id].to_i
+    if current_user&.role != 'owner' || !user_of_set_organization?
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end
   end
 
   # システム管理者　set_userと同組織投稿者　のみ許可
-  def ensure_admin_or_user_in_same_organization_as_set_user
-    if current_system_admin.nil? && !user_in_same_organization_as_set_user?
+  def ensure_admin_or_user_in_same_organization_as_set_organization
+    if current_system_admin.nil? && !user_of_set_organization?
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_path)
     end

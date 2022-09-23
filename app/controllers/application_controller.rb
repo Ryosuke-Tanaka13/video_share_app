@@ -53,6 +53,11 @@ class ApplicationController < ActionController::Base
     current_viewer == Viewer.find(params[:id])
   end
 
+  # set_organizationと同組織投稿者の場合trueを返す
+  def user_of_set_organization?
+    current_user&.organization_id == params[:id].to_i
+  end
+
   # set_userと同組織投稿者であればtrueを返す
   def user_in_same_organization_as_set_user?
     current_user&.organization_id == User.find(params[:id]).organization_id
