@@ -23,7 +23,10 @@ document.addEventListener("turbolinks:load", function() {
                 folder: {
                   name: inputVal
                 }
-              }
+              },
+              beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-CSRF-Token", $('meta[name="csrf-token"]').attr('content'))
+              },
             })
           });
         };
