@@ -253,7 +253,7 @@ RSpec.describe 'User', type: :request do
         }.to change(User, :count).by(1)
       end
 
-      it 'トップ画面にリダイレクトされる' do
+      it '投稿者一覧にリダイレクトされる' do
         expect(
           post(users_path,
             params: {
@@ -265,7 +265,7 @@ RSpec.describe 'User', type: :request do
               }
             }
           )
-        ).to redirect_to root_path
+        ).to redirect_to users_path
       end
     end
 
