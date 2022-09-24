@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   # =================================================================
 
   # system_admin関連=========================================================
-  devise_for :system_admins, controllers: {
+  devise_for :system_admins, skip: %i[registrations], controllers: {
     sessions:  'system_admins/sessions',
     passwords: 'system_admins/passwords'
   }
@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   # =================================================================
 
   # user関連=======================================================
-  devise_for :users, controllers: {
+  devise_for :users, skip: %i[registrations], controllers: {
     sessions:      'users/sessions',
     passwords:     'users/passwords',
     confirmations: 'users/confirmations',
@@ -48,12 +48,16 @@ Rails.application.routes.draw do
   # =================================================================
 
   # viewer関連==========================================================
-  devise_for :viewers, controllers: {
+  devise_for :viewers, skip: %i[registrations], controllers: {
     sessions:      'viewers/sessions',
     passwords:     'viewers/passwords',
     confirmations: 'viewers/confirmations',
     registrations: 'viewers/registrations'
   }
+
+  devise_scope :viewers do
+    get '/viewers/sign_up' => 'viewers/registrations#new', as: :new_viewer_registration
+  end
 
   resources :viewers do
     member do
