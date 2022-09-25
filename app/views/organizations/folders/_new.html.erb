@@ -6,7 +6,7 @@
     <div class="modal-body">
       <div class="row">
         <div class="col-md-6 col-md-offset-3">
-          <%= form_with(model: @folder, url:folders_path(@folder) ,local: false, method: :post) do |f| %>
+          <%= form_with(model: @folder, url:organization_folders_path,local: false, method: :post) do |f| %>
             <%= render '/shared/error_messages', object: f.object %>
             <%= f.label :name %>
             <%= f.text_field :name, class: "form-control" %>
