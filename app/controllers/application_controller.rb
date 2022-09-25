@@ -97,12 +97,12 @@ class ApplicationController < ActionController::Base
   end
 
   # ログアウト中　のみ許可
-  def ensure_logged_out
-    if logged_in?
-      flash[:danger] = 'ログアウトしてください。'
-      redirect_back(fallback_location: root_path)
-    end
-  end
+  # def ensure_logged_out
+  #   if logged_in?
+  #     flash[:danger] = 'ログアウトしてください。'
+  #     redirect_back(fallback_location: root_path)
+  #   end
+  # end
 
   # システム管理者　のみ許可
   def ensure_admin

@@ -43,7 +43,7 @@ RSpec.describe 'ViewerSession', type: :request do
         expect(response).to have_http_status(:success)
         post viewer_session_path, params: { viewer: { email: viewer.email, password: viewer.password } }
         expect(response).to have_http_status(:found)
-        expect(response).to redirect_to 'http://www.example.com/'
+        expect(response).to redirect_to 'http://www.example.com/viewers/1'
       end
     end
 

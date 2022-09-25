@@ -43,7 +43,7 @@ RSpec.describe 'UserSession', type: :request do
         expect(response).to have_http_status(:success)
         post user_session_path, params: { user: { email: user_owner.email, password: user_owner.password } }
         expect(response).to have_http_status(:found)
-        expect(response).to redirect_to 'http://www.example.com/'
+        expect(response).to redirect_to 'http://www.example.com/organizations/1/folders'
       end
     end
 
@@ -66,7 +66,7 @@ RSpec.describe 'UserSession', type: :request do
         expect(response).to have_http_status(:success)
         post user_session_path, params: { user: { email: user_staff.email, password: user_staff.password } }
         expect(response).to have_http_status(:found)
-        expect(response).to redirect_to 'http://www.example.com/'
+        expect(response).to redirect_to 'http://www.example.com/organizations/1/folders'
       end
     end
 

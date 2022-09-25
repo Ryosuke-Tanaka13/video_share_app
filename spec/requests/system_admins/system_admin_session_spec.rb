@@ -43,7 +43,7 @@ RSpec.describe 'SystemAdminSession', type: :request do
         expect(response).to have_http_status(:success)
         post system_admin_session_path, params: { system_admin: { email: system_admin.email, password: system_admin.password } }
         expect(response).to have_http_status(:found)
-        expect(response).to redirect_to 'http://www.example.com/'
+        expect(response).to redirect_to 'http://www.example.com/organizations'
       end
     end
 
