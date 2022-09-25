@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
     when SystemAdmin
       organizations_path
     when User
-      folders_path
+      organization_folders_path(organization_id: current_user.organization_id)
     end
   end
 
