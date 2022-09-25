@@ -97,7 +97,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -108,7 +108,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -177,7 +177,7 @@ RSpec.describe 'Viewer', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -189,7 +189,7 @@ RSpec.describe 'Viewer', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -201,7 +201,7 @@ RSpec.describe 'Viewer', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -213,7 +213,7 @@ RSpec.describe 'Viewer', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -225,7 +225,7 @@ RSpec.describe 'Viewer', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -236,7 +236,7 @@ RSpec.describe 'Viewer', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -271,7 +271,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -283,7 +283,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -295,7 +295,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -307,7 +307,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -319,7 +319,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -331,7 +331,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -343,7 +343,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -354,7 +354,7 @@ RSpec.describe 'Viewer', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status '302'
           expect(response).to redirect_to root_path
         end
       end
@@ -392,18 +392,16 @@ RSpec.describe 'Viewer', type: :request do
             current_system_admin(system_admin)
           end
 
-          context '異常' do
-            it 'オーナはアップデートできない' do
-              expect {
-                patch viewer_path(viewer),
-                  params: {
-                    viewer: {
-                      name:  'user',
-                      email: 'sample_u@email.com'
-                    }
+          it 'アップデートできない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'user',
+                    email: 'sample_u@email.com'
                   }
-              }.not_to change { Viewer.find(viewer.id).name }
-            end
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
           end
         end
 
@@ -412,18 +410,16 @@ RSpec.describe 'Viewer', type: :request do
             current_user(user_owner)
           end
 
-          context '異常' do
-            it 'オーナはアップデートできない' do
-              expect {
-                patch viewer_path(viewer),
-                  params: {
-                    viewer: {
-                      name:  'user',
-                      email: 'sample_u@email.com'
-                    }
+          it 'アップデートできない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'user',
+                    email: 'sample_u@email.com'
                   }
-              }.not_to change { Viewer.find(viewer.id).name }
-            end
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
           end
         end
 
@@ -432,18 +428,16 @@ RSpec.describe 'Viewer', type: :request do
             current_user(user_staff)
           end
 
-          context '異常' do
-            it 'オーナはアップデートできない' do
-              expect {
-                patch viewer_path(viewer),
-                  params: {
-                    viewer: {
-                      name:  'user',
-                      email: 'sample_u@email.com'
-                    }
+          it 'アップデートできない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'user',
+                    email: 'sample_u@email.com'
                   }
-              }.not_to change { Viewer.find(viewer.id).name }
-            end
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
           end
         end
 
@@ -452,18 +446,16 @@ RSpec.describe 'Viewer', type: :request do
             current_user(another_user_owner)
           end
 
-          context '異常' do
-            it 'オーナはアップデートできない' do
-              expect {
-                patch viewer_path(viewer),
-                  params: {
-                    viewer: {
-                      name:  'user',
-                      email: 'sample_u@email.com'
-                    }
+          it 'アップデートできない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'user',
+                    email: 'sample_u@email.com'
                   }
-              }.not_to change { Viewer.find(viewer.id).name }
-            end
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
           end
         end
 
@@ -472,18 +464,16 @@ RSpec.describe 'Viewer', type: :request do
             current_user(another_user_staff)
           end
 
-          context '異常' do
-            it 'オーナはアップデートできない' do
-              expect {
-                patch viewer_path(viewer),
-                  params: {
-                    viewer: {
-                      name:  'user',
-                      email: 'sample_u@email.com'
-                    }
+          it 'アップデートできない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'user',
+                    email: 'sample_u@email.com'
                   }
-              }.not_to change { Viewer.find(viewer.id).name }
-            end
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
           end
         end
 
@@ -492,18 +482,16 @@ RSpec.describe 'Viewer', type: :request do
             current_viewer(viewer1)
           end
 
-          context '異常' do
-            it 'オーナはアップデートできない' do
-              expect {
-                patch viewer_path(viewer),
-                  params: {
-                    viewer: {
-                      name:  'user',
-                      email: 'sample_u@email.com'
-                    }
+          it 'アップデートできない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'user',
+                    email: 'sample_u@email.com'
                   }
-              }.not_to change { Viewer.find(viewer.id).name }
-            end
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
           end
         end
 
@@ -512,34 +500,30 @@ RSpec.describe 'Viewer', type: :request do
             current_viewer(another_viewer)
           end
 
-          context '異常' do
-            it 'オーナはアップデートできない' do
-              expect {
-                patch viewer_path(viewer),
-                  params: {
-                    viewer: {
-                      name:  'user',
-                      email: 'sample_u@email.com'
-                    }
+          it 'アップデートできない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'user',
+                    email: 'sample_u@email.com'
                   }
-              }.not_to change { Viewer.find(viewer.id).name }
-            end
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
           end
         end
 
         context 'ログインなし' do
-          context '異常' do
-            it 'オーナはアップデートできない' do
-              expect {
-                patch viewer_path(viewer),
-                  params: {
-                    viewer: {
-                      name:  'user',
-                      email: 'sample_u@email.com'
-                    }
+          it 'アップデートできない' do
+            expect {
+              patch viewer_path(viewer),
+                params: {
+                  viewer: {
+                    name:  'user',
+                    email: 'sample_u@email.com'
                   }
-              }.not_to change { Viewer.find(viewer.id).name }
-            end
+                }
+            }.not_to change { Viewer.find(viewer.id).name }
           end
         end
       end

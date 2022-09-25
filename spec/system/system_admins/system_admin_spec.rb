@@ -29,18 +29,39 @@ RSpec.describe 'SystemAdmin', type: :system do
       end
 
       it 'レイアウト' do
+        expect(page).to have_link 'レコブル'
+        expect(page).to have_link system_admin.name
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'
 
         visit users_path(organization_id: organization.id)
 
+        expect(page).to have_link 'レコブル'
+        expect(page).to have_link system_admin.name
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'
 
         viewers_path(organization_id: organization.id)
 
+        expect(page).to have_link 'レコブル'
+        expect(page).to have_link system_admin.name
         expect(page).to have_link '組織一覧'
         expect(page).to have_link 'アカウント編集'
+      end
+
+      it 'レコブルへの遷移' do
+        click_link 'レコブル'
+        expect(page).to have_current_path organizations_path, ignore_query: true
+      end
+
+      it '自身の名前への遷移' do
+        click_link system_admin.name, match: :first
+        expect(page).to have_current_path system_admin_path(system_admin), ignore_query: true
+      end
+
+      it '組織一覧への遷移' do
+        click_link '組織一覧'
+        expect(page).to have_current_path organizations_path, ignore_query: true
       end
 
       it 'アカウント編集への遷移' do

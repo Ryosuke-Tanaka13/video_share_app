@@ -34,6 +34,8 @@ RSpec.describe 'UserSystem', type: :system do
       end
 
       it 'レイアウト' do
+        expect(page).to have_link 'レコブル'
+        expect(page).to have_link user_owner.name
         expect(page).to have_link 'アンケート作成'
         expect(page).to have_link '対象Grの設定'
         expect(page).to have_link '動画録画'
@@ -46,6 +48,8 @@ RSpec.describe 'UserSystem', type: :system do
 
         visit viewers_path
 
+        expect(page).to have_link 'レコブル'
+        expect(page).to have_link user_owner.name
         expect(page).to have_link 'アンケート作成'
         expect(page).to have_link '対象Grの設定'
         expect(page).to have_link '動画録画'
@@ -57,10 +61,20 @@ RSpec.describe 'UserSystem', type: :system do
         expect(page).to have_link 'アカウント編集'
       end
 
-      # it '動画一覧への遷移' do
-      # click_link '動画フォルダ一覧'
-      # expect(page).to have_current_path folders_path, ignore_query: true
-      # end
+      it 'レコブルへの遷移' do
+        click_link 'レコブル'
+        expect(page).to have_current_path organization_folders_path(organization), ignore_query: true
+      end
+
+      it '自身の名前への遷移' do
+        click_link user_owner.name, match: :first
+        expect(page).to have_current_path user_path(user_owner), ignore_query: true
+      end
+
+      it '動画フォルダ一覧への遷移' do
+        click_link '動画フォルダ一覧'
+        expect(page).to have_current_path organization_folders_path(organization), ignore_query: true
+      end
 
       it '投稿者一覧への遷移' do
         click_link '投稿者一覧'
@@ -70,6 +84,11 @@ RSpec.describe 'UserSystem', type: :system do
       it '視聴者一覧への遷移' do
         click_link '視聴者一覧'
         expect(page).to have_current_path viewers_path, ignore_query: true
+      end
+
+      it 'ログインなし視聴者一覧への遷移' do
+        click_link 'ログインなし視聴者一覧'
+        expect(page).to have_current_path loginless_viewers_path, ignore_query: true
       end
 
       it 'アカウント編集への遷移' do
@@ -86,15 +105,31 @@ RSpec.describe 'UserSystem', type: :system do
       end
 
       it 'レイアウト' do
+        expect(page).to have_link 'レコブル'
+        expect(page).to have_link user_staff.name
         expect(page).to have_link 'アンケート作成'
         expect(page).to have_link '対象Grの設定'
         expect(page).to have_link '動画録画'
         expect(page).to have_link '動画投稿'
         expect(page).to have_link '動画フォルダ一覧'
-        expect(page).not_to have_link '投稿者一覧'
         expect(page).to have_link '視聴者一覧'
         expect(page).to have_link 'ログインなし視聴者一覧'
         expect(page).to have_link 'アカウント編集'
+      end
+
+      it 'レコブルへの遷移' do
+        click_link 'レコブル'
+        expect(page).to have_current_path organization_folders_path(organization), ignore_query: true
+      end
+
+      it '自身の名前への遷移' do
+        click_link user_staff.name, match: :first
+        expect(page).to have_current_path user_path(user_staff), ignore_query: true
+      end
+
+      it '動画フォルダ一覧への遷移' do
+        click_link '動画フォルダ一覧'
+        expect(page).to have_current_path organization_folders_path(organization), ignore_query: true
       end
 
       it '視聴者一覧への遷移' do

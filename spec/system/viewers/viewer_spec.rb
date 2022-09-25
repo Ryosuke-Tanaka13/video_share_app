@@ -37,8 +37,14 @@ RSpec.describe 'ViewerSystem', type: :system do
       end
 
       it 'レイアウト' do
+        expect(page).to have_link viewer.name
         expect(page).to have_link '動画一覧'
         expect(page).to have_link 'アカウント編集'
+      end
+
+      it '自身の名前への遷移' do
+        click_link viewer.name, match: :first
+        expect(page).to have_current_path viewer_path(viewer), ignore_query: true
       end
 
       it 'アカウント編集への遷移' do

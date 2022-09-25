@@ -26,7 +26,7 @@
     <%= link_to "投稿者一覧", users_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>
     <%= link_to "視聴者一覧", viewers_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>
     <%= link_to "ログインなし視聴者一覧", loginless_viewers_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>
-    <%= link_to "フォルダ一覧", folders_path, class: "btn btn-md btn-block btn-default" %>
+    <%= link_to "動画フォルダ一覧", organization_folders_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>
     <% if current_system_admin %>
       <br><%= link_to "戻る", organizations_path, class: "btn btn-md btn-block btn-secondary" %>
     <% end %>

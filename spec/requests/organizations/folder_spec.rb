@@ -135,7 +135,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
 
       describe '動画投稿者' do
         before(:each) do
-          current_user(user)
+          current_user(user_staff)
         end
 
         it 'フォルダが新規作成される' do
@@ -306,7 +306,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
 
     describe '動画投稿者' do
       before(:each) do
-        current_user(user)
+        current_user(user_staff)
       end
 
       it 'フォルダ名がアップデートされる' do
@@ -416,7 +416,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
 
     describe '動画投稿者' do
       before(:each) do
-        current_user(user)
+        current_user(user_staff)
       end
 
       describe '異常' do

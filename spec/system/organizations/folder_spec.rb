@@ -74,8 +74,8 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
 
       describe '動画投稿者' do
         before(:each) do
-          login(user)
-          current_user(user)
+          login(user_staff)
+          current_user(user_staff)
           visit organization_folders_path(organization_id: organization.id)
         end
 
