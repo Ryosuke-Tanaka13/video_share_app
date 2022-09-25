@@ -72,7 +72,7 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  # システム管理者　set_userと同組織投稿者　のみ許可
+  # システム管理者　set_organizationと同組織投稿者　のみ許可
   def ensure_admin_or_user_in_same_organization_as_set_organization
     if current_system_admin.nil? && !user_of_set_organization?
       flash[:danger] = '権限がありません。'
