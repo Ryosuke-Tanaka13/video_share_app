@@ -7,19 +7,26 @@ module LoginSupport
     click_button 'ログイン'
   end
 
+  def login_system_admin(system_admin)
+    visit '/system_admins/sign_in'
+    fill_in 'Eメール', with: system_admin.email
+    fill_in 'パスワード', with: system_admin.password
+    click_button 'ログイン'
+  end
+
   def login_session(user)
-    allow_any_instance_of(ActionDispatch::Request).to receive(:session) { { user_id: user.id } }
+    allow_any_instance_of(ActionDispatch::Request).to receive(:session) { { id: user.id } }
   end
 
   def current_user(user)
     allow_any_instance_of(ApplicationController).to receive(:current_user) { user }
   end
 
-  def current_system_admin(user)
-    allow_any_instance_of(ApplicationController).to receive(:current_system_admin) { user }
+  def current_system_admin(system_admin)
+    allow_any_instance_of(ApplicationController).to receive(:current_system_admin) { system_admin }
   end
 
-  def current_viewer(user)
-    allow_any_instance_of(ApplicationController).to receive(:current_viewer) { user }
+  def current_viewer(_current_viewer)
+    allow_any_instance_of(ApplicationController).to receive(:current_viewer) { viewer }
   end
 end

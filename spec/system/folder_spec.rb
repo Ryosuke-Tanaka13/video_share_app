@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe 'UsersSystem', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
+  let(:system_admin) { create(:system_admin) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
   let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id) }
   let(:user) { create(:user, organization_id: organization.id) }
@@ -13,6 +14,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
   before(:each) do
     organization
     another_organization
+    system_admin
     user_owner
     another_user_owner
     user
@@ -23,33 +25,66 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
 
   describe '正常' do
     describe '動画フォルダ一覧ページ' do
-      before(:each) do
-        login(user_owner)
-        current_user(user_owner)
-        visit folders_path
+      describe '組織管理者' do
+        before(:each) do
+          login(user_owner)
+          current_user(user_owner)
+          visit organization_folders_path(organization_id: organization.id)
+        end
+
+        it 'レイアウト' do
+          expect(page).to have_text 'セレブエンジニア'
+          expect(page).to have_text 'テックリーダーズ'
+          expect(page).to have_link 'フォルダ新規作成'
+          expect(page).to have_css('svg.fa-trash-alt')
+        end
+
+        it 'フォルダ削除' do
+          find(:xpath, '//*[@id="organizations-folders-index"]/div[1]/div[1]/div[2]/div/table[2]/tbody/tr[2]/th/a').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
+            page.driver.browser.switch_to.alert.accept
+            expect(page).to have_content 'フォルダを削除しました'
+          }.to change(Folder, :count).by(-1)
+        end
+
+        it 'フォルダ削除キャンセル' do
+          find(:xpath, '//*[@id="organizations-folders-index"]/div[1]/div[1]/div[2]/div/table[2]/tbody/tr[2]/th/a').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
+            page.driver.browser.switch_to.alert.dismiss
+          }.not_to change(Folder, :count)
+        end
       end
 
-      it 'レイアウト' do
-        expect(page).to have_text 'セレブエンジニア'
-        expect(page).to have_text 'テックリーダーズ'
-        expect(page).to have_link 'フォルダ新規作成'
+      describe 'システム管理者' do
+        before(:each) do
+          login_system_admin(system_admin)
+          current_system_admin(system_admin)
+          visit organization_folders_path(organization_id: organization.id)
+        end
+
+        it 'レイアウト' do
+          expect(page).to have_text 'セレブエンジニア'
+          expect(page).to have_text 'テックリーダーズ'
+          expect(page).not_to have_link 'フォルダ新規作成'
+          expect(page).to have_css('svg.fa-trash-alt')
+        end
       end
 
-      it 'フォルダ削除' do
-        find(:xpath, '//*[@id="organizations-folders-index"]/div[1]/div[1]/div[2]/div/table[2]/tbody/tr[2]/th/a').click
-        expect {
-          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
-          page.driver.browser.switch_to.alert.accept
-          expect(page).to have_content 'フォルダを削除しました'
-        }.to change(Folder, :count).by(-1)
-      end
+      describe '動画投稿者' do
+        before(:each) do
+          login(user)
+          current_user(user)
+          visit organization_folders_path(organization_id: organization.id)
+        end
 
-      it 'フォルダ削除キャンセル' do
-        find(:xpath, '//*[@id="organizations-folders-index"]/div[1]/div[1]/div[2]/div/table[2]/tbody/tr[2]/th/a').click
-        expect {
-          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
-          page.driver.browser.switch_to.alert.dismiss
-        }.not_to change(Folder, :count)
+        it 'レイアウト' do
+          expect(page).to have_text 'セレブエンジニア'
+          expect(page).to have_text 'テックリーダーズ'
+          expect(page).to have_link 'フォルダ新規作成'
+          expect(page).not_to have_css('svg.fa-trash-alt')
+        end
       end
     end
 
@@ -57,7 +92,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
         click_link('フォルダ新規作成')
       end
 
@@ -83,7 +118,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
       end
 
       it '名前を更新する' do
@@ -101,7 +136,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
         click_link('フォルダ新規作成')
       end
 
@@ -122,7 +157,7 @@ RSpec.describe 'UsersSystem', type: :system, js: true do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
-        visit folders_path
+        visit organization_folders_path(organization_id: organization.id)
       end
 
       it '他の組織のフォルダは見れない' do

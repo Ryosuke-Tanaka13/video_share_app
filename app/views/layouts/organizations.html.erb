@@ -13,11 +13,10 @@
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
     <div class="wrapper">
       <%if current_system_admin.present?%>
-        <%= render "layouts/current_system_admins/header" %>
+        <%= render "layouts/system_admins/header" %>
       <%else%>
         <%= render "layouts/users/header" %>
       <%end%>
-
       <%if current_system_admin.present?%>
         <%= render "layouts/system_admins/side" %>
       <%else%>
