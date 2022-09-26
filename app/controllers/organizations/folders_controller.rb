@@ -1,5 +1,5 @@
 class Organizations::FoldersController < ApplicationController
-  layout 'organizations'
+  layout 'folders'
 
   before_action :set_organization
   before_action :access_right

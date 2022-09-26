@@ -1,5 +1,5 @@
 <% provide(:title,  "動画フォルダ一覧") %>
-<%= javascript_pack_tag 'organizations/folder' %>
+
 <div class="content">
   <%if current_user.present?%>
     <%= link_to "フォルダ新規作成", new_organization_folder_path, remote: true, class: "btn btn-success" %>
