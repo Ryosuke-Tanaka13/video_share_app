@@ -30,9 +30,7 @@
     </table>
   </div>
   <div class="card-footer">
-  <% if current_viewer&.id == params[:id].to_i %>
     <%= link_to "編集", edit_viewer_path, class: "btn btn-md btn-block btn-success" %>
-    <%= link_to "退会ページ", viewers_unsubscribe_path(@viewer), class: "btn btn-md btn-block btn-danger" %><br>
-  <% end %>
+    <%= link_to "退会", viewers_unsubscribe_path(@viewer), class: "btn btn-md btn-block btn-danger" %><br>
   </div>
 </div>

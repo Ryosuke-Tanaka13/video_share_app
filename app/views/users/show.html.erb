@@ -23,12 +23,8 @@
     </table>
   </div>
   <div class="card-footer">
-  <% if current_user&.id == params[:id].to_i || current_user&.role == 'owner' %>
-    <%= link_to "編集", edit_user_path, class: "btn btn-md btn-block btn-success" %><br>
-  <% end %>
+    <%= link_to "編集", edit_user_path, class: "btn btn-md btn-block btn-success" %>
+    <%= link_to "退会", users_unsubscribe_path(@user), class: "btn btn-md btn-block btn-danger" %><br>
     <%= link_to "戻る", users_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-secondary" %>
-  <% if current_user&.id == params[:id].to_i %>
-    <br><br><%= link_to "退会ページ", users_unsubscribe_path(@user), class: "btn btn-md btn-block btn-danger" %><br>
-  <% end %>
   </div>
 </div>
