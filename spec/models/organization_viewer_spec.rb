@@ -36,7 +36,7 @@ RSpec.describe OrganizationViewer, type: :model do
       end
     end
 
-    describe '#loginless_viewer_id' do
+    describe '#viewer_id' do
       context '存在しない場合' do
         before :each do
           subject.viewer_id = nil

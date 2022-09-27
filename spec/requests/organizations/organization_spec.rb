@@ -521,10 +521,25 @@ RSpec.describe 'Organization', type: :request do
     end
   end
 
-  # set_organizationのオーナー　のみ許可
+  # システム管理者　set_organizationのオーナー　のみ許可
   describe 'GET #edit' do
     context '組織編集（権限）' do
       describe '正常' do
+        context 'システム管理者' do
+          before(:each) do
+            current_system_admin(system_admin)
+            get edit_user_path(user_owner)
+          end
+
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
+          end
+        end
+
         context '所属オーナー' do
           before(:each) do
             current_user(user_owner)
@@ -542,18 +557,6 @@ RSpec.describe 'Organization', type: :request do
       end
 
       describe '異常' do
-        context 'システム管理者' do
-          before(:each) do
-            current_system_admin(system_admin)
-            get edit_user_path(user_owner)
-          end
-
-          it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
-          end
-        end
-
         context '同組織スタッフ' do
           before(:each) do
             current_user(user_staff)
@@ -616,16 +619,34 @@ RSpec.describe 'Organization', type: :request do
     end
   end
 
-  # set_organizationのオーナー　のみ許可
+  # システム管理者　set_organizationのオーナー　のみ許可
   describe 'PATCH #update' do
     context '組織更新（権限）' do
       describe '正常' do
+        context 'システム管理者' do
+          before(:each) do
+            current_system_admin(system_admin)
+          end
+
+          it 'アップデートできる' do
+            expect {
+              patch organization_path(organization),
+                params: {
+                  organization: {
+                    name:  'test',
+                    email: 'test_spec@example.com'
+                  }
+                }
+            }.to change { Organization.find(organization.id).name }.from(organization.name).to('test')
+          end
+        end
+
         context '所属オーナー' do
           before(:each) do
             current_user(user_owner)
           end
 
-          it '同組織のオーナはアップデートできる' do
+          it 'アップデートできる' do
             expect {
               patch organization_path(organization),
                 params: {
@@ -640,24 +661,6 @@ RSpec.describe 'Organization', type: :request do
       end
 
       describe '異常' do
-        context 'システム管理者' do
-          before(:each) do
-            current_system_admin(system_admin)
-          end
-
-          it 'システム管理者はアップデートできない' do
-            expect {
-              patch organization_path(organization),
-                params: {
-                  organization: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
-                  }
-                }
-            }.not_to change { Organization.find(organization.id).name }
-          end
-        end
-
         context '所属スタッフ' do
           before(:each) do
             current_user(user_staff)

@@ -345,8 +345,8 @@ RSpec.describe 'Organizations::Folders', type: :request do
         current_system_admin(system_admin)
       end
 
-      describe '異常' do
-        it '別組織のオーナはアップデートできない' do
+      describe '正常' do
+        it 'フォルダ名がアップデートされる' do
           expect {
             patch organization_folder_path(organization_id: organization.id, id: folder_celeb.id),
               params: {
@@ -354,7 +354,18 @@ RSpec.describe 'Organizations::Folders', type: :request do
                   name: 'セレブ'
                 }
               }
-          }.not_to change { Folder.find(folder_celeb.id).name }
+          }.to change { Folder.find(folder_celeb.id).name }.from(folder_celeb.name).to('セレブ')
+        end
+
+        it 'indexにリダイレクトされる' do
+          expect(
+            patch(organization_folder_path(organization_id: organization.id, id: folder_celeb.id),
+              params: {
+                folder: {
+                  name: 'セレブ'
+                }
+              })
+          ).to redirect_to organization_folders_path(organization_id: organization.id)
         end
       end
     end

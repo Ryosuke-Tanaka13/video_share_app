@@ -244,9 +244,24 @@ RSpec.describe 'Viewer', type: :request do
     end
   end
 
-  # 視聴者本人　のみ許可
+  # システム管理者　set_viewerと同組織オーナー　視聴者本人　のみ許可
   describe 'GET #edit' do
     describe '正常' do
+      context 'システム管理者' do
+        before(:each) do
+          current_system_admin(system_admin)
+          get edit_viewer_path(viewer)
+        end
+
+        it 'レスポンスに成功する' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it '正常値レスポンス' do
+          expect(response).to have_http_status '200'
+        end
+      end
+
       context '本人' do
         before(:each) do
           current_viewer(viewer)
@@ -261,20 +276,6 @@ RSpec.describe 'Viewer', type: :request do
           expect(response).to have_http_status '200'
         end
       end
-    end
-
-    describe '異常' do
-      context 'システム管理者' do
-        before(:each) do
-          current_system_admin(system_admin)
-          get edit_viewer_path(viewer)
-        end
-
-        it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
-        end
-      end
 
       context '同組織オーナー' do
         before(:each) do
@@ -282,12 +283,17 @@ RSpec.describe 'Viewer', type: :request do
           get edit_viewer_path(viewer)
         end
 
-        it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+        it 'レスポンスに成功する' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it '正常値レスポンス' do
+          expect(response).to have_http_status '200'
         end
       end
+    end
 
+    describe '異常' do
       context '同組織スタッフ' do
         before(:each) do
           current_user(user_staff)
@@ -361,7 +367,7 @@ RSpec.describe 'Viewer', type: :request do
     end
   end
 
-  # 視聴者本人　のみ許可
+  # システム管理者　set_viewerと同組織オーナー　視聴者本人　のみ許可
   describe 'PATCH #update' do
     context '視聴者更新（権限チェック）' do
       describe '正常' do
@@ -371,7 +377,7 @@ RSpec.describe 'Viewer', type: :request do
           end
 
           context '正常' do
-            it '本人はアップデートできる' do
+            it 'アップデートできる' do
               expect {
                 patch viewer_path(viewer),
                   params: {
@@ -384,24 +390,22 @@ RSpec.describe 'Viewer', type: :request do
             end
           end
         end
-      end
 
-      describe '異常' do
         context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
           end
 
-          it 'アップデートできない' do
+          it 'アップデートできる' do
             expect {
               patch viewer_path(viewer),
                 params: {
                   viewer: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
+                    name:  'ユーザー',
+                    email: 'test_spec@example.com'
                   }
                 }
-            }.not_to change { Viewer.find(viewer.id).name }
+            }.to change { Viewer.find(viewer.id).name }.from(viewer.name).to('ユーザー')
           end
         end
 
@@ -410,19 +414,21 @@ RSpec.describe 'Viewer', type: :request do
             current_user(user_owner)
           end
 
-          it 'アップデートできない' do
+          it 'アップデートできる' do
             expect {
               patch viewer_path(viewer),
                 params: {
                   viewer: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
+                    name:  'ユーザー',
+                    email: 'test_spec@example.com'
                   }
                 }
-            }.not_to change { Viewer.find(viewer.id).name }
+            }.to change { Viewer.find(viewer.id).name }.from(viewer.name).to('ユーザー')
           end
         end
+      end
 
+      describe '異常' do
         context '同組織スタッフ' do
           before(:each) do
             current_user(user_staff)

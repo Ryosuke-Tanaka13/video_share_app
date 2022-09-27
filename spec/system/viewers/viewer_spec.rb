@@ -127,11 +127,23 @@ RSpec.describe 'ViewerSystem', type: :system do
           expect(page).to have_text viewer.email
           expect(page).to have_text viewer.name
           expect(page).to have_link 'セレブエンジニア', href: organization_path(organization)
+          expect(page).to have_link '編集', href: edit_viewer_path(viewer)
+          expect(page).to have_link '退会', href: viewers_unsubscribe_path(viewer)
         end
 
         it 'セレブエンジニアへの遷移' do
           click_link 'セレブエンジニア'
           expect(page).to have_current_path organization_path(organization), ignore_query: true
+        end
+
+        it '編集への遷移' do
+          click_link '編集'
+          expect(page).to have_current_path edit_viewer_path(viewer), ignore_query: true
+        end
+
+        it '退会への遷移' do
+          click_link '退会'
+          expect(page).to have_current_path viewers_unsubscribe_path(viewer), ignore_query: true
         end
       end
     end
@@ -256,7 +268,7 @@ RSpec.describe 'ViewerSystem', type: :system do
           expect(page).to have_text viewer.email
           expect(page).to have_text viewer.name
           expect(page).to have_link '編集', href: edit_viewer_path(viewer)
-          expect(page).to have_link '退会ページ', href: viewers_unsubscribe_path(viewer)
+          expect(page).to have_link '退会', href: viewers_unsubscribe_path(viewer)
         end
 
         it '編集への遷移' do
@@ -264,8 +276,8 @@ RSpec.describe 'ViewerSystem', type: :system do
           expect(page).to have_current_path edit_viewer_path(viewer), ignore_query: true
         end
 
-        it '戻るへの遷移' do
-          click_link '退会ページ'
+        it '退会への遷移' do
+          click_link '退会'
           expect(page).to have_current_path viewers_unsubscribe_path(viewer), ignore_query: true
         end
       end

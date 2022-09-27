@@ -38,6 +38,18 @@ RSpec.describe 'ViewerUnsubscribe', type: :request do
 
   context '視聴者退会' do
     describe '正常～異常' do
+      context 'システム管理者操作' do
+        before(:each) do
+          current_system_admin(system_admin)
+        end
+
+        it '退会できる' do
+          expect {
+            patch viewers_unsubscribe_path(viewer)
+          }.to change { Viewer.find(viewer.id).is_valid }.from(viewer.is_valid).to(false)
+        end
+      end
+
       context '本人' do
         before(:each) do
           current_viewer(viewer)
@@ -70,18 +82,6 @@ RSpec.describe 'ViewerUnsubscribe', type: :request do
     end
 
     describe '異常' do
-      context 'システム管理者操作' do
-        before(:each) do
-          current_system_admin(system_admin)
-        end
-
-        it '退会できない' do
-          expect {
-            patch viewers_unsubscribe_path(viewer)
-          }.not_to change { Viewer.find(viewer.id).is_valid }
-        end
-      end
-
       context '他組織オーナー操作' do
         before(:each) do
           current_user(another_user_owner)

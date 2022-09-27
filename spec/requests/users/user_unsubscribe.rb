@@ -36,6 +36,7 @@ RSpec.describe 'UserUnsubscribe', type: :request do
     organization_viewer3
   end
 
+  # システム管理者　set_userと同組織オーナー　投稿者本人 のみ許可
   describe 'オーナー退会' do
     context '正常～異常' do
       context '本人操作' do
@@ -55,21 +56,21 @@ RSpec.describe 'UserUnsubscribe', type: :request do
           expect(response).to redirect_to 'http://www.example.com/users/sign_in'
         end
       end
-    end
 
-    context '異常' do
       context 'システム管理者操作' do
         before(:each) do
           current_system_admin(system_admin)
         end
 
-        it '退会できない' do
+        it '退会できる' do
           expect {
             patch users_unsubscribe_path(user_owner)
-          }.not_to change { User.find(user_owner.id).is_valid }
+          }.to change { User.find(user_owner.id).is_valid }.from(user_owner.is_valid).to(false)
         end
       end
+    end
 
+    context '異常' do
       context '同組織のスタッフ操作' do
         before(:each) do
           current_user(user_staff)

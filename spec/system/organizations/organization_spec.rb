@@ -92,7 +92,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
         expect(page).to have_link '動画フォルダ一覧'
         expect(page).to have_link '投稿者一覧'
         expect(page).to have_link '視聴者一覧'
-        expect(page).to have_link 'ログインなし視聴者一覧'
         expect(page).to have_link 'アカウント編集'
 
         visit viewers_path
@@ -106,7 +105,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
         expect(page).to have_link '動画フォルダ一覧'
         expect(page).to have_link '投稿者一覧'
         expect(page).to have_link '視聴者一覧'
-        expect(page).to have_link 'ログインなし視聴者一覧'
         expect(page).to have_link 'アカウント編集'
       end
 
@@ -135,11 +133,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
         expect(page).to have_current_path viewers_path, ignore_query: true
       end
 
-      it 'ログインなし視聴者一覧への遷移' do
-        click_link 'ログインなし視聴者一覧'
-        expect(page).to have_current_path loginless_viewers_path, ignore_query: true
-      end
-
       it 'アカウント編集への遷移' do
         click_link 'アカウント編集'
         expect(page).to have_current_path edit_user_path(user_owner), ignore_query: true
@@ -162,7 +155,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
         expect(page).to have_link '動画投稿'
         expect(page).to have_link '動画フォルダ一覧'
         expect(page).to have_link '視聴者一覧'
-        expect(page).to have_link 'ログインなし視聴者一覧'
         expect(page).to have_link 'アカウント編集'
       end
 
@@ -184,11 +176,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
       it '視聴者一覧への遷移' do
         click_link '視聴者一覧'
         expect(page).to have_current_path viewers_path, ignore_query: true
-      end
-
-      it 'ログインなし視聴者一覧への遷移' do
-        click_link 'ログインなし視聴者一覧'
-        expect(page).to have_current_path loginless_viewers_path, ignore_query: true
       end
 
       it 'アカウント編集への遷移' do
@@ -251,11 +238,22 @@ RSpec.describe 'OrganizationSystem', type: :system do
         it 'レイアウト' do
           expect(page).to have_text organization.name
           expect(page).to have_text organization.email
+          expect(page).to have_link '編集', href: edit_organization_path(organization)
+          expect(page).to have_link '退会', href: organizations_unsubscribe_path(organization)
           expect(page).to have_link '投稿者一覧', href: users_path(organization_id: organization.id)
           expect(page).to have_link '視聴者一覧', href: viewers_path(organization_id: organization.id)
-          expect(page).to have_link 'ログインなし視聴者一覧', href: loginless_viewers_path(organization_id: organization.id)
           expect(page).to have_link '動画フォルダ一覧', href: organization_folders_path(organization)
           expect(page).to have_link '戻る', href: organizations_path
+        end
+
+        it '編集への遷移' do
+          click_link '編集'
+          expect(page).to have_current_path edit_organization_path(organization), ignore_query: true
+        end
+
+        it '退会への遷移' do
+          click_link '退会'
+          expect(page).to have_current_path organizations_unsubscribe_path(organization), ignore_query: true
         end
 
         it '投稿者一覧への遷移' do
@@ -266,11 +264,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
         it '視聴者一覧への遷移' do
           click_link '視聴者一覧', match: :first
           expect(page).to have_current_path viewers_path, ignore_query: true
-        end
-
-        it 'ログインなし視聴者一覧への遷移' do
-          click_link 'ログインなし視聴者一覧', match: :first
-          expect(page).to have_current_path loginless_viewers_path, ignore_query: true
         end
 
         it '動画フォルダ一覧への遷移' do
@@ -302,16 +295,20 @@ RSpec.describe 'OrganizationSystem', type: :system do
           expect(page).to have_text organization.name
           expect(page).to have_text organization.email
           expect(page).to have_link '編集', href: edit_organization_path(organization)
-          expect(page).to have_link '退会ページ', href: organizations_unsubscribe_path(organization)
+          expect(page).to have_link '退会', href: organizations_unsubscribe_path(organization)
           expect(page).to have_link '投稿者一覧', href: users_path(organization_id: organization.id)
           expect(page).to have_link '視聴者一覧', href: viewers_path(organization_id: organization.id)
-          expect(page).to have_link 'ログインなし視聴者一覧', href: loginless_viewers_path(organization_id: organization.id)
           expect(page).to have_link '動画フォルダ一覧'
         end
 
         it '編集への遷移' do
           click_link '編集'
           expect(page).to have_current_path edit_organization_path(organization), ignore_query: true
+        end
+
+        it '退会への遷移' do
+          click_link '退会'
+          expect(page).to have_current_path organizations_unsubscribe_path(organization), ignore_query: true
         end
 
         it '投稿者一覧への遷移' do
@@ -322,11 +319,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
         it '視聴者一覧への遷移' do
           click_link '視聴者一覧', match: :first
           expect(page).to have_current_path viewers_path, ignore_query: true
-        end
-
-        it 'ログインなし視聴者一覧への遷移' do
-          click_link 'ログインなし視聴者一覧', match: :first
-          expect(page).to have_current_path loginless_viewers_path, ignore_query: true
         end
 
         it '動画フォルダ一覧への遷移' do
@@ -411,7 +403,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
           expect(page).to have_text organization.email
           expect(page).to have_link '投稿者一覧', href: users_path(organization_id: organization.id)
           expect(page).to have_link '視聴者一覧', href: viewers_path(organization_id: organization.id)
-          expect(page).to have_link 'ログインなし視聴者一覧', href: loginless_viewers_path(organization_id: organization.id)
           expect(page).to have_link '動画フォルダ一覧', href: organization_folders_path(organization)
         end
 
@@ -423,11 +414,6 @@ RSpec.describe 'OrganizationSystem', type: :system do
         it '視聴者一覧への遷移' do
           click_link '視聴者一覧', match: :first
           expect(page).to have_current_path viewers_path, ignore_query: true
-        end
-
-        it 'ログインなし視聴者一覧への遷移' do
-          click_link 'ログインなし視聴者一覧', match: :first
-          expect(page).to have_current_path loginless_viewers_path, ignore_query: true
         end
 
         it '動画フォルダ一覧への遷移' do

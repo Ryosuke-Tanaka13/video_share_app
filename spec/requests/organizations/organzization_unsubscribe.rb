@@ -36,8 +36,21 @@ RSpec.describe 'Organizations::Unsubscribe', type: :request do
     organization_viewer3
   end
 
+  # システム管理者　set_organizationのオーナー　のみ許可
   context '組織退会' do
     describe '正常～異常' do
+      context 'システム管理者' do
+        before(:each) do
+          current_system_admin(system_admin)
+        end
+
+        it '退会できない' do
+          expect {
+            patch organizations_unsubscribe_path(organization)
+          }.to change { Organization.find(organization.id).is_valid }.from(organization.is_valid).to(false)
+        end
+      end
+
       context '所属オーナー' do
         before(:each) do
           current_user(user_owner)
@@ -58,18 +71,6 @@ RSpec.describe 'Organizations::Unsubscribe', type: :request do
     end
 
     describe '異常' do
-      context 'システム管理者' do
-        before(:each) do
-          current_system_admin(system_admin)
-        end
-
-        it '退会できない' do
-          expect {
-            patch organizations_unsubscribe_path(organization)
-          }.not_to change { Organization.find(organization.id).is_valid }
-        end
-      end
-
       context '同組織スタッフ' do
         before(:each) do
           current_user(user_staff)

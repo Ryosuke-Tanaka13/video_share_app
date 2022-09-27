@@ -514,7 +514,7 @@ RSpec.describe 'User', type: :request do
     end
   end
 
-  # 同組織オーナー　投稿者本人　のみ許可
+  # システム管理者　同組織オーナー　投稿者本人　のみ許可
   describe 'GET #edit' do
     context 'オーナー編集' do
       describe '正常' do
@@ -532,21 +532,24 @@ RSpec.describe 'User', type: :request do
             expect(response).to have_http_status '200'
           end
         end
-      end
 
-      describe '異常' do
         context 'システム管理者の場合' do
           before(:each) do
             current_system_admin(system_admin)
             get edit_user_path(user_owner)
           end
 
-          it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
           end
         end
+      end
 
+      describe '異常' do
         context '同組織スタッフ' do
           before(:each) do
             current_user(user_staff)
@@ -554,7 +557,7 @@ RSpec.describe 'User', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -566,7 +569,7 @@ RSpec.describe 'User', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -578,7 +581,7 @@ RSpec.describe 'User', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -590,7 +593,7 @@ RSpec.describe 'User', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -601,7 +604,7 @@ RSpec.describe 'User', type: :request do
           end
 
           it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
+            expect(response).to have_http_status '302'
             expect(response).to redirect_to root_path
           end
         end
@@ -610,6 +613,21 @@ RSpec.describe 'User', type: :request do
 
     context 'スタッフ編集' do
       describe '正常' do
+        context 'システム管理者' do
+          before(:each) do
+            current_system_admin(system_admin)
+            get edit_user_path(user_staff)
+          end
+
+          it 'レスポンスに成功する' do
+            expect(response).to have_http_status(:success)
+          end
+
+          it '正常値レスポンス' do
+            expect(response).to have_http_status '200'
+          end
+        end
+
         context '同組織オーナー' do
           before(:each) do
             current_user(user_owner)
@@ -642,18 +660,6 @@ RSpec.describe 'User', type: :request do
       end
 
       describe '異常' do
-        context 'システム管理者' do
-          before(:each) do
-            current_system_admin(system_admin)
-            get edit_user_path(user_staff)
-          end
-
-          it 'アクセス権限なしのためリダイレクト' do
-            expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
-          end
-        end
-
         context '同組織他スタッフ' do
           before(:each) do
             current_user(user_staff1)
@@ -716,16 +722,34 @@ RSpec.describe 'User', type: :request do
     end
   end
 
-  # 同組織オーナー　投稿者本人　のみ許可
+  # システム管理者　同組織オーナー　投稿者本人　のみ許可
   describe 'PATCH #update' do
     context 'オーナー更新' do
       describe '正常' do
+        context 'システム管理者' do
+          before(:each) do
+            current_system_admin(system_admin)
+          end
+
+          it 'アップデートできる' do
+            expect {
+              patch user_path(user_owner),
+                params: {
+                  user: {
+                    name:  'ユーザー',
+                    email: 'test_spec@example.com'
+                  }
+                }
+            }.to change { User.find(user_owner.id).name }.from(user_owner.name).to('ユーザー')
+          end
+        end
+
         context '本人' do
           before(:each) do
             current_user(user_owner)
           end
 
-          it '同組織のオーナはアップデートできる' do
+          it 'アップデートできる' do
             expect {
               patch user_path(user_owner),
                 params: {
@@ -745,7 +769,7 @@ RSpec.describe 'User', type: :request do
             current_user(another_user_owner)
           end
 
-          it '別組織のオーナはアップデートできない' do
+          it 'アップデートできない' do
             expect {
               patch user_path(user_owner),
                 params: {
@@ -761,24 +785,6 @@ RSpec.describe 'User', type: :request do
         context 'スタッフ' do
           before(:each) do
             current_user(user_staff)
-          end
-
-          it '別組織のオーナはアップデートできない' do
-            expect {
-              patch user_path(user_owner),
-                params: {
-                  user: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
-                  }
-                }
-            }.not_to change { User.find(user_owner.id).name }
-          end
-        end
-
-        context 'システム管理者' do
-          before(:each) do
-            current_system_admin(system_admin)
           end
 
           it 'アップデートできない' do
@@ -799,7 +805,7 @@ RSpec.describe 'User', type: :request do
             current_viewer(viewer)
           end
 
-          it '視聴者はアップデートできない' do
+          it 'アップデートできない' do
             expect {
               patch user_path(user_owner),
                 params: {
@@ -813,7 +819,7 @@ RSpec.describe 'User', type: :request do
         end
 
         context 'ログインなし' do
-          it 'ログインなしはアップデートできない' do
+          it 'アップデートできない' do
             expect {
               patch user_path(user_owner),
                 params: {
@@ -830,18 +836,36 @@ RSpec.describe 'User', type: :request do
 
     context 'スタッフ更新（権限）' do
       describe '正常' do
-        context '同組織オーナー' do
+        context 'システム管理者' do
           before(:each) do
-            current_user(user_owner)
+            current_system_admin(system_admin)
           end
 
-          it '同組織のオーナはアップデートできる' do
+          it 'アップデートできる' do
             expect {
               patch user_path(user_staff),
                 params: {
                   user: {
                     name:  'ユーザー',
-                    email: 'sample@email.com'
+                    email: 'test_spec@example.com'
+                  }
+                }
+            }.to change { User.find(user_staff.id).name }.from(user_staff.name).to('ユーザー')
+          end
+        end
+
+        context '同組織オーナー' do
+          before(:each) do
+            current_user(user_owner)
+          end
+
+          it 'アップデートできる' do
+            expect {
+              patch user_path(user_staff),
+                params: {
+                  user: {
+                    name:  'ユーザー',
+                    email: 'test_spec@example.com'
                   }
                 }
             }.to change { User.find(user_staff.id).name }.from(user_staff.name).to('ユーザー')
@@ -855,7 +879,7 @@ RSpec.describe 'User', type: :request do
           end
 
           # emailの更新については認証が必要
-          it '本人はアップデートできる' do
+          it 'アップデートできる' do
             expect {
               patch user_path(user_staff),
                 params: {
@@ -913,24 +937,6 @@ RSpec.describe 'User', type: :request do
           end
 
           it '別組織のオーナはアップデートできない' do
-            expect {
-              patch user_path(user_staff),
-                params: {
-                  user: {
-                    name:  'user',
-                    email: 'sample_u@email.com'
-                  }
-                }
-            }.not_to change { User.find(user_staff.id).name }
-          end
-        end
-
-        context 'システム管理者' do
-          before(:each) do
-            current_system_admin(system_admin)
-          end
-
-          it 'アップデートできない' do
             expect {
               patch user_path(user_staff),
                 params: {
