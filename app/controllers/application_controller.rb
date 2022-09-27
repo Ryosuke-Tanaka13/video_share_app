@@ -78,16 +78,6 @@ class ApplicationController < ActionController::Base
     current_user&.role == 'owner' && user_in_same_organization_as_set_viewer?
   end
 
-  # set_loginless_viewerと同組織投稿者であればtrueを返す
-  def user_in_same_organization_as_set_loginless_viewer?
-    !OrganizationLoginlessViewer.where(loginless_viewer_id: params[:id]).find_by(organization_id: current_user&.organization_id).nil?
-  end
-
-  # set_loginless_viewerと同組織オーナーであればtrueを返す
-  def owner_in_same_organization_as_set_loginless_viewer?
-    current_user&.role == 'owner' && user_in_same_organization_as_set_loginless_viewer?
-  end
-
   # ログイン中　のみ許可
   def ensure_logged_in
     unless logged_in?

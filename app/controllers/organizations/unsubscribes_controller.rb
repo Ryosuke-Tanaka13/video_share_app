@@ -1,6 +1,6 @@
 class Organizations::UnsubscribesController < OrganizationsController
   before_action :ensure_logged_in
-  before_action :ensure_owner_of_set_organization
+  before_action :ensure_admin_or_owner_of_set_organization
   before_action :set_organization
   layout 'organizations_auth'
 

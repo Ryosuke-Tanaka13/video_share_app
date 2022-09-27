@@ -1,6 +1,6 @@
-class Viewers::UnsubscribesController < ApplicationController
+class Viewers::UnsubscribesController < ViewersController
   before_action :ensure_logged_in
-  before_action :ensure_owner_in_same_organization_as_set_viewer_or_correct_viewer
+  before_action :ensure_admin_or_owner_in_same_organization_as_set_viewer_or_correct_viewer
   before_action :set_viewer
   layout 'viewers_auth'
 
@@ -22,13 +22,5 @@ class Viewers::UnsubscribesController < ApplicationController
 
   def set_viewer
     @viewer = Viewer.find(params[:id])
-  end
-
-  # set_viewerと同組織オーナー　視聴者本人　のみ許可
-  def ensure_owner_in_same_organization_as_set_viewer_or_correct_viewer
-    if !owner_in_same_organization_as_set_viewer? && !correct_viewer?
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
   end
 end

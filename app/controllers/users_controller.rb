@@ -3,8 +3,7 @@ class UsersController < ApplicationController
   before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_owner, only: %i[new create]
   before_action :ensure_admin_or_user, only: %i[index]
-  before_action :ensure_admin_or_owner_in_same_organization_as_set_user_or_correct_user, only: %i[show]
-  before_action :ensure_owner_in_same_organization_as_set_user_or_correct_user, only: %i[edit update]
+  before_action :ensure_admin_or_owner_in_same_organization_as_set_user_or_correct_user, only: %i[show edit update]
   before_action :set_user, except: %i[index new create]
 
   def index
@@ -69,14 +68,6 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
-  end
-
-  # set_userと同組織オーナー　投稿者本人　のみ許可
-  def ensure_owner_in_same_organization_as_set_user_or_correct_user
-    if !owner_in_same_organization_as_set_user? && !correct_user?
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
-    end
   end
 
   # システム管理者　set_userと同組織オーナー　投稿者本人 のみ許可

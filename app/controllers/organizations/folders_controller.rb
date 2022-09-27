@@ -4,7 +4,7 @@ class Organizations::FoldersController < ApplicationController
   before_action :set_organization
   before_action :access_right
   before_action :ensure_system_admin_or_owner, only: %i[destroy]
-  before_action :ensure_user, only: %i[create update]
+  before_action :ensure_user, only: %i[create]
   before_action :set_folder, only: %i[show update destroy]
 
   def index
