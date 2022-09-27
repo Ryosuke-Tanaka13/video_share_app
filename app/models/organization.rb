@@ -1,7 +1,6 @@
 class Organization < ApplicationRecord
   has_many :users, dependent: :destroy, autosave: true
   has_many :organization_viewers, dependent: :destroy
-  has_many :organization_loginless_viewers, dependent: :destroy
   has_many :folders
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -11,8 +10,6 @@ class Organization < ApplicationRecord
   # 引数のviewer_idと一致するorganizationの絞り込み
   scope :viewer_has, ->(viewer_id) { includes(:organization_viewers).where(organization_viewers: { viewer_id: viewer_id }) }
   scope :viewer_existence_confirmation, ->(viewer_id) { find_by(organization_viewers: { viewer_id: viewer_id }) }
-  scope :linked_arguments, ->(loginless_viewer_id) { where(organization_loginless_viewers: { loginless_viewer_id: loginless_viewer_id }) }
-  scope :loginless_viewer_has, ->(loginless_viewer_id) { includes(:organization_loginless_viewers).linked_arguments(loginless_viewer_id) }
 
   # 組織に属するオーナーを紐づける
   class << self
@@ -36,13 +33,7 @@ class Organization < ApplicationRecord
         viewer.update(is_valid: false) if OrganizationViewer.where(viewer_id: viewer.id).count == 1
       end
 
-      loginless_viewers = LoginlessViewer.loginless_viewer_has(organization_id)
-      loginless_viewers.each do |loginless_viewer|
-        # 複数所属している場合退会処理にしない
-        loginless_viewer.update(is_valid: false) if OrganizationLoginlessViewer.where(loginless_viewer_id: loginless_viewer.id).count == 1
-      end
-
-      all_valid &= organization && user && viewers && loginless_viewers
+      all_valid &= organization && user && viewers
       # 全ての処理が有効出ない場合ロールバックする
       unless all_valid
         raise ActiveRecord::Rollback

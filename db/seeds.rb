@@ -110,37 +110,4 @@ organization_viewer = OrganizationViewer.new(
 organization_viewer.save!
 
 # =================================================================
-# loginless_viewer関連==================================================
-3.times do |i|
-  loginless_viewer = LoginlessViewer.new(
-    email: "test_loginless_viewer#{i}@gmail.com",
-    name: "ログインなし視聴者#{i}",
-  )
-  loginless_viewer.save!
-end
 
-organization_loginless_viewer = OrganizationLoginlessViewer.new(
-  organization_id: 1,
-  loginless_viewer_id: 1
-)
-organization_loginless_viewer.save!
-
-organization_loginless_viewer = OrganizationLoginlessViewer.new(
-  organization_id: 2,
-  loginless_viewer_id: 2
-)
-organization_loginless_viewer.save!
-
-organization_loginless_viewer = OrganizationLoginlessViewer.new(
-  organization_id: 1,
-  loginless_viewer_id: 3
-)
-organization_loginless_viewer.save!
-
-organization_loginless_viewer = OrganizationLoginlessViewer.new(
-  organization_id: 2,
-  loginless_viewer_id: 3
-)
-organization_loginless_viewer.save!
-
-# =================================================================

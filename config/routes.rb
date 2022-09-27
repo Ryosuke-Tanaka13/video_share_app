@@ -66,16 +66,6 @@ Rails.application.routes.draw do
   end
   # =================================================================
 
-  # loginless_viewer関連==============================================================
-  resources :loginless_viewers, except: %i[new edit update] do
-    member do
-      scope module: :loginless_viewers do
-        resource :unsubscribe, only: %i[update], as: :loginless_viewers_unsubscribe
-      end
-    end
-  end
-  # =================================================================
-
   # 共通==============================================================
   # 利用規約
   get 'use' => 'use#index'

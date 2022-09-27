@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_07_213542) do
+ActiveRecord::Schema.define(version: 2022_09_07_213435) do
 
   create_table "folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -18,23 +18,6 @@ ActiveRecord::Schema.define(version: 2022_09_07_213542) do
     t.integer "video_folder_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "loginless_viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.boolean "is_valid", default: true, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "organization_loginless_viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "organization_id", null: false
-    t.bigint "loginless_viewer_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["loginless_viewer_id"], name: "index_organization_loginless_viewers_on_loginless_viewer_id"
-    t.index ["organization_id"], name: "index_organization_loginless_viewers_on_organization_id"
   end
 
   create_table "organization_viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -154,8 +137,6 @@ ActiveRecord::Schema.define(version: 2022_09_07_213542) do
     t.index ["unlock_token"], name: "index_viewers_on_unlock_token", unique: true
   end
 
-  add_foreign_key "organization_loginless_viewers", "loginless_viewers"
-  add_foreign_key "organization_loginless_viewers", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
 end

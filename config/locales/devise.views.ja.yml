@@ -73,7 +73,6 @@ ja:
         unconfirmed_email: 未確認Eメール
         unlock_token: ロック解除用トークン
         updated_at: 更新日
-      loginless_viewer:
         created_at: 作成日
         current_password: 現在のパスワード
         email: Eメール
@@ -96,7 +95,6 @@ ja:
       system_admin: システム管理者
       user: 投稿者
       viewer: 視聴者
-      loginless_viewer: ログインなし視聴者
       organization: 組織
   shared:
       links:
