@@ -3,8 +3,8 @@ class VideosController < ApplicationController
   before_action :set_organization, only: %i[index]
   before_action :set_video, only: %i[show edit update destroy]
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
-  before_action :ensure_user, only: %i[new create update]
-  before_action :ensure_owner_or_correct_user, only: %i[update]
+  before_action :ensure_user, only: %i[new create]
+  before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
   before_action :ensure_system_admin_or_owner, only: %i[destroy]
   before_action :ensure_my_organization, exept: %i[new create]
   # 視聴者がログインしている場合、表示されているビデオの視聴グループ＝現在の視聴者の視聴グループでなければ、締め出す下記のメソッド追加予定
@@ -103,8 +103,8 @@ class VideosController < ApplicationController
     @video = Video.find(params[:id])
   end
 
-  def ensure_owner_or_correct_user
-    unless @video.my_upload?(current_user) || current_user.role == 'owner'
+  def ensure_admin_or_owner_or_correct_user
+    unless current_system_admin.present? || @video.my_upload?(current_user) || current_user.role == 'owner'
       flash[:danger] = '権限がありません'
       redirect_to video_path
     end

@@ -67,7 +67,7 @@ RSpec.describe 'VideosSystem', type: :system do
 
     describe 'モーダル画面' do
       before(:each) do
-        sign_in user_owner || user
+        sign_in system_admin || user_owner || user
         visit video_path(video_test)
         click_link('設定')
       end
@@ -207,9 +207,9 @@ RSpec.describe 'VideosSystem', type: :system do
       end
     end
 
-    describe 'モーダル画面(オーナー、動画投稿者本人以外)' do
+    describe 'モーダル画面(システム管理者、オーナー、動画投稿者本人以外)' do
       before(:each) do
-        sign_in user || system_admin
+        sign_in user
         visit video_path(video_sample)
         click_link('設定')
       end

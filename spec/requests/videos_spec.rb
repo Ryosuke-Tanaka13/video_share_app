@@ -470,21 +470,50 @@ RSpec.describe 'Videos', type: :request do
           }.not_to change { Video.find(video_test.id).title }
         end
 
-        # jsのテストが通らない(できない)ので、コメントアウト
-        # it '登録失敗するとモーダル上でエラーを出す' do
-        #   expect(
-        #     patch(video_path(video_sample),
-        #       params: {
-        #         video: {
-        #           title: ''
-        #         }, format: :js
-        #       })
-        #   ).to render_template :edit
-        # end
+        it '登録失敗するとモーダル上でエラーを出す' do
+          expect(
+            patch(video_path(video_sample),
+              params: {
+                video: {
+                  title: ''
+                }, format: :js
+              })
+          ).to render_template :edit
+        end
       end
     end
 
     describe '動画投稿者本人が現在のログインユーザ' do
+      before(:each) do
+        sign_in user
+      end
+
+      describe '正常' do
+        it '動画情報がアップデートされる' do
+          expect {
+            patch video_path(video_test),
+              params: {
+                video: {
+                  title: 'テストビデオ2'
+                }
+              }
+          }.to change { Video.find(video_test.id).title }.from(video_test.title).to('テストビデオ2')
+        end
+
+        it 'showにリダイレクトされる' do
+          expect(
+            patch(video_path(video_test),
+              params: {
+                video: {
+                  title: 'テストビデオ２'
+                }
+              })
+          ).to redirect_to video_path(video_test)
+        end
+      end
+    end
+
+    describe 'システム管理者が現在のログインユーザ' do
       before(:each) do
         sign_in user
       end
@@ -533,33 +562,28 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    # jsのテストが通らない(できない)ので、コメントアウト
-    # describe '別組織のオーナーが現在のログインユーザ' do
-    #   before(:each) do
-    #     sign_in another_user_owner
-    #   end
-
-    #   describe '異常' do
-    #     it '別組織のオーナーはアップデートできない' do
-    #       expect {
-    #         patch video_path(video_sample),
-    #           params: {
-    #             video: {
-    #               title: 'サンプルビデオ２'
-    #             }
-    #           }
-    #       }.not_to change { Video.find(video_sample.id).title }
-    #     end
-    #   end
-    # end
-
-    describe 'システム管理者が現在のログインユーザ' do
+    describe '別組織のオーナーが現在のログインユーザ' do
       before(:each) do
-        sign_in system_admin
+        sign_in another_user_owner
       end
 
       describe '異常' do
-        it 'システム管理者はアップデートできない' do
+        it '別組織のオーナーはアップデートできない' do
+          expect {
+            patch video_path(video_sample),
+              params: {
+                video: {
+                  title: 'サンプルビデオ２'
+                }
+              }
+          }.not_to change { Video.find(video_sample.id).title }
+        end
+      end
+    end
+
+    describe '非ログイン' do
+      describe '異常' do
+        it '別組織のオーナーはアップデートできない' do
           expect {
             patch video_path(video_sample),
               params: {
