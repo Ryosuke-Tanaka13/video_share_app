@@ -14,16 +14,14 @@
             <% end %>
           </td>
         </tr>
-        <tr id = "<%=current_user&.id%>">
-          <th id = "<%=folder.organization_id%>" class = "<%=folder.id%>">
-            <%=folder.name%> &nbsp;
-            <%if current_system_admin.present? || current_user.role == 'owner'%>
-              <%= link_to organization_folder_path(folder.organization_id, folder.id), method: :delete, data: {confirm: "削除しますか？"} do%>
-                <i class="far fa-trash-alt" color=red></i>
-              <% end %>
-            <%end%>
-          </th>
-        </tr>
+        <th id = "<%=folder.organization_id%>" class = "<%=folder.id%>">
+          <%=folder.name%> &nbsp;
+          <%if current_system_admin.present? || current_user.role == 'owner'%>
+            <%= link_to organization_folder_path(folder.organization_id, folder.id), method: :delete, data: {confirm: "削除しますか？"} do%>
+              <i class="far fa-trash-alt" color=red></i>
+            <% end %>
+          <%end%>
+        </th>
       </table>
     <%end%>
   </div>
