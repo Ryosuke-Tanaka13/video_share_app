@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'VideosSystem', type: :system, js: true do
+RSpec.describe 'VideosSystem', type: :system do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
@@ -202,6 +202,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       it 'レイアウトに削除リンクなし' do
         expect(page).to have_link 'サンプルビデオ', href: video_path(video_sample)
         expect(page).to have_link 'テストビデオ', href: video_path(video_test)
+        expect(page).to have_no_link '削除', href: video_path(video_sample)
+        expect(page).to have_no_link '削除', href: video_path(video_test)
       end
     end
 
@@ -217,6 +219,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
 
       it 'レイアウトに設定を変更リンクなし' do
+        expect(page).to have_no_link '設定を変更'
         expect(page).to have_button '閉じる'
         expect(page).to have_field 'title_edit'
         expect(page).to have_field 'open_period_edit'
@@ -235,6 +238,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
       it 'レイアウトに設定リンクなし' do
         expect(page).to have_text 'サンプルビデオ'
+        expect(page).to have_no_link '設定'
       end
     end
   end
