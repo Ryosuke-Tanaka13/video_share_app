@@ -22,4 +22,10 @@ class Video < ApplicationRecord
 
     false
   end
+
+  def ensure_owner?(current_user)
+    return true if current_user.role == 'owner'
+
+    false
+  end
 end
