@@ -46,16 +46,12 @@ Rails.application.routes.draw do
   # =================================================================
 
   # viewer関連==========================================================
-  devise_for :viewers, skip: %i[registrations], controllers: {
+  devise_for :viewers, controllers: {
     sessions:      'viewers/sessions',
     passwords:     'viewers/passwords',
     confirmations: 'viewers/confirmations',
     registrations: 'viewers/registrations'
   }
-
-  devise_scope :viewers do
-    get '/viewers/sign_up' => 'viewers/registrations#new', as: :new_viewer_registration
-  end
 
   resources :viewers do
     member do

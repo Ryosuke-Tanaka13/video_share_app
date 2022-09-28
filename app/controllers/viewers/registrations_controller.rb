@@ -48,9 +48,9 @@ module Viewers
     end
 
     # GET /resource/edit
-    # def edit
-    #   super
-    # end
+    def edit
+      redirect_to root_url
+    end
 
     # PUT /resource
     # def update
