@@ -2,6 +2,7 @@ class ViewersController < ApplicationController
   before_action :ensure_logged_in
   before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_admin_or_user, only: %i[index]
+  before_action :not_exist, only: %i[show edit update]
   before_action :ensure_admin_or_owner_in_same_organization_as_set_viewer_or_correct_viewer, only: %i[show edit update]
   before_action :set_viewer, except: %i[index]
 
@@ -56,6 +57,14 @@ class ViewersController < ApplicationController
   def ensure_admin_or_owner_in_same_organization_as_set_viewer_or_correct_viewer
     if !current_system_admin? && !owner_in_same_organization_as_set_viewer? && !correct_viewer?
       flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
+  # set_viewerが退会であるページにて、システム管理者のみ許可
+  def not_exist
+    if Viewer.find(params[:id]).is_valid == false && !current_system_admin?
+      flash[:danger] = '存在しないアカウントです。'
       redirect_back(fallback_location: root_path)
     end
   end
