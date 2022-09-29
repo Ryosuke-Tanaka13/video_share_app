@@ -1011,7 +1011,7 @@ RSpec.describe 'User', type: :request do
                   name: 'ユーザー'
                 }
               })
-          ).to redirect_to users_path
+          ).to redirect_to users_path(organization_id: organization.id)
         end
 
         context '異常' do

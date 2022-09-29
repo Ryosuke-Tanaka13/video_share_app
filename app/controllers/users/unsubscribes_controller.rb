@@ -12,9 +12,12 @@ class Users::UnsubscribesController < UsersController
       reset_session
       flash[:notice] = '退会処理が完了しました。'
       redirect_to root_path
-    else
+    elsif current_user&.role == 'owner'
       flash[:notice] = "#{@user.name}のユーザー情報を削除しました"
-      redirect_to users_path
+      redirect_to users_path(organization_id: current_user.organization_id)
+    else # システム管理者の場合退会者の詳細へ遷移
+      flash[:notice] = "#{@user.name}のユーザー情報を削除しました"
+      redirect_to user_path(params[:id])
     end
   end
 
