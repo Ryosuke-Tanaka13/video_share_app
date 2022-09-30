@@ -5,16 +5,27 @@ class VideosController < ApplicationController
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
   before_action :ensure_user, only: %i[new create]
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
-  before_action :ensure_system_admin_or_owner, only: %i[destroy]
+  before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_my_organization, exept: %i[new create]
   # 視聴者がログインしている場合、表示されているビデオの視聴グループ＝現在の視聴者の視聴グループでなければ、締め出す下記のメソッド追加予定
   # before_action :limited_viewer, only: %i[show]
   before_action :ensure_logged_in_viewer, only: %i[show]
+  before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
 
   def index
-    # n+1問題対応.includes([:video_blob])
-    @organization_videos = Video.includes([:video_blob]).where(organization_id: params[:organization_id])
-    # 視聴者がログインしている場合、現在の視聴者の視聴グループに紐づくビデオのみを表示する条件分岐が今後必要
+    if current_system_admin.present?
+      @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
+      @organization_videos.each do |organization_video| 
+        @organization_video_id = organization_video.data_url[8..17].to_i
+      end
+    elsif current_user.present?
+      # n+1問題対応.includes([:video_blob])
+      @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
+      @organization_videos.each do |organization_video| 
+        @organization_video_id = organization_video.data_url[8..17].to_i
+      end
+    # elsif 視聴者がログインしている場合、現在の視聴者の視聴グループに紐づくビデオのみを表示する条件分岐が今後必要
+    end
   end
 
   def new
@@ -24,18 +35,22 @@ class VideosController < ApplicationController
   def create
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
-    if @video.save
-      # 今後必要に応じてファイル形式変換処理
-      # ConvertVideoJob.perform_later(@video.id)
-      # snip response boilerplate
+    if @video.save!
       flash[:success] = '動画を投稿しました。'
       redirect_to @video
     else
+      # 動画以外のデータ(タイトル)についてエラーがあったとき
       render :new
     end
+  # 動画についてエラーがあったとき
+  rescue
+    render :new
   end
-
-  def show; end
+  
+  def show
+    # 動画詳細ページのパスから、id部分のみを取得し、数字型に変換
+    @video_id = @video.data_url[8..17].to_i
+  end
 
   def edit; end
 
@@ -49,8 +64,11 @@ class VideosController < ApplicationController
   end
 
   def destroy
+    @vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], @video.data_url)
+    # vimeoの動画の削除とアプリ内のDBに登録しているその他のカラムのデータの削除
+    @vimeo_video.destroy
     @video.destroy
-    flash[:danger] = '動画を削除しました'
+    flash[:success] = "削除しました"
     redirect_to videos_path(organization_id: @video.organization.id)
   end
 
@@ -74,9 +92,18 @@ class VideosController < ApplicationController
   end
 
   def ensure_admin_or_user
+    # 真偽判定メソッド加藤さんに合わせる予定
     if current_system_admin.nil? && current_user.nil?
-      flash[:danger] = '権限がありません'
-      redirect_to root_path
+      flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
+  def ensure_admin
+    # 真偽判定メソッド加藤さんに合わせる予定
+    unless current_system_admin.present?
+      flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -87,14 +114,7 @@ class VideosController < ApplicationController
 
   def ensure_user
     if current_user.nil?
-      flash[:danger] = '権限がありません'
-      redirect_to root_path
-    end
-  end
-
-  def ensure_system_admin_or_owner
-    if current_user.present? && current_user.role != 'owner'
-      redirect_to videos_path(organization_id: current_user.organization.id), flash: { danger: '権限がありません' }
+      redirect_to users_path, flash: { danger: '権限がありません' }
     end
   end
 
@@ -105,8 +125,7 @@ class VideosController < ApplicationController
 
   def ensure_admin_or_owner_or_correct_user
     unless current_system_admin.present? || @video.my_upload?(current_user) || current_user.role == 'owner'
-      flash[:danger] = '権限がありません'
-      redirect_to video_path
+      redirect_to video_path, flash: { danger: '権限がありません。' }
     end
   end
 
@@ -114,12 +133,12 @@ class VideosController < ApplicationController
     if current_user.present?
       # indexへのアクセス制限
       if @organization.present? && current_user.organization_id != @organization.id
-        flash[:danger] = '権限がありません'
-        redirect_to videos_path(organization_id: current_user.organization.id)
+        flash[:danger] = '権限がありません。'
+        redirect_to videos_path(organization_id: current_user.organization_id)
       # show, eidt, update, destroyへのアクセス制限
       elsif @video.present? && (@video.organization_id != current_user.organization_id)
-        flash[:danger] = '権限がありません'
-        redirect_to videos_path(organization_id: current_user.organization.id)
+        flash[:danger] = '権限がありません。'
+        redirect_to videos_path(organization_id: current_user.organization_id)
       end
     end
     # 視聴者がログインしている場合の条件分岐も今後必要
@@ -129,8 +148,14 @@ class VideosController < ApplicationController
 
   def ensure_logged_in_viewer
     if !logged_in? && @video.login_set != false
-      flash[:danger] = '視聴者でログインしてください'
-      redirect_to new_viewer_session_path
+      redirect_to new_viewer_session_path, flash: { danger: '視聴者ログインしてください。' }
+    end
+  end
+
+  def ensure_admin_for_access_hidden
+    if current_system_admin.nil? && @video.is_valid == false
+      flash[:danger] = 'すでに削除された動画です。'
+      redirect_back(fallback_location: root_path)
     end
   end
 end

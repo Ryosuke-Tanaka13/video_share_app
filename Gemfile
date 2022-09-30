@@ -39,8 +39,8 @@ gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
 
-# 追記
 gem 'activestorage-validator'
+gem 'vimeo_me2', :git => "https://github.com/bo-oz/vimeo_me2.git"
 
 group :development, :test do
   # ERD生成
