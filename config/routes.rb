@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       end
     end
   end
+
   # =================================================================
 
   # system_admin関連=========================================================
@@ -62,5 +63,11 @@ Rails.application.routes.draw do
   # =================================================================
 
   # 追記
-  resources :videos
+  resources :videos 
+
+  scope module: :videos do
+      # resource :unsubscribe, only: %i[show update], as: :videos_unsubscribe
+    get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
+    patch 'videos/:id/withdraw' => 'hiddens#withdraw', as: :videos_withdraw
+  end
 end
