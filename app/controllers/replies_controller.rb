@@ -1,6 +1,7 @@
 class RepliesController < ApplicationController
   include CommentReply
   before_action :set_account
+  before_action :ensure_user_or_viewer
   helper_method :account_logged_in?
   protect_from_forgery :except => [:destroy]
 
@@ -23,13 +24,12 @@ class RepliesController < ApplicationController
   end
 
   def update
+    @video = Video.find(params[:video_id])
     @comment = Comment.find(params[:comment_id])
     @reply = Reply.find(params[:id])
-    if @reply.update(eply_params)
-      flash[:success] = "コメント返信編集に成功しました。"
+    if @reply.update(reply_params)
       redirect_to video_url(@comment.video_id)
     else
-      flash.now[:danger] = "コメント返信編集に失敗しました。"
       render template: "comments/index"
     end
   end

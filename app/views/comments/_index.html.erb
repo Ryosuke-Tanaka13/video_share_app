@@ -1,3 +1,4 @@
+<%= javascript_pack_tag 'video-comment.js' %>
 <!-- 'videos/show'で使用 -------------------------------------------------------------------------------------------------------------->
 <h5>コメント一覧 <%= "(#{@comments.count}件)" %></h5>
 <%= render 'layouts/flash' %>
@@ -19,18 +20,27 @@
           <%= comment.user.name %>さん
         <% elsif comment.viewer.present? && comment.viewer.name.present? %>
           <%= comment.viewer.name %>さん
-        <% else %>
-          ゲストさん
         <% end %>
       <!-- コメントを表示 -->
-      <div class="comment-entry">
+      <div id="js-comment-label-<%= comment.id %>">
         <%= simple_format(comment.comment) %>
         <%= comment.created_at.strftime('%Y/%m/%d') %>
       </div>
-      <!-- 返信ボタン、削除ボタンを表示 -->
+      <!-- 編集ボタン、削除ボタンを表示 -->
       <div class="content-show-comment-bottom-top-icons">
-      <!-- ログイン済みかつコメントしたアカウント本人であれば削除ボタンを表示 -->
+      <!-- ログイン済みかつコメントしたアカウント本人であれば編集、削除ボタンを表示 -->
         <% if account_logged_in? && (comment.user_id == @account.id || comment.viewer_id == @account.id) %>
+          <div data-comment-id='<%= comment.id %>' class="js-edit-comment-button">
+            <i class="fas fa-edit text-primary"></i>
+          </div>
+          <div id="js-comment-<%= comment.id %>">
+            <div id="js-comment-post-error-<%= comment.id %>" class="text-danger"></div>
+            <textarea style="display: none;" id="js-textarea-comment-<%= comment.id %>" class="form-control comment-post-error"><%= comment.comment %></textarea>
+            <div id="js-comment-button-<%= comment.id %>" style="display: none;">
+              <button data-cancel-id=<%= comment.id %> type="button" class="btn btn-light comment-cancel-button">キャンセル</button>
+              <button data-update-id=<%= comment.id %> data-video-id=<%= comment.video_id %> type="submit" class="btn btn-success comment-update-button">更新</button>
+            </div>
+          </div>
           <div class="content-show-comment-bottom-top-icons-delete">
             <%= link_to video_comment_path(comment.video_id, comment.id), method: :delete, remote: true, data: { confirm: "削除しますか？" } do %>
               <i class="far fa-trash-alt" color=red></i>
@@ -78,10 +88,26 @@
                 <%= reply.viewer.name %>さん
               <% end %>
             </div>
-            <!-- 返信削除ボタンを表示 -->
+            <!-- 返信を表示 -->
+            <div id="js-reply-label-<%= reply.id %>">
+              <%= simple_format(reply.reply) %>
+              <%= reply.created_at.strftime('%Y/%m/%d') %>
+            </div>
+            <!-- 返信編集ボタン、削除ボタンを表示 -->
             <div class="content-show-comment-bottom-view-reply-top-icons">
-              <!-- ログイン済みかつ返信したアカウントの場合、削除ボタンを表示 -->
+              <!-- ログイン済みかつ返信したアカウントの場合、編集ボタン、削除ボタンを表示 -->
               <% if account_logged_in? && (reply.user_id == @account.id || reply.viewer_id == @account.id) %>
+                <div data-reply-id='<%= reply.id %>' class="js-edit-reply-button">
+                  <i class="fas fa-edit text-primary"></i>
+                </div>
+                <div id="js-reply-<%= reply.id %>">
+                  <div id="js-reply-post-error-<%= reply.id %>" class="text-danger"></div>
+                  <textarea style="display: none;" id="js-textarea-reply-<%= reply.id %>" class="form-control reply-post-error"><%= reply.reply %></textarea>
+                  <div id="js-reply-button-<%= reply.id %>" style="display: none;">
+                    <button data-cancel-id=<%= reply.id %> type="button" class="btn btn-light reply-cancel-button">キャンセル</button>
+                    <button data-update-id=<%= reply.id %> data-video-id=<%= comment.video_id %> data-comment-id=<%=comment.id %> type="submit" class="btn btn-success reply-update-button">更新</button>
+                  </div>
+                </div>
                 <div class="content-show-comment-bottom-view-reply-top-icons-delete">
                   <%= link_to video_comment_reply_path(comment.video_id, reply.comment_id, reply.id), method: :delete, remote: true, data: { confirm: "削除しますか？" } do %>
                     <i class="far fa-trash-alt" color=red></i>
@@ -91,11 +117,6 @@
             </div>
           </div>      
         </div> 
-        <!-- 返信を表示 -->
-        <div class="content-show-comment-bottom-view-reply-text">
-          <%= simple_format(reply.reply) %>
-          <%= reply.created_at.strftime('%Y/%m/%d') %>
-        </div>
       </div>
     <% end %>
   <% end %>

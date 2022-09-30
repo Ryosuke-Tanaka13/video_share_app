@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
   include CommentReply
   before_action :set_account
+  before_action :ensure_user_or_viewer
   helper_method :account_logged_in?
   protect_from_forgery :except => [:destroy]
   
@@ -26,7 +27,6 @@ class CommentsController < ApplicationController
     @video= Video.find(params[:video_id])
     @comment = Comment.find(params[:id])
     if @comment.update(comment_params)
-      flash[:success] = "コメント編集に成功しました。"
       redirect_to video_url(@video.id)
     else
       flash.now[:danger] = "コメント編集に失敗しました。"
@@ -47,19 +47,19 @@ class CommentsController < ApplicationController
   end
 
   private
-    def comment_params
-      params.require(:comment).permit(:comment, :video_id, :organization_id).merge(
-        organization_id: @video.organization_id
-      )
-    end
+  def comment_params
+    params.require(:comment).permit(:comment, :video_id, :organization_id).merge(
+      organization_id: @video.organization_id
+    )
+  end
 
-    # コメントしたアカウントidをセット
-    def set_commenter_id
-      if current_user && (@account == current_user)
-        @comment.user_id = current_user.id
-      elsif current_viewer && (@account == current_viewer)
-        @comment.viewer_id = current_viewer.id
-      end
+  # コメントしたアカウントidをセット
+  def set_commenter_id
+    if current_user && (@account == current_user)
+      @comment.user_id = current_user.id
+    elsif current_viewer && (@account == current_viewer)
+      @comment.viewer_id = current_viewer.id
     end
-    
+  end
+
 end
