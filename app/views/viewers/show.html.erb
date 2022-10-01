@@ -17,12 +17,24 @@
         </tr>
         <% @organizations.each.with_index(1) do |organization, i| %>
         <tr>
-          <% if current_system_admin %>
+          <% if current_system_admin  %>
             <th><%= "所属組織名#{i}" %></th>
-            <td><%= link_to organization.name, organization_path(organization) %></td>
-          <% elsif current_user&.organization_id == organization.id %>
+            <td>
+              <%= link_to organization.name, organization_path(organization) %>
+              <%= link_to "脱退", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
+            </td>
+          <% elsif current_viewer %>
+            <th><%= "所属組織名#{i}" %></th>
+            <td>
+              <%= organization.name %>
+              <%= link_to "脱退", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
+            </td>
+          <% elsif current_user&.organization_id == organization.id %></td>
             <th><%= "所属組織名" %></th>
-            <td><%= link_to organization.name, organization_path(organization) %></td>
+            <td>
+              <%= link_to organization.name, organization_path(organization) %>
+              <%= link_to "脱退", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
+            </td>
           <% end %>
         </tr>
         <% end %>

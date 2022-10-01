@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     member do
       scope module: :organizations do
         resource :unsubscribe, only: %i[show update], as: :organizations_unsubscribe
+        resource :admission, only: %i[show update destroy], as: :organizations_admission
       end
     end
   end

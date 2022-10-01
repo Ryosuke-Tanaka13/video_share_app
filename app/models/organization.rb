@@ -1,6 +1,7 @@
 class Organization < ApplicationRecord
   has_many :users, dependent: :destroy, autosave: true
   has_many :organization_viewers, dependent: :destroy
+  has_many :viewers, through: :organization_viewers
   has_many :folders
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

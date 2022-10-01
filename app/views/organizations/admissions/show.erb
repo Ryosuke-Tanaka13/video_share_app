@@ -1,0 +1,12 @@
+<% provide(:title, "組織加入") %>
+
+<div>
+  <h2><%= "#{@organization.name}から招待されています" %></h2>
+  <div>
+    <p>入会する場合は、『入会する』をクリックしてください。</p>
+  </div>
+  <div>
+    <%= link_to '入会しない', viewer_path(current_viewer) %>
+    <%= link_to "入会する", organizations_admission_path(@organization), method: :patch %>
+  </div>
+</div> 
