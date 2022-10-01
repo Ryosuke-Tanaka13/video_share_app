@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'ViewerUnsubscribeSystem', type: :system do
+RSpec.describe 'OrganizationUnsubscribeSystem', type: :system do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -36,32 +36,31 @@ RSpec.describe 'ViewerUnsubscribeSystem', type: :system do
     organization_viewer3
   end
 
-  context 'オーナー退会' do
-    describe '正常～異常' do
+  context '組織退会' do
+    describe '正常' do
       context '本人操作' do
         before(:each) do
-          login(viewer)
-          current_viewer(viewer)
-          visit viewers_unsubscribe_path(viewer)
+          login(user_owner)
+          current_user(user_owner)
+          visit organizations_unsubscribe_path(organization)
         end
 
         it 'レイアウト' do
-          expect(page).to have_link '退会しない', href: viewer_path(viewer)
-          expect(page).to have_link '退会する', href: viewers_unsubscribe_path(viewer)
+          expect(page).to have_link '退会しない', href: organization_path(organization)
+          expect(page).to have_link '退会する', href: organizations_unsubscribe_path(organization)
         end
 
         it '詳細へ遷移' do
           click_link '退会しない'
-          expect(page).to have_current_path viewer_path(viewer), ignore_query: true
+          expect(page).to have_current_path organization_path(organization), ignore_query: true
         end
 
-        # テンプレートエラーの解決せず（手動では動作確認済）
-        # it '退会する' do
-        #   find(:xpath, '//*[@id="viewers-unsubscribes-show"]/div[1]/div[2]/a[2]').click
-        #   expect {
-        #     expect(page).to have_content '退会処理が完了しました。'
-        #   }.to change { Viewer.find(viewer.id).is_valid }.from(viewer.is_valid).to(false)
-        # end
+        it '退会する' do
+          expect {
+            click_link '退会する'
+            expect(page).to have_content '退会処理が完了しました。'
+          }.to change { Organization.find(organization.id).is_valid }.from(organization.is_valid).to(false)
+        end
       end
     end
   end

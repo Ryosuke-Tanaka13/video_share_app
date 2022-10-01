@@ -18,7 +18,7 @@ class User < ApplicationRecord
 
   # 引数のorganization_idと一致するuserの絞り込み
   scope :current_owner_has, ->(current_user) { where(organization_id: current_user.organization_id) }
-  scope :user_has, ->(organization_id) { where(organization_id: organization_id) }
+  scope :user_has, ->(organization_id) { includes([:organization]).where(organization_id: organization_id) }
   # 退会者は省く絞り込み
   scope :subscribed, -> { where(is_valid: true) }
 end

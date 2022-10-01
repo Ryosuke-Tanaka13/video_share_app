@@ -8,9 +8,14 @@ class Organizations::UnsubscribesController < OrganizationsController
 
   def update
     if Organization.bulk_update(params[:id])
-      reset_session
-      flash[:notice] = '退会処理が完了しました。'
-      redirect_to root_path
+      if current_system_admin
+        flash[:notice] = '退会処理が完了しました。'
+        redirect_to organizations_path
+      else
+        reset_session
+        flash[:notice] = '退会処理が完了しました。'
+        redirect_to root_path
+      end
     else
       render :show
     end

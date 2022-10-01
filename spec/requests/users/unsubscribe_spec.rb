@@ -97,7 +97,7 @@ RSpec.describe 'UserUnsubscribe', type: :request do
 
       context '他組織のスタッフ操作' do
         before(:each) do
-          current_user(another_user)
+          current_user(another_user_staff)
         end
 
         it '退会できない' do
@@ -131,6 +131,18 @@ RSpec.describe 'UserUnsubscribe', type: :request do
 
   describe 'スタッフ退会' do
     describe '正常' do
+      context 'システム管理者操作' do
+        before(:each) do
+          current_system_admin(system_admin)
+        end
+
+        it '論理削除できる' do
+          expect {
+            patch users_unsubscribe_path(user_staff)
+          }.to change { User.find(user_staff.id).is_valid }.from(user_staff.is_valid).to(false)
+        end
+      end
+
       context '本人操作' do
         before(:each) do
           current_user(user_staff)
@@ -154,33 +166,15 @@ RSpec.describe 'UserUnsubscribe', type: :request do
           current_user(user_owner)
         end
 
-        it '退会した後ログインできない' do
+        it '退会できる' do
           expect {
             patch users_unsubscribe_path(user_staff)
           }.to change { User.find(user_staff.id).is_valid }.from(user_staff.is_valid).to(false)
-
-          get new_user_session_path
-          expect(response).to have_http_status(:success)
-          post user_session_path, params: { user: { email: user_staff.email, password: user_staff.password } }
-          expect(response).to have_http_status(:found)
-          expect(response).to redirect_to 'http://www.example.com/users/sign_in'
         end
       end
     end
 
     describe '異常' do
-      context 'システム管理者操作' do
-        before(:each) do
-          current_system_admin(system_admin)
-        end
-
-        it '退会できない' do
-          expect {
-            patch users_unsubscribe_path(user_staff)
-          }.not_to change { User.find(user_staff.id).is_valid }
-        end
-      end
-
       context '他組織のオーナー操作' do
         before(:each) do
           current_user(another_user_owner)
@@ -195,7 +189,7 @@ RSpec.describe 'UserUnsubscribe', type: :request do
 
       context '他組織のスタッフ操作' do
         before(:each) do
-          current_user(another_user)
+          current_user(another_user_staff)
         end
 
         it '退会できない' do

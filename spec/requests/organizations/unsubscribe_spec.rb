@@ -38,13 +38,13 @@ RSpec.describe 'Organizations::Unsubscribe', type: :request do
 
   # システム管理者　set_organizationのオーナー　のみ許可
   context '組織退会' do
-    describe '正常～異常' do
+    describe '正常' do
       context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
         end
 
-        it '退会できない' do
+        it '退会できる' do
           expect {
             patch organizations_unsubscribe_path(organization)
           }.to change { Organization.find(organization.id).is_valid }.from(organization.is_valid).to(false)
