@@ -43,6 +43,8 @@
   </div>
   <div class="card-footer">
     <%= link_to "編集", edit_viewer_path, class: "btn btn-md btn-block btn-success" %>
-    <%= link_to "退会", viewers_unsubscribe_path(@viewer), class: "btn btn-md btn-block btn-danger" %><br>
+    <% if current_system_admin || current_viewer %>
+      <%= link_to "退会", viewers_unsubscribe_path(@viewer), class: "btn btn-md btn-block btn-danger" %><br>
+    <% end %>
   </div>
 </div>

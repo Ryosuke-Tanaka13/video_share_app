@@ -61,7 +61,15 @@ class ViewersController < ApplicationController
     end
   end
 
-  # set_viewerが退会であるページにて、システム管理者のみ許可
+  # システム管理者　視聴者本人　のみ許可
+  def ensure_admin_or_correct_viewer
+    if !current_system_admin? && !correct_viewer?
+      flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
+  # set_viewerが退会済であるページは、システム管理者のみ許可
   def not_exist
     if Viewer.find(params[:id]).is_valid == false && !current_system_admin?
       flash[:danger] = '存在しないアカウントです。'

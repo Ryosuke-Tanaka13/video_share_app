@@ -24,7 +24,7 @@ RSpec.describe 'ViewerSystem', type: :system do
     organization_viewer2
   end
 
-  context 'サイドバーの項目/遷移確認' do
+  describe 'サイドバーの項目/遷移確認' do
     before(:each) do
       viewer
     end
@@ -127,6 +127,7 @@ RSpec.describe 'ViewerSystem', type: :system do
           expect(page).to have_text viewer.email
           expect(page).to have_text viewer.name
           expect(page).to have_link 'セレブエンジニア', href: organization_path(organization)
+          expect(page).to have_link '脱退', href: organizations_admission_path(organization, viewer_id: viewer.id)
           expect(page).to have_link '編集', href: edit_viewer_path(viewer)
           expect(page).to have_link '退会', href: viewers_unsubscribe_path(viewer)
         end
@@ -134,6 +135,23 @@ RSpec.describe 'ViewerSystem', type: :system do
         it 'セレブエンジニアへの遷移' do
           click_link 'セレブエンジニア'
           expect(page).to have_current_path organization_path(organization), ignore_query: true
+        end
+
+        it '脱退する' do
+          find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td/a[2]').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.accept
+            expect(page).to have_content 'セレブエンジニアを脱退しました。'
+          }.to change(OrganizationViewer, :count).by(-1)
+        end
+
+        it '脱退するをキャンセル' do
+          find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td/a[2]').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.dismiss
+          }.not_to change(OrganizationViewer, :count)
         end
 
         it '編集への遷移' do
@@ -164,8 +182,6 @@ RSpec.describe 'ViewerSystem', type: :system do
         it 'レイアウト' do
           expect(page).to have_link viewer.name, href: viewer_path(viewer)
           expect(page).to have_link viewer1.name, href: viewer_path(viewer1)
-          expect(page).to have_link '削除', href: viewers_unsubscribe_path(viewer)
-          expect(page).to have_link '削除', href: viewers_unsubscribe_path(viewer1)
         end
 
         it '視聴者詳細への遷移' do
@@ -177,40 +193,6 @@ RSpec.describe 'ViewerSystem', type: :system do
           click_link viewer1.name
           expect(page).to have_current_path viewer_path(viewer1), ignore_query: true
         end
-
-        it '視聴者論理削除' do
-          find(:xpath, '//*[@id="viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[2]/td[3]/a').click
-          expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq '視聴者のユーザー情報を削除します。本当によろしいですか？'
-            page.driver.browser.switch_to.alert.accept
-            expect(page).to have_content '視聴者のユーザー情報を削除しました'
-          }.to change { Viewer.find(viewer.id).is_valid }.from(viewer.is_valid).to(false)
-        end
-
-        it '視聴者論理削除キャンセル' do
-          find(:xpath, '//*[@id="viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[2]/td[3]/a').click
-          expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq '視聴者のユーザー情報を削除します。本当によろしいですか？'
-            page.driver.browser.switch_to.alert.dismiss
-          }.not_to change(Viewer, :count)
-        end
-
-        it '視聴者1視聴者論理削除' do
-          find(:xpath, '//*[@id="viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[3]/a').click
-          expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq '視聴者1のユーザー情報を削除します。本当によろしいですか？'
-            page.driver.browser.switch_to.alert.accept
-            expect(page).to have_content '視聴者1のユーザー情報を削除しました'
-          }.to change { Viewer.find(viewer1.id).is_valid }.from(viewer1.is_valid).to(false)
-        end
-
-        it '視聴者1視聴者論理削除キャンセル' do
-          find(:xpath, '//*[@id="viewers-index"]/div[1]/div[1]/div[2]/div/table/tbody/tr[3]/td[3]/a').click
-          expect {
-            expect(page.driver.browser.switch_to.alert.text).to eq '視聴者1のユーザー情報を削除します。本当によろしいですか？'
-            page.driver.browser.switch_to.alert.dismiss
-          }.not_to change(Viewer, :count)
-        end
       end
 
       context '視聴者詳細' do
@@ -219,14 +201,32 @@ RSpec.describe 'ViewerSystem', type: :system do
         end
 
         it 'レイアウト' do
-          expect(page).to have_text viewer.email
-          expect(page).to have_text viewer.name
+          expect(page).to have_text '視聴者'
+          expect(page).to have_text 'viewer_spec@example.com'
           expect(page).to have_link 'セレブエンジニア', href: organization_path(organization)
+          expect(page).to have_link '脱退', href: organizations_admission_path(organization, viewer_id: viewer.id)
         end
 
         it 'セレブエンジニアへの遷移' do
           click_link 'セレブエンジニア'
           expect(page).to have_current_path organization_path(organization), ignore_query: true
+        end
+
+        it '脱退する' do
+          find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td/a[2]').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.accept
+            expect(page).to have_content 'セレブエンジニアを脱退しました。'
+          }.to change(OrganizationViewer, :count).by(-1)
+        end
+
+        it '脱退するをキャンセル' do
+          find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td/a[2]').click
+          expect {
+            expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
+            page.driver.browser.switch_to.alert.dismiss
+          }.not_to change(OrganizationViewer, :count)
         end
       end
     end

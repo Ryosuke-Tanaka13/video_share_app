@@ -79,7 +79,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # set_userが退会であるページにて、システム管理者のみ許可
+  # set_userが退会済であるページは、システム管理者のみ許可
   def not_exist
     if User.find(params[:id]).is_valid == false && !current_system_admin?
       flash[:danger] = '存在しないアカウントです。'

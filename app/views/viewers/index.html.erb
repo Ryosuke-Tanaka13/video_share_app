@@ -21,8 +21,6 @@
             <td><%= viewer.email %></td>
             <% if current_system_admin %>
               <td><%= link_to "削除", viewer_path(viewer), method: :delete, data: { confirm: "#{viewer.name}のユーザー情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
-            <% elsif current_user&.role == 'owner'  %>
-              <td><%= link_to "削除", viewers_unsubscribe_path(viewer), method: :patch, data: { confirm: "#{viewer.name}のユーザー情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
             <% else %>
               <td></td>
             <% end %>
