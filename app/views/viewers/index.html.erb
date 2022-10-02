@@ -1,4 +1,7 @@
 <% provide(:title,  "#{@organization&.name}視聴者一覧") %>
+<% if @organization.present? %>
+  <%= link_to "全表示", viewers_path, class: "btn btn-sm btn-link" %>
+<% end %>
   <div class="card">
     <div class="card-body table-responsive p-0">
       <table class="table table-hover text-nowrap"> 
