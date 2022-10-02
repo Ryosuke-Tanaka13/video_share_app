@@ -9,6 +9,7 @@
           <td>
             <%= @viewer.name %>
             <% if @viewer.is_valid == false %>(退会)<% end %>
+            <% if @viewer.organization_viewers == [] %>(無所属)<% end %>
           </td>
         </tr>
         <tr>

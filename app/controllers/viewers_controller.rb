@@ -7,8 +7,9 @@ class ViewersController < ApplicationController
   before_action :set_viewer, except: %i[index]
 
   def index
-    # system_adminが/viewersへ直接アクセスするとエラーになる仕様
-    if current_system_admin
+    if params[:organization_id].nil? && current_system_admin
+      @viewers = Viewer.all
+    elsif current_system_admin
       @viewers = Viewer.viewer_has(params[:organization_id])
       # 組織名を表示させるためのインスタンス変数
       @organization = Organization.find(params[:organization_id])
