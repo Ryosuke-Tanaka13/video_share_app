@@ -292,7 +292,6 @@ RSpec.describe 'ViewerSystem', type: :system do
           expect(page).to have_field 'Eメール'
           expect(page).to have_button '更新'
           expect(page).to have_link '詳細画面へ'
-          expect(page).to have_link '一覧画面へ'
         end
 
         it '更新で登録情報が更新される' do
