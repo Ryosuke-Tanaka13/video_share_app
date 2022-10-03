@@ -6,10 +6,12 @@
 <div class="container">
   <div class="row">
     <div class="col-8">
-      <div class="comment-create">
-        <h4 class="text-left">コメントを投稿する</h4>
-          <%= render partial: 'comments/form' %>
-      </div><br>
+      <% if account_logged_in? %>
+        <div class="comment-create">
+          <h4 class="text-left">コメントを投稿する</h4>
+            <%= render partial: 'comments/form' %>
+        </div><br>
+      <% end %>
       <hr>
       <div class="comment-create">
         <h4 class="text-left title">コメント</h4>

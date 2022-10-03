@@ -1,9 +1,11 @@
 <%= javascript_pack_tag 'video-comment.js' %>
+
 <!-- 'videos/show'で使用 -------------------------------------------------------------------------------------------------------------->
 <h5>コメント一覧 <%= "(#{@comments.count}件)" %></h5>
 <%= render 'layouts/flash' %>
+<hr>
 <% @comments.each do |comment| %>
-  <hr>
+  <h5>コメント</h5>
   <div class="content-show-comment-bottom-top">
     <div class="content-show-comment-bottom-top-user">
       <!-- アカウントのアイコンを表示 -->
@@ -120,4 +122,5 @@
       </div>
     <% end %>
   <% end %>
+  <hr>
 <% end %>
