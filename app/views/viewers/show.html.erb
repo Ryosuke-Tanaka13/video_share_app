@@ -11,10 +11,12 @@
             <% if @viewer.is_valid == false %>(退会)<% end %>
             <% if @viewer.organization_viewers == [] %>(無所属)<% end %>
           </td>
+          <td></td>
         </tr>
         <tr>
           <th><%= "メールアドレス" %></th>
           <td><%= @viewer.email %></td>
+          <td></td>
         </tr>
         <% @organizations.each.with_index(1) do |organization, i| %>
         <tr>
@@ -22,18 +24,24 @@
             <th><%= "所属組織名#{i}" %></th>
             <td>
               <%= link_to organization.name, organization_path(organization) %>
+            </td>
+            <td class='text-right'>
               <%= link_to "脱退はこちら", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
             </td>
           <% elsif current_viewer %>
             <th><%= "所属組織名#{i}" %></th>
             <td>
               <%= organization.name %>
+            </td>
+            <td class='text-right'>
               <%= link_to "脱退はこちら", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
             </td>
           <% elsif current_user&.organization_id == organization.id %></td>
             <th><%= "所属組織名" %></th>
             <td>
               <%= link_to organization.name, organization_path(organization) %>
+            </td>
+            <td class='text-right'>
               <%= link_to "脱退はこちら", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
             </td>
           <% end %>
