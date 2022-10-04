@@ -30,7 +30,7 @@ RSpec.describe 'ViewerRegistration', type: :request do
               }
             }
           )
-        ).to redirect_to new_viewer_session_path
+        ).to redirect_to new_viewer_session_url
       end
     end
 

@@ -99,7 +99,7 @@ RSpec.describe 'User', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status ' 302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
 
@@ -110,7 +110,7 @@ RSpec.describe 'User', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status ' 302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
     end
@@ -163,7 +163,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to users_path
+            expect(response).to redirect_to users_url
           end
         end
 
@@ -175,7 +175,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to users_path
+            expect(response).to redirect_to users_url
           end
         end
 
@@ -187,7 +187,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to users_path
+            expect(response).to redirect_to users_url
           end
         end
 
@@ -199,7 +199,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to users_path
+            expect(response).to redirect_to users_url
           end
         end
 
@@ -211,7 +211,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to users_path
+            expect(response).to redirect_to users_url
           end
         end
 
@@ -222,7 +222,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
       end
@@ -265,7 +265,7 @@ RSpec.describe 'User', type: :request do
               }
             }
           )
-        ).to redirect_to users_path
+        ).to redirect_to users_url
       end
     end
 
@@ -350,7 +350,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -362,7 +362,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -374,7 +374,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -386,7 +386,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -397,7 +397,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status ' 302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
       end
@@ -460,7 +460,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -472,7 +472,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -484,7 +484,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -496,7 +496,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -507,7 +507,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
       end
@@ -558,7 +558,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -570,7 +570,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -582,7 +582,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -594,7 +594,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -605,7 +605,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
       end
@@ -668,7 +668,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -680,7 +680,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -692,7 +692,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -704,7 +704,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -715,7 +715,7 @@ RSpec.describe 'User', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
       end
@@ -1011,7 +1011,7 @@ RSpec.describe 'User', type: :request do
                   name: 'ユーザー'
                 }
               })
-          ).to redirect_to users_path(organization_id: organization.id)
+          ).to redirect_to users_url(organization_id: organization.id)
         end
 
         context '異常' do
@@ -1071,7 +1071,7 @@ RSpec.describe 'User', type: :request do
         it 'indexにリダイレクトされる' do
           expect(
             delete(user_path(user_staff), params: { id: user_staff.id })
-          ).to redirect_to users_path(organization_id: organization.id)
+          ).to redirect_to users_url(organization_id: organization.id)
         end
       end
     end
@@ -1091,7 +1091,7 @@ RSpec.describe 'User', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(user_path(user_staff), params: { id: user_staff.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -1109,7 +1109,7 @@ RSpec.describe 'User', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(user_path(user_staff), params: { id: user_staff.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -1127,7 +1127,7 @@ RSpec.describe 'User', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(user_path(user_staff), params: { id: user_staff.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -1145,7 +1145,7 @@ RSpec.describe 'User', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(user_path(user_staff), params: { id: user_staff.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -1163,7 +1163,7 @@ RSpec.describe 'User', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(user_path(user_staff), params: { id: user_staff.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -1177,7 +1177,7 @@ RSpec.describe 'User', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(user_path(user_staff), params: { id: user_staff.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
     end

@@ -12,15 +12,15 @@ class Organizations::AdmissionsController < ApplicationController
   def update
     viewer = Viewer.find(current_viewer.id)
     @organization.viewers << viewer
-    redirect_to viewer_path(current_viewer), notice: "#{@organization.name}へ入会しました。"
+    redirect_to viewer_url(current_viewer), notice: "#{@organization.name}へ入会しました。"
   end
 
   def destroy
     OrganizationViewer.find_by(organization_id: params[:id], viewer_id: params[:viewer_id]).destroy
     if current_viewer || current_system_admin
-      redirect_to viewer_path(params[:viewer_id]), notice: "#{@organization.name}を脱退しました。"
+      redirect_to viewer_url(params[:viewer_id]), notice: "#{@organization.name}を脱退しました。"
     else
-      redirect_to viewers_path(@organization), notice: "#{Viewer.find(params[:viewer_id]).name}は#{@organization.name}を脱退しました。"
+      redirect_to viewers_url(@organization), notice: "#{Viewer.find(params[:viewer_id]).name}は#{@organization.name}を脱退しました。"
     end
   end
 
@@ -34,7 +34,7 @@ class Organizations::AdmissionsController < ApplicationController
   def ensure_logged_in_viewer
     unless current_viewer?
       flash[:danger] = '視聴者でログインしてください。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -42,7 +42,7 @@ class Organizations::AdmissionsController < ApplicationController
   def ensure_non_enrolled
     if OrganizationViewer.find_by(organization_id: params[:id], viewer_id: current_viewer.id)
       flash[:danger] = '既に加入されています'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -50,7 +50,7 @@ class Organizations::AdmissionsController < ApplicationController
   def ensure_admissioned_viewer
     if OrganizationViewer.find_by(organization_id: params[:id], viewer_id: current_viewer&.id).nil? && current_viewer
       flash[:danger] = '権限がありません'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -58,7 +58,7 @@ class Organizations::AdmissionsController < ApplicationController
   def ensure_admin_or_owner_of_set_organization_or_correct_viewer
     if !current_system_admin? && (current_user&.role != 'owner' || !user_of_set_organization?) && params[:viewer_id].to_i != current_viewer&.id
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 end

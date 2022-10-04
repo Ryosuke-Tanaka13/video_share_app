@@ -58,7 +58,7 @@ class ViewersController < ApplicationController
   def ensure_admin_or_owner_in_same_organization_as_set_viewer_or_correct_viewer
     if !current_system_admin? && !owner_in_same_organization_as_set_viewer? && !correct_viewer?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -66,7 +66,7 @@ class ViewersController < ApplicationController
   def ensure_admin_or_correct_viewer
     if !current_system_admin? && !correct_viewer?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -74,7 +74,7 @@ class ViewersController < ApplicationController
   def not_exist
     if Viewer.find(params[:id]).is_valid == false && !current_system_admin?
       flash[:danger] = '存在しないアカウントです。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 end

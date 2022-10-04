@@ -33,7 +33,7 @@ module SystemAdmins
     def ensure_other_account_logged_out
       if current_user? || current_viewer?
         flash[:danger] = 'ログアウトしてください。'
-        redirect_back(fallback_location: root_path)
+        redirect_back(fallback_location: root_url)
       end
     end
   end

@@ -75,7 +75,7 @@ class UsersController < ApplicationController
   def ensure_admin_or_owner_in_same_organization_as_set_user_or_correct_user
     if current_system_admin.nil? && !owner_in_same_organization_as_set_user? && !correct_user?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -83,7 +83,7 @@ class UsersController < ApplicationController
   def not_exist
     if User.find(params[:id]).is_valid == false && !current_system_admin?
       flash[:danger] = '存在しないアカウントです。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 end

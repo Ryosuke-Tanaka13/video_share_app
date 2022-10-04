@@ -90,7 +90,7 @@ class ApplicationController < ActionController::Base
   def ensure_admin
     unless current_system_admin?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -98,7 +98,7 @@ class ApplicationController < ActionController::Base
   def ensure_owner
     if current_user&.role != 'owner'
       flash[:danger] = '権限がありません'
-      redirect_to users_path
+      redirect_to users_url
     end
   end
 
@@ -106,7 +106,7 @@ class ApplicationController < ActionController::Base
   def ensure_admin_or_user
     if !current_system_admin? && !current_user?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 end

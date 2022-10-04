@@ -98,7 +98,7 @@ RSpec.describe 'Viewer', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
 
@@ -109,7 +109,7 @@ RSpec.describe 'Viewer', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
     end
@@ -178,7 +178,7 @@ RSpec.describe 'Viewer', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -190,7 +190,7 @@ RSpec.describe 'Viewer', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -202,7 +202,7 @@ RSpec.describe 'Viewer', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -214,7 +214,7 @@ RSpec.describe 'Viewer', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -226,7 +226,7 @@ RSpec.describe 'Viewer', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
 
@@ -237,7 +237,7 @@ RSpec.describe 'Viewer', type: :request do
 
           it 'アクセス権限なしのためリダイレクト' do
             expect(response).to have_http_status '302'
-            expect(response).to redirect_to root_path
+            expect(response).to redirect_to root_url
           end
         end
       end
@@ -302,7 +302,7 @@ RSpec.describe 'Viewer', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
 
@@ -314,7 +314,7 @@ RSpec.describe 'Viewer', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
 
@@ -326,7 +326,7 @@ RSpec.describe 'Viewer', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
 
@@ -338,7 +338,7 @@ RSpec.describe 'Viewer', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
 
@@ -350,7 +350,7 @@ RSpec.describe 'Viewer', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
 
@@ -361,7 +361,7 @@ RSpec.describe 'Viewer', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status '302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
     end
@@ -564,7 +564,7 @@ RSpec.describe 'Viewer', type: :request do
                     name: 'ユーザー'
                   }
                 })
-            ).to redirect_to viewer_path(viewer)
+            ).to redirect_to viewer_url(viewer)
           end
         end
 
@@ -625,7 +625,7 @@ RSpec.describe 'Viewer', type: :request do
         it 'indexにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to viewers_path(organization_id: organization.id)
+          ).to redirect_to viewers_url(organization_id: organization.id)
         end
       end
     end
@@ -645,7 +645,7 @@ RSpec.describe 'Viewer', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -663,7 +663,7 @@ RSpec.describe 'Viewer', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -681,7 +681,7 @@ RSpec.describe 'Viewer', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -699,7 +699,7 @@ RSpec.describe 'Viewer', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -717,7 +717,7 @@ RSpec.describe 'Viewer', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -735,7 +735,7 @@ RSpec.describe 'Viewer', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
 
@@ -749,7 +749,7 @@ RSpec.describe 'Viewer', type: :request do
         it 'rootにリダイレクトされる' do
           expect(
             delete(viewer_path(viewer), params: { id: viewer.id })
-          ).to redirect_to root_path
+          ).to redirect_to root_url
         end
       end
     end

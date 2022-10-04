@@ -11,14 +11,14 @@ class Viewers::UnsubscribesController < ViewersController
     @viewer.update(is_valid: false)
     if current_user&.role == 'owner'
       flash[:notice] = "#{@viewer.name}のユーザー情報を削除しました"
-      redirect_to viewers_path(organization_id: current_user.organization_id)
+      redirect_to viewers_url(organization_id: current_user.organization_id)
     elsif current_system_admin
       flash[:notice] = '退会処理が完了しました。'
-      redirect_to viewer_path(params[:id])
+      redirect_to viewer_url(params[:id])
     else # 本人の場合、セッションの解除
       reset_session
       flash[:notice] = '退会処理が完了しました。'
-      redirect_to root_path
+      redirect_to root_url
     end
   end
 

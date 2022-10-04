@@ -32,7 +32,7 @@ class Users::UnsubscribesController < UsersController
   def ensure_user_in_same_organization_as_set_user_or_correct_viewer
     unless user_in_same_organization_as_set_user? || current_viewer?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 end

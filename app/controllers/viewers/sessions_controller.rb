@@ -33,7 +33,7 @@ module Viewers
       @viewer = Viewer.find_by(email: params[:viewer][:email])
       if @viewer && (@viewer.valid_password?(params[:viewer][:password]) && !@viewer.is_valid)
         flash[:notice] = 'Eメールまたはパスワードが違います。'
-        redirect_to new_viewer_session_path
+        redirect_to new_viewer_session_url
       end
     end
 
@@ -41,7 +41,7 @@ module Viewers
     def ensure_other_account_logged_out
       if current_system_admin? || current_user?
         flash[:danger] = 'ログアウトしてください。'
-        redirect_back(fallback_location: root_path)
+        redirect_back(fallback_location: root_url)
       end
     end
   end

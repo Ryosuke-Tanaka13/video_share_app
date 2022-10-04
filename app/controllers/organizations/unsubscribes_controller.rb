@@ -10,11 +10,11 @@ class Organizations::UnsubscribesController < OrganizationsController
     if Organization.bulk_update(params[:id])
       if current_system_admin
         flash[:notice] = '退会処理が完了しました。'
-        redirect_to organizations_path
+        redirect_to organizations_url
       else
         reset_session
         flash[:notice] = '退会処理が完了しました。'
-        redirect_to root_path
+        redirect_to root_url
       end
     else
       render :show

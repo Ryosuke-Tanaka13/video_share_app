@@ -84,7 +84,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status ' 302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
 
@@ -97,7 +97,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
 
         it 'アクセス権限なしのためリダイレクト' do
           expect(response).to have_http_status ' 302'
-          expect(response).to redirect_to root_path
+          expect(response).to redirect_to root_url
         end
       end
     end
@@ -129,7 +129,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
                   name: 'セレブ'
                 }
               })
-          ).to redirect_to organization_folders_path(organization_id: organization.id)
+          ).to redirect_to organization_folders_url(organization_id: organization.id)
         end
       end
 
@@ -157,7 +157,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
                   name: 'セレブ'
                 }
               })
-          ).to redirect_to organization_folders_path(organization_id: organization.id)
+          ).to redirect_to organization_folders_url(organization_id: organization.id)
         end
       end
     end
@@ -264,7 +264,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
                   name: 'セレブ'
                 }
               })
-          ).to redirect_to organization_folders_path(organization_id: organization.id)
+          ).to redirect_to organization_folders_url(organization_id: organization.id)
         end
       end
 
@@ -299,7 +299,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
                   name: ''
                 }
               })
-          ).to redirect_to organization_folders_path(organization_id: organization.id)
+          ).to redirect_to organization_folders_url(organization_id: organization.id)
         end
       end
     end
@@ -365,7 +365,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
                   name: 'セレブ'
                 }
               })
-          ).to redirect_to organization_folders_path(organization_id: organization.id)
+          ).to redirect_to organization_folders_url(organization_id: organization.id)
         end
       end
     end
@@ -406,7 +406,7 @@ RSpec.describe 'Organizations::Folders', type: :request do
         it 'indexにリダイレクトされる' do
           expect(
             delete(organization_folder_path(organization_id: organization.id, id: folder_celeb.id), params: { id: folder_celeb.id })
-          ).to redirect_to organization_folders_path(organization_id: organization.id)
+          ).to redirect_to organization_folders_url(organization_id: organization.id)
         end
       end
     end

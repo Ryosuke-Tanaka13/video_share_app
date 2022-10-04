@@ -21,7 +21,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.build(form.params)
     if @organization.save
       flash[:success] = '送られてくるメールの認証URLからアカウントの認証をしてください。'
-      redirect_to new_user_session_path
+      redirect_to new_user_session_url
     else
       render :new
     end
@@ -68,7 +68,7 @@ class OrganizationsController < ApplicationController
   def ensure_admin_or_owner_of_set_organization
     if !current_system_admin? && (current_user&.role != 'owner' || !user_of_set_organization?)
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -76,7 +76,7 @@ class OrganizationsController < ApplicationController
   def ensure_admin_or_user_in_same_organization_as_set_organization
     if current_system_admin.nil? && !user_of_set_organization?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 end
