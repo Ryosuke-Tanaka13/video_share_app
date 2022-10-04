@@ -35,16 +35,13 @@ class VideosController < ApplicationController
   def create
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
-    if @video.save!
+    if @video.save
       flash[:success] = '動画を投稿しました。'
       redirect_to @video
     else
       # 動画以外のデータ(タイトル)についてエラーがあったとき
       render :new
     end
-  # 動画についてエラーがあったとき
-  rescue
-    render :new
   end
   
   def show
@@ -76,7 +73,7 @@ class VideosController < ApplicationController
 
   def video_params
     params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
-      :popup_after_video)
+      :popup_after_video, :data_url)
   end
 
   # 加藤さんと共通メソッド appコントローラから継承？

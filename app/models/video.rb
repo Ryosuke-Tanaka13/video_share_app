@@ -43,7 +43,7 @@ class Video < ApplicationRecord
     # to the upload_video() method. The data_url in this model, stores
     # the location of the uploaded video on Vimeo.
 
-    # 動画が存在している、拡張子がvimeoや〜であればvimeoにアップロードする
+    # 動画が存在している、拡張子が動画のものであればvimeoにアップロードする
     if self.video.present? && (self.video.content_type == "video/webm" || self.video.content_type == "video/quicktime" || self.video.content_type == "video/MP4" || self.video.content_type == "video/WMV" || self.video.content_type == "video/AVI")
       video = vimeo_client.upload_video(self.video) 
       self.data_url = video['uri']
