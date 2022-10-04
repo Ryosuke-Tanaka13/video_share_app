@@ -28,13 +28,11 @@ class Organization < ApplicationRecord
       organization = Organization.find(organization_id).update(is_valid: false)
       user = User.user_has(organization_id).update(is_valid: false)
 
-      viewers = Viewer.viewer_has(organization_id)
-      viewers.each do |viewer|
-        # 複数所属している場合退会処理にしない
-        viewer.update(is_valid: false) if OrganizationViewer.where(viewer_id: viewer.id).count == 1
-      end
+      # 視聴者は複数の組織へ所属できる為、脱退処理
+      organization_viewers = OrganizationViewer.where(organization_id: organization_id)
+      organization_viewers.each(&:destroy)
 
-      all_valid &= organization && user && viewers
+      all_valid &= organization && user && organization_viewers
       # 全ての処理が有効出ない場合ロールバックする
       unless all_valid
         raise ActiveRecord::Rollback
