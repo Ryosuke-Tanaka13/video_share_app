@@ -28,6 +28,14 @@
           <% end %>
         </li>
         <li class="nav-item">
+          <%= link_to viewers_path, class:"nav-link" do %>
+            <i class="nav-icon fas fa-th"></i>
+            <p>
+              視聴者一覧
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
           <%= link_to edit_system_admin_path(current_system_admin), class:"nav-link" do %>
             <i class="nav-icon fas fa-th"></i>
             <p>

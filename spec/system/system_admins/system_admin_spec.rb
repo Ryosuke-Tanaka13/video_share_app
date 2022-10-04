@@ -32,6 +32,7 @@ RSpec.describe 'SystemAdmin', type: :system do
         expect(page).to have_link 'レコブル'
         expect(page).to have_link system_admin.name
         expect(page).to have_link '組織一覧'
+        expect(page).to have_link '視聴者一覧'
         expect(page).to have_link 'アカウント編集'
 
         visit users_path(organization_id: organization.id)
@@ -39,6 +40,7 @@ RSpec.describe 'SystemAdmin', type: :system do
         expect(page).to have_link 'レコブル'
         expect(page).to have_link system_admin.name
         expect(page).to have_link '組織一覧'
+        expect(page).to have_link '視聴者一覧'
         expect(page).to have_link 'アカウント編集'
 
         viewers_path(organization_id: organization.id)
@@ -46,6 +48,7 @@ RSpec.describe 'SystemAdmin', type: :system do
         expect(page).to have_link 'レコブル'
         expect(page).to have_link system_admin.name
         expect(page).to have_link '組織一覧'
+        expect(page).to have_link '視聴者一覧'
         expect(page).to have_link 'アカウント編集'
       end
 
