@@ -39,9 +39,11 @@ class VideosController < ApplicationController
       flash[:success] = '動画を投稿しました。'
       redirect_to @video
     else
-      # 動画以外のデータ(タイトル)についてエラーがあったとき
       render :new
     end
+   # アプリ側ではなく、vimeo側に原因があるエラーのとき(容量不足)
+  rescue
+    render :new
   end
   
   def show
