@@ -138,7 +138,7 @@ RSpec.describe 'ViewerSystem', type: :system do
         end
 
         it '脱退する' do
-          find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td/a[2]').click
+          find(:xpath, '//*[@id="viewers-show"]/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td[2]/a').click
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.accept
@@ -147,7 +147,7 @@ RSpec.describe 'ViewerSystem', type: :system do
         end
 
         it '脱退するをキャンセル' do
-          find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td/a[2]').click
+          find(:xpath, '//*[@id="viewers-show"]/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td[2]/a').click
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.dismiss
@@ -213,7 +213,7 @@ RSpec.describe 'ViewerSystem', type: :system do
         end
 
         it '脱退する' do
-          find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td/a[2]').click
+          find(:xpath, '//*[@id="viewers-show"]/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td[2]/a').click
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.accept
@@ -222,7 +222,7 @@ RSpec.describe 'ViewerSystem', type: :system do
         end
 
         it '脱退するをキャンセル' do
-          find(:xpath, '/html/body/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td/a[2]').click
+          find(:xpath, '//*[@id="viewers-show"]/div[1]/div/div[2]/div[1]/table/tbody/tr[3]/td[2]/a').click
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.dismiss
