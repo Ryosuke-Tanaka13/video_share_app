@@ -36,7 +36,7 @@ RSpec.describe 'OrganizationAdmissionSystem', type: :system do
     organization_viewer3
   end
 
-  describe '組織入会' do
+  describe '組織加入' do
     describe '正常' do
       context '視聴者本人' do
         before(:each) do
@@ -45,15 +45,15 @@ RSpec.describe 'OrganizationAdmissionSystem', type: :system do
           visit organizations_admission_path(organization)
         end
 
-        it '入会しないへの遷移' do
-          click_link '入会しない'
+        it '加入しないへの遷移' do
+          click_link '加入しない'
           expect(page).to have_current_path viewer_path(another_viewer), ignore_query: true
         end
 
-        it '視聴者の入会' do
+        it '視聴者の加入' do
           expect {
-            click_link '入会する'
-            expect(page).to have_content 'セレブエンジニアへ入会しました。'
+            click_link '加入する'
+            expect(page).to have_content 'セレブエンジニアへ加入しました。'
           }.to change(OrganizationViewer, :count).by(1)
         end
       end

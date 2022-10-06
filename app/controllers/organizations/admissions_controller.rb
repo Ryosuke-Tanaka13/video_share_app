@@ -12,7 +12,7 @@ class Organizations::AdmissionsController < ApplicationController
   def update
     viewer = Viewer.find(current_viewer.id)
     @organization.viewers << viewer
-    redirect_to viewer_url(current_viewer), notice: "#{@organization.name}へ入会しました。"
+    redirect_to viewer_url(current_viewer), notice: "#{@organization.name}へ加入しました。"
   end
 
   def destroy
