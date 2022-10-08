@@ -5,11 +5,12 @@
     </iframe>
   </div>
   <div class="video-title-and-action-show">
-    <%= @video.title %> <%= link_to "設定", edit_video_path(@video), remote: true  if user_signed_in? || system_admin_signed_in? %><br>
+    <%= @video.title %><br>
+    <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
     <% if @video.is_valid == true %>
-      <%= link_to "論理削除", videos_hidden_path(@video) if system_admin_signed_in? || current_user.present? && current_user.role == "owner" %>
+      <%= link_to "削除", videos_hidden_path(@video), class: "btn btn-danger" if system_admin_signed_in? || current_user.present? && current_user.role == "owner" %>
     <% else %>
-      <p>論理削除済み</p>
+      <p>オーナー削除済み</p>
     <% end %>
   </div>
 </div>

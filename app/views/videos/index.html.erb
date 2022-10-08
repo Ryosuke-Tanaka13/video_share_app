@@ -9,11 +9,11 @@
       <div class="video-title-and-action-index">
         <%= link_to organization_video.title, video_path(organization_video) %>
         <% if organization_video.is_valid == false %>
-          <span>論理削除済み</span>
+          <span>オーナー削除済み</span>
         <% end %><br>
-        <% if current_system_admin.present? %>  
-          <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？"} %><br> 
-        <% end %> 
+        <% if current_system_admin.present? %>   
+          <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？ この動画はvimeoからも完全に削除されます"}, class: "btn btn-danger mt-2" %><br> 
+        <% end %>  
       </div>
     </div>
   <% end %> 
