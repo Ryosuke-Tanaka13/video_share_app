@@ -6,7 +6,7 @@ RSpec.xdescribe 'VideoUnsubscribeSystem', type: :system, js: true do
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
   let(:user) { create(:user, organization_id: organization.id, confirmed_at: Time.now) }
   let(:video_test) { create(:video_test, organization_id: user.organization.id, user_id: user.id) }
- 
+
   before(:each) do
     system_admin
     organization

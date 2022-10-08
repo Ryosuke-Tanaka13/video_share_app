@@ -1,7 +1,7 @@
 require 'simplecov'
 require 'spec_helpers/coverage_spec_helper'
 # vcrを使用宣言
-require "vcr"
+require 'vcr'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -80,11 +80,11 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
-  
+
   # vcrの設定
   VCR.configure do |config|
-    config.allow_http_connections_when_no_cassette = true 
-    config.cassette_library_dir = "spec/vcr_cassettes"
+    config.allow_http_connections_when_no_cassette = true
+    config.cassette_library_dir = 'spec/vcr_cassettes'
     config.hook_into :webmock
     config.ignore_localhost = false
   end
@@ -92,6 +92,6 @@ RSpec.configure do |config|
   SimpleCov.start do
     add_filter '/spec/'
     add_group 'Files', '/lib/**/*'
-    track_files "lib/vimeo_mw2/**/*.rb"
+    track_files 'lib/vimeo_mw2/**/*.rb'
   end
 end

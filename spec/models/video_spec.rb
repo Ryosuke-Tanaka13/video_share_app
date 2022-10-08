@@ -22,16 +22,16 @@ RSpec.describe Video, type: :model do
 
   describe 'バリデーション' do
     describe 'タイトル' do
+      before(:each) do
+        video_it
+      end
+
       it '空白' do
         video_test.title = ''
         expect(video_test.valid?).to eq(false)
         expect(video_test.errors.full_messages).to include('タイトルを入力してください')
       end
 
-      before do
-        video_it
-      end
-      
       it '重複' do
         video_test.title = 'ITビデオ'
         expect(video_test.valid?).to eq(false)

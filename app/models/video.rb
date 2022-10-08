@@ -4,11 +4,11 @@ class Video < ApplicationRecord
 
   has_one_attached :video
 
-  validates :title, presence:true, uniqueness: { scope: :organization }
-  
+  validates :title, presence: true, uniqueness: { scope: :organization }
+
   # 動画自体はアプリ内には保存されないので、動画なしを不可, 動画以外を不可とするバリデーションはここでは設定しない
   # validates :video, presence: true, blob: { content_type: :video }
-  
+
   scope :user_has, ->(organization_id) { where(organization_id: organization_id) }
   scope :current_user_has, ->(current_user) { where(organization_id: current_user.organization_id) }
   scope :available, -> { where(is_valid: true) }
@@ -44,23 +44,23 @@ class Video < ApplicationRecord
     # the location of the uploaded video on Vimeo.
 
     # 動画が存在している、拡張子が動画のものであればvimeoにアップロードする
-    if self.video.present? && (self.video.content_type == "video/webm" || self.video.content_type == "video/quicktime" || self.video.content_type == "video/MP4" || self.video.content_type == "video/WMV" || self.video.content_type == "video/AVI")
-      video = vimeo_client.upload_video(self.video) 
+    if self.video.present? && (self.video.content_type == 'video/webm' || self.video.content_type == 'video/quicktime' || self.video.content_type == 'video/MP4' || self.video.content_type == 'video/WMV' || self.video.content_type == 'video/AVI')
+      video = vimeo_client.upload_video(self.video)
       self.data_url = video['uri']
-      return true
+      true
     end
   # アプリ側ではなく、vimeo側に原因があるエラーのとき(容量不足など)
   rescue VimeoMe2::RequestFailed => e
     errors.add(:video, e.message)
-    return false
+    false
   end
 
-  validate :data_url_is_necessary 
-  
+  validate :data_url_is_necessary
+
   def data_url_is_necessary
     # デフォルトでdata_urlがnilならエラーとするのではなく、投稿ボタン押下後にvideo = vimeo_client.upload_video(self.video) がない状況下でdata_urlがnilならエラーとする。
-    if video.nil? || ( video.content_type != "video/webm" && video.content_type != "video/quicktime" && video.content_type != "video/MP4" && video.content_type != "video/WMV" && video.content_type != "video/AVI" )
-      errors.add(:data_url, "をアップロードしてください")  if data_url == nil 
+    if (video.nil? || (video.content_type != 'video/webm' && video.content_type != 'video/quicktime' && video.content_type != 'video/MP4' && video.content_type != 'video/WMV' && video.content_type != 'video/AVI')) && data_url.nil?
+      errors.add(:data_url, 'をアップロードしてください')
     end
   end
 end

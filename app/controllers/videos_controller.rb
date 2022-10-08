@@ -15,16 +15,16 @@ class VideosController < ApplicationController
   def index
     if current_system_admin.present?
       @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
-      @organization_videos.each do |organization_video| 
+      @organization_videos.each do |organization_video|
         @organization_video_id = organization_video.data_url[8..17].to_i
       end
     elsif current_user.present?
       # n+1問題対応.includes([:video_blob])
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
-      @organization_videos.each do |organization_video| 
+      @organization_videos.each do |organization_video|
         @organization_video_id = organization_video.data_url[8..17].to_i
       end
-    # elsif 視聴者がログインしている場合、現在の視聴者の視聴グループに紐づくビデオのみを表示する条件分岐が今後必要
+      # elsif 視聴者がログインしている場合、現在の視聴者の視聴グループに紐づくビデオのみを表示する条件分岐が今後必要
     end
   end
 
@@ -41,11 +41,11 @@ class VideosController < ApplicationController
     else
       render :new
     end
-   # アプリ側ではなく、vimeo側に原因があるエラーのとき(容量不足)
-  rescue
+  # アプリ側ではなく、vimeo側に原因があるエラーのとき(容量不足)
+  rescue StandardError
     render :new
   end
-  
+
   def show
     # 動画詳細ページのパスから、id部分のみを取得し、数字型に変換
     @video_id = @video.data_url[8..17].to_i
@@ -67,7 +67,7 @@ class VideosController < ApplicationController
     # vimeoの動画の削除とアプリ内のDBに登録しているその他のカラムのデータの削除
     @vimeo_video.destroy
     @video.destroy
-    flash[:success] = "削除しました"
+    flash[:success] = '削除しました'
     redirect_to videos_path(organization_id: @video.organization.id)
   end
 

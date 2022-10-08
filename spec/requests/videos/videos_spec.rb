@@ -150,7 +150,7 @@ RSpec.describe 'Videos', type: :request do
       before(:each) do
         sign_in user
       end
-      
+
       # アプリ内でvideosのインスタンスが生成されることを確認(ここではvimeoに動画がアップされることのテストは行えていない)
       describe '正常' do
         it '動画が新規作成される' do
@@ -235,21 +235,21 @@ RSpec.describe 'Videos', type: :request do
       end
 
       describe '異常' do
+        before(:each) do
+          video_test
+        end
+
         it 'タイトルが空白だと新規作成されない' do
           expect {
             post videos_path,
               params: {
                 video: {
-                  title: '',
-                  video: fixture_file_upload('/rec.webm'),
-                  data_url:           '/videos/999999999'
+                  title:    '',
+                  video:    fixture_file_upload('/rec.webm'),
+                  data_url: '/videos/999999999'
                 }
               }
           }.not_to change(Video, :count)
-        end
-
-        before do
-          video_test
         end
 
         it 'タイトルが重複していると新規作成されない' do
@@ -257,9 +257,9 @@ RSpec.describe 'Videos', type: :request do
             post videos_path,
               params: {
                 video: {
-                  title: 'テストビデオ',
-                  video: fixture_file_upload('/rec.webm'),
-                  data_url:           '/videos/999999999'
+                  title:    'テストビデオ',
+                  video:    fixture_file_upload('/rec.webm'),
+                  data_url: '/videos/999999999'
                 }
               }
           }.not_to change(Video, :count)
@@ -436,7 +436,7 @@ RSpec.describe 'Videos', type: :request do
             patch(video_path(video_test),
               params: {
                 video: {
-                  title: 'テストビデオ２',
+                  title:              'テストビデオ２',
                   open_period:        'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00',
                   range:              true,
                   comment_public:     true,
@@ -450,6 +450,10 @@ RSpec.describe 'Videos', type: :request do
       end
 
       describe '異常' do
+        before(:each) do
+          video_it
+        end
+
         it 'タイトルが空白でアップデートされない' do
           expect {
             patch video_path(video_test),
@@ -459,10 +463,6 @@ RSpec.describe 'Videos', type: :request do
                 }, format: :js
               }
           }.not_to change { Video.find(video_test.id).title }
-        end
-
-        before do
-          video_it
         end
 
         it 'ビデオ名が重複してアップデートされない' do
@@ -604,16 +604,16 @@ RSpec.describe 'Videos', type: :request do
   end
 
   describe 'DELETE #destroy' do
-    describe 'システム管理者が現在のログインユーザー' do
-      before(:each) do
-        sign_in system_admin
-        video_sample
-      end
+    # describe 'システム管理者が現在のログインユーザー' do
+    #   before(:each) do
+    #     sign_in system_admin
+    #     video_sample
+    #   end
 
       # まとめてテストを行うと、too many api requests. wait a minute or so, then try again.エラーが生じ、テストに落ちる。(別個にテストを行えば通る)
       # describe '正常' do
       #   it '動画を削除する' do
-      #     expect { 
+      #     expect {
       #       delete(video_path(video_sample), params: { id: video_sample.id })
       #       }.to change(Video, :count).by(-1)
       #   end
@@ -657,7 +657,7 @@ RSpec.describe 'Videos', type: :request do
     end
 
     describe '非ログイン' do
-      before do
+      before(:each) do
         video_test
       end
 

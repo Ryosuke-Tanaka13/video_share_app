@@ -117,7 +117,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#popup_before_video'
         expect(page).to have_selector '#popup_after_video'
       end
-      
+
       # videosのインスタンス生成に必要なdata_urlの入力方法がわからず、テスト実施できず
       # it '新規作成で動画が作成される' do
       #   fill_in 'title', with: 'サンプルビデオ２'

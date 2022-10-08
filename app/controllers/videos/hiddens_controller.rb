@@ -15,7 +15,7 @@ class Videos::HiddensController < VideosController
       render :show
     end
   end
-  
+
   private
 
   # 金野さんと共通のメソッド
