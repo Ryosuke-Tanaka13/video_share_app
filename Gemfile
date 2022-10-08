@@ -88,6 +88,9 @@ group :test do
 
   # request specツール
   gem 'rails-controller-testing'
+
+  gem "webmock"
+  gem "vcr"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
