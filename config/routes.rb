@@ -62,11 +62,10 @@ Rails.application.routes.draw do
   root 'use#top'
   # =================================================================
 
-  # 追記
   resources :videos 
-
+  
+  # 動画の論理削除(データは残すが表示しないという意味でhiddensコントローラと命名)
   scope module: :videos do
-      # resource :unsubscribe, only: %i[show update], as: :videos_unsubscribe
     get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
     patch 'videos/:id/withdraw' => 'hiddens#withdraw', as: :videos_withdraw
   end
