@@ -82,11 +82,11 @@ RSpec.configure do |config|
   #   Kernel.srand config.seed
 
   # vcrの設定
-  VCR.configure do |config|
-    config.allow_http_connections_when_no_cassette = true
-    config.cassette_library_dir = 'spec/vcr_cassettes'
-    config.hook_into :webmock
-    config.ignore_localhost = false
+  VCR.configure do |c|
+    c.allow_http_connections_when_no_cassette = true
+    c.cassette_library_dir = 'spec/vcr_cassettes'
+    c.hook_into :webmock
+    c.ignore_localhost = false
   end
 
   SimpleCov.start do

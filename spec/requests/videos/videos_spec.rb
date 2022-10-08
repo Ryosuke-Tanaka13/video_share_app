@@ -610,21 +610,21 @@ RSpec.describe 'Videos', type: :request do
     #     video_sample
     #   end
 
-      # まとめてテストを行うと、too many api requests. wait a minute or so, then try again.エラーが生じ、テストに落ちる。(別個にテストを行えば通る)
-      # describe '正常' do
-      #   it '動画を削除する' do
-      #     expect {
-      #       delete(video_path(video_sample), params: { id: video_sample.id })
-      #       }.to change(Video, :count).by(-1)
-      #   end
+    # まとめてテストを行うと、too many api requests. wait a minute or so, then try again.エラーが生じ、テストに落ちる。(別個にテストを行えば通る)
+    # describe '正常' do
+    #   it '動画を削除する' do
+    #     expect {
+    #       delete(video_path(video_sample), params: { id: video_sample.id })
+    #       }.to change(Video, :count).by(-1)
+    #   end
 
-      #   it 'indexにリダイレクトされる' do
-      #     expect(
-      #       delete(video_path(video_sample), params: { id: video_sample.id })
-      #     ).to redirect_to videos_path(organization_id: organization.id)
-      #   end
-      # end
-    end
+    #   it 'indexにリダイレクトされる' do
+    #     expect(
+    #       delete(video_path(video_sample), params: { id: video_sample.id })
+    #     ).to redirect_to videos_path(organization_id: organization.id)
+    #   end
+    # end
+    # end
 
     describe 'オーナーが現在のログインユーザー' do
       before(:each) do
