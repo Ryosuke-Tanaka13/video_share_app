@@ -44,7 +44,7 @@ class Video < ApplicationRecord
     # the location of the uploaded video on Vimeo.
 
     # 動画が存在している、拡張子が動画のものであればvimeoにアップロードする。今のところ、許可しているものは左から順にwebm, mov, mp4, mpeg, wmv, avi
-    if self.video.present? && (self.video.content_type == 'video/webm' || self.video.content_type == 'video/quicktime' || self.video.content_type == 'video/mp4' || self.content_type == 'video/mpeg'|| self.video.content_type == 'video/x-ms-wmv' || self.video.content_type == 'video/avi')
+    if self.video.present? && (self.video.content_type == 'video/webm' || self.video.content_type == 'video/quicktime' || self.video.content_type == 'video/mp4' || self.content_type == 'video/mpeg' || self.video.content_type == 'video/x-ms-wmv' || self.video.content_type == 'video/avi')
       video = vimeo_client.upload_video(self.video)
       self.data_url = video['uri']
       true
