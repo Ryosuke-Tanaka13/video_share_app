@@ -47,7 +47,6 @@ class Video < ApplicationRecord
     if self.video.present? && (self.video.content_type == 'video/webm' || self.video.content_type == 'video/quicktime' || self.video.content_type == 'video/mp4' || self.content_type == 'video/mpeg'|| self.video.content_type == 'video/x-ms-wmv' || self.video.content_type == 'video/avi')
       video = vimeo_client.upload_video(self.video)
       self.data_url = video['uri']
-      binding.pry
       true
     end
   # アプリ側ではなく、vimeo側に原因があるエラーのとき(容量不足など)
