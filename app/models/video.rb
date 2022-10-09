@@ -43,10 +43,11 @@ class Video < ApplicationRecord
     # to the upload_video() method. The data_url in this model, stores
     # the location of the uploaded video on Vimeo.
 
-    # 動画が存在している、拡張子が動画のものであればvimeoにアップロードする
-    if self.video.present? && (self.video.content_type == 'video/webm' || self.video.content_type == 'video/quicktime' || self.video.content_type == 'video/MP4' || self.video.content_type == 'video/WMV' || self.video.content_type == 'video/AVI')
+    # 動画が存在している、拡張子が動画のものであればvimeoにアップロードする。今のところ、許可しているものは左から順にwebm, mov, mp4, mpeg, wmv, avi
+    if self.video.present? && (self.video.content_type == 'video/webm' || self.video.content_type == 'video/quicktime' || self.video.content_type == 'video/mp4' || self.content_type == 'video/mpeg'|| self.video.content_type == 'video/x-ms-wmv' || self.video.content_type == 'video/avi')
       video = vimeo_client.upload_video(self.video)
       self.data_url = video['uri']
+      binding.pry
       true
     end
   # アプリ側ではなく、vimeo側に原因があるエラーのとき(容量不足など)
@@ -59,7 +60,7 @@ class Video < ApplicationRecord
 
   def data_url_is_necessary
     # デフォルトでdata_urlがnilならエラーとするのではなく、投稿ボタン押下後にvideo = vimeo_client.upload_video(self.video) がない状況下でdata_urlがnilならエラーとする。
-    if (video.nil? || (video.content_type != 'video/webm' && video.content_type != 'video/quicktime' && video.content_type != 'video/MP4' && video.content_type != 'video/WMV' && video.content_type != 'video/AVI')) && data_url.nil?
+    if (video.nil? || (video.content_type != 'video/webm' && video.content_type != 'video/quicktime' && video.content_type != 'video/mp4' && video.content_type != 'video/mpeg' && video.content_type != 'video/x-ms-wmv' && video.content_type != 'video/avi')) && data_url.nil?
       errors.add(:data_url, 'をアップロードしてください')
     end
   end

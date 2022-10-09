@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'UserSessions', type: :system do
+RSpec.xdescribe 'UserSessions', type: :system do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
   let(:user) { create(:user, organization_id: organization.id) }
@@ -45,6 +45,10 @@ RSpec.describe 'UserSessions', type: :system do
       # click_link '動画フォルダ一覧'
       # expect(page).to have_current_path folders_path, ignore_query: true
       # end
+      it '動画投稿への遷移' do
+        click_link '動画投稿'
+        expect(page).to have_current_path new_video_path, ignore_query: true
+      end
 
       it '投稿者一覧への遷移' do
         click_link '投稿者一覧'
@@ -78,6 +82,11 @@ RSpec.describe 'UserSessions', type: :system do
         expect(page).not_to have_link '投稿者一覧'
         expect(page).to have_link '視聴者一覧'
         expect(page).to have_link 'アカウント編集'
+      end
+
+      it '動画投稿への遷移' do
+        click_link '動画投稿'
+        expect(page).to have_current_path new_video_path, ignore_query: true
       end
 
       it '視聴者一覧への遷移' do
