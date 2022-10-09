@@ -23,18 +23,18 @@ RSpec.xdescribe 'VideoUnsubscribeSystem', type: :system, js: true do
         end
 
         it 'レイアウト' do
-          expect(page).to have_link '論理削除しない', href: video_path(video_test)
-          expect(page).to have_link '論理削除する', href: videos_withdraw_path(video_test)
+          expect(page).to have_link '削除しない', href: video_path(video_test)
+          expect(page).to have_link '削除する', href: videos_withdraw_path(video_test)
         end
 
         it '詳細へ遷移' do
-          click_link '論理削除しない'
+          click_link '削除しない'
           expect(page).to have_current_path video_path(video_test), ignore_query: true
         end
 
         it '論理削除する' do
           expect {
-            click_link '論理削除する'
+            click_link '削除する'
           }.to change { Video.find(video_test.id).is_valid }.from(video_test.is_valid).to(false)
         end
       end

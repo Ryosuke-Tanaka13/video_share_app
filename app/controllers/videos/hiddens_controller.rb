@@ -9,7 +9,7 @@ class Videos::HiddensController < VideosController
 
   def withdraw
     if @video.update(is_valid: false)
-      flash[:success] = '論理削除しました'
+      flash[:success] = '削除しました'
       redirect_to videos_path(organization_id: @video.organization.id)
     else
       render :show
