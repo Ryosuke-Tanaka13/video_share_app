@@ -53,7 +53,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画詳細' do
       before(:each) do
-        sign_in user_owner || user || system_admin
+        sign_in user_owner || system_admin
         visit video_path(video_test)
       end
 
@@ -191,7 +191,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画一覧画面(動画投稿者)' do
+    describe '動画一覧画面(オーナー、動画投稿者)' do
       before(:each) do
         sign_in user_owner || user
         video_test
@@ -230,6 +230,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画詳細(動画投稿者)' do
       before(:each) do
+        sign_in user
         visit video_path(video_test)
       end
 
