@@ -18,7 +18,7 @@ class VideosController < ApplicationController
       @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
     elsif current_user.present?
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
-    # elsif 視聴者がログインしている場合、現在の視聴者の視聴グループに紐づくビデオのみを表示する条件分岐が今後必要
+      # elsif 視聴者がログインしている場合、現在の視聴者の視聴グループに紐づくビデオのみを表示する条件分岐が今後必要
     end
   end
 
@@ -59,7 +59,7 @@ class VideosController < ApplicationController
     @video.destroy
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)
-  rescue
+  rescue StandardError
     @video.destroy
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)
