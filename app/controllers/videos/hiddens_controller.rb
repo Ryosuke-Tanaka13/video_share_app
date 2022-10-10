@@ -10,7 +10,7 @@ class Videos::HiddensController < VideosController
   def withdraw
     if @video.update(is_valid: false)
       flash[:success] = '削除しました'
-      redirect_to videos_path(organization_id: @video.organization.id)
+      redirect_to videos_url(organization_id: @video.organization.id)
     else
       render :show
     end
@@ -21,7 +21,7 @@ class Videos::HiddensController < VideosController
   # 金野さんと共通のメソッド
   def ensure_admin_or_owner
     if current_user.present? && current_user.role != 'owner'
-      redirect_to users_path, flash: { danger: '権限がありません' }
+      redirect_to users_url, flash: { danger: '権限がありません' }
     end
   end
 end

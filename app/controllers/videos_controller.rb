@@ -47,7 +47,7 @@ class VideosController < ApplicationController
   def update
     if @video.update(video_params)
       flash[:success] = '動画情報を更新しました'
-      redirect_to video_path
+      redirect_to video_url
     else
       render 'edit'
     end
@@ -58,11 +58,11 @@ class VideosController < ApplicationController
     @vimeo_video.destroy
     @video.destroy
     flash[:success] = '削除しました'
-    redirect_to videos_path(organization_id: @video.organization.id)
+    redirect_to videos_url(organization_id: @video.organization.id)
   rescue
     @video.destroy
     flash[:success] = '削除しました'
-    redirect_to videos_path(organization_id: @video.organization.id)
+    redirect_to videos_url(organization_id: @video.organization.id)
   end
 
   private
@@ -88,7 +88,7 @@ class VideosController < ApplicationController
     # 真偽判定メソッド加藤さんに合わせる予定
     if current_system_admin.nil? && current_user.nil?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -96,7 +96,7 @@ class VideosController < ApplicationController
     # 真偽判定メソッド加藤さんに合わせる予定
     unless current_system_admin.present?
       flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 
@@ -107,7 +107,7 @@ class VideosController < ApplicationController
 
   def ensure_user
     if current_user.nil?
-      redirect_to users_path, flash: { danger: '権限がありません' }
+      redirect_to users_url, flash: { danger: '権限がありません' }
     end
   end
 
@@ -118,7 +118,7 @@ class VideosController < ApplicationController
 
   def ensure_admin_or_owner_or_correct_user
     unless current_system_admin.present? || @video.my_upload?(current_user) || current_user.role == 'owner'
-      redirect_to video_path, flash: { danger: '権限がありません。' }
+      redirect_to video_url, flash: { danger: '権限がありません。' }
     end
   end
 
@@ -127,11 +127,11 @@ class VideosController < ApplicationController
       # indexへのアクセス制限
       if @organization.present? && current_user.organization_id != @organization.id
         flash[:danger] = '権限がありません。'
-        redirect_to videos_path(organization_id: current_user.organization_id)
+        redirect_to videos_url(organization_id: current_user.organization_id)
       # show, eidt, update, destroyへのアクセス制限
       elsif @video.present? && (@video.organization_id != current_user.organization_id)
         flash[:danger] = '権限がありません。'
-        redirect_to videos_path(organization_id: current_user.organization_id)
+        redirect_to videos_url(organization_id: current_user.organization_id)
       end
     end
     # 視聴者がログインしている場合の条件分岐も今後必要
@@ -141,14 +141,14 @@ class VideosController < ApplicationController
 
   def ensure_logged_in_viewer
     if !logged_in? && @video.login_set != false
-      redirect_to new_viewer_session_path, flash: { danger: '視聴者ログインしてください。' }
+      redirect_to new_viewer_session_url, flash: { danger: '視聴者ログインしてください。' }
     end
   end
 
   def ensure_admin_for_access_hidden
     if current_system_admin.nil? && @video.is_valid == false
       flash[:danger] = 'すでに削除された動画です。'
-      redirect_back(fallback_location: root_path)
+      redirect_back(fallback_location: root_url)
     end
   end
 end
