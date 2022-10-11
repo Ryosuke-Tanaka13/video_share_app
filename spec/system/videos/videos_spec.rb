@@ -76,7 +76,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
 
       it 'レイアウト' do
-        expect(page).to have_link '設定を変更'
+        expect(page).to have_button '設定を変更'
         expect(page).to have_button '閉じる'
         expect(page).to have_field 'title_edit'
         expect(page).to have_field 'open_period_edit'
@@ -90,11 +90,11 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       it '設定を変更で動画情報が更新される' do
         fill_in 'title_edit', with: 'テストビデオ２'
         # fill_in 'open_period_edit', with: 'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00'
-        expect(page).to have_selector '#range_edit', text: true
-        expect(page).to have_selector '#comment_public_edit', text: true
-        expect(page).to have_selector '#login_set_edit', text: true
-        expect(page).to have_selector '#popup_before_video_edit', text: true
-        expect(page).to have_selector '#popup_after_video_edit', text: true
+        expect(page).to have_selector '#range_edit', text: '一般公開'
+        expect(page).to have_selector '#comment_public_edit', text: '公開'
+        expect(page).to have_selector '#login_set_edit', text: 'ログイン不要'
+        expect(page).to have_selector '#popup_before_video_edit', text: '動画視聴開始時ポップアップ表示'
+        expect(page).to have_selector '#popup_after_video_edit', text: '動画視聴終了時ポップアップ表示'
         click_button '設定を変更'
         expect(page).to have_text '動画情報を更新しました'
       end
@@ -174,12 +174,13 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
     describe 'モーダル画面' do
       before(:each) do
         sign_in user_owner
+        video_sample
         visit video_path(video_test)
         click_link('設定')
       end
 
       it 'タイトル重複' do
-        fill_in 'title_edit', with: 'テストビデオ'
+        fill_in 'title_edit', with: 'サンプルビデオ'
         click_button '設定を変更'
         expect(page).to have_text 'タイトルはすでに存在します'
       end
