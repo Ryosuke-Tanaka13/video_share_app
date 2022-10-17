@@ -2,7 +2,7 @@
 
 module SystemAdmins
   class ConfirmationsController < Devise::ConfirmationsController
-    layout 'system_admins'
+    layout 'system_admins_auth'
     # GET /resource/confirmation/new
     # def new
     #   super
