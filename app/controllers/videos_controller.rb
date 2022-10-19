@@ -14,11 +14,14 @@ class VideosController < ApplicationController
 
   def index
     if current_system_admin.present?
-      # n+1問題対応.includes([:video_blob])
       @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
     elsif current_user.present?
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
-      # elsif 視聴者がログインしている場合、現在の視聴者の視聴グループに紐づくビデオのみを表示する条件分岐が今後必要
+    elsif current_viewer.present?
+      current_viewer.organization_viewers.each do |organization_viewer|
+        @organization_videos = Video.includes([:video_blob]).current_viewer_has(organization_viewer).available
+      end
+      # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
     end
   end
 
@@ -72,35 +75,7 @@ class VideosController < ApplicationController
       :popup_after_video, :data_url)
   end
 
-  # 加藤さんと共通メソッド appコントローラから継承？
-  def logged_in?
-    !current_system_admin.nil? || !current_user.nil? || !current_viewer.nil?
-  end
-
-  def ensure_logged_in
-    unless logged_in?
-      flash[:danger] = 'ログインしてください。'
-      redirect_to root_url
-    end
-  end
-
-  def ensure_admin_or_user
-    # 真偽判定メソッド加藤さんに合わせる予定
-    if current_system_admin.nil? && current_user.nil?
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_url)
-    end
-  end
-
-  def ensure_admin
-    # 真偽判定メソッド加藤さんに合わせる予定
-    unless current_system_admin.present?
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_url)
-    end
-  end
-
-  # 金野さんと共通メソッド appコントローラから継承？
+  # 金野さんと共通メソッド
   def set_organization
     @organization = Organization.find(params[:organization_id])
   end
@@ -124,19 +99,20 @@ class VideosController < ApplicationController
 
   def ensure_my_organization
     if current_user.present?
-      # indexへのアクセス制限
-      if @organization.present? && current_user.organization_id != @organization.id
-        flash[:danger] = '権限がありません。'
-        redirect_to videos_url(organization_id: current_user.organization_id)
-      # show, eidt, update, destroyへのアクセス制限
-      elsif @video.present? && (@video.organization_id != current_user.organization_id)
+      # indexへのアクセス制限とshow, eidt, update, destroyへのアクセス制限
+      if (@organization.present? && current_user.organization_id != @organization.id) || (@video.present? && @video.user_no_available?(current_user))
         flash[:danger] = '権限がありません。'
         redirect_to videos_url(organization_id: current_user.organization_id)
       end
+    elsif current_viewer.present?
+      current_viewer.organization_viewers.each do |organization_viewer|
+        # indexへのアクセス制限とshowへのアクセス制限
+        if (@organization.present? && organization_viewer.organization_id != @organization.id) || @video.present? && @video.viewer_no_available?(organization_viewer)
+          flash[:danger] = '権限がありません'
+          redirect_to videos_url(organization_id: organization_viewer.organization_id)
+        end
+      end
     end
-    # 視聴者がログインしている場合の条件分岐も今後必要
-    # indexへのアクセス制限
-    # showへのアクセス制限
   end
 
   def ensure_logged_in_viewer

@@ -11,11 +11,20 @@ class Video < ApplicationRecord
 
   scope :user_has, ->(organization_id) { where(organization_id: organization_id) }
   scope :current_user_has, ->(current_user) { where(organization_id: current_user.organization_id) }
+  scope :current_viewer_has, ->(organization_viewer) { where(organization_id: organization_viewer.organization_id) }
   scope :available, -> { where(is_valid: true) }
 
   def identify_organization_and_user(current_user)
     self.organization_id = current_user.organization.id
     self.user_id = current_user.id
+  end
+
+  def user_no_available?(current_user)
+    return self.organization_id != current_user.organization_id
+  end
+
+  def viewer_no_available?(organization_viewer)
+    return self.organization_id != organization_viewer.organization_id
   end
 
   def my_upload?(current_user)
