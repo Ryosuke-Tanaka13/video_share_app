@@ -1,0 +1,27 @@
+<% provide(:title,  "組織一覧") %>
+<br>
+  <div class="card">
+    <div class="card-body table-responsive p-0">
+      <table class="table table-hover text-nowrap"> 
+        <tbody>
+          <tr align="center">
+            <td>組織名</td>
+            <td>メールアドレス</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <% @organizations.each do |organization| %>
+          <tr align="center">
+            <td>
+              <%= link_to organization.name, organization_path(organization) %>
+              <% if organization.is_valid == false %>(退会)<% end %>
+            </td>
+            <td><%= organization.email %></td>
+            <td></td>
+            <td><%= link_to "削除", organization_path(organization), method: :delete, data: { confirm: "#{organization.name}の組織情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>

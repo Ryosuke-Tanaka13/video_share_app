@@ -2,7 +2,7 @@
 
 module SystemAdmins
   class UnlocksController < Devise::UnlocksController
-    layout 'system_admins'
+    layout 'system_admins_auth'
     # GET /resource/unlock/new
     # def new
     #   super
