@@ -1,8 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  let!(:user_comment) { FactoryBot.build(:user_comment) }
-  let!(:viewer_comment) { FactoryBot.build(:viewer_comment) }
+  let(:organization) { create(:organization) }
+  let(:user) { create(:user, organization_id: organization.id) }
+  let(:video) { create(:video, organization_id: organization.id, user_id: user.id) }
+  let(:user_comment) { create(:user_comment, organization_id: user.organization_id, video_id: video.id) }
+  let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video.id) }
+
+  before(:each) do
+    organization
+    user
+    video
+    user_comment
+    viewer_comment
+  end
 
   describe '正常' do
     context 'userの場合' do

@@ -1,17 +1,26 @@
 FactoryBot.define do
   factory :user_comment, class: 'Comment' do
-    association :user
-    association :organization
-    association :video
     comment { 'userのコメント' }
+    organization_id { 1 }
+    video_id { 1 }
   end
 
+  factory :another_user_comment, class: 'Comment' do
+    comment { 'another_userのコメント' }
+    organization_id { 1 }
+    video_id { 1 }
+  end
 
   factory :viewer_comment, class: 'Comment' do
-    association :viewer
-    association :organization
-    association :video
     comment { 'viewerのコメント' }
+    organization_id { 1 }
+    video_id { 1 }
+  end
+
+  factory :another_viewer_comment, class: 'Comment' do
+    comment { 'another_viewerのコメント' }
+    organization_id { 1 }
+    video_id { 1 }
   end
 
   factory :comment, class: 'Comment' do

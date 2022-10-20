@@ -8,7 +8,7 @@ class VideosController < ApplicationController
     @comment = Comment.new
     @reply = Reply.new
     # 新着順で表示
-    @comments = @video.comments.order(created_at: :desc)
+    @comments = @video.comments.includes(:user, :viewer, :replies).order(created_at: :desc)
   end
 
 end

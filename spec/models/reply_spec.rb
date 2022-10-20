@@ -1,8 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe Reply, type: :model do
-  let!(:user_reply) { FactoryBot.build(:user_reply) }
-  let!(:viewer_reply) { FactoryBot.build(:viewer_reply) }
+  let(:organization) { create(:organization) }
+  let(:user) { create(:user, organization_id: organization.id) }
+  let(:viewer) { create(:viewer) }
+  let(:video) { create(:video, organization_id: organization.id, user_id: user.id) }
+  let(:comment) { create(:comment, organization_id: organization.id, video_id: video.id) }
+  let(:user_reply) { create(:user_reply, organization_id: user.organization_id, comment_id: comment.id) }
+  let(:viewer_reply) { create(:viewer_reply, organization_id: user.organization_id, comment_id: comment.id) }
+
+  before(:each) do
+    organization
+    user
+    viewer
+    video
+    comment
+    user_reply
+    viewer_reply
+  end
 
   describe '正常' do
     context 'userの場合' do

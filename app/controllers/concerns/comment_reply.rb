@@ -17,9 +17,15 @@ module CommentReply
 
   # 動画投稿者または動画視聴者のみ許可
   def ensure_user_or_viewer
+    @video= Video.find(params[:video_id])
     if current_user.blank? && current_viewer.blank?
-      redirect_to users_path, flash: { danger: '権限がありません' }
+      redirect_to video_url(@video.id), flash: { danger: '権限がありません' }
     end
+  end
+
+  # video_idを元に動画情報をセット
+  def set_video_id
+    @video = Video.find(params[:video_id])
   end
   
 end 
