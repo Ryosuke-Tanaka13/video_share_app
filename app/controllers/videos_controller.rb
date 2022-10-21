@@ -99,13 +99,15 @@ class VideosController < ApplicationController
   def ensure_my_organization
     if current_user.present?
       # indexへのアクセス制限とshow, eidt, update, destroyへのアクセス制限
-      if (@organization.present? && current_user.organization_id != @organization.id) || (@video.present? && @video.user_no_available?(current_user))
+      if (@organization.present? && current_user.organization_id != @organization.id) ||
+         (@video.present? && @video.user_no_available?(current_user))
         flash[:danger] = '権限がありません。'
         redirect_to videos_url(organization_id: current_user.organization_id)
       end
     elsif current_viewer.present?
       # indexへのアクセス制限とshowへのアクセス制限
-      if (@organization.present? && current_viewer.organization_viewers.where(organization_id: @organization.id).empty?) || (@video.present? && current_viewer.organization_viewers.where(organization_id: @video.organization_id).empty?)
+      if (@organization.present? && current_viewer.organization_viewers.where(organization_id: @organization.id).empty?) ||
+         (@video.present? && current_viewer.organization_viewers.where(organization_id: @video.organization_id).empty?)
         flash[:danger] = '権限がありません'
         redirect_back(fallback_location: root_url)
       end

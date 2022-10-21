@@ -96,7 +96,7 @@ RSpec.describe 'UserUnsubscribe', type: :request do
           }.not_to change { Video.find(video_test.id).is_valid }
         end
       end
-      
+
       context '視聴者操作' do
         before(:each) do
           current_viewer(viewer)

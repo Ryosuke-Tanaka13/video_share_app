@@ -22,7 +22,7 @@ RSpec.describe 'Videos', type: :request do
   let(:organization_viewer) { create(:organization_viewer) }
   # orgとviewer1の紐付け
   let(:organization_viewer2) { create(:organization_viewer2) }
-   # another_orgとviewer1の紐付け
+  # another_orgとviewer1の紐付け
   let(:organization_viewer3) { create(:organization_viewer3) }
 
   before(:each) do
@@ -458,7 +458,7 @@ RSpec.describe 'Videos', type: :request do
         expect(response).to have_http_status '200'
       end
     end
-    
+
     describe '正常(視聴者)' do
       before(:each) do
         sign_in viewer1
@@ -514,7 +514,7 @@ RSpec.describe 'Videos', type: :request do
         expect(response).to redirect_to videos_path(organization_id: another_organization.id)
       end
     end
-    
+
     describe '異常(別組織の視聴者)' do
       before(:each) do
         sign_in viewer
@@ -737,7 +737,7 @@ RSpec.describe 'Videos', type: :request do
         end
       end
     end
-   
+
     describe '非ログイン' do
       describe '異常' do
         it '非ログインはアップデートできない' do
@@ -765,7 +765,7 @@ RSpec.describe 'Videos', type: :request do
         it '動画を削除する' do
           expect {
             delete(video_path(video_sample), params: { id: video_sample.id })
-            }.to change(Video, :count).by(-1)
+          }.to change(Video, :count).by(-1)
         end
 
         it 'indexにリダイレクトされる' do

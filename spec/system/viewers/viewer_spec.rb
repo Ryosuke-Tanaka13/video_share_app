@@ -46,7 +46,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
         click_link viewer.name, match: :first
         expect(page).to have_current_path viewer_path(viewer), ignore_query: true
       end
-      
+
       it '動画一覧への遷移' do
         click_link 'セレブエンジニア動画一覧', match: :first
         expect(page).to have_current_path videos_path, ignore_query: true

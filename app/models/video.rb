@@ -20,7 +20,7 @@ class Video < ApplicationRecord
   end
 
   def user_no_available?(current_user)
-    return self.organization_id != current_user.organization_id
+    self.organization_id != current_user.organization_id
   end
 
   def my_upload?(current_user)

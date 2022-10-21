@@ -261,7 +261,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_no_link '削除'
       end
     end
-   
+
     describe '動画詳細(視聴者)' do
       before(:each) do
         sign_in viewer
