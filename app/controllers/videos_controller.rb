@@ -77,7 +77,7 @@ class VideosController < ApplicationController
   def set_organization
     @organization = Organization.find(params[:organization_id])
   end
-  
+
   def ensure_user
     if current_user.nil?
       # 修正 遷移先はorganization::foldersコントローラのものとは異なる
@@ -105,7 +105,7 @@ class VideosController < ApplicationController
       end
     elsif current_viewer.present?
       # indexへのアクセス制限とshowへのアクセス制限
-      if (@organization.present? && current_viewer.organization_viewers.find_by(organization_id: @organization.id).nil? ) || (@video.present? && current_viewer.organization_viewers.find_by(organization_id: @video.organization_id).nil?)
+      if (@organization.present? && current_viewer.organization_viewers.where(organization_id: @organization.id).empty?) || (@video.present? && current_viewer.organization_viewers.where(organization_id: @video.organization_id).empty?)
         flash[:danger] = '権限がありません'
         redirect_back(fallback_location: root_url)
       end
