@@ -18,7 +18,7 @@ class VideosController < ApplicationController
     elsif current_user.present?
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
     elsif current_viewer.present?
-      current_viewer.organization_viewers.each do |organization_viewer|
+      current_viewer.organization_viewers.includes([:organization]).each do |organization_viewer|
         @organization_videos = Video.includes([:video_blob]).current_viewer_has(organization_viewer).available
       end
       # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
@@ -75,14 +75,15 @@ class VideosController < ApplicationController
       :popup_after_video, :data_url)
   end
 
-  # 金野さんと共通メソッド
+  # 共通メソッド(organization::foldersコントローラにも記載)
   def set_organization
     @organization = Organization.find(params[:organization_id])
   end
-
+  
   def ensure_user
     if current_user.nil?
-      redirect_to users_url, flash: { danger: '権限がありません' }
+      # 修正 遷移先はorganization::foldersコントローラのものとは異なる
+      redirect_to root_url, flash: { danger: '権限がありません' }
     end
   end
 
@@ -105,12 +106,10 @@ class VideosController < ApplicationController
         redirect_to videos_url(organization_id: current_user.organization_id)
       end
     elsif current_viewer.present?
-      current_viewer.organization_viewers.each do |organization_viewer|
-        # indexへのアクセス制限とshowへのアクセス制限
-        if (@organization.present? && organization_viewer.organization_id != @organization.id) || @video.present? && @video.viewer_no_available?(organization_viewer)
-          flash[:danger] = '権限がありません'
-          redirect_to videos_url(organization_id: organization_viewer.organization_id)
-        end
+      # indexへのアクセス制限とshowへのアクセス制限
+      if (@organization.present? && current_viewer.organization_viewers.find_by(organization_id: @organization.id).nil? ) || (@video.present? && current_viewer.organization_viewers.find_by(organization_id: @video.organization_id).nil?)
+        flash[:danger] = '権限がありません'
+        redirect_back(fallback_location: root_url)
       end
     end
   end

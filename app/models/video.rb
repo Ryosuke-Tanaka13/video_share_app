@@ -23,10 +23,6 @@ class Video < ApplicationRecord
     return self.organization_id != current_user.organization_id
   end
 
-  def viewer_no_available?(organization_viewer)
-    return self.organization_id != organization_viewer.organization_id
-  end
-
   def my_upload?(current_user)
     return true if self.user_id == current_user.id
 
