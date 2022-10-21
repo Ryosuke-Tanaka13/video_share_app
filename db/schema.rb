@@ -184,13 +184,10 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
     t.index ["unlock_token"], name: "index_viewers_on_unlock_token", unique: true
   end
 
-<<<<<<< HEAD
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "videos", "organizations"
-  add_foreign_key "videos", "users"
-=======
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
->>>>>>> main
+  add_foreign_key "videos", "organizations"
+  add_foreign_key "videos", "users"
 end
