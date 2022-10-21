@@ -2,14 +2,28 @@ require 'rails_helper'
 
 RSpec.describe 'Videos', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
+
   let(:organization) { create(:organization) }
-  let(:another_organization) { create(:another_organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
-  let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id, confirmed_at: Time.now) }
-  let(:user) { create(:user, organization_id: organization.id, confirmed_at: Time.now) }
+  let(:user_staff) { create(:user_staff, organization_id: organization.id, confirmed_at: Time.now) }
+  # orgにのみ属す
+  let(:viewer) { create(:viewer, confirmed_at: Time.now) }
+  # orgとanother_orgの両方に属す
+  let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
   let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-  let(:video_test) { create(:video_test, organization_id: user.organization.id, user_id: user.id) }
-  let(:video_it) { create(:video_it, organization_id: user.organization.id, user_id: user_owner.id) }
+  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
+  let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+
+  let(:another_organization) { create(:another_organization) }
+  let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id, confirmed_at: Time.now) }
+  let(:another_video) { create(:another_video, organization_id: another_user_owner.organization.id, user_id: another_user_owner.id) }
+
+  # orgとviewerの紐付け
+  let(:organization_viewer) { create(:organization_viewer) }
+  # orgとviewer1の紐付け
+  let(:organization_viewer2) { create(:organization_viewer2) }
+   # another_orgとviewer1の紐付け
+  let(:organization_viewer3) { create(:organization_viewer3) }
 
   before(:each) do
     system_admin
@@ -17,13 +31,18 @@ RSpec.describe 'Videos', type: :request do
     another_organization
     user_owner
     another_user_owner
-    user
+    user_staff
+    viewer
+    viewer1
+    organization_viewer
+    organization_viewer2
+    organization_viewer3
   end
 
   describe 'GET #index' do
     describe '正常(動画投稿者)' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
         get videos_path(organization_id: organization.id)
       end
 
@@ -66,6 +85,36 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
+    describe '正常(視聴者)' do
+      before(:each) do
+        sign_in viewer1
+        get videos_path(organization_id: organization.id)
+      end
+
+      it 'レスポンスに成功する' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it '正常値レスポンス' do
+        expect(response).to have_http_status '200'
+      end
+    end
+
+    describe '正常(視聴者)' do
+      before(:each) do
+        sign_in viewer1
+        get videos_path(organization_id: another_organization.id)
+      end
+
+      it 'レスポンスに成功する' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it '正常値レスポンス' do
+        expect(response).to have_http_status '200'
+      end
+    end
+
     describe '異常(別組織のuser)' do
       before(:each) do
         sign_in user_owner
@@ -75,6 +124,18 @@ RSpec.describe 'Videos', type: :request do
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status ' 302'
         expect(response).to redirect_to videos_path(organization_id: organization.id)
+      end
+    end
+
+    describe '異常(別組織の視聴者)' do
+      before(:each) do
+        sign_in viewer
+        get videos_path(organization_id: another_organization.id)
+      end
+
+      it 'アクセス権限なしのためリダイレクト' do
+        expect(response).to have_http_status ' 302'
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -93,7 +154,7 @@ RSpec.describe 'Videos', type: :request do
   describe 'GET #new' do
     describe '正常(動画投稿者)' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
         get new_video_path
       end
 
@@ -129,7 +190,19 @@ RSpec.describe 'Videos', type: :request do
 
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status ' 302'
-        expect(response).to redirect_to users_path
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    describe '異常(視聴者)' do
+      before(:each) do
+        sign_in viewer
+        get new_video_path
+      end
+
+      it 'アクセス権限なしのためリダイレクト' do
+        expect(response).to have_http_status ' 302'
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -148,7 +221,7 @@ RSpec.describe 'Videos', type: :request do
   describe 'POST #create' do
     describe '動画投稿者' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
       end
 
       # アプリ内でvideosのインスタンスが生成されることを確認(ここではvimeoに動画がアップされることのテストは行えていない)
@@ -159,7 +232,6 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  video:              fixture_file_upload('/rec.webm'),
                   open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
                   range:              false,
                   comment_public:     false,
@@ -177,7 +249,6 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  video:              fixture_file_upload('/rec.webm'),
                   open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
                   range:              false,
                   comment_public:     false,
@@ -203,7 +274,6 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  video:              fixture_file_upload('/rec.webm'),
                   open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
                   range:              false,
                   comment_public:     false,
@@ -221,7 +291,6 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  video:              fixture_file_upload('/rec.webm'),
                   open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
                   range:              false,
                   comment_public:     false,
@@ -245,7 +314,6 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:    '',
-                  video:    fixture_file_upload('/rec.webm'),
                   data_url: '/videos/999999999'
                 }
               }
@@ -258,7 +326,6 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:    'テストビデオ',
-                  video:    fixture_file_upload('/rec.webm'),
                   data_url: '/videos/999999999'
                 }
               }
@@ -301,7 +368,31 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  video:              fixture_file_upload('/rec.webm'),
+                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  range:              false,
+                  comment_public:     false,
+                  popup_before_video: false,
+                  popup_after_video:  false,
+                  data_url:           '/videos/999999999'
+                }
+              }
+          }.not_to change(Video, :count)
+        end
+      end
+    end
+
+    describe '視聴者が現在のログインユーザ' do
+      before(:each) do
+        sign_in viewer
+      end
+
+      describe '異常' do
+        it '視聴者は作成できない' do
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title:              'サンプルビデオ2',
                   open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
                   range:              false,
                   comment_public:     false,
@@ -323,7 +414,6 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  video:              fixture_file_upload('/rec.webm'),
                   open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
                   range:              false,
                   comment_public:     false,
@@ -341,7 +431,7 @@ RSpec.describe 'Videos', type: :request do
   describe 'GET #show' do
     describe '正常(動画投稿者)' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
         get video_path(video_test)
       end
 
@@ -358,6 +448,36 @@ RSpec.describe 'Videos', type: :request do
       before(:each) do
         sign_in user_owner
         get video_path(video_test)
+      end
+
+      it 'レスポンスに成功する' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it '正常値レスポンス' do
+        expect(response).to have_http_status '200'
+      end
+    end
+    
+    describe '正常(視聴者)' do
+      before(:each) do
+        sign_in viewer1
+        get video_path(video_test)
+      end
+
+      it 'レスポンスに成功する' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it '正常値レスポンス' do
+        expect(response).to have_http_status '200'
+      end
+    end
+
+    describe '正常(視聴者)' do
+      before(:each) do
+        sign_in viewer1
+        get video_path(another_video)
       end
 
       it 'レスポンスに成功する' do
@@ -392,6 +512,18 @@ RSpec.describe 'Videos', type: :request do
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status ' 302'
         expect(response).to redirect_to videos_path(organization_id: another_organization.id)
+      end
+    end
+    
+    describe '異常(別組織の視聴者)' do
+      before(:each) do
+        sign_in viewer
+        get video_path(another_video)
+      end
+
+      it 'アクセス権限なしのためリダイレクト' do
+        expect(response).to have_http_status ' 302'
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -491,7 +623,7 @@ RSpec.describe 'Videos', type: :request do
 
     describe '動画投稿者本人が現在のログインユーザ' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
       end
 
       describe '正常' do
@@ -521,7 +653,7 @@ RSpec.describe 'Videos', type: :request do
 
     describe 'システム管理者が現在のログインユーザ' do
       before(:each) do
-        sign_in user
+        sign_in system_admin
       end
 
       describe '正常' do
@@ -551,7 +683,7 @@ RSpec.describe 'Videos', type: :request do
 
     describe '本人以外の動画投稿者が現在のログインユーザ' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
       end
 
       describe '異常' do
@@ -587,44 +719,62 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
+    describe '視聴者が現在のログインユーザ' do
+      before(:each) do
+        sign_in viewer
+      end
+
+      describe '異常' do
+        it '視聴者はアップデートできない' do
+          expect {
+            patch video_path(video_test),
+              params: {
+                video: {
+                  title: 'テストビデオ２'
+                }
+              }
+          }.not_to change { Video.find(video_test.id).title }
+        end
+      end
+    end
+   
     describe '非ログイン' do
       describe '異常' do
         it '非ログインはアップデートできない' do
           expect {
-            patch video_path(video_it),
+            patch video_path(video_test),
               params: {
                 video: {
-                  title: 'ITビデオ2'
+                  title: 'テストビデオ2'
                 }
               }
-          }.not_to change { Video.find(video_it.id).title }
+          }.not_to change { Video.find(video_test.id).title }
         end
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    # describe 'システム管理者が現在のログインユーザー' do
-    #   before(:each) do
-    #     sign_in system_admin
-    #     video_sample
-    #   end
+    describe 'システム管理者が現在のログインユーザー' do
+      before(:each) do
+        sign_in system_admin
+        video_sample
+      end
 
-    # まとめてテストを行うと、too many api requests. wait a minute or so, then try again.エラーが生じ、テストに落ちる。(別個にテストを行えば通る)
-    # describe '正常' do
-    #   it '動画を削除する' do
-    #     expect {
-    #       delete(video_path(video_sample), params: { id: video_sample.id })
-    #       }.to change(Video, :count).by(-1)
-    #   end
+      describe '正常' do
+        it '動画を削除する' do
+          expect {
+            delete(video_path(video_sample), params: { id: video_sample.id })
+            }.to change(Video, :count).by(-1)
+        end
 
-    #   it 'indexにリダイレクトされる' do
-    #     expect(
-    #       delete(video_path(video_sample), params: { id: video_sample.id })
-    #     ).to redirect_to videos_path(organization_id: organization.id)
-    #   end
-    # end
-    # end
+        it 'indexにリダイレクトされる' do
+          expect(
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          ).to redirect_to videos_path(organization_id: organization.id)
+        end
+      end
+    end
 
     describe 'オーナーが現在のログインユーザー' do
       before(:each) do
@@ -643,12 +793,27 @@ RSpec.describe 'Videos', type: :request do
 
     describe '動画投稿者が現在のログインユーザ' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
         video_test
       end
 
       describe '異常' do
         it '動画投稿者は削除できない' do
+          expect {
+            delete video_path(video_test), params: { id: video_test.id }
+          }.not_to change(Video, :count)
+        end
+      end
+    end
+
+    describe '視聴者が現在のログインユーザ' do
+      before(:each) do
+        sign_in viewer
+        video_test
+      end
+
+      describe '異常' do
+        it '視聴者は削除できない' do
           expect {
             delete video_path(video_test), params: { id: video_test.id }
           }.not_to change(Video, :count)
