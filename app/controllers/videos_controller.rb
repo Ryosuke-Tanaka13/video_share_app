@@ -18,9 +18,7 @@ class VideosController < ApplicationController
     elsif current_user.present?
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
     elsif current_viewer.present?
-      current_viewer.organization_viewers.includes([:organization]).each do |organization_viewer|
-        @organization_videos = Video.includes([:video_blob]).current_viewer_has(organization_viewer).available
-      end
+      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available
       # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
     end
   end
