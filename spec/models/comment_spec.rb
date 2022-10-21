@@ -21,6 +21,7 @@ RSpec.describe Comment, type: :model do
         expect(user_comment).to be_valid
       end
     end
+
     context 'viewerの場合' do
       it '正常に保存できること' do
         expect(viewer_comment).to be_valid
@@ -36,6 +37,7 @@ RSpec.describe Comment, type: :model do
         expect(user_comment.errors.full_messages).to include('Commentを入力してください')
       end
     end
+    
     context 'viewerの場合' do
       it '空白' do
         viewer_comment.comment = ''

@@ -28,5 +28,4 @@ FactoryBot.define do
     association :video
     comment { 'テストコメント' }
   end
-
 end

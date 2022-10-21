@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Comments", type: :request do
+RSpec.describe 'Comments', type: :request do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization_id: organization.id) }
   let(:video) { create(:video, organization_id: organization.id, user_id: user.id) }
@@ -20,7 +20,7 @@ RSpec.describe "Comments", type: :request do
     user_comment
     viewer_comment
   end
-  
+
   describe 'Post #create' do
     describe '正常' do
       describe '動画投稿者' do
@@ -29,7 +29,7 @@ RSpec.describe "Comments", type: :request do
         end
 
         it 'コメントが新規作成される' do
-          expect{
+          expect {
             post video_comments_path(video_id: user_comment.video_id),
             params: {
               comment: {
@@ -43,8 +43,8 @@ RSpec.describe "Comments", type: :request do
           expect(
             post video_comments_path(video_id: user_comment.video_id),
             params: {
-              comment:{
-                comment:'動画投稿者のコメント'
+              comment: {
+                comment: '動画投稿者のコメント'
               }
             }
           ).to redirect_to video_path(video)
@@ -58,7 +58,7 @@ RSpec.describe "Comments", type: :request do
       end
 
       it 'コメントが新規作成される' do
-        expect{
+        expect {
           post video_comments_path(video_id: viewer_comment.video_id),
           params: {
             comment: {
@@ -72,8 +72,8 @@ RSpec.describe "Comments", type: :request do
         expect(
           post video_comments_path(video_id: viewer_comment.video_id),
           params: {
-            comment:{
-              comment:'動画視聴者のコメント'
+            comment: {
+              comment: '動画視聴者のコメント'
             }
           }
         ).to redirect_to video_path(video)
@@ -87,11 +87,11 @@ RSpec.describe "Comments", type: :request do
         end
 
         it 'コメントが空白だと新規作成されない' do
-          expect{
+          expect {
             post video_comments_path(video_id: user_comment.video_id),
             params: {
-              comment:{
-                comment:''
+              comment: {
+                comment: ''
               }, format: :js
             }
           }.not_to change(Comment, :count)
@@ -104,11 +104,11 @@ RSpec.describe "Comments", type: :request do
         end
 
         it 'コメントが空白だと新規作成されない' do
-          expect{
+          expect {
             post video_comments_path(video_id: viewer_comment.video_id),
             params: {
-              comment:{
-                comment:''
+              comment: {
+                comment: ''
               }, format: :js
             }
           }.not_to change(Comment, :count)
@@ -146,6 +146,7 @@ RSpec.describe "Comments", type: :request do
           ).to redirect_to video_path(video)
         end
       end
+
       describe '異常' do
         it 'コメントが空白ではアップデートされない' do
           expect {
@@ -164,7 +165,7 @@ RSpec.describe "Comments", type: :request do
       before(:each) do
         current_viewer(viewer)
       end
-      
+
       describe '正常' do
         it 'コメントがアップデートされる' do
           expect {
@@ -271,7 +272,7 @@ RSpec.describe "Comments", type: :request do
         before(:each) do
           current_user(user_staff)
         end
-        
+
         describe '異常' do
           it '別の動画投稿者は削除できない' do
             expect {
@@ -279,17 +280,17 @@ RSpec.describe "Comments", type: :request do
             }.not_to change(Comment, :count)
           end
         end
+      end
 
+      describe 'コメント作成者以外の別の動画視聴者が現在のログインユーザ' do
         before(:each) do
           current_user(another_viewer)
         end
 
-        describe '異常' do
-          it '別の動画視聴者は削除できない' do
-            expect {
-              delete video_comment_path(video_id: user_comment.video_id, id: user_comment.id), params: { id: user_comment.id }
-            }.not_to change(Comment, :count)
-          end
+        it '別の動画視聴者は削除できない' do
+          expect {
+            delete video_comment_path(video_id: user_comment.video_id, id: user_comment.id), params: { id: user_comment.id }
+          }.not_to change(Comment, :count)
         end
       end
     end

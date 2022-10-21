@@ -8,5 +8,4 @@ class Comment < ApplicationRecord
 
   # バリデーション
   validates :comment, presence: true
-
 end

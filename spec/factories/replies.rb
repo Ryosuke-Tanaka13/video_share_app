@@ -16,6 +16,4 @@ FactoryBot.define do
     comment_id { 1 }
     reply { 'viewerの返信' }
   end
-
 end
-

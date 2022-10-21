@@ -6,5 +6,4 @@ class Reply < ApplicationRecord
 
   # バリデーション
   validates :reply, presence: true
-
 end

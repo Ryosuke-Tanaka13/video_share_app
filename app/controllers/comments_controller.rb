@@ -5,8 +5,8 @@ class CommentsController < ApplicationController
   before_action :ensure_user_or_viewer
   before_action :correct_user_comment_or_correct_viewer_comment, only: %i[update destroy]
   helper_method :account_logged_in?
-  protect_from_forgery :except => [:destroy]
-  
+  protect_from_forgery { :except => [:destroy] }
+
   def create
     @reply = Reply.new
     # videoに紐づいたコメントを取得
@@ -16,10 +16,10 @@ class CommentsController < ApplicationController
     # コメント投稿したアカウントをセット
     set_commenter_id
     if @comment.save
-      flash[:success] = "コメント投稿に成功しました。"
+      flash[:success] = 'コメント投稿に成功しました。'
       redirect_to video_url(@video.id)
     else
-      flash.now[:danger] = "コメント投稿に失敗しました。"
+      flash.now[:danger] = 'コメント投稿に失敗しました。'
       render :index
     end
   end
@@ -31,7 +31,7 @@ class CommentsController < ApplicationController
     if @comment.update(comment_params)
       redirect_to video_url(@video.id)
     else
-      flash.now[:danger] = "コメント編集に失敗しました。"
+      flash.now[:danger] = 'コメント編集に失敗しました。'
       render :index
     end
   end
@@ -39,37 +39,37 @@ class CommentsController < ApplicationController
   def destroy
     @comment = Comment.find(params[:id])
     if @comment.destroy
-      flash[:success] = "コメント削除に成功しました。"
+      flash[:success] = 'コメント削除に成功しました。'
       redirect_to video_url(@video.id)
     else
-      flash.now[:danger] = "コメント削除に失敗しました。"
+      flash.now[:danger] = 'コメント削除に失敗しました。'
       render :index
     end
   end
 
   private
-    def comment_params
-      params.require(:comment).permit(:comment, :video_id, :organization_id).merge(
-        organization_id: @video.organization_id
-      )
-    end
 
-    # コメントしたアカウントidをセット
-    def set_commenter_id
-      if current_user && (@account == current_user)
-        @comment.user_id = current_user.id
-      elsif current_viewer && (@account == current_viewer)
-        @comment.viewer_id = current_viewer.id
-      end
-    end
+  def comment_params
+    params.require(:comment).permit(:comment, :video_id, :organization_id).merge(
+      organization_id: @video.organization_id
+    )
+  end
 
-    # コメントした動画投稿者、動画視聴者本人のみ許可
-    def correct_user_comment_or_correct_viewer_comment
-      @comment = Comment.find(params[:id])
-      @video= Video.find(params[:video_id])
-      if @comment.user_id != current_user&.id || @comment.viewer_id != current_viewer&.id
-        redirect_to video_url(@video.id), flash: { danger: '権限がありません' }
-      end
+  # コメントしたアカウントidをセット
+  def set_commenter_id
+    if current_user && (@account == current_user)
+      @comment.user_id = current_user.id
+    elsif current_viewer && (@account == current_viewer)
+      @comment.viewer_id = current_viewer.id
     end
+  end
 
+  # コメントした動画投稿者、動画視聴者本人のみ許可
+  def correct_user_comment_or_correct_viewer_comment
+    @comment = Comment.find(params[:id])
+    set_video_id
+    if @comment.user_id != current_user&.id || @comment.viewer_id != current_viewer&.id
+      redirect_to video_url(@video.id), flash: { danger: '権限がありません' }
+    end
+  end
 end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Replies", type: :request do
+RSpec.describe 'Replies', type: :request do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization_id: organization.id) }
   let(:user_staff) { create(:user_staff, organization_id: organization.id) }
@@ -31,7 +31,7 @@ RSpec.describe "Replies", type: :request do
         end
 
         it '返信が新規作成される' do
-          expect{
+          expect {
             post video_comment_replies_path(video_id: video.id, comment_id: user_reply.comment_id),
             params: {
               reply: {
@@ -45,8 +45,8 @@ RSpec.describe "Replies", type: :request do
           expect(
             post video_comment_replies_path(video_id: video.id, comment_id: user_reply.comment_id),
             params: {
-              reply:{
-                reply:'動画投稿者の返信'
+              reply: {
+                reply: '動画投稿者の返信'
               }
             }
           ).to redirect_to video_path(video.id)
@@ -60,7 +60,7 @@ RSpec.describe "Replies", type: :request do
       end
 
       it '返信が新規作成される' do
-        expect{
+        expect {
           post video_comment_replies_path(video_id: video.id, comment_id: viewer_reply.comment_id),
           params: {
             reply: {
@@ -74,8 +74,8 @@ RSpec.describe "Replies", type: :request do
         expect(
           post video_comment_replies_path(video_id: video.id, comment_id: viewer_reply.comment_id),
           params: {
-            reply:{
-              reply:'動画視聴者の返信'
+            reply: {
+              reply: '動画視聴者の返信'
             }
           }
         ).to redirect_to video_path(video)
@@ -89,11 +89,11 @@ RSpec.describe "Replies", type: :request do
         end
 
         it '返信が空白だと新規作成されない' do
-          expect{
+          expect {
             post video_comment_replies_path(video_id: video.id, comment_id: viewer_reply.comment_id),
             params: {
-              reply:{
-                reply:''
+              reply: {
+                reply: ''
               }, format: :js
             }
           }.not_to change(Reply, :count)
@@ -106,11 +106,11 @@ RSpec.describe "Replies", type: :request do
         end
 
         it '返信が空白だと新規作成されない' do
-          expect{
+          expect {
             post video_comment_replies_path(video_id: video.id, comment_id: viewer_reply.comment_id),
             params: {
-              reply:{
-                reply:''
+              reply: {
+                reply: ''
               }, format: :js
             }
           }.not_to change(Reply, :count)
@@ -237,7 +237,8 @@ RSpec.describe "Replies", type: :request do
       describe '異常' do
         it '別の動画投稿者は削除できない' do
           expect {
-            delete video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id), params: { id: user_reply.id }
+            delete video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id), 
+            params: { id: user_reply.id }
           }.not_to change(Reply, :count)
         end
       end
@@ -251,7 +252,8 @@ RSpec.describe "Replies", type: :request do
       describe '異常' do
         it '別の動画視聴者は削除できない' do
           expect {
-            delete video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id), params: { id: user_reply.id }
+            delete video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id), 
+            params: { id: user_reply.id }
           }.not_to change(Comment, :count)
         end
       end

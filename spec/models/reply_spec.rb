@@ -25,6 +25,7 @@ RSpec.describe Reply, type: :model do
         expect(user_reply).to be_valid
       end
     end
+
     context 'viewerの場合' do
       it '正常に保存できること' do
         expect(viewer_reply).to be_valid
@@ -40,6 +41,7 @@ RSpec.describe Reply, type: :model do
         expect(user_reply.errors.full_messages).to include('Replyを入力してください')
       end
     end
+
     context 'viewerの場合' do
       it '空白' do
         viewer_reply.reply = ''
