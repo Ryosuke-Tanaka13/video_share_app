@@ -2,18 +2,26 @@ require 'rails_helper'
 
 RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
+
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
-  let(:user) { create(:user, organization_id: organization.id, confirmed_at: Time.now) }
+  let(:user_staff) { create(:user_staff, organization_id: organization.id, confirmed_at: Time.now) }
+  # orgにのみ属す
+  let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-  let(:video_test) { create(:video_test, organization_id: user.organization.id, user_id: user.id) }
+  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+
+  # orgとviewerの紐付け
+  let(:organization_viewer) { create(:organization_viewer) }
 
   before(:each) do
     system_admin
     organization
     user_owner
-    user
+    user_staff
+    viewer
+    organization_viewer
   end
 
   describe '正常' do
@@ -32,23 +40,22 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_link '削除', href: video_path(video_test)
       end
 
-      # まとめてテストを行うと、too many api requests. wait a minute or so, then try again.エラーが生じ、テストに落ちる。(別個にテストを行えば通る)
-      # it '動画削除' do
-      #   find(:xpath, '//*[@id="videos-index"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
-      #   expect {
-      #     expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はvimeoからも完全に削除されます'
-      #     page.driver.browser.switch_to.alert.accept
-      #     expect(page).to have_content '動画を削除しました'
-      #   }.to change(Video, :count).by(-1)
-      # end
+      it '動画削除' do
+        find(:xpath, '//*[@id="videos-index"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はvimeoからも完全に削除されます'
+          page.driver.browser.switch_to.alert.accept
+          expect(page).to have_content '動画を削除しました'
+        }.to change(Video, :count).by(-1)
+      end
 
-      # it '動画削除キャンセル' do
-      #   find(:xpath, '//*[@id="videos-index"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
-      #   expect {
-      #     expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はvimeoからも完全に削除されます'
-      #     page.driver.browser.switch_to.alert.dismiss
-      #   }.not_to change(Video, :count)
-      # end
+      it '動画削除キャンセル' do
+        find(:xpath, '//*[@id="videos-index"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はvimeoからも完全に削除されます'
+          page.driver.browser.switch_to.alert.dismiss
+        }.not_to change(Video, :count)
+      end
     end
 
     describe '動画詳細' do
@@ -66,7 +73,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe 'モーダル画面' do
       before(:each) do
-        sign_in system_admin || user_owner || user
+        sign_in system_admin || user_owner || user_staff
         visit video_path(video_test)
         click_link('設定')
       end
@@ -102,7 +109,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画投稿画面' do
       before(:each) do
-        sign_in user_owner || user
+        sign_in user_owner || user_staff
         visit new_video_path
       end
 
@@ -205,9 +212,23 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
+    describe '動画一覧画面(視聴者)' do
+      before(:each) do
+        sign_in viewer
+        video_test
+        visit videos_path(organization_id: organization.id)
+      end
+
+      it 'レイアウトに設定リンク、削除リンクなし' do
+        expect(page).to have_link 'テストビデオ', href: video_path(video_test)
+        expect(page).to have_no_link '設定', href: edit_video_path(video_test)
+        expect(page).to have_no_link '削除', href: video_path(video_test)
+      end
+    end
+
     describe 'モーダル画面(システム管理者、オーナー、動画投稿者本人以外)' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
         visit video_path(video_it)
         click_link('設定')
       end
@@ -231,12 +252,25 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画詳細(動画投稿者)' do
       before(:each) do
-        sign_in user
+        sign_in user_staff
         visit video_path(video_test)
       end
 
       it 'レイアウトに論理削除リンクなし' do
         expect(page).to have_text 'テストビデオ'
+        expect(page).to have_no_link '削除'
+      end
+    end
+   
+    describe '動画詳細(視聴者)' do
+      before(:each) do
+        sign_in viewer
+        visit video_path(video_test)
+      end
+
+      it 'レイアウトに設定リンクと論理削除リンクなし' do
+        expect(page).to have_text 'テストビデオ'
+        expect(page).to have_no_link '設定'
         expect(page).to have_no_link '削除'
       end
     end
