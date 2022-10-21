@@ -85,6 +85,7 @@ RSpec.xdescribe 'UsersSystem', type: :system, js: true do
           expect(page).to have_text 'セレブエンジニア'
           expect(page).to have_text 'テックリーダーズ'
           expect(page).to have_link 'フォルダ新規作成'
+          expect(page).to have_link '動画一覧'
           expect(page).not_to have_css('svg.fa-trash-alt')
         end
       end
