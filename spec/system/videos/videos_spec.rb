@@ -45,7 +45,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はvimeoからも完全に削除されます'
           page.driver.browser.switch_to.alert.accept
-          expect(page).to have_content '動画を削除しました'
+          expect(page).to have_content '削除しました'
         }.to change(Video, :count).by(-1)
       end
 
