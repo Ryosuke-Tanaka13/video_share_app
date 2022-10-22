@@ -5,11 +5,11 @@ class Video < ApplicationRecord
   has_one_attached :video
 
   validates :title, presence: true
-  validates :title, uniqueness: { scope: :organization } ,if: :video_exists?
+  validates :title, uniqueness: { scope: :organization }, if: :video_exists?
 
   def video_exists?
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
-    return video.present?
+    video.present?
   end
 
   # 動画自体はアプリ内には保存されないので、動画なしを不可, 動画以外を不可とするバリデーションはここでは設定しない
