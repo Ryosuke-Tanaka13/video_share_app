@@ -4,7 +4,8 @@ class Video < ApplicationRecord
 
   has_one_attached :video
 
-  validates :title, uniqueness: true, uniqueness: { scope: :organization } ,if: :video_exists?
+  validates :title, presence: true
+  validates :title, uniqueness: { scope: :organization } ,if: :video_exists?
 
   def video_exists?
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
