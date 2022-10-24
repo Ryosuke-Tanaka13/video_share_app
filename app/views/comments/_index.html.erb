@@ -1,4 +1,5 @@
 <%= javascript_pack_tag 'video-comment.js' %>
+<%= stylesheet_pack_tag "stylesheets/comment" %>
 
 <!-- 'videos/show'で使用 -------------------------------------------------------------------------------------------------------------->
 <h5>コメント一覧 <%= "(#{@comments.count}件)" %></h5>
@@ -34,7 +35,7 @@
         <% if account_logged_in? && (comment.user_id == @account.id || comment.viewer_id == @account.id) %>
           <div data-comment-id='<%= comment.id %>' class="js-edit-comment-button">
             <i class="fas fa-edit text-primary"></i>
-          </div>
+          </div><br>
           <div id="js-comment-<%= comment.id %>">
             <div id="js-comment-post-error-<%= comment.id %>" class="text-danger"></div>
             <textarea style="display: none;" id="js-textarea-comment-<%= comment.id %>" class="form-control comment-post-error"><%= comment.comment %></textarea>
@@ -48,7 +49,7 @@
               <i class="far fa-trash-alt" color=red></i>
             <% end %>
           </div>
-        <% end %>              
+        <% end %>
       </div>
     </div>
   </div>
@@ -101,7 +102,7 @@
               <% if account_logged_in? && (reply.user_id == @account.id || reply.viewer_id == @account.id) %>
                 <div data-reply-id='<%= reply.id %>' class="js-edit-reply-button">
                   <i class="fas fa-edit text-primary"></i>
-                </div>
+                </div><br>
                 <div id="js-reply-<%= reply.id %>">
                   <div id="js-reply-post-error-<%= reply.id %>" class="text-danger"></div>
                   <textarea style="display: none;" id="js-textarea-reply-<%= reply.id %>" class="form-control reply-post-error"><%= reply.reply %></textarea>
