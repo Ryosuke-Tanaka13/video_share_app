@@ -18,7 +18,7 @@ class Videos::HiddensController < VideosController
 
   private
 
-  # 金野さんと共通のメソッド
+  # 共通メソッド(organization::foldersコントローラにも記載)
   def ensure_admin_or_owner
     if current_user.present? && current_user.role != 'owner'
       redirect_to users_url, flash: { danger: '権限がありません' }
