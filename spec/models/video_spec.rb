@@ -59,7 +59,7 @@ RSpec.describe Video, type: :model do
       it '空白または動画以外のファイル' do
         video_test.data_url = nil
         expect(video_test.valid?).to eq(false)
-        expect(video_test.errors.full_messages).to include('動画データをアップロードしてください')
+        expect(video_test.errors.full_messages).to include('ビデオをアップロードしてください')
       end
     end
   end
