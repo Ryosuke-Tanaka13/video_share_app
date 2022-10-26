@@ -66,12 +66,13 @@ class Video < ApplicationRecord
     false
   end
 
-  validate :data_url_is_necessary
+  validate :video_is_necessary
 
-  def data_url_is_necessary
-    # デフォルトでdata_urlがnilならエラーとするのではなく、投稿ボタン押下後にvideo = vimeo_client.upload_video(self.video) がない状況下でdata_urlがnilならエラーとする。
+  def video_is_necessary
+    # (acitvestorageで取り付けたvideoが存在しないまたはファイルの形式が不正) かつ、data_urlが存在しないならば、はじく。
+    # && data_url.nil?を記述しないと、動画情報を更新する際も、動画の投稿が必須となってしまう。
     if (video.nil? || (video.content_type != 'video/webm' && video.content_type != 'video/quicktime' && video.content_type != 'video/mp4' && video.content_type != 'video/mpeg' && video.content_type != 'video/x-ms-wmv' && video.content_type != 'video/avi')) && data_url.nil?
-      errors.add(:data_url, 'をアップロードしてください')
+      errors.add(:video, 'をアップロードしてください')
     end
   end
 end
