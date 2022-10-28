@@ -167,14 +167,14 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       it '動画データ空白' do
         fill_in 'title', with: 'サンプルビデオ2'
         click_button '新規投稿'
-        expect(page).to have_text '動画データをアップロードしてください'
+        expect(page).to have_text 'ビデオをアップロードしてください'
       end
 
       it '動画以外のファイル' do
         fill_in 'title', with: 'サンプルビデオ2'
         attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/default.png')
         click_button '新規投稿'
-        expect(page).to have_text '動画データをアップロードしてください'
+        expect(page).to have_text 'ビデオをアップロードしてください'
       end
     end
 
