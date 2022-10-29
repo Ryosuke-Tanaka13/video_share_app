@@ -60,7 +60,7 @@ class VideosController < ApplicationController
     @video.destroy
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)
-  rescue StandardError
+  rescue VimeoMe2::RequestFailed
     @video.destroy
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)

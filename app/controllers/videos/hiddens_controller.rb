@@ -16,7 +16,7 @@ class Videos::HiddensController < VideosController
     else
       render :show
     end
-  rescue StandardError
+  rescue VimeoMe2::RequestFailed
     @video.update(is_valid: false)
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)
