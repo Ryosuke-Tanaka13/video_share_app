@@ -55,8 +55,8 @@ class VideosController < ApplicationController
   end
 
   def destroy
-    @vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], @video.data_url)
-    @vimeo_video.destroy
+    vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], @video.data_url)
+    vimeo_video.destroy
     @video.destroy
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)
