@@ -21,11 +21,4 @@ FactoryBot.define do
     email    { 'viewer_spec2@example.com' }
     password { 'password' }
   end
-
-  factory :another_viewer, class: 'Viewer' do
-    id { 2 }
-    name { '別の動画視聴者' }
-    email { 'another_viewer@example.com' }
-    password { 'password' }
-  end
 end

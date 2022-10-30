@@ -110,24 +110,7 @@ organization_viewer = OrganizationViewer.new(
 organization_viewer.save!
 
 # =================================================================
-
-
-5.times do |i|
-  viewer = Viewer.new(
-    email: "test_viewer#{i}@gmail.com", # sample: test_viewer1@gmail.com
-    name: "視聴者#{i}",
-    password: 'password'
-  )
-
-  viewer.skip_confirmation! # deviseの確認メールをスキップ
-  viewer.save!
-end
-
-LoginlessViewer.create!(
-  name: 'ログインなし視聴者',
-  email: 'test_loginless_viewer@gmail.com'
-)
-
+# video関連 ========================================================
 Video.create!(
   video: 'https//www.youtube.com',
   title: 'テスト動画',
