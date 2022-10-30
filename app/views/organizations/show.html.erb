@@ -1,0 +1,33 @@
+<% provide(:title, "組織詳細") %>
+
+<div class="card">
+  <div class="card-body table-responsive p-0">
+    <table class="table table-hover text-nowrap">
+      <tbody>
+        <tr>
+          <th><%= "名前" %></th>
+          <td>
+            <%= @organization.name %>
+            <% if @organization.is_valid == false %>(退会)<% end %>
+          </td>
+        </tr>
+        <tr>
+          <th><%= "メールアドレス" %></th>
+          <td><%= @organization.email %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+    <div class="card-footer">
+    <% if current_user&.role == 'owner' || current_system_admin %>
+      <%= link_to "編集", edit_organization_path, class: "btn btn-md btn-block btn-success" %>
+      <%= link_to "退会ページ", organizations_unsubscribe_path(@organization), class: "btn btn-md btn-block btn-danger" %><br>
+    <% end %>
+    <%= link_to "投稿者一覧", users_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>
+    <%= link_to "視聴者一覧", viewers_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>
+    <%= link_to "動画フォルダ一覧", organization_folders_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>
+    <% if current_system_admin %>
+      <br><%= link_to "戻る", organizations_path, class: "btn btn-md btn-block btn-secondary" %>
+    <% end %>
+    </div>
+</div>

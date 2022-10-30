@@ -2,6 +2,9 @@
 
 module SystemAdmins
   class SessionsController < Devise::SessionsController
+    layout 'system_admins_auth'
+
+    before_action :ensure_other_account_logged_out, only: %i[new create]
     # before_action :configure_sign_in_params, only: [:create]
 
     # GET /resource/sign_in
@@ -25,5 +28,13 @@ module SystemAdmins
     # def configure_sign_in_params
     #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
     # end
+
+    # 他アカウントがログアウト中　のみ許可
+    def ensure_other_account_logged_out
+      if current_user? || current_viewer?
+        flash[:danger] = 'ログアウトしてください。'
+        redirect_back(fallback_location: root_url)
+      end
+    end
   end
 end

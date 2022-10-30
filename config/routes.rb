@@ -5,22 +5,45 @@ Rails.application.routes.draw do
 
   # organization関連==================================================
   resources :organizations do
-    collection do
+    scope module: :organizations do
+      resources :folders
+    end
+    member do
       scope module: :organizations do
-        resources :folders
+        resource :unsubscribe, only: %i[show update], as: :organizations_unsubscribe
+        resource :admission, only: %i[show update destroy], as: :organizations_admission
       end
     end
   end
   # =================================================================
 
   # system_admin関連=========================================================
-  devise_for :system_admins, controllers: {
-    sessions: 'system_admins/sessions'
+  devise_for :system_admins, skip: %i[registrations], controllers: {
+    sessions:  'system_admins/sessions',
+    passwords: 'system_admins/passwords'
   }
 
   resources :system_admins, only: %i[show edit update] do
   end
+  # =================================================================
 
+  # user関連=======================================================
+  devise_for :users, skip: %i[registrations], controllers: {
+    sessions:      'users/sessions',
+    passwords:     'users/passwords',
+    confirmations: 'users/confirmations',
+    registrations: 'users/registrations'
+  }
+
+  resources :users do
+    member do
+      scope module: :users do
+        resource :unsubscribe, only: %i[show update], as: :users_unsubscribe
+      end
+    end
+  end
+
+  post 'users_create', to: 'users#create'
   # =================================================================
 
   # viewer関連==========================================================
@@ -31,27 +54,13 @@ Rails.application.routes.draw do
     registrations: 'viewers/registrations'
   }
 
-  namespace :viewers do
-    resources :dash_boards, only: [:index]
-    resource :profile, except: %i[create new]
-  end
-
   resources :viewers do
+    member do
+      scope module: :viewers do
+        resource :unsubscribe, only: %i[show update], as: :viewers_unsubscribe
+      end
+    end
   end
-  # =================================================================
-
-  # user関連=======================================================
-  devise_for :users, controllers: {
-    sessions:      'users/sessions',
-    passwords:     'users/passwords',
-    confirmations: 'users/confirmations',
-    registrations: 'users/registrations'
-  }
-
-  resources :users do
-  end
-
-  post 'users_create', to: 'users#create'
   # =================================================================
 
   # video関連=========================================================

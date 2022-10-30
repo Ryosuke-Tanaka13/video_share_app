@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_21_125509) do
+ActiveRecord::Schema.define(version: 2022_09_07_213435) do
 
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "comment", null: false
@@ -34,16 +34,19 @@ ActiveRecord::Schema.define(version: 2022_08_21_125509) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "loginless_viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
+  create_table "organization_viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "organization_id", null: false
+    t.bigint "viewer_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["organization_id"], name: "index_organization_viewers_on_organization_id"
+    t.index ["viewer_id"], name: "index_organization_viewers_on_viewer_id"
   end
 
   create_table "organizations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
+    t.boolean "is_valid", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -121,7 +124,8 @@ ActiveRecord::Schema.define(version: 2022_08_21_125509) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "name"
     t.integer "role", default: 0, null: false
-    t.bigint "organization_id", null: false
+    t.integer "organization_id", default: 1, null: false
+    t.boolean "is_valid", default: true, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
@@ -166,6 +170,7 @@ ActiveRecord::Schema.define(version: 2022_08_21_125509) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name"
+    t.boolean "is_valid", default: true, null: false
     t.index ["confirmation_token"], name: "index_viewers_on_confirmation_token", unique: true
     t.index ["email"], name: "index_viewers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_viewers_on_reset_password_token", unique: true
@@ -183,4 +188,6 @@ ActiveRecord::Schema.define(version: 2022_08_21_125509) do
   add_foreign_key "users", "organizations"
   add_foreign_key "videos", "organizations"
   add_foreign_key "videos", "users"
+  add_foreign_key "organization_viewers", "organizations"
+  add_foreign_key "organization_viewers", "viewers"
 end

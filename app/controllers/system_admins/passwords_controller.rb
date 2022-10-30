@@ -2,7 +2,7 @@
 
 module SystemAdmins
   class PasswordsController < Devise::PasswordsController
-    layout 'system_admins'
+    layout 'system_admins_auth'
     # GET /resource/password/new
     # def new
     #   super

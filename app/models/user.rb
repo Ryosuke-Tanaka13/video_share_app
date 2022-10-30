@@ -9,10 +9,18 @@ class User < ApplicationRecord
 
   has_many :comments
 
-  enum role: { video_contributor: 0, owner: 1 }
+  # 初期値 owner
+  enum role: { owner: 0, staff: 1 }
 
   belongs_to :organization
+
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validates :name,  presence: true, length: { in: 1..10 }
+
+  # 引数のorganization_idと一致するuserの絞り込み
+  scope :current_owner_has, ->(current_user) { where(organization_id: current_user.organization_id) }
+  scope :user_has, ->(organization_id) { includes([:organization]).where(organization_id: organization_id) }
+  # 退会者は省く絞り込み
+  scope :subscribed, -> { where(is_valid: true) }
 end
