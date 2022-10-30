@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>test</title>
+  </head>
+  <body>
+    <div id="container">
+      <h1>WebRTC - MediaStream Recording</h1>
+      <button id="stream">get stream</button>
+      <select id="camera_list" size="1" style="width:160pt;">
+        <option>(video)</option>
+      </select>
+      <select id="mic_list" size="1" style="width:160pt;">
+        <option>(audio)</option>
+      </select>
+      <button id="start_video_button" >Start Selected Video/Audio</button><br />
+      <button id="record" disabled>録画開始</button>
+      <button id="play" disabled>再生</button>
+      <button id="download" disabled>ダウンロード</button><br/>
+      <h3>canvas</h3><br/>
+      <canvas id="canvas" width="640px" height="360px" style="object-fit: contain;">
+        <video id="local" playsinline autoplay></video>
+        <video id="video" autoplay></video>
+      </canvas><br>
+      <h3>canvasから取得したStream</h3><br/>
+      <video id="player-canvas" controls autoplay width="640px" height="360px"></video><br>
+      <audio id="player" controls autoplay></audio> <br />
+      <input type="range" id="volume">
+      <video id="recorded" playsinline width="480" height="270" style="object-fit: contain;" loop></video>
+      <script src="../recording.js" async></script>
+    </div>
+  </body>
+</html>

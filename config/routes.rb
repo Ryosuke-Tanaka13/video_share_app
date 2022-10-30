@@ -62,5 +62,11 @@ Rails.application.routes.draw do
   # =================================================================
 
   # 追記
-  resources :videos
+  resources :videos do
+    collection do
+      scope module: :videos do
+        resource :recording
+      end
+    end
+  end
 end
