@@ -90,12 +90,31 @@ ja:
         password: 投稿者のパスワード
         email: 投稿者のEメール
         name: 投稿者の名前
-        updated_at: 更新日  
+        updated_at: 更新日
+      video:
+        id: ID
+        title: タイトル
+        video: ビデオ
+        audience_rate: 視聴率
+        open_period: 公開期間
+        range: 動画公開範囲
+        comment_public: コメント公開範囲
+        login_set: ログイン有無設定
+        popup_before_video: 動画視聴開始時ポップアップ表示
+        popup_after_video: 動画視聴終了時ポップアップ表示
+        data_url: 動画データURL
+        organization_id: 組織ID
+        organization: 組織
+        user_id: 動画投稿者ID
+        user: 投稿者
+        created_at: 作成日
+        updated_at: 更新日
     models:
       system_admin: システム管理者
       user: 投稿者
       viewer: 視聴者
       organization: 組織
+      video: 動画
   shared:
       links:
         back: 戻る
@@ -398,4 +417,3 @@ ja:
       not_saved:
         one: エラーが発生したため %{resource} は保存されませんでした。
         other: "%{count} 件のエラーが発生したため %{resource} は保存されませんでした。"
-  

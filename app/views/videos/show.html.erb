@@ -1,0 +1,19 @@
+<% provide(:title,  "ビデオ詳細") %>
+<div class="content">
+  <div class="video-display-show">
+    <!-- vimeoの動画詳細ページのパスから、id部分のみを取得し、数字型に変換したものをsrcの中に記載 -->
+    <iframe src="https://player.vimeo.com/video/<%= @video.data_url[8..17].to_i %>" width="1000px" height="500px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+    </iframe>
+  </div>
+  <div class="video-title-and-action-show">
+    <%= @video.title %><br>
+    <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
+    <% if @video.is_valid == true %>
+      <%= link_to "削除", videos_hidden_path(@video), class: "btn btn-danger" if system_admin_signed_in? || current_user.present? && current_user.role == "owner" %>
+    <% else %>
+      <p>オーナー削除済み</p>
+    <% end %>
+  </div>
+</div>
+
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

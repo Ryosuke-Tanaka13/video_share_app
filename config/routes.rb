@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       end
     end
   end
+
   # =================================================================
 
   # system_admin関連=========================================================
@@ -69,4 +70,11 @@ Rails.application.routes.draw do
   # トップページ
   root 'use#top'
   # =================================================================
+
+  resources :videos
+  # 動画の論理削除(データは残すが表示しないという意味でhiddensコントローラと命名)
+  scope module: :videos do
+    get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
+    patch 'videos/:id/withdraw' => 'hiddens#withdraw', as: :videos_withdraw
+  end
 end
