@@ -31,22 +31,22 @@ RSpec.describe 'Comments', type: :request do
         it 'コメントが新規作成される' do
           expect {
             post video_comments_path(video_id: user_comment.video_id),
-            params: {
-              comment: {
-                comment: '動画投稿者のコメント'
+              params: {
+                comment: {
+                  comment: '動画投稿者のコメント'
+                }
               }
-            }
           }.to change(Comment, :count).by(1)
         end
 
         it 'videos#showにリダイレクトされる' do
           expect(
-            post video_comments_path(video_id: user_comment.video_id),
-            params: {
-              comment: {
-                comment: '動画投稿者のコメント'
-              }
-            }
+            post(video_comments_path(video_id: user_comment.video_id),
+              params: {
+                comment: {
+                  comment: '動画投稿者のコメント'
+                }
+              })
           ).to redirect_to video_path(video)
         end
       end
@@ -60,22 +60,22 @@ RSpec.describe 'Comments', type: :request do
       it 'コメントが新規作成される' do
         expect {
           post video_comments_path(video_id: viewer_comment.video_id),
-          params: {
-            comment: {
-              comment: '動画視聴者のコメント'
+            params: {
+              comment: {
+                comment: '動画視聴者のコメント'
+              }
             }
-          }
         }.to change(Comment, :count).by(1)
       end
 
       it 'videos#showにリダイレクトされる' do
         expect(
-          post video_comments_path(video_id: viewer_comment.video_id),
-          params: {
-            comment: {
-              comment: '動画視聴者のコメント'
-            }
-          }
+          post(video_comments_path(video_id: viewer_comment.video_id),
+            params: {
+              comment: {
+                comment: '動画視聴者のコメント'
+              }
+            })
         ).to redirect_to video_path(video)
       end
     end
@@ -89,11 +89,11 @@ RSpec.describe 'Comments', type: :request do
         it 'コメントが空白だと新規作成されない' do
           expect {
             post video_comments_path(video_id: user_comment.video_id),
-            params: {
-              comment: {
-                comment: ''
-              }, format: :js
-            }
+              params: {
+                comment: {
+                  comment: ''
+                }, format: :js
+              }
           }.not_to change(Comment, :count)
         end
       end
@@ -106,11 +106,11 @@ RSpec.describe 'Comments', type: :request do
         it 'コメントが空白だと新規作成されない' do
           expect {
             post video_comments_path(video_id: viewer_comment.video_id),
-            params: {
-              comment: {
-                comment: ''
-              }, format: :js
-            }
+              params: {
+                comment: {
+                  comment: ''
+                }, format: :js
+              }
           }.not_to change(Comment, :count)
         end
       end
