@@ -110,10 +110,3 @@ organization_viewer = OrganizationViewer.new(
 organization_viewer.save!
 
 # =================================================================
-# video関連 ========================================================
-Video.create!(
-  video: 'https//www.youtube.com',
-  title: 'テスト動画',
-  user_id: 1,
-  organization_id: 1
-)

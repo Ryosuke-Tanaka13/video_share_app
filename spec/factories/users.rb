@@ -19,7 +19,7 @@ FactoryBot.define do
     role             { 'owner' }
   end
 
-  factory :user_staff, class: 'User' do
+  factory :user, aliases: [:user_staff] do
     id               { 3 }
     name             { 'スタッフ' }
     email            { 'staff_spec@example.com' }
@@ -43,15 +43,6 @@ FactoryBot.define do
     email            { 'staff_spec2@example.com' }
     password         { 'password' }
     organization_id  { 2 }
-    role             { 'staff' }
-  end
-
-  factory :user, class: 'User' do
-    id               { 6 }
-    name             { 'ユーザー' }
-    email            { 'user_sprec1@example.com' }
-    password         { 'password' }
-    organization_id  { 1 }
     role             { 'staff' }
   end
 end

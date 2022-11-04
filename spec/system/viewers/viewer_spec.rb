@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'ViewerSystem', type: :system do
+RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -29,7 +29,7 @@ RSpec.describe 'ViewerSystem', type: :system do
       viewer
     end
 
-    describe 'システム管理者' do
+    describe '視聴者' do
       before(:each) do
         login(viewer)
         current_viewer(viewer)
@@ -38,13 +38,18 @@ RSpec.describe 'ViewerSystem', type: :system do
 
       it 'レイアウト' do
         expect(page).to have_link viewer.name
-        expect(page).to have_link '動画一覧'
+        expect(page).to have_link 'セレブエンジニア動画一覧'
         expect(page).to have_link 'アカウント編集'
       end
 
       it '自身の名前への遷移' do
         click_link viewer.name, match: :first
         expect(page).to have_current_path viewer_path(viewer), ignore_query: true
+      end
+
+      it '動画一覧への遷移' do
+        click_link 'セレブエンジニア動画一覧', match: :first
+        expect(page).to have_current_path videos_path, ignore_query: true
       end
 
       it 'アカウント編集への遷移' do

@@ -74,6 +74,11 @@ RSpec.describe 'UserSystem', type: :system do
         expect(page).to have_current_path organization_folders_path(organization), ignore_query: true
       end
 
+      it '動画投稿への遷移' do
+        click_link '動画投稿'
+        expect(page).to have_current_path new_video_path, ignore_query: true
+      end
+
       it '投稿者一覧への遷移' do
         click_link '投稿者一覧'
         expect(page).to have_current_path users_path, ignore_query: true
@@ -122,6 +127,11 @@ RSpec.describe 'UserSystem', type: :system do
       it '動画フォルダ一覧への遷移' do
         click_link '動画フォルダ一覧'
         expect(page).to have_current_path organization_folders_path(organization), ignore_query: true
+      end
+
+      it '動画投稿への遷移' do
+        click_link '動画投稿'
+        expect(page).to have_current_path new_video_path, ignore_query: true
       end
 
       it '視聴者一覧への遷移' do
