@@ -134,6 +134,5 @@ class VideosController < ApplicationController
       flash[:danger] = 'すでに削除された動画です。'
       redirect_back(fallback_location: root_url)
     end
->>>>>>> 4e175c478bd37278a42a7574c5aa2cb6c7a8a010
   end
 end
