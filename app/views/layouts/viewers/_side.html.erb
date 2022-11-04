@@ -17,16 +17,18 @@
     </div>
 
     <!-- Sidebar Menu -->
-    <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+    <nav class="mt-2">   
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"> 
+        <% current_viewer.organization_viewers.includes([:organization]).each do |organization_viewer| %>
         <li class="nav-item">
-          <%= link_to "#", class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
+          <%= link_to videos_path(organization_id: organization_viewer.organization_id), class:"nav-link" do %>  
+            <i class="nav-icon fas fa-th"></i> 
             <p>
-              動画一覧
+              <%= organization_viewer.organization.name %><br><span class="ml-5">動画一覧</span>
             </p>
           <% end %>
         </li>
+        <% end %>
         <li class="nav-item">
           <%= link_to edit_viewer_path(current_viewer), class:"nav-link" do %>
             <i class="nav-icon fas fa-th"></i>

@@ -40,6 +40,9 @@ gem 'rails-i18n', '~> 6.0'
 gem 'dotenv-rails'
 gem 'font-awesome-rails'
 
+gem 'activestorage-validator'
+gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
+
 group :development, :test do
   # ERD生成
   gem 'rails-erd'
@@ -86,6 +89,9 @@ group :test do
 
   # request specツール
   gem 'rails-controller-testing'
+
+  gem 'vcr'
+  gem 'webmock'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
