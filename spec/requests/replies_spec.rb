@@ -3,21 +3,21 @@ require 'rails_helper'
 RSpec.describe 'Replies', type: :request do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization_id: organization.id) }
-  let(:user_staff) { create(:user_staff, organization_id: organization.id) }
+  let(:user_staff1) { create(:user_staff1, organization_id: organization.id) }
   let(:viewer) { create(:viewer) }
   let(:another_viewer) { create(:another_viewer) }
-  let(:video) { create(:video, organization_id: organization.id, user_id: user.id) }
-  let(:comment) { create(:comment, organization_id: organization.id, video_id: video.id) }
+  let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id) }
+  let(:comment) { create(:comment, organization_id: organization.id, video_id: video_it.id) }
   let(:user_reply) { create(:user_reply, organization_id: user.organization_id, comment_id: comment.id, user_id: user.id) }
   let(:viewer_reply) { create(:viewer_reply, organization_id: user.organization_id, comment_id: comment.id) }
 
   before(:each) do
     organization
     user
-    user_staff
+    user_staff1
     viewer
     another_viewer
-    video
+    video_it
     comment
     user_reply
     viewer_reply
@@ -32,7 +32,7 @@ RSpec.describe 'Replies', type: :request do
 
         it '返信が新規作成される' do
           expect {
-            post video_comment_replies_path(video_id: video.id, comment_id: user_reply.comment_id),
+            post video_comment_replies_path(video_id: video_it.id, comment_id: user_reply.comment_id),
               params: {
                 reply: {
                   reply: '動画投稿者の返信'
@@ -43,13 +43,13 @@ RSpec.describe 'Replies', type: :request do
 
         it 'videos#showにリダイレクトされる' do
           expect(
-            post(video_comment_replies_path(video_id: video.id, comment_id: user_reply.comment_id),
+            post(video_comment_replies_path(video_id: video_it.id, comment_id: user_reply.comment_id),
               params: {
                 reply: {
                   reply: '動画投稿者の返信'
                 }
               })
-          ).to redirect_to video_path(video.id)
+          ).to redirect_to video_path(video_it.id)
         end
       end
     end
@@ -61,7 +61,7 @@ RSpec.describe 'Replies', type: :request do
 
       it '返信が新規作成される' do
         expect {
-          post video_comment_replies_path(video_id: video.id, comment_id: viewer_reply.comment_id),
+          post video_comment_replies_path(video_id: video_it.id, comment_id: viewer_reply.comment_id),
             params: {
               reply: {
                 reply: '動画視聴者のコメント'
@@ -72,13 +72,13 @@ RSpec.describe 'Replies', type: :request do
 
       it 'videos#showにリダイレクトされる' do
         expect(
-          post(video_comment_replies_path(video_id: video.id, comment_id: viewer_reply.comment_id),
+          post(video_comment_replies_path(video_id: video_it.id, comment_id: viewer_reply.comment_id),
             params: {
               reply: {
                 reply: '動画視聴者の返信'
               }
             })
-        ).to redirect_to video_path(video)
+        ).to redirect_to video_path(video_it)
       end
     end
 
@@ -90,7 +90,7 @@ RSpec.describe 'Replies', type: :request do
 
         it '返信が空白だと新規作成されない' do
           expect {
-            post video_comment_replies_path(video_id: video.id, comment_id: viewer_reply.comment_id),
+            post video_comment_replies_path(video_id: video_it.id, comment_id: viewer_reply.comment_id),
               params: {
                 reply: {
                   reply: ''
@@ -107,7 +107,7 @@ RSpec.describe 'Replies', type: :request do
 
         it '返信が空白だと新規作成されない' do
           expect {
-            post video_comment_replies_path(video_id: video.id, comment_id: viewer_reply.comment_id),
+            post video_comment_replies_path(video_id: video_it.id, comment_id: viewer_reply.comment_id),
               params: {
                 reply: {
                   reply: ''
@@ -128,7 +128,7 @@ RSpec.describe 'Replies', type: :request do
       describe '正常' do
         it '返信がアップデートされる' do
           expect {
-            patch video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+            patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
               params: {
                 reply: {
                   reply: '動画投稿者のアップデート返信'
@@ -139,20 +139,20 @@ RSpec.describe 'Replies', type: :request do
 
         it 'videos#showにリダイレクトされる' do
           expect(
-            patch(video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+            patch(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
               params: {
                 reply: {
                   reply: '動画投稿者のアップデート返信'
                 }
               })
-          ).to redirect_to video_path(video)
+          ).to redirect_to video_path(video_it)
         end
       end
 
       describe '異常' do
         it '返信が空白ではアップデートされない' do
           expect {
-            patch video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+            patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
               params: {
                 reply: {
                   reply: ''
@@ -166,13 +166,13 @@ RSpec.describe 'Replies', type: :request do
 
   describe '別の動画投稿者' do
     before(:each) do
-      current_user(user_staff)
+      current_user(user_staff1)
     end
 
     describe '異常' do
       it '別の動画投稿者はアップデートできない' do
         expect {
-          patch video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+          patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
             params: {
               reply: {
                 reply: '別の動画投稿者の返信'
@@ -191,7 +191,7 @@ RSpec.describe 'Replies', type: :request do
     describe '異常' do
       it '別の動画視聴者はアップデートできない' do
         expect {
-          patch video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+          patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
             params: {
               reply: {
                 reply: '別の動画視聴者の返信'
@@ -211,33 +211,33 @@ RSpec.describe 'Replies', type: :request do
       describe '正常' do
         it '返信を削除する' do
           expect {
-            delete video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+            delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
               params: { id: user_reply.id }
           }.to change(Reply, :count).by(-1)
         end
 
         it 'videos#showにリダイレクトされる' do
           expect(
-            delete(video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+            delete(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
               params: {
                 reply: {
                   reply: '動画投稿者の返信'
                 }
               })
-          ).to redirect_to video_path(video)
+          ).to redirect_to video_path(video_it)
         end
       end
     end
 
     describe '返信作成者以外の別の動画投稿者が現在のログインユーザ' do
       before(:each) do
-        current_user(user_staff)
+        current_user(user_staff1)
       end
 
       describe '異常' do
         it '別の動画投稿者は削除できない' do
           expect {
-            delete video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+            delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
               params: { id: user_reply.id }
           }.not_to change(Reply, :count)
         end
@@ -252,7 +252,7 @@ RSpec.describe 'Replies', type: :request do
       describe '異常' do
         it '別の動画視聴者は削除できない' do
           expect {
-            delete video_comment_reply_path(video_id: video.id, comment_id: user_reply.comment_id, id: user_reply.id),
+            delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
               params: { id: user_reply.id }
           }.not_to change(Comment, :count)
         end

@@ -3,18 +3,18 @@ require 'rails_helper'
 RSpec.describe 'Comments', type: :request do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization_id: organization.id) }
-  let(:video) { create(:video, organization_id: organization.id, user_id: user.id) }
-  let(:user_staff) { create(:user_staff, organization_id: organization.id) }
+  let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id) }
+  let(:user_staff1) { create(:user_staff1, organization_id: organization.id) }
   let(:viewer) { create(:viewer) }
   let(:another_viewer) { create(:another_viewer) }
-  let(:user_comment) { create(:user_comment, organization_id: user.organization_id, video_id: video.id, user_id: user.id) }
-  let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video.id, viewer_id: viewer.id) }
+  let(:user_comment) { create(:user_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user.id) }
+  let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video_it.id, viewer_id: viewer.id) }
 
   before(:each) do
     organization
     user
-    video
-    user_staff
+    video_it
+    user_staff1
     viewer
     another_viewer
     user_comment
@@ -47,7 +47,7 @@ RSpec.describe 'Comments', type: :request do
                   comment: '動画投稿者のコメント'
                 }
               })
-          ).to redirect_to video_path(video)
+          ).to redirect_to video_path(video_it)
         end
       end
     end
@@ -76,7 +76,7 @@ RSpec.describe 'Comments', type: :request do
                 comment: '動画視聴者のコメント'
               }
             })
-        ).to redirect_to video_path(video)
+        ).to redirect_to video_path(video_it)
       end
     end
 
@@ -143,7 +143,7 @@ RSpec.describe 'Comments', type: :request do
                   comment: '動画投稿者のアップデートコメント'
                 }
               })
-          ).to redirect_to video_path(video)
+          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -186,7 +186,7 @@ RSpec.describe 'Comments', type: :request do
                   comment: '動画視聴者のアップデートコメント'
                 }
               })
-          ).to redirect_to video_path(video)
+          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -206,7 +206,7 @@ RSpec.describe 'Comments', type: :request do
 
     describe '別の動画投稿者' do
       before(:each) do
-        current_user(user_staff)
+        current_user(user_staff1)
       end
 
       describe '異常' do
@@ -264,13 +264,13 @@ RSpec.describe 'Comments', type: :request do
                   comment: '動画投稿者のコメント'
                 }
               })
-          ).to redirect_to video_path(video)
+          ).to redirect_to video_path(video_it)
         end
       end
 
       describe 'コメント作成者以外の別の動画投稿者が現在のログインユーザ' do
         before(:each) do
-          current_user(user_staff)
+          current_user(user_staff1)
         end
 
         describe '異常' do

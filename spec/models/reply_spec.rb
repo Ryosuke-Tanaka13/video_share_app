@@ -4,8 +4,8 @@ RSpec.describe Reply, type: :model do
   let(:organization) { create(:organization) }
   let(:user) { create(:user, organization_id: organization.id) }
   let(:viewer) { create(:viewer) }
-  let(:video) { create(:video, organization_id: organization.id, user_id: user.id) }
-  let(:comment) { create(:comment, organization_id: organization.id, video_id: video.id) }
+  let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id) }
+  let(:comment) { create(:comment, organization_id: organization.id, video_id: video_it.id) }
   let(:user_reply) { create(:user_reply, organization_id: user.organization_id, comment_id: comment.id) }
   let(:viewer_reply) { create(:viewer_reply, organization_id: user.organization_id, comment_id: comment.id) }
 
@@ -13,7 +13,7 @@ RSpec.describe Reply, type: :model do
     organization
     user
     viewer
-    video
+    video_it
     comment
     user_reply
     viewer_reply
