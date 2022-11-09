@@ -46,9 +46,12 @@ class OrganizationsController < ApplicationController
       videos.each do |video|
         vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], video.data_url)
         vimeo_video.destroy
-        video.delete
       end
     end
+    @organization.destroy!
+    flash[:danger] = "#{@organization.name}を削除しました"
+    redirect_to organizations_url
+  rescue VimeoMe2::RequestFailed
     @organization.destroy!
     flash[:danger] = "#{@organization.name}を削除しました"
     redirect_to organizations_url
