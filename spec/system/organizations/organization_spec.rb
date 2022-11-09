@@ -5,6 +5,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:user_staff1) { create(:user_staff1, confirmed_at: Time.now) }
+  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
@@ -18,6 +19,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
     user_owner
     user_staff
     user_staff1
+    video_sample
     another_organization
     another_user_owner
     another_user_staff
@@ -218,7 +220,7 @@ RSpec.describe 'OrganizationSystem', type: :system do
             expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアの組織情報を削除します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.accept
             expect(page).to have_content 'セレブエンジニアを削除しました'
-          }.to change(Organization, :count).by(-1)
+          }.to change(Organization, :count).by(-1) && change(Video, :count).by(-1)
         end
 
         it 'another_organization削除キャンセル' do
