@@ -1,24 +1,26 @@
 module CommentReply
   extend ActiveSupport::Concern
 
-  # 現在ログインしているアカウントをセット(システム管理者を除く)
+  # 現在ログインしているアカウントをセット
   def set_account
-    if current_user.present?
+    if current_system_admin.present?
+      @account = current_system_admin
+    elsif current_user.present?
       @account = current_user
     elsif current_viewer.present?
       @account = current_viewer
     end
   end
 
-  # ログインしているか判定(システム管理者を除く)
+  # ログインしているか判定
   def account_logged_in?
-    current_user.present? || current_viewer.present?
+    current_system_admin.present? || current_user.present? || current_viewer.present?
   end
 
-  # 動画投稿者または動画視聴者のみ許可
-  def ensure_user_or_viewer
+  # システム管理者、動画投稿者、動画視聴者のみ許可
+  def ensure_admin_user_or_viewer
     @video = Video.find(params[:video_id])
-    if current_user.blank? && current_viewer.blank?
+    if current_system_admin.present? && current_user.present? && current_viewer.present?
       redirect_to video_url(@video.id), flash: { danger: '権限がありません' }
     end
   end

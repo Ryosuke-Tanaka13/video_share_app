@@ -11,7 +11,9 @@
     <div class="content-show-comment-bottom-top-user">
       <!-- アカウントのアイコンを表示 -->
       <div class="content-show-comment-bottom-top-user-icon">
-        <% if comment.user.present? && comment.user.image.present? %>
+        <% if comment.system_admin.present? && comment.system_admin.image.present? %>
+          <%= image_tag comment.system?_admin.image.url, fallback: "default.png", class:"comment-image", size: "40x40" %>
+        <% elsif comment.user.present? && comment.user.image.present? %>
           <%= image_tag comment.user.image.url, fallback: "default.png", class:"comment-image", size: "40x40" %>
         <% elsif comment.viewer.present? && comment.viewer.image.present? %> 
           <%= image_tag comment.viewer.image.url, fallback: "default.png", class:"comment-image",size: "40x40" %>
@@ -19,7 +21,9 @@
       </div> 
       <!-- アカウントの名前を表示 -->
       <div class="content-show-comment-bottom-top-user-name">
-        <% if comment.user.present? && comment.user.name.present? %>
+        <% if comment.system_admin.present? && comment.system_admin.name.present? %>
+          <%= comment.system_admin.name %>さん
+        <% elsif comment.user.present? && comment.user.name.present? %>
           <%= comment.user.name %>さん
         <% elsif comment.viewer.present? && comment.viewer.name.present? %>
           <%= comment.viewer.name %>さん
@@ -32,7 +36,7 @@
       <!-- 編集ボタン、削除ボタンを表示 -->
       <div class="content-show-comment-bottom-top-icons">
       <!-- ログイン済みかつコメントしたアカウント本人であれば編集、削除ボタンを表示 -->
-        <% if account_logged_in? && (comment.user_id == @account.id || comment.viewer_id == @account.id) %>
+        <% if account_logged_in? && (comment.system_admin_id == @account.id || comment.user_id == @account.id || comment.viewer_id == @account.id) %>
           <div data-comment-id='<%= comment.id %>' class="js-edit-comment-button">
             <i class="fas fa-edit text-primary"></i>
           </div><br>
@@ -99,7 +103,7 @@
             <!-- 返信編集ボタン、削除ボタンを表示 -->
             <div class="content-show-comment-bottom-view-reply-top-icons">
               <!-- ログイン済みかつ返信したアカウントの場合、編集ボタン、削除ボタンを表示 -->
-              <% if account_logged_in? && (reply.user_id == @account.id || reply.viewer_id == @account.id) %>
+              <% if account_logged_in? && (reply.system_admin_id == @account.id ||reply.user_id == @account.id || reply.viewer_id == @account.id) %>
                 <div data-reply-id='<%= reply.id %>' class="js-edit-reply-button">
                   <i class="fas fa-edit text-primary"></i>
                 </div><br>

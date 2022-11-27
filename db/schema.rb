@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
 
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "comment", null: false
+    t.bigint "system_admin_id"
     t.bigint "user_id"
     t.bigint "viewer_id"
     t.bigint "organization_id", null: false
@@ -49,6 +50,7 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["organization_id"], name: "index_comments_on_organization_id"
+    t.index ["system_admin_id"], name: "index_comments_on_system_admin_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
     t.index ["video_id"], name: "index_comments_on_video_id"
     t.index ["viewer_id"], name: "index_comments_on_viewer_id"
@@ -83,6 +85,7 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
   create_table "replies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "reply", null: false
     t.bigint "organization_id", null: false
+    t.bigint "system_admin_id"
     t.bigint "user_id"
     t.bigint "viewer_id"
     t.bigint "comment_id", null: false
@@ -90,6 +93,7 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["comment_id"], name: "index_replies_on_comment_id"
     t.index ["organization_id"], name: "index_replies_on_organization_id"
+    t.index ["system_admin_id"], name: "index_replies_on_system_admin_id"
     t.index ["user_id"], name: "index_replies_on_user_id"
     t.index ["viewer_id"], name: "index_replies_on_viewer_id"
   end
@@ -217,6 +221,7 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "organizations"
+  add_foreign_key "comments", "system_admins"
   add_foreign_key "comments", "users"
   add_foreign_key "comments", "videos"
   add_foreign_key "comments", "viewers"
@@ -225,6 +230,7 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
   add_foreign_key "organization_viewers", "viewers"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"
+  add_foreign_key "replies", "system_admins"
   add_foreign_key "replies", "users"
   add_foreign_key "replies", "viewers"
   add_foreign_key "users", "organizations"
