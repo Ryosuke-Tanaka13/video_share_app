@@ -208,7 +208,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
         end
       end
 
-      describe '動画投稿者' do
+      describe '動画投稿者本人' do
         before(:each) do
           login(user_staff)
           current_user(user_staff)
@@ -224,7 +224,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
         end
 
         it 'フォルダ内から削除' do
-          find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+          find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[2]/div[2]/a[2]').click
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります'
             page.driver.browser.switch_to.alert.accept
@@ -233,7 +233,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
         end
 
         it 'フォルダ内から削除キャンセル' do
-          find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+          find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[2]/div[2]/a[2]').click
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります'
             page.driver.browser.switch_to.alert.dismiss
