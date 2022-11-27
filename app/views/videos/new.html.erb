@@ -3,7 +3,7 @@
   <%= form_with(model: @video, url:videos_path, local:true ) do |f| %>
     <%= render '/shared/error_messages', object: f.object %>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-7">
         <div class="field">
           <%= f.label :video %><br>
           <%= f.file_field :video, accept: "video/*", id:"post" %> 
@@ -13,7 +13,7 @@
         <!--ここにプレビュー表示-->
         <div id="show"></div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5 video-info">
         <div class="field">
           <%= f.label :title, class: "video-label" %><br>
           <%= f.text_field :title, id: "title" %><br>
@@ -44,10 +44,10 @@
         </div>
         <div class="field">
           <%= f.label :folders, class: "video-label" %><br>
-          <%= collection_check_boxes(:video, :folder_ids, Folder.current_owner_has(current_user), :id, :name) do |b| %>
+          <%= collection_check_boxes(:video, :folder_ids, Folder.current_user_has(current_user).includes([:organization]), :id, :name) do |b| %>
             <%= b.label { b.check_box + b.text } %>
           <% end %><br>
-          <%= link_to "フォルダ新規作成はこちら", new_folder_path, remote: true %>
+          <%= link_to "フォルダ新規作成はこちら", new_organization_folder_path(organization_id: current_user.organization.id), remote: true %>
         </div>
         <div class="video-post-actions">
           <%= f.submit "新規投稿", class: "btn btn-success"%>

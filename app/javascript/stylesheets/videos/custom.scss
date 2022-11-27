@@ -1,6 +1,6 @@
 @mixin videoBox{
   height: 300px;
-  width: 900px;
+  width: 600px;
   // ホーバー時に、マウスキーをカーソル型に変形
   cursor: pointer;
   // これがないと、後述のz-indexが効かない
@@ -29,13 +29,13 @@
 
 #show{
   height: 300px;
-  width: 900px;
+  width: 600px;
   border: 2px solid #333;
   position:absolute;
   top:300px;
   video{
     height: 296px;
-    width: 896px;
+    width: 596px;
     object-fit: cover;
   }
 }
@@ -48,9 +48,16 @@
   margin-top:20px;
 }
 
+.video-info{
+  z-index: 3;
+}
+
 // videos#indexページ
-.video-index{
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
+.video-title-and-action-index{
+  margin-left:10px;
+}
+
+// videos#showページ
+.video-title-and-action-show{
+  margin-left:50px;
 }

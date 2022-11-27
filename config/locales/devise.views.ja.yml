@@ -73,7 +73,6 @@ ja:
         unconfirmed_email: 未確認Eメール
         unlock_token: ロック解除用トークン
         updated_at: 更新日
-      loginless_viewer:
         created_at: 作成日
         current_password: 現在のパスワード
         email: Eメール
@@ -81,7 +80,16 @@ ja:
       organization:
         created_at: 作成日
         current_password: 現在のパスワード
-        email: Eメール
+        email: 組織のEメール
+        name: 組織名
+        updated_at: 更新日
+      organization/users:
+        created_at: 作成日
+        current_password: 現在のパスワード
+        password_confirmation: 投稿者のパスワード（確認用）
+        password: 投稿者のパスワード
+        email: 投稿者のEメール
+        name: 投稿者の名前
         updated_at: 更新日
       video:
         id: ID
@@ -94,6 +102,7 @@ ja:
         login_set: ログイン有無設定
         popup_before_video: 動画視聴開始時ポップアップ表示
         popup_after_video: 動画視聴終了時ポップアップ表示
+        data_url: 動画データURL
         organization_id: 組織ID
         organization: 組織
         user_id: 動画投稿者ID
@@ -105,7 +114,6 @@ ja:
       system_admin: システム管理者
       user: 投稿者
       viewer: 視聴者
-      loginless_viewer: ログインなし視聴者
       organization: 組織
       video: 動画
   shared:

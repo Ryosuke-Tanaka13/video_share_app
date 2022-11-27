@@ -1,13 +1,21 @@
 <% provide(:title,  "ビデオ一覧") %>
-<div class="content">
+<div class="content">  
   <% @organization_videos.each do |organization_video| %>
-    <video class="video-index" controls>
-      <source src="<%= url_for(organization_video.video) %>"> 
-    </video><br>
-    <%= link_to organization_video.title, video_path(organization_video) %>
-    <% if current_user.role == 'owner' %> 
-      <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？"} %><br> 
-    <% end %>
-  <% end %>
+    <div style="float:left;margin:15px;"> 
+      <div class="video-display-index">
+        <iframe src="https://player.vimeo.com/video/<%= organization_video.data_url[8..17].to_i %>" width="200px" height="100px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+        </iframe>
+      </div>
+      <div class="video-title-and-action-index">
+        <%= link_to organization_video.title, video_path(organization_video) %>
+        <% if organization_video.is_valid == false %>
+          <span>オーナー削除済み</span>
+        <% end %><br>
+        <% if current_system_admin.present? %>   
+          <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？ この動画はvimeoからも完全に削除されます"}, class: "btn btn-danger mt-2" %><br> 
+        <% end %>  
+      </div>
+    </div>
+  <% end %> 
 </div>
 

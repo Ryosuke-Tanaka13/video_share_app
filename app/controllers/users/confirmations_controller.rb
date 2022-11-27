@@ -2,6 +2,7 @@
 
 module Users
   class ConfirmationsController < Devise::ConfirmationsController
+    layout 'users_auth'
     # GET /resource/confirmation/new
     # def new
     #   super
