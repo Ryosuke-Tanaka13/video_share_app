@@ -11,7 +11,9 @@ class Organizations::FoldersController < ApplicationController
     @folders = @organization.folders
   end
 
-  def show; end
+  def show
+    @videos = @folder.videos.available
+  end
 
   def new
     @folder = Folder.new
@@ -20,7 +22,11 @@ class Organizations::FoldersController < ApplicationController
   def create
     @folder = Folder.new(folder_params)
     if @folder.create(current_user)
-      redirect_to organization_folders_url, flash: { success: 'フォルダを作成しました！' }
+      if URI(request.referer.to_s).path == new_video_path
+        redirect_to new_video_path, flash: { success: 'フォルダを作成しました！' }
+      else
+        redirect_to organization_folders_path
+      end
     else
       render 'new'
     end

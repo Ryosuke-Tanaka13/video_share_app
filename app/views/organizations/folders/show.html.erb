@@ -1,0 +1,15 @@
+<% provide(:title,  "フォルダ詳細") %>
+<div class="content">
+  <% @videos.each do |video| %>
+    <div style="float:left;margin:15px;"> 
+      <div class="video-display-index">
+        <iframe src="https://player.vimeo.com/video/<%= video.data_url[8..17].to_i %>" width="200px" height="100px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+        </iframe>
+      </div>
+      <div class="video-title-and-action-index">
+        <%= link_to video.title, video_path(video) %><br> 
+        <%= link_to "フォルダ内から削除", video_video_folder_path(video, folder_id: @folder.id, organization_id: @organization.id), method: :delete, data:{confirm: "削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります"}, class: "btn btn-danger mt-2" %><br>   
+      </div>
+    </div>
+  <% end %>
+</div>
