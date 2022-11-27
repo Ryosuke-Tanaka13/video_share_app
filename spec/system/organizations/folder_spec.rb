@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'UsersSystem', type: :system, js: true do
+RSpec.xdescribe 'FolderSystem', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:system_admin) { create(:system_admin) }
@@ -10,6 +10,11 @@ RSpec.xdescribe 'UsersSystem', type: :system, js: true do
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
   let(:folder_other_owner) { create(:folder_other_owner, organization_id: another_user_owner.organization_id) }
+  # フォルダ選択機能の実装の際にここから追記
+  let(:video_sample) do
+    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
+  end
+  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
 
   before(:each) do
     organization
@@ -21,6 +26,8 @@ RSpec.xdescribe 'UsersSystem', type: :system, js: true do
     folder_celeb
     folder_tech
     folder_other_owner
+    video_sample
+    video_test
   end
 
   describe '正常' do
@@ -133,6 +140,109 @@ RSpec.xdescribe 'UsersSystem', type: :system, js: true do
       end
     end
   end
+
+  # フォルダ選択機能の実装の際にここから追記
+  describe '動画フォルダ詳細ページ' do
+    describe 'システム管理者' do
+      before(:each) do
+        login_system_admin(system_admin)
+        current_system_admin(system_admin)
+        visit organization_folder_path(folder_celeb.organization_id, folder_celeb.id)
+      end
+
+      it 'レイアウト' do
+        expect(page).to have_text 'サンプルビデオ'
+        expect(page).to have_link 'フォルダ内から削除'
+        expect(page).to have_text 'テストビデオ'
+        expect(page).to have_link 'フォルダ内から削除'
+        expect(page).to have_no_text 'ITビデオ'
+      end
+
+      it 'フォルダ内から削除' do
+        find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります'
+          page.driver.browser.switch_to.alert.accept
+          expect(page).to have_content '動画をフォルダ内から削除しました'
+        }.to change(VideoFolder, :count).by(-1)
+      end
+
+      it 'フォルダ内から削除キャンセル' do
+        find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります'
+          page.driver.browser.switch_to.alert.dismiss
+        }.not_to change(VideoFolder, :count)
+      end
+    end
+
+    describe '組織管理者' do
+      before(:each) do
+        login(user_owner)
+        current_user(user_owner)
+        visit organization_folder_path(folder_celeb.organization_id, folder_celeb.id)
+      end
+
+      it 'レイアウト' do
+        expect(page).to have_text 'サンプルビデオ'
+        expect(page).to have_link 'フォルダ内から削除'
+        expect(page).to have_text 'テストビデオ'
+        expect(page).to have_link 'フォルダ内から削除'
+        expect(page).to have_no_text 'ITビデオ'
+      end
+
+      it 'フォルダ内から削除' do
+        find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります'
+          page.driver.browser.switch_to.alert.accept
+          expect(page).to have_content '動画をフォルダ内から削除しました'
+        }.to change(VideoFolder, :count).by(-1)
+      end
+
+      it 'フォルダ内から削除キャンセル' do
+        find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります'
+          page.driver.browser.switch_to.alert.dismiss
+        }.not_to change(VideoFolder, :count)
+      end
+    end
+
+    describe '動画投稿者本人' do
+      before(:each) do
+        login(user_staff)
+        current_user(user_staff)
+        visit organization_folder_path(folder_celeb.organization_id, folder_celeb.id)
+      end
+
+      it 'レイアウト' do
+        expect(page).to have_text 'サンプルビデオ'
+        expect(page).to have_link 'フォルダ内から削除'
+        expect(page).to have_text 'テストビデオ'
+        expect(page).to have_link 'フォルダ内から削除'
+        expect(page).to have_no_text 'ITビデオ'
+      end
+
+      it 'フォルダ内から削除' do
+        find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[2]/div[2]/a[2]').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります'
+          page.driver.browser.switch_to.alert.accept
+          expect(page).to have_content '動画をフォルダ内から削除しました'
+        }.to change(VideoFolder, :count).by(-1)
+      end
+
+      it 'フォルダ内から削除キャンセル' do
+        find(:xpath, '//*[@id="organizations-folders-show"]/div[1]/div[1]/div[2]/div[2]/div[2]/a[2]').click
+        expect {
+          expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります'
+          page.driver.browser.switch_to.alert.dismiss
+        }.not_to change(VideoFolder, :count)
+      end
+    end
+  end
+  # ここまで追記
 
   describe '異常' do
     describe 'モーダル画面' do
