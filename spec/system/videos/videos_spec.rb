@@ -96,7 +96,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_button '設定を変更'
         expect(page).to have_button '閉じる'
         expect(page).to have_field 'title_edit', with: video_test.title
-        expect(page).to have_field 'open_period_edit', with: "2022-08-14T18:06"
+        expect(page).to have_field 'open_period_edit', with: '2022-08-14T18:06'
         expect(page).to have_select('range_edit', selected: '一般公開')
         expect(page).to have_select('comment_public_edit', selected: '公開')
         expect(page).to have_select('login_set_edit', selected: 'ログイン不要')
