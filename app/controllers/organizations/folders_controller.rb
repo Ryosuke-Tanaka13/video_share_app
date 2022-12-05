@@ -23,9 +23,9 @@ class Organizations::FoldersController < ApplicationController
     @folder = Folder.new(folder_params)
     if @folder.create(current_user)
       if URI(request.referer.to_s).path == new_video_path
-        redirect_to new_video_path, flash: { success: 'フォルダを作成しました！' }
+        redirect_to new_video_url, flash: { success: 'フォルダを作成しました！' }
       else
-        redirect_to organization_folders_path
+        redirect_to organization_folders_url, flash: { success: 'フォルダを作成しました！' }
       end
     else
       render 'new'
