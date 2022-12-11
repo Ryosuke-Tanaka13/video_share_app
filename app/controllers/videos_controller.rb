@@ -37,8 +37,8 @@ class VideosController < ApplicationController
       render :new
     end
   # アプリ側ではなく、vimeo側に原因があるエラーのとき(容量不足)
-  rescue StandardError
-    render :new
+  # rescue StandardError
+  #   render :new
   end
 
   def show; end
@@ -55,23 +55,27 @@ class VideosController < ApplicationController
   end
 
   def destroy
-    vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], @video.data_url)
-    vimeo_video.destroy
+    # vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], @video.data_url)
+    # vimeo_video.destroy
     @video.destroy
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)
-  rescue VimeoMe2::RequestFailed
-    @video.destroy
-    flash[:success] = '削除しました'
-    redirect_to videos_url(organization_id: @video.organization.id)
+  # rescue VimeoMe2::RequestFailed
+  #   @video.destroy
+  #   flash[:success] = '削除しました'
+  #   redirect_to videos_url(organization_id: @video.organization.id)
   end
 
   private
-
+  
   def video_params
     params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
-      :popup_after_video, :data_url)
+      :popup_after_video)
   end
+  # def video_params
+  #   params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
+  #     :popup_after_video, :data_url)
+  # end
 
   # 共通メソッド(organization::foldersコントローラにも記載)
   def set_organization
