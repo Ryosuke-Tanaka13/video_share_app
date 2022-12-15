@@ -304,3 +304,9 @@ RSpec/LetSetup:
 # instance_doubleを推奨する警告を無効化
 RSpec/VerifiedDoubles:
   Enabled: false
+
+# app/helpers/viewers/video_statuses_helper.rbでの警告、Metrics/AbcSize: Assignment Branch Condition size for culuculate_watched_ratio is too high. [<0, 82, 10> 82.61/50]への対応
+Metrics/AbcSize:
+  # The ABC size is a calculated magnitude, so this number can be a Fixnum or
+  # a Float.
+  Max: 85

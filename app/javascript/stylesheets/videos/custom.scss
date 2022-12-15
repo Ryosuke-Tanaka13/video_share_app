@@ -1,3 +1,10 @@
+// videos関連全ページ
+// 視聴率取得時のチェックボックスを非表示
+button, label:last-child, pre, hr{
+  display: none;
+}
+
+// videos#newページ
 @mixin videoBox{
   height: 300px;
   width: 600px;
@@ -57,7 +64,65 @@
   margin-left:10px;
 }
 
+// 動画のfloat解除
+#videos-index .content{
+  overflow: hidden;
+}
+
 // videos#showページ
 .video-title-and-action-show{
   margin-left:50px;
 }
+
+.video-statuses{
+  display: none;
+}
+
+
+
+/*タブのスタイル*/
+.tab_item {
+  width: calc(100%/2);
+  height: 50px;
+  border-bottom: 3px solid #5ab4bd;
+  background-color: #d9d9d9;
+  line-height: 50px;
+  font-size: 16px;
+  text-align: center;
+  color: #565656;
+  display: block;
+  float: left;
+  text-align: center;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+.tab_item:hover {
+  opacity: 0.75;
+}
+
+/*ラジオボタンを全て消す*/
+input[name="tab_item"] {
+  display: none;
+}
+
+/*タブ切り替えの中身のスタイル*/
+.tab_content {
+  display: none;
+  padding: 40px 40px 0;
+  clear: both;
+  overflow: hidden;
+}
+
+
+/*選択されているタブのコンテンツのみを表示*/
+#all:checked ~ #all_content,
+#status:checked ~ #status_content{
+  display: block;
+}
+
+/*選択されているタブのスタイルを変える*/
+.tabs input:checked + .tab_item {
+  background-color: #5ab4bd;
+  color: #fff;
+}
+

@@ -5,18 +5,17 @@
       <div class="video-display-index">
         <video width="300" height="200" id="mv" controls>
           <source src="<%= url_for(organization_video.video) %>">
-        <!-- vimeoの動画表示の場合は<iframe>で対応-->
       </div>
       <div class="video-title-and-action-index">
         <%= link_to organization_video.title, video_path(organization_video) %>
-        <% if organization_video.is_valid == false %>
-          <span>オーナー削除済み</span>
-        <% end %><br>
-        <% if current_system_admin.present? %>   
+        <% if current_system_admin %> 
+          <% if organization_video.is_valid == false %>
+            <span>オーナー削除済み</span>
+          <% end %><br>
           <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？"}, class: "btn btn-danger mt-2" %><br> 
         <% end %>  
       </div>
     </div>
   <% end %> 
 </div>
-
+        

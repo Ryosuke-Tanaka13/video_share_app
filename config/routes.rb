@@ -71,10 +71,24 @@ Rails.application.routes.draw do
   root 'use#top'
   # =================================================================
 
-  resources :videos
+  # video関連==========================================================
+  scope module: :viewers do
+    get 'videos/:video_id/video_statuses/:id/hidden' => 'hiddens#confirm', as: :video_status_hidden
+    patch 'videos/:video_id/video_statuses/:id/withdraw' => 'hiddens#withdraw', as: :video_status_withdraw
+  end
+
+  resources :videos do
+    member do
+      scope module: :viewers do
+        resources :video_statuses, only: %i[index update destroy]
+      end
+    end
+  end
+
   # 動画の論理削除(データは残すが表示しないという意味でhiddensコントローラと命名)
   scope module: :videos do
     get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
     patch 'videos/:id/withdraw' => 'hiddens#withdraw', as: :videos_withdraw
   end
+  # =================================================================
 end

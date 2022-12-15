@@ -1,0 +1,120 @@
+<% provide(:title,  "視聴状況一覧") %>
+<div class="content">
+  <P>●視聴が完了している視聴者の割合</p>
+     → <%= @complete_viewers_rate %> % (<%= @viewers.count %>人中<%= @complete_viewers.count %>人が完了)
+  <p class ="mt-3">●視聴が完了している視聴者</p>
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap"> 
+          <tbody>
+            <tr align="center">
+              <td>名前</td>
+              <td>視聴完了時刻</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <% if current_user %>
+              <% @viewers.each do |viewer| %>
+                <% if viewer.complete_video_status(@video.id)&.valid_true? %>
+                  <tr align="center">
+                    <td>
+                      <%= viewer.name_show %>
+                    </td>
+                    <td>
+                      <%= l(viewer.complete_video_status(@video.id).watched_at, format: :long, default: '-') %>
+                    </td>
+                    <td>
+                      <% if current_user.owner? %>
+                        <%= link_to "視聴状況の削除", video_status_hidden_path(viewer.complete_video_status(@video.id), video_id: @video.id), class: "btn btn-md btn-danger" %>
+                      <% end %>
+                    </td>
+                    <td></td>
+                  </tr>
+                <% end %>
+              <% end %>
+            <% elsif current_system_admin %>
+              <% @viewers.each do |viewer| %>
+                <% if viewer.complete_video_status(@video.id) %>
+                  <tr align="center">
+                    <td>
+                      <%= link_to viewer.name, viewer_path(viewer) %>
+                      <% if viewer.is_valid == false %>(退会)<% end %>
+                    </td>
+                    <td>
+                      <%= l(viewer.complete_video_status(@video.id).watched_at, format: :long, default: '-') %>
+                    </td> 
+                    <td>
+                      <%= viewer.complete_video_status_hidden_button(@video.id) %>
+                    </td>
+                    <td>
+                      <%= link_to "視聴状況の完全削除", video_status_path(viewer.complete_video_status(@video.id), video_id: @video.id), method: :delete, data: { confirm: "#{viewer.name}の視聴状況を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <p>●視聴が完了していない視聴者</p>
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap"> 
+          <tbody>
+            <tr align="center">
+              <td>名前</td>
+              <td>視聴率</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <% if current_user %>
+              <% @viewers.each do |viewer| %>
+                <% if (viewer.incomplete_video_status(@video.id)) || (viewer.complete_video_status(@video.id)&.not_valid?) %>
+                  <tr align="center">
+                    <td>
+                      <%= viewer.name_show %>
+                    </td>
+                    <td>
+                      <%= viewer.incomplete_video_status_watched_ratio(@video.id) %> %
+                    </td>
+                    <td>
+                      <% if current_user.owner? %>
+                        <%= viewer.incomplete_video_status_hidden_button(@video.id) %>
+                      <% end %>
+                    </td>
+                    <td>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            <% elsif current_system_admin %>
+              <% @viewers.each do |viewer| %>
+                <% if viewer.incomplete_video_status(@video.id) %>
+                  <tr align="center">
+                    <td>
+                      <%= link_to viewer.name, viewer_path(viewer) %> 
+                      <% if viewer.is_valid == false %>(退会)<% end %>
+                      <% if viewer.organization_viewers == [] %>(無所属)<% end %> 
+                    </td>
+                    <td>
+                      <%= viewer.incomplete_video_status_watched_ratio(@video.id) %> %
+                    </td>
+                    <td>
+                      <%= viewer.incomplete_video_status_hidden_button(@video.id) %>
+                    </td>
+                    <td>
+                      <% if viewer.not_zero_video_status(@video.id) %>
+                        <%= link_to "視聴状況の完全削除", video_status_path(viewer.not_zero_video_status(@video.id), video_id: @video.id), method: :delete, data: { confirm: "#{viewer.name}の視聴状況を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div> 
+  <canvas id="myChart"></canvas>
+</div> 
