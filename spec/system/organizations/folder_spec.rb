@@ -218,7 +218,6 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
 
       it 'レイアウト' do
         expect(page).to have_text 'サンプルビデオ'
-        expect(page).to have_link 'フォルダ内から削除'
         expect(page).to have_text 'テストビデオ'
         expect(page).to have_link 'フォルダ内から削除'
         expect(page).to have_no_text 'ITビデオ'

@@ -8,7 +8,9 @@
       </div>
       <div class="video-title-and-action-index">
         <%= link_to video.title, video_path(video) %><br> 
-        <%= link_to "フォルダ内から削除", video_video_folder_path(video, folder_id: @folder.id, organization_id: @organization.id), method: :delete, data:{confirm: "削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります"}, class: "btn btn-danger mt-2" %><br>   
+        <% if system_admin_signed_in? || video.my_upload?(current_user) || video.ensure_owner?(current_user) %> 
+          <%= link_to "フォルダ内から削除", video_video_folder_path(video, folder_id: @folder.id, organization_id: @organization.id), method: :delete, data:{confirm: "削除しますか？ この動画はフォルダ内からは削除されますが、動画自体は残ります"}, class: "btn btn-danger mt-2" %><br>
+        <% end %>
       </div>
     </div>
   <% end %>
