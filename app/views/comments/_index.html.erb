@@ -34,7 +34,7 @@
       <!-- 編集ボタン、削除ボタンを表示 -->
       <div class="content-show-comment-bottom-top-icons">
       <!-- ログイン済みかつコメントしたアカウント本人であれば編集、削除ボタンを表示 -->
-        <% if account_logged_in? && (comment.user_id == @account.id || comment.viewer_id == @account.id) %>
+        <% if current_system_admin || comment.user_id == current_user&.id || comment.viewer_id == current_viewer&.id %>
           <div data-comment-id='<%= comment.id %>' class="js-edit-comment-button">
             <i class="fas fa-edit text-primary"></i>
           </div><br>
@@ -65,16 +65,16 @@
 
   <!-- 返信の件数を表示 -->
   <div class="content-show-comment-bottom-view-btn">
-    <% if comment.replies.includes(:user, :viewer).present? %>
-      <%= "#{ comment.replies.includes(:user, :viewer).count } 件の返信" %>
+    <% if comment.replies.includes(:system_admin, :user, :viewer).present? %>
+      <%= "#{ comment.replies.includes(:system_admin, :user, :viewer).count } 件の返信" %>
     <% else %>
       <p>コメントの返信はありません</p>
     <% end %>
   </div>
 
   <!-- 返信部分 -->
-  <% if comment.replies.includes(:user, :viewer).present? %>
-    <% comment.replies.includes(:user, :viewer).each do |reply| %>
+  <% if comment.replies.includes(:system_admin, :user, :viewer).present? %>
+    <% comment.replies.includes(:system_admin, :user, :viewer).each do |reply| %>
       <div class="content-show-comment-bottom-view-reply">
         <div class="content-show-comment-bottom-view-reply-top">
           <div class="content-show-comment-bottom-view-reply-top-user">

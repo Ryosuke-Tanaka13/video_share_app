@@ -10,15 +10,10 @@ module CommentReply
     end
   end
 
-  # ログインしているか判定(システム管理者を除く)
-  def account_logged_in?
-    current_user.present? || current_viewer.present?
-  end
-
-  # 動画投稿者または動画視聴者のみ許可
-  def ensure_user_or_viewer
+  # システム管理者、動画投稿者または動画視聴者のみ許可
+  def ensure_system_admin_or_user_or_viewer
     @video = Video.find(params[:video_id])
-    if current_user.blank? && current_viewer.blank?
+    if current_system_admin.blank? && current_user.blank? && current_viewer.blank?
       redirect_to video_url(@video.id), flash: { danger: '権限がありません' }
     end
   end
