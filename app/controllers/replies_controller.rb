@@ -4,10 +4,11 @@ class RepliesController < ApplicationController
   before_action :set_comment_id
   before_action :ensure_system_admin_or_user_or_viewer
   before_action :correct_admin_or_user_viewer_reply, only: %i[update destroy]
+  helper_method :account_logged_in?
   protect_from_forgery { :except => [:destroy] }
 
   def create
-    @reply = Reply.find(params[:id])
+    # videoのidを取得
     set_video_id
     # videoに紐づいたコメントを取得
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
@@ -68,7 +69,7 @@ class RepliesController < ApplicationController
 
   # コメント返信したシステム管理者、動画投稿者、動画視聴者本人のみ許可
   def correct_admin_or_user_viewer_reply
-    set_reply
+    @reply = Reply.find(params[:id])
     set_video_id
     if @reply.system_admin_id != current_system_admin&.id || @reply.user_id != current_user&.id || @reply.viewer_id != current_viewer&.id
       redirect_to video_url(@video.id), flash: { danger: '権限がありません' }

@@ -3,6 +3,7 @@ class CommentsController < ApplicationController
   before_action :set_account
   before_action :ensure_system_admin_or_user_or_viewer
   before_action :correct_admin_or_user_or_viewer_comment, only: %i[update destroy]
+  helper_method :account_logged_in?
   protect_from_forgery { :except => [:destroy] }
 
   def create

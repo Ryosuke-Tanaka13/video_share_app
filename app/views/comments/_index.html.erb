@@ -105,7 +105,7 @@
             <!-- 返信編集ボタン、削除ボタンを表示 -->
             <div class="content-show-comment-bottom-view-reply-top-icons">
               <!-- ログイン済みかつ返信したアカウントの場合、編集ボタン、削除ボタンを表示 -->
-              <% if account_logged_in? && (reply.user_id == @account.id || reply.viewer_id == @account.id) %>
+              <% if current_system_admin || reply.user_id == current_user&.id || reply.viewer_id == current_viewer&.id %>
                 <div data-reply-id='<%= reply.id %>' class="js-edit-reply-button">
                   <i class="fas fa-edit text-primary"></i>
                 </div><br>
