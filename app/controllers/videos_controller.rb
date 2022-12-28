@@ -45,11 +45,10 @@ class VideosController < ApplicationController
   end
 
   def show
-    @video = Video.find(params[:id])
     @comment = Comment.new
     @reply = Reply.new
     # 新着順で表示
-    @comments = @video.comments.includes(:user, :viewer, :replies).order(created_at: :desc)
+    @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
   end
 
   def edit; end
