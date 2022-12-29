@@ -33,7 +33,8 @@ Rails.application.routes.draw do
     sessions:      'users/sessions',
     passwords:     'users/passwords',
     confirmations: 'users/confirmations',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    omniauth_callbacks: "users/omniauth_callbacks"
   }
 
   resources :users do

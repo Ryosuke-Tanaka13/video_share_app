@@ -5,7 +5,8 @@ class User < ApplicationRecord
   # :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable,
-    :confirmable
+    :confirmable,
+    :omniauthable, omniauth_providers: %i[google_oauth2]
 
   # 初期値 owner
   enum role: { owner: 0, staff: 1 }
@@ -22,4 +23,16 @@ class User < ApplicationRecord
   scope :user_has, ->(organization_id) { includes([:organization]).where(organization_id: organization_id) }
   # 退会者は省く絞り込み
   scope :subscribed, -> { where(is_valid: true) }
+
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      # ※deviseのuserカラムに nameやprofile を追加している場合は下のコメントアウトを外して使用
+
+      user.name = auth.info.name
+      # user.profile = auth.info.profile
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0,20]
+    end
+  end
+  
 end
