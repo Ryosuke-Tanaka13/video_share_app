@@ -1,6 +1,5 @@
 class VideosController < ApplicationController
   include CommentReply
-  before_action :set_account
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
@@ -45,6 +44,8 @@ class VideosController < ApplicationController
   end
 
   def show
+    # ログインしているアカウントをセット
+    set_account
     @comment = Comment.new
     @reply = Reply.new
     # 新着順で表示
