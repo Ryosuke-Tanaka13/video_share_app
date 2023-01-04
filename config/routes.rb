@@ -32,9 +32,7 @@ Rails.application.routes.draw do
   devise_for :users, skip: %i[registrations], controllers: {
     sessions:      'users/sessions',
     passwords:     'users/passwords',
-    confirmations: 'users/confirmations',
-    registrations: 'users/registrations',
-    omniauth_callbacks: "users/omniauth_callbacks"
+    confirmations: 'users/confirmations'
   }
 
   resources :users do
@@ -53,7 +51,9 @@ Rails.application.routes.draw do
     sessions:      'viewers/sessions',
     passwords:     'viewers/passwords',
     confirmations: 'viewers/confirmations',
-    registrations: 'viewers/registrations'
+    registrations: 'viewers/registrations',
+    registrations: 'viewers/registrations',
+    omniauth_callbacks: "viewers/omniauth_callbacks"
   }
 
   resources :viewers do
