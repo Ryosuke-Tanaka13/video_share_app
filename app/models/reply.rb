@@ -18,4 +18,11 @@ class Reply < ApplicationRecord
       @reply.viewer_id = current_viewer.id
     end
   end
+
+  # システム管理者またはコメント返信した本人しか編集・削除ができない
+  def system_admin_or_correct_replyer(reply)
+    unless current_system_admin || reply.user_id == current_user&.id || reply.viewer_id == current_viewer&.id
+      errors.add(:reply, ": 権限がありません。")
+    end
+  end
 end

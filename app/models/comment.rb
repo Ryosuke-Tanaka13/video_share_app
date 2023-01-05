@@ -9,6 +9,7 @@ class Comment < ApplicationRecord
 
   # バリデーション
   validates :comment, presence: true
+  validates :system_admin_or_correct_commenter
 
   # コメントしたアカウントidをセット
   def set_commenter_id
@@ -18,6 +19,13 @@ class Comment < ApplicationRecord
       @comment.user_id = current_user.id
     elsif current_viewer && (@account == current_viewer)
       @comment.viewer_id = current_viewer.id
+    end
+  end
+
+  # システム管理者またはコメントした本人しか編集・削除ができない
+  def system_admin_or_correct_commenter(comment)
+    unless current_system_admin || comment.user_id == current_user&.id || comment.viewer_id == current_viewer&.id
+      errors.add(:comment, ": 権限がありません。")
     end
   end
 end
