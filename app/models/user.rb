@@ -12,8 +12,8 @@ class User < ApplicationRecord
 
   belongs_to :organization
   has_many :videos
-  has_many :comments
-  has_many :replies
+  has_many :comments, dependent: :destroy
+  has_many :replies, dependent: :destroy
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
