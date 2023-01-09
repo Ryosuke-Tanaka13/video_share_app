@@ -3,7 +3,7 @@ class RepliesController < ApplicationController
   before_action :set_account
   before_action :set_comment_id
   before_action :ensure_system_admin_or_user_or_viewer
-  before_action :correct_admin_or_user_viewer_reply, only: %i[update destroy]
+  before_action :system_admin_or_correct_user_viewer_reply, only: %i[update destroy]
   helper_method :account_logged_in?
   protect_from_forgery { :except => [:destroy] }
 
@@ -56,22 +56,11 @@ class RepliesController < ApplicationController
     @comment = Comment.find(params[:comment_id])
   end
 
-  # コメント返信したアカウントのidをセット
-  def set_replyer_id
-    if current_system_admin && (@account == current_system_admin)
-      @reply.system_admin_id = current_system_admin.id   
-    elsif current_user && (@account == current_user)
-      @reply.user_id = current_user.id
-    elsif current_viewer && (@account == current_viewer)
-      @reply.viewer_id = current_viewer.id
-    end
-  end
-
-  # コメント返信したシステム管理者、動画投稿者、動画視聴者本人のみ許可
-  def correct_admin_or_user_viewer_reply
+  # システム管理者またはコメント返信した動画投稿者、動画視聴者本人のみ許可
+  def system_admin_or_correct_user_viewer_reply
     @reply = Reply.find(params[:id])
     set_video_id
-    if @reply.system_admin_id != current_system_admin&.id || @reply.user_id != current_user&.id || @reply.viewer_id != current_viewer&.id
+    if !current_system_admin && @reply.user_id != current_user&.id && @reply.viewer_id != current_viewer&.id
       redirect_to video_url(@video.id), flash: { danger: '権限がありません' }
     end
   end
