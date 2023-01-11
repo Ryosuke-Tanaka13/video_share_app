@@ -12,22 +12,3 @@
 # URISchemes: http, https
 Layout/LineLength:
   Max: 234
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: SkipBlocks, EnforcedStyle.
-# SupportedStyles: described_class, explicit
-RSpec/DescribedClass:
-  Exclude:
-    - 'spec/vimeo_me2/video_spec.rb'
-
-# Offense count: 3
-# Configuration parameters: AssignmentOnly.
-RSpec/InstanceVariable:
-  Exclude:
-    - 'spec/vimeo_me2/video_spec.rb'
-
-# Offense count: 4
-RSpec/RepeatedExampleGroupDescription:
-  Exclude:
-    - 'spec/requests/videos/videos_spec.rb'
