@@ -25,6 +25,8 @@
           <%= comment.user.name %>さん
         <% elsif comment.viewer.present? && comment.viewer.name.present? %>
           <%= comment.viewer.name %>さん
+        <% elsif !comment.user.is_valid || !comment.viewer.is_valid %>
+          削除されたユーザー
         <% end %>
       <!-- コメントを表示 -->
       <div id="js-comment-label-<%= comment.id %>">
@@ -33,8 +35,8 @@
       </div>
       <!-- 編集ボタン、削除ボタンを表示 -->
       <div class="content-show-comment-bottom-top-icons">
-      <!-- ログイン済みかつコメントしたアカウント本人であれば編集、削除ボタンを表示 -->
-        <% if current_system_admin || comment.user_id == current_user&.id || comment.viewer_id == current_viewer&.id %>
+      <!-- システム管理者およびコメントした本人であれば編集、削除ボタンを表示 -->
+        <% if current_system_admin || (comment.user_id == current_user&.id && current_user.present?) || (comment.viewer_id == current_viewer&.id && current_viewer.present?) %>
           <div data-comment-id='<%= comment.id %>' class="js-edit-comment-button">
             <i class="fas fa-edit text-primary"></i>
           </div><br>
@@ -95,6 +97,8 @@
                 <%= reply.user.name %>さん
               <% elsif reply.viewer.present? && reply.viewer.name.present? %> 
                 <%= reply.viewer.name %>さん
+              <% elsif !reply.user.is_valid || !reply.viewer.is_valid %>
+                削除されたユーザー
               <% end %>
             </div>
             <!-- 返信を表示 -->
@@ -105,7 +109,7 @@
             <!-- 返信編集ボタン、削除ボタンを表示 -->
             <div class="content-show-comment-bottom-view-reply-top-icons">
               <!-- ログイン済みかつ返信したアカウントの場合、編集ボタン、削除ボタンを表示 -->
-              <% if current_system_admin || reply.user_id == current_user&.id || reply.viewer_id == current_viewer&.id %>
+              <% if current_system_admin || (reply.user_id == current_user&.id && current_user.present?) || (reply.viewer_id == current_viewer&.id && current_viewer.present?) %>
                 <div data-reply-id='<%= reply.id %>' class="js-edit-reply-button">
                   <i class="fas fa-edit text-primary"></i>
                 </div><br>
