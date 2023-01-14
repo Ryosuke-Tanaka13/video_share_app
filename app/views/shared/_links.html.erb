@@ -21,5 +21,5 @@
 <% end %>
 
 <%- if devise_mapping.omniauthable? %>
-    <%= button_to 'Googleログイン', viewer_google_oauth2_omniauth_authorize_path %>
-  <% end %>
+  <%= button_to 'Googleでログイン', viewer_google_oauth2_omniauth_authorize_path, class:"btn btn-primary" %>
+<% end %>
