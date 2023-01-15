@@ -38,6 +38,8 @@ gem 'devise-i18n'
 gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
+gem 'omniauth', '1.9.1'
+gem 'omniauth-google-oauth2'
 
 gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
