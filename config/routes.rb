@@ -52,7 +52,6 @@ Rails.application.routes.draw do
     passwords:     'viewers/passwords',
     confirmations: 'viewers/confirmations',
     registrations: 'viewers/registrations',
-    registrations: 'viewers/registrations',
     omniauth_callbacks: "viewers/omniauth_callbacks"
   }
 

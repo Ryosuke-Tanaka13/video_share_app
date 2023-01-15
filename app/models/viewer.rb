@@ -32,7 +32,7 @@ class Viewer < ApplicationRecord
       viewer.name = auth.info.name
       # viewer.profile = auth.info.profile
       viewer.email = auth.info.email
-      viewer.password = Devise.friendly_token[0,20]
+      viewer.password = Devise.friendly_token[0, 20]
     end
   end
 end
