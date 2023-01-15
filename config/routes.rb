@@ -48,11 +48,11 @@ Rails.application.routes.draw do
 
   # viewer関連==========================================================
   devise_for :viewers, controllers: {
-    sessions:      'viewers/sessions',
-    passwords:     'viewers/passwords',
-    confirmations: 'viewers/confirmations',
-    registrations: 'viewers/registrations',
-    omniauth_callbacks: "viewers/omniauth_callbacks"
+    sessions:           'viewers/sessions',
+    passwords:          'viewers/passwords',
+    confirmations:      'viewers/confirmations',
+    registrations:      'viewers/registrations',
+    omniauth_callbacks: 'viewers/omniauth_callbacks'
   }
 
   resources :viewers do
