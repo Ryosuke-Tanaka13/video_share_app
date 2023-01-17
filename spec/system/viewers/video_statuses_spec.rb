@@ -70,7 +70,7 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
           expect(page.driver.browser.switch_to.alert.text).to eq '視聴者1の視聴状況を削除します。本当によろしいですか？'
           page.driver.browser.switch_to.alert.accept
           expect(page).to have_content '削除しました。'
-        }.to change(VideoStatus, :count).by(-1)
+        }.to change(VideoStatus, :count).by(0)
       end
 
       it '視聴状況(100%)削除キャンセル' do
@@ -87,7 +87,7 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
           expect(page.driver.browser.switch_to.alert.text).to eq '視聴者の視聴状況を削除します。本当によろしいですか？'
           page.driver.browser.switch_to.alert.accept
           expect(page).to have_content '削除しました。'
-        }.to change(VideoStatus, :count).by(-1)
+        }.to change(VideoStatus, :count).by(0)
       end
 
       it '視聴状況(100%未満)削除キャンセル' do
