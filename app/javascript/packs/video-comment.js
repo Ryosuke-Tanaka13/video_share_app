@@ -63,6 +63,15 @@ $(function () {
   });
 });
 
+// 返信フォーム開閉
+$(function() {
+  $(".js-reply-form-button").on("click", function () {
+    const commentId = $(this).data('reply-form-id');
+
+    $('#content-show-comment-bottom-reply-form-' + commentId).toggle();
+  })
+});
+
 // 返信編集エリア表示
 $(function () {
   $(document).on("click", ".js-edit-reply-button", function () {
@@ -70,6 +79,7 @@ $(function () {
     const replyLabelArea = $('#js-reply-label-' + replyId);
     const replyTextArea = $('#js-textarea-reply-' + replyId);
     const replyButton = $('#js-reply-button-' + replyId);
+
     replyLabelArea.hide();
     replyTextArea.show();
     replyButton.show();
