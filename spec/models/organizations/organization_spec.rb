@@ -1,9 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
-  let :organization do
-    build(:organization)
-  end
+  let(:organization) { build(:organization) }
+  let(:deactivated_organization) { create(:deactivated_organization) }
 
   describe 'バリデーションについて' do
     subject do
@@ -34,6 +33,8 @@ RSpec.describe Organization, type: :model do
         before :each do
           organization = create(:organization)
           subject.email = organization.email
+          # 同じidだとバリデーションが反応しない為ずらす
+          subject.id = organization.id + 1
         end
 
         it 'バリデーションに落ちること' do
@@ -65,6 +66,16 @@ RSpec.describe Organization, type: :model do
             subject.valid?
             expect(subject.errors.full_messages).to include('組織のEメールは不正な値です')
           end
+        end
+      end
+
+      context '非アクティブアカウントと同じemailを使用した場合' do
+        before :each do
+          subject.email = deactivated_organization.email
+        end
+
+        it 'バリデーションが通ること' do
+          expect(subject).to be_valid
         end
       end
     end

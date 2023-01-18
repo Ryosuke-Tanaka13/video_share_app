@@ -3,8 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Viewer, type: :model do
-  let :viewer do
-    build(:viewer)
+  let(:viewer) { build(:viewer) }
+  let(:deactivated_viewer) { create(:deactivated_viewer) }
+
+  before(:each) do
+    deactivated_viewer
   end
 
   describe 'バリデーションについて' do
@@ -36,6 +39,8 @@ RSpec.describe Viewer, type: :model do
         before :each do
           viewer = create(:viewer)
           subject.email = viewer.email
+          # 同じidだとバリデーションが反応しない為ずらす
+          subject.id = viewer.id + 1
         end
 
         it 'バリデーションに落ちること' do
@@ -66,6 +71,16 @@ RSpec.describe Viewer, type: :model do
           it 'バリデーションのエラーが正しいこと' do
             subject.valid?
             expect(subject.errors.full_messages).to include('Eメールは不正な値です')
+          end
+        end
+
+        context '非アクティブアカウントと同じemailを使用した場合' do
+          before :each do
+            subject.email = deactivated_viewer.email
+          end
+  
+          it 'バリデーションが通ること' do
+            expect(subject).to be_valid
           end
         end
       end
@@ -134,6 +149,63 @@ RSpec.describe Viewer, type: :model do
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
           expect(subject.errors.full_messages).to include('Nameを入力してください')
+        end
+      end
+    end
+
+    describe '#password' do
+      context '存在しない場合' do
+        before :each do
+          subject.password = nil
+        end
+
+        it 'バリデーションに落ちること' do
+          expect(subject).to be_invalid
+        end
+
+        it 'バリデーションのエラーが正しいこと' do
+          subject.valid?
+          expect(subject.errors.full_messages).to include('パスワードを入力してください')
+        end
+      end
+
+      context '文字数が6文字の場合' do
+        before :each do
+          subject.password = 'a' * 6
+        end
+
+        it 'バリデーションが通ること' do
+          expect(subject).to be_valid
+        end
+      end
+
+      context '文字数が129文字の場合' do
+        before :each do
+          subject.password = 'a' * 129
+        end
+
+        it 'バリデーションに落ちること' do
+          expect(subject).to be_invalid
+        end
+
+        it 'バリデーションのエラーが正しいこと' do
+          subject.valid?
+          expect(subject.errors.full_messages).to include('パスワードは128文字以内で入力してください')
+        end
+      end
+
+      context '空白の場合' do
+        before :each do
+          subject.password = ' '
+        end
+
+        it 'バリデーションに落ちること' do
+          expect(subject).to be_invalid
+        end
+
+        it 'バリデーションのエラーが正しいこと' do
+          subject.valid?
+          expect(subject.errors.full_messages).to include('パスワードを入力してください')
         end
       end
     end

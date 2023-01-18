@@ -45,4 +45,14 @@ FactoryBot.define do
     organization_id  { 2 }
     role             { 'staff' }
   end
+  
+  factory :deactivated_user, class: 'User' do
+    id               { 6 }
+    name             { '非アクティブ投稿者' }
+    email            { 'staff_spec3@example.com' }
+    password         { 'password' }
+    organization_id  { 1 }
+    role             { 'staff' }
+    is_valid         { false }
+  end
 end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'UsersSystem', type: :system, js: true do
+RSpec.describe 'UsersSystem', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:system_admin) { create(:system_admin) }

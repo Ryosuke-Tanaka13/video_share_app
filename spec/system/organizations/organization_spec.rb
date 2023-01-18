@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
+RSpec.describe 'OrganizationSystem', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
@@ -10,6 +10,8 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
   let(:another_user_staff) { create(:another_user_staff, confirmed_at: Time.now) }
+
+  let(:deactivated_organization) { create(:deactivated_organization) }
 
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
@@ -23,6 +25,7 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
     another_organization
     another_user_owner
     another_user_staff
+    deactivated_organization
     system_admin
     viewer
   end
@@ -348,6 +351,14 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
           expect(page).to have_current_path organization_path(organization), ignore_query: true
           expect(page).to have_text '更新しました'
         end
+
+        it '非アクティブ組織と同じメールアドレスは使用可能' do
+          fill_in '組織名', with: 'test'
+          fill_in '組織のEメール', with: deactivated_organization.email
+          click_button '更新'
+          expect(page).to have_current_path organization_path(organization), ignore_query: true
+          expect(page).to have_text '更新しました'
+        end
       end
     end
 
@@ -422,6 +433,57 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
           click_link '動画フォルダ一覧', match: :first
           expect(page).to have_current_path organization_folders_path(organization), ignore_query: true
         end
+      end
+    end
+  end
+
+  context '新規作成' do
+    describe '正常' do
+      it '組織とオーナー新規作成' do
+        visit new_organization_path
+        expect {
+          fill_in 'organization[name]', with: 'test'
+          fill_in 'organization[email]', with: 'test@email.com'
+          fill_in 'organization[users][name]', with: 'test'
+          fill_in 'organization[users][email]', with: 'test@email.com'
+          fill_in 'organization[users][password]', with: 'password'
+          fill_in 'organization[users][password_confirmation]', with: 'password'
+          check 'agreeTerms'
+          click_button '登録'
+        }.to change(Organization, :count).by(1)
+        .and change(User, :count).by(1)
+      end
+  
+      it '非アクティブアカウントと同じメールアドレスは新規作成可能' do
+        visit new_organization_path
+        expect {
+          fill_in 'organization[name]', with: 'test'
+          fill_in 'organization[email]', with: deactivated_organization.email
+          fill_in 'organization[users][name]', with: 'test'
+          fill_in 'organization[users][email]', with: 'test@email.com'
+          fill_in 'organization[users][password]', with: 'password'
+          fill_in 'organization[users][password_confirmation]', with: 'password'
+          check 'agreeTerms'
+          click_button '登録'
+        }.to change(Organization, :count).by(1)
+        .and change(User, :count).by(1)
+      end
+    end
+  
+    describe '異常' do
+      it '入力が不十分だと作成されない' do
+        visit new_organization_path
+        expect {
+          fill_in 'organization[name]', with: ''
+          fill_in 'organization[email]', with: 'test@email.com'
+          fill_in 'organization[users][name]', with: 'test'
+          fill_in 'organization[users][email]', with: 'test@email.com'
+          fill_in 'organization[users][password]', with: 'password'
+          fill_in 'organization[users][password_confirmation]', with: 'password'
+          check 'agreeTerms'
+          click_button '登録'
+        }.to change(Organization, :count).by(0)
+        .and change(User, :count).by(0)
       end
     end
   end
