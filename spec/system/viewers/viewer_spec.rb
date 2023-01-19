@@ -10,7 +10,6 @@ RSpec.describe 'ViewerSystem', type: :system, js: true do
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
   let(:deactivated_viewer) { create(:deactivated_viewer, confirmed_at: Time.now) }
 
-
   let(:organization_viewer) { create(:organization_viewer) }
   let(:organization_viewer2) { create(:organization_viewer2) }
   let(:organization_viewer3) { create(:organization_viewer3) }

@@ -451,9 +451,9 @@ RSpec.describe 'OrganizationSystem', type: :system, js: true do
           check 'agreeTerms'
           click_button '登録'
         }.to change(Organization, :count).by(1)
-        .and change(User, :count).by(1)
+          .and change(User, :count).by(1)
       end
-  
+
       it '非アクティブアカウントと同じメールアドレスは新規作成可能' do
         visit new_organization_path
         expect {
@@ -466,10 +466,10 @@ RSpec.describe 'OrganizationSystem', type: :system, js: true do
           check 'agreeTerms'
           click_button '登録'
         }.to change(Organization, :count).by(1)
-        .and change(User, :count).by(1)
+          .and change(User, :count).by(1)
       end
     end
-  
+
     describe '異常' do
       it '入力が不十分だと作成されない' do
         visit new_organization_path
@@ -483,7 +483,7 @@ RSpec.describe 'OrganizationSystem', type: :system, js: true do
           check 'agreeTerms'
           click_button '登録'
         }.to change(Organization, :count).by(0)
-        .and change(User, :count).by(0)
+          .and change(User, :count).by(0)
       end
     end
   end

@@ -78,7 +78,7 @@ RSpec.describe Viewer, type: :model do
           before :each do
             subject.email = deactivated_viewer.email
           end
-  
+
           it 'バリデーションが通ること' do
             expect(subject).to be_valid
           end

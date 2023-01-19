@@ -28,6 +28,6 @@ class Viewer < ApplicationRecord
   # アクティブviewerと同じemailが存在すればtrueを返す（trueでuniqueness検知する）
   def viewer_exists?
     viewer = Viewer.subscribed.where(email: self.email).where.not(id: self.id)
-    return viewer.present?
+    viewer.present?
   end
 end
