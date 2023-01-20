@@ -1,4 +1,4 @@
-document.addEventListener("turbolinks:load", function(){
+window.addEventListener( "load", function () {
   const videoId = $('.video-id').attr('id');
   const viewerId = $('.viewer-id').attr('id');
   const videostatusId = $('.video-status-id').attr('id');

@@ -12,7 +12,8 @@
         <% end %>
       </div>
       <div class="video-title-and-action-index">
-        <%= link_to organization_video.title, video_path(organization_video) %>
+      <!-- videos.htmlを使用するページ間で遷移すると、動画の再生状況が無限に取得され続けるバグが発生していたので、turbolinksを無効に-->
+        <%= link_to organization_video.title, video_path(organization_video), 'data-turbolinks': false %>
         <% if current_system_admin %> 
           <% if organization_video.is_valid == false %>
             <span>オーナー削除済み</span>
