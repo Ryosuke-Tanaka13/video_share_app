@@ -3,8 +3,13 @@
   <% @organization_videos.each do |organization_video| %>
     <div style="float:left;margin:15px;"> 
       <div class="video-display-index">
-        <video width="300" height="200" id="mv" controls>
+        <% if current_system_admin || current_user %>
+          <video width="300" height="200" id="mv" controls>
           <source src="<%= url_for(organization_video.video) %>">
+        <% else %>
+          <video width="300" height="200" id="mv">
+          <source src="<%= url_for(organization_video.video) %>">
+        <% end %>
       </div>
       <div class="video-title-and-action-index">
         <%= link_to organization_video.title, video_path(organization_video) %>
