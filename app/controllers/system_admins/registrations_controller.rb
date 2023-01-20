@@ -2,7 +2,7 @@
 
 module SystemAdmins
   class RegistrationsController < Devise::RegistrationsController
-    layout 'system_admins'
+    layout 'system_admins_auth'
     # before_action :configure_sign_up_params, only: [:create]
     # before_action :configure_account_update_params, only: [:update]
 

@@ -1,13 +1,33 @@
-<% provide(:title,  "視聴者一覧") %>
+<% provide(:title,  "#{@organization&.name}視聴者一覧") %>
+<% if @organization.present? %>
+  <%= link_to "全表示", viewers_path, class: "btn btn-sm btn-link" %>
+<% end %>
   <div class="card">
     <div class="card-body table-responsive p-0">
       <table class="table table-hover text-nowrap"> 
         <tbody>
+          <tr align="center">
+            <td>名前</td>
+            <td>メールアドレス</td>
+            <td></td>
+          </tr>
           <% @viewers.each do |viewer| %>
           <tr align="center">
-            <td><%= link_to viewer.name, viewer_path(viewer) %></td>
+            <td>
+              <% if current_user && current_user&.role != 'owner' %>
+                <%= viewer.name %>
+                <% else %>
+                <%= link_to viewer.name, viewer_path(viewer) %>
+                <% end %>
+              <% if viewer.is_valid == false %>(退会)<% end %>
+              <% if viewer.organization_viewers == [] %>(無所属)<% end %>
+            </td>
             <td><%= viewer.email %></td>
-            <td><%= link_to "削除", viewer_path(viewer), method: :delete, data: { confirm: "#{viewer.name}の視聴者情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+            <% if current_system_admin %>
+              <td><%= link_to "削除", viewer_path(viewer), method: :delete, data: { confirm: "#{viewer.name}のユーザー情報を削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
+            <% else %>
+              <td></td>
+            <% end %>
           </tr>
           <% end %>
         </tbody>

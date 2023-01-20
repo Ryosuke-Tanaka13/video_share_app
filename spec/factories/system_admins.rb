@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :system_admin, class: 'SystemAdmin' do
-    id             { 1 }
-    name           { 'システム管理者' }
-    email          { 'test_system_admin_spec@example.com' }
-    password       { 'password' }
+    name                  { 'システム管理者' }
+    email                 { 'admin_spec@example.com' }
+    password              { 'password' }
+    password_confirmation { 'password' }
   end
 end

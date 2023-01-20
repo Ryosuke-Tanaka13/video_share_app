@@ -1,0 +1,10 @@
+<div class="text-center">
+  <h2>本当に削除しますか？</h2>
+  <div>
+    <p>削除する場合は、『削除する』をクリックしてください。</p>
+  </div>
+  <div>
+    <%= link_to '削除しない', video_path(@video) %>
+    <%= link_to '削除する', videos_withdraw_path(@video), method: :patch %>
+  </div>
+</div>

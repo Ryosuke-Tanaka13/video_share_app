@@ -53,18 +53,11 @@
 }
 
 // videos#indexページ
-.video-index{
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
+.video-title-and-action-index{
+  margin-left:10px;
 }
 
 // videos#showページ
-.video-show{
-  width:1000px;
+.video-title-and-action-show{
+  margin-left:50px;
 }
-
-canvas {
-  border: 1px solid black;
-}
-

@@ -6,17 +6,25 @@
       <tbody>
         <tr>
           <th><%= "名前" %></th>
-          <td><%= @user.name %></td>
+          <td>
+            <%= @user.name %>
+            <% if @user.is_valid == false %>(退会)<% end %>
+          </td>
         </tr>
         <tr>
           <th><%= "メールアドレス" %></th>
           <td><%= @user.email %></td>
+        </tr>
+        <tr>
+          <th><%= "所属組織名" %></th>
+          <td><%= link_to @organization.name, organization_path(@organization) %></td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="card-footer">
     <%= link_to "編集", edit_user_path, class: "btn btn-md btn-block btn-success" %>
-    <%= link_to "一覧画面へ", users_path, class: "btn btn-md btn-block btn-default" %>
+    <%= link_to "退会", users_unsubscribe_path(@user), class: "btn btn-md btn-block btn-danger" %><br>
+    <%= link_to "戻る", users_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-secondary" %>
   </div>
 </div>
