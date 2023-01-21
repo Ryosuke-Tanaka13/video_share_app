@@ -71,17 +71,16 @@ Rails.application.routes.draw do
   root 'use#top'
   # =================================================================
 
-  resources :videos
+  resources :videos do
+    collection do
+      scope module: :videos do
+        resource :recording
+      end
+    end
+  end
   # 動画の論理削除(データは残すが表示しないという意味でhiddensコントローラと命名)
   scope module: :videos do
     get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
     patch 'videos/:id/withdraw' => 'hiddens#withdraw', as: :videos_withdraw
   end
-
-  # resources :videos do
-  #   collection do
-  #     scope module: :videos do
-  #       resource :recording
-  #     end
-  #   end
 end

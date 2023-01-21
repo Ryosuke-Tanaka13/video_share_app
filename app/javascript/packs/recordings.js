@@ -16,7 +16,3 @@ import "@fortawesome/fontawesome-free/js/all";
 
 // 追記
 import "./videos/recording"
-
-// document.addEventListener("turbolinks:load", () => {
-//     $('[data-toggle="tooltip"]').tooltip()
-//   });
