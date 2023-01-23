@@ -9,23 +9,14 @@ class Comment < ApplicationRecord
 
   # バリデーション
   validates :comment, presence: true
-  validates :system_admin_or_correct_commenter
+  # TODO:エラー発生のため改修が必要　CommentsControllerで一旦制御
+  # validate :system_admin_or_correct_commenter
+  # attr_accessor :current_system_admin, :current_user, :current_viewer
 
-  # コメントしたアカウントidをセット
-  def set_commenter_id
-    if current_system_admin && (@account == current_system_admin)
-      @comment.system_admin_id = current_system_admin.id
-    elsif current_user && (@account == current_user)
-      @comment.user_id = current_user.id
-    elsif current_viewer && (@account == current_viewer)
-      @comment.viewer_id = current_viewer.id
-    end
-  end
-
-  # システム管理者またはコメントした本人しか編集・削除ができない
-  def system_admin_or_correct_commenter(comment)
-    unless current_system_admin || comment.user_id == current_user&.id || comment.viewer_id == current_viewer&.id
-      errors.add(:comment, ": 権限がありません。")
-    end
-  end
+  # # システム管理者またはコメントした本人しか編集・削除ができない
+  # def system_admin_or_correct_commenter
+  #   if !current_system_admin.present? && self.user_id != current_user&.id && self.viewer_id != current_viewer&.id
+  #     errors.add(:comment, ": 権限がありません。")
+  #   end
+  # end
 end
