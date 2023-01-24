@@ -1,4 +1,10 @@
 FactoryBot.define do
+  factory :system_admin_reply, class: 'Reply' do
+    organization_id { 1 }
+    comment_id { 1 }
+    reply { 'system_adminの返信' }
+  end
+
   factory :user_reply, class: 'Reply' do
     organization_id { 1 }
     comment_id { 1 }

@@ -1,4 +1,10 @@
 FactoryBot.define do
+  factory :system_admin_comment, class: 'Comment' do
+    comment { 'system_adminのコメント' }
+    organization_id { 1 }
+    video_id { 1 }
+  end
+
   factory :user_comment, class: 'Comment' do
     comment { 'userのコメント' }
     organization_id { 1 }
