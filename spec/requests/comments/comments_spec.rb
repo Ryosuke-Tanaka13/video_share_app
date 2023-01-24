@@ -34,7 +34,11 @@ RSpec.describe 'Comments', type: :request do
 
         it 'コメントが新規作成される' do
           expect {
+<<<<<<< HEAD
             post video_comments_path(video_id: video_it.id),
+=======
+            post video_comments_path(video_id: user_comment.video_id),
+>>>>>>> 60b7369873a6cf5aae1efbfe7c5e5ec34b3074ee
               params: {
                 comment: {
                   comment: 'システム管理者のコメント'
