@@ -63,7 +63,7 @@
   <h5>コメント返信</h5>
   <% if account_logged_in? %>
     <div data-reply-form-id='<%= comment.id %>' class="js-reply-form-button">
-      <i class="fa-solid fa-reply"></i>
+      <button type="button" class="btn btn-light">返信</button>
     </div>
     <div id="content-show-comment-bottom-reply-form-<%= comment.id %>" data-comment-id=<%= comment.id %> style="display: none;">
       <%= render partial: 'replies/form', locals: { comment: comment } %>
