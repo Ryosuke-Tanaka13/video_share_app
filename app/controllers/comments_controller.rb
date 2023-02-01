@@ -13,12 +13,11 @@ class CommentsController < ApplicationController
     # コメント投稿したアカウントをセット
     set_commenter_id
     if @comment.save
-      flash[:success] = 'コメント投稿に成功しました。'
-      redirect_to video_url(@video.id)
+      flash.now[:success] = 'コメント投稿に成功しました。'
     else
       flash.now[:danger] = 'コメント投稿に失敗しました。'
-      render :index
     end
+    render :index
   end
 
   def update
@@ -27,12 +26,11 @@ class CommentsController < ApplicationController
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
     @comment = Comment.find(params[:id])
     if @comment.update(comment_params)
-      flash[:success] = 'コメント編集に成功しました。'
-      redirect_to video_url(@video.id)
+      flash.now[:success] = 'コメント編集に成功しました。'
     else
       flash.now[:danger] = 'コメント編集に失敗しました。'
-      render :index
     end
+    render :index
   end
 
   def destroy
@@ -41,7 +39,7 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     if @comment.destroy
       flash[:success] = 'コメント削除に成功しました。'
-      redirect_to video_url(@video.id)
+      render :index
     else
       flash.now[:danger] = 'コメント削除に失敗しました。'
       render :index

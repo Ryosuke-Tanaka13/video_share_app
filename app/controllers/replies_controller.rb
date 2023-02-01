@@ -16,31 +16,29 @@ class RepliesController < ApplicationController
     # コメント返信したアカウントをセット
     set_replyer_id
     if @reply.save
-      flash[:success] = 'コメント返信に成功しました。'
-      redirect_to video_url(@comment.video_id)
+      flash.now[:success] = 'コメント返信に成功しました。'
     else
       flash.now[:danger] = 'コメント返信に失敗しました。'
-      render template: 'comments/index'
     end
+    render template: 'comments/index'
   end
 
   def update
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
     if @reply.update(reply_params)
       flash[:success] = 'コメント返信の編集に成功しました。'
-      redirect_to video_url(@comment.video_id)
     else
-      flash.now[:danger] = 'コメント返信に削除に失敗しました。'
-      render template: 'comments/index'
+      flash.now[:danger] = 'コメント返信の編集に失敗しました。'
     end
+    render template: 'comments/index'
   end
 
   def destroy
     if @reply.destroy
-      flash[:success] = 'コメント返信削除に成功しました。'
+      flash[:success] = 'コメント返信の削除に成功しました。'
       redirect_to video_url(@comment.video_id)
     else
-      flash.now[:danger] = 'コメント返信削除に失敗しました。'
+      flash.now[:danger] = 'コメント返の削除に失敗しました。'
       render template: 'comments/index'
     end
   end
@@ -60,7 +58,7 @@ class RepliesController < ApplicationController
   # コメント返信したアカウントのidをセット
   def set_replyer_id
     if current_system_admin
-      @reply.system_admin_id = current_system_admin.id   
+      @reply.system_admin_id = current_system_admin.id
     elsif current_user
       @reply.user_id = current_user.id
     elsif current_viewer
