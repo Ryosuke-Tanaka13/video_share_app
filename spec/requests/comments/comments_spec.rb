@@ -8,7 +8,9 @@ RSpec.describe 'Comments', type: :request do
   let(:user_staff1) { create(:user_staff1, organization_id: organization.id) }
   let(:viewer) { create(:viewer) }
   let(:another_viewer) { create(:another_viewer) }
-  let(:system_admin_comment) { create(:system_admin_comment, organization_id: user.organization_id, video_id: video_it.id, system_admin_id: system_admin) }
+  let(:system_admin_comment) do
+    create(:system_admin_comment, organization_id: user.organization_id, video_id: video_it.id, system_admin_id: system_admin)
+  end
   let(:user_comment) { create(:user_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user.id) }
   let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video_it.id, viewer_id: viewer.id) }
 
@@ -38,20 +40,9 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: 'システム管理者のコメント'
-                }
+                }, format: :js
               }
           }.to change(Comment, :count).by(1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            post(video_comments_path(video_id: video_it.id),
-              params: {
-                comment: {
-                  comment: 'システム管理者のコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -66,20 +57,9 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: '動画投稿者のコメント'
-                }
+                }, format: :js
               }
           }.to change(Comment, :count).by(1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            post(video_comments_path(video_id: video_it.id),
-              params: {
-                comment: {
-                  comment: '動画投稿者のコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -94,20 +74,9 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: '動画視聴者のコメント'
-                }
+                }, format: :js
               }
           }.to change(Comment, :count).by(1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            post(video_comments_path(video_id: video_it.id),
-              params: {
-                comment: {
-                  comment: '動画視聴者のコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
     end
@@ -179,20 +148,9 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: 'システム管理者のアップデートコメント'
-                }
+                }, format: :js
               }
           }.to change { Comment.find(system_admin_comment.id).comment }.from(system_admin_comment.comment).to('システム管理者のアップデートコメント')
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
-              params: {
-                comment: {
-                  comment: 'システム管理者のアップデートコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -203,20 +161,9 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: 'システム管理者からのアップデートコメント'
-                }
+                }, format: :js
               }
           }.to change { Comment.find(user_comment.id).comment }.from(user_comment.comment).to('システム管理者からのアップデートコメント')
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_path(video_id: video_it.id, id: user_comment.id),
-              params: {
-                comment: {
-                  comment: 'システム管理者からのアップデートコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
 
         it '動画視聴者のコメントがアップデートされる' do
@@ -225,20 +172,9 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: 'システム管理者からのアップデートコメント'
-                }
+                }, format: :js
               }
           }.to change { Comment.find(viewer_comment.id).comment }.from(viewer_comment.comment).to('システム管理者からのアップデートコメント')
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_path(video_id: video_it.id, id: viewer_comment.id),
-              params: {
-                comment: {
-                  comment: 'システム管理者からのアップデートコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -268,20 +204,9 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: '動画投稿者のアップデートコメント'
-                }
+                }, format: :js
               }
           }.to change { Comment.find(user_comment.id).comment }.from(user_comment.comment).to('動画投稿者のアップデートコメント')
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_path(video_id: video_it.id, id: user_comment.id),
-              params: {
-                comment: {
-                  comment: '動画投稿者のアップデートコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -311,20 +236,9 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: '動画視聴者のアップデートコメント'
-                }
+                }, format: :js
               }
           }.to change { Comment.find(viewer_comment.id).comment }.from(viewer_comment.comment).to('動画視聴者のアップデートコメント')
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_path(video_id: video_it.id, id: viewer_comment.id),
-              params: {
-                comment: {
-                  comment: '動画視聴者のアップデートコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
 

@@ -39,7 +39,7 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     if @comment.destroy
       flash[:success] = 'コメント削除に成功しました。'
-      render :index
+      redirect_to video_url(@comment.video_id)
     else
       flash.now[:danger] = 'コメント削除に失敗しました。'
       render :index

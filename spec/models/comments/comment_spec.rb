@@ -22,7 +22,7 @@ RSpec.describe Comment, type: :model do
   describe '正常' do
     context 'システム管理者の場合' do
       it '正常に保存できること' do
-        expect(system_admin).to be_valid
+        expect(system_admin_comment).to be_valid
       end
     end
 
@@ -42,9 +42,9 @@ RSpec.describe Comment, type: :model do
   describe 'バリデーション' do
     context 'システム管理者の場合' do
       it '空白' do
-        user_comment.comment = ''
-        expect(user_comment.valid?).to eq(false)
-        expect(user_comment.errors.full_messages).to include('Commentを入力してください')
+        system_admin_comment.comment = ''
+        expect(system_admin_comment.valid?).to eq(false)
+        expect(system_admin_comment.errors.full_messages).to include('Commentを入力してください')
       end
     end
 

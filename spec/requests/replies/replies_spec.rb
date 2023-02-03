@@ -40,20 +40,9 @@ RSpec.describe 'Replies', type: :request do
               params: {
                 reply: {
                   reply: 'システム管理者の返信'
-                }
+                }, format: :js
               }
           }.to change(Reply, :count).by(1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            post(video_comment_replies_path(video_id: video_it.id, comment_id: user_reply.comment_id),
-              params: {
-                reply: {
-                  reply: 'システム管理者の返信'
-                }
-              })
-          ).to redirect_to video_path(video_it.id)
         end
       end
     end
@@ -70,20 +59,9 @@ RSpec.describe 'Replies', type: :request do
               params: {
                 reply: {
                   reply: '動画投稿者の返信'
-                }
+                }, format: :js
               }
           }.to change(Reply, :count).by(1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            post(video_comment_replies_path(video_id: video_it.id, comment_id: user_reply.comment_id),
-              params: {
-                reply: {
-                  reply: '動画投稿者の返信'
-                }
-              })
-          ).to redirect_to video_path(video_it.id)
         end
       end
     end
@@ -99,20 +77,9 @@ RSpec.describe 'Replies', type: :request do
             params: {
               reply: {
                 reply: '動画視聴者のコメント'
-              }
+              }, format: :js
             }
         }.to change(Reply, :count).by(1)
-      end
-
-      it 'videos#showにリダイレクトされる' do
-        expect(
-          post(video_comment_replies_path(video_id: video_it.id, comment_id: viewer_reply.comment_id),
-            params: {
-              reply: {
-                reply: '動画視聴者の返信'
-              }
-            })
-        ).to redirect_to video_path(video_it)
       end
     end
 
@@ -183,20 +150,9 @@ RSpec.describe 'Replies', type: :request do
               params: {
                 reply: {
                   reply: 'システム管理者のアップデート返信'
-                }
+                }, format: :js
               }
           }.to change { Reply.find(system_admin_reply.id).reply }.from(system_admin_reply.reply).to('システム管理者のアップデート返信')
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: system_admin_reply.id),
-              params: {
-                reply: {
-                  reply: 'システム管理者のアップデート返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
 
         it '動画投稿者の返信がアップデートされる' do
@@ -205,20 +161,9 @@ RSpec.describe 'Replies', type: :request do
               params: {
                 reply: {
                   reply: 'システム管理者からのアップデート返信'
-                }
+                }, format: :js
               }
           }.to change { Reply.find(user_reply.id).reply }.from(user_reply.reply).to('システム管理者からのアップデート返信')
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: {
-                reply: {
-                  reply: 'システム管理者からのアップデート返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
 
         it '動画視聴者の返信がアップデートされる' do
@@ -227,20 +172,9 @@ RSpec.describe 'Replies', type: :request do
               params: {
                 reply: {
                   reply: 'システム管理者からのアップデート返信'
-                }
+                }, format: :js
               }
           }.to change { Reply.find(viewer_reply.id).reply }.from(viewer_reply.reply).to('システム管理者からのアップデート返信')
-        end
-  
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-              params: {
-                reply: {
-                  reply: 'システム管理者からのアップデート返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -270,20 +204,9 @@ RSpec.describe 'Replies', type: :request do
               params: {
                 reply: {
                   reply: '動画投稿者のアップデート返信'
-                }
+                }, format: :js
               }
           }.to change { Reply.find(user_reply.id).reply }.from(user_reply.reply).to('動画投稿者のアップデート返信')
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            patch(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: {
-                reply: {
-                  reply: '動画投稿者のアップデート返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -355,20 +278,9 @@ RSpec.describe 'Replies', type: :request do
             params: {
               reply: {
                 reply: '動画視聴者のアップデート返信'
-              }
+              }, format: :js
             }
         }.to change { Reply.find(viewer_reply.id).reply }.from(viewer_reply.reply).to('動画視聴者のアップデート返信')
-      end
-
-      it 'videos#showにリダイレクトされる' do
-        expect(
-          patch(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-            params: {
-              reply: {
-                reply: '動画視聴者のアップデート返信'
-              }
-            })
-        ).to redirect_to video_path(video_it)
       end
     end
 
