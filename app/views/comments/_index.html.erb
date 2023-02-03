@@ -63,84 +63,87 @@
   <h5>コメント返信</h5>
   <% if account_logged_in? %>
     <div data-reply-form-id='<%= comment.id %>' class="js-reply-form-button">
-      <button type="button" class="btn btn-light">返信</button>
+      <button type="button" class="btn btn-light rounded-pill">返信</button>
     </div>
     <div id="content-show-comment-bottom-reply-form-<%= comment.id %>" data-comment-id=<%= comment.id %> style="display: none;">
       <%= render partial: 'replies/form', locals: { comment: comment } %>
     </div>
   <% end %>
 
-  <!-- 返信の件数を表示 -->
+  <!-- 返信の件数及び内容 -->
   <div class="content-show-comment-bottom-view-btn">
     <% if comment.replies.includes(:system_admin, :user, :viewer).present? %>
-      <%= "#{ comment.replies.includes(:system_admin, :user, :viewer).count } 件の返信" %>
+      <div data-reply-content-id='<%= comment.id %>' class="js-reply-content-button">
+        <button type="button" class="btn btn-link btn-sm rounded-pill">
+          <%= "#{ comment.replies.includes(:system_admin, :user, :viewer).count } 件の返信" %>
+        </button>
+      </div>
+      <br>
+      <div id="content-show-comment-bottom-reply-content-<%= comment.id %>" data-comment-id=<%= comment.id %> style="display: none;">
+        <% comment.replies.includes(:system_admin, :user, :viewer).each do |reply| %>
+          <div class="content-show-comment-bottom-view-reply">
+            <div class="content-show-comment-bottom-view-reply-top">
+              <div class="content-show-comment-bottom-view-reply-top-user">
+                <!-- アカウントのアイコンを表示 -->
+                <div class="content-show-comment-bottom-view-reply-top-user-icon">
+                  <% if reply.system_admin.present? && reply.system_admin.image.present? %>
+                    <%= image_tag reply.system_admin.image.url, class:"reply-image", size: "40x40" %>
+                  <% elsif (reply.user.present? && !reply.user&.is_valid) || (reply.viewer.present? && !reply.viewer&.is_valid) %>
+                    <%= image_tag "default.png", class:"reply-image", size: "40x40" %>
+                  <% elsif reply.user.present? && reply.user.image.present? %>
+                    <%= image_tag reply.user.image.url, class:"reply-image", size: "40x40" %>
+                  <% elsif reply.viewer.present? && reply.viewer.image.present? %>
+                    <%= image_tag reply.viewer.image.url, class:"reply-image", size: "40x40" %>
+                  <% else %>
+                    <%= image_tag "default.png", class:"reply-image", size: "40x40" %>
+                  <% end %>
+                <!-- アカウントの名前を表示 -->
+                <div class="content-show-comment-bottom-view-reply-top-user-name">
+                  <% if reply.system_admin.present? %>
+                    <%= reply.system_admin.name %>さん
+                  <% elsif (reply.user.present? && !reply.user&.is_valid) || (reply.viewer.present? && !reply.viewer&.is_valid) %>
+                    削除されたユーザー
+                  <% elsif reply.user.present? %>
+                    <%= reply.user.name %>さん
+                  <% elsif reply.viewer.present? %> 
+                    <%= reply.viewer.name %>さん
+                  <% end %>
+                </div>
+                <!-- 返信を表示 -->
+                <div id="js-reply-label-<%= reply.id %>">
+                  <%= simple_format(reply.reply) %>
+                  <%= l reply.created_at, format: :short %>
+                </div>
+                <!-- 返信編集ボタン、削除ボタンを表示 -->
+                <div class="content-show-comment-bottom-view-reply-top-icons">
+                  <!-- ログイン済みかつ返信したアカウントの場合、編集ボタン、削除ボタンを表示 -->
+                  <% if current_system_admin || (reply.user_id == current_user&.id && current_user.present?) || (reply.viewer_id == current_viewer&.id && current_viewer.present?) %>
+                    <div data-reply-id='<%= reply.id %>' class="js-edit-reply-button">
+                      <i class="fas fa-edit text-primary"></i>
+                    </div><br>
+                    <div id="js-reply-<%= reply.id %>">
+                      <div id="js-reply-post-error-<%= reply.id %>" class="text-danger"></div>
+                      <textarea style="display: none;" id="js-textarea-reply-<%= reply.id %>" class="form-control reply-post-error"><%= reply.reply %></textarea>
+                      <div id="js-reply-button-<%= reply.id %>" style="display: none;">
+                        <button data-cancel-id=<%= reply.id %> type="button" class="btn btn-light reply-cancel-button">キャンセル</button>
+                        <button data-update-id=<%= reply.id %> data-video-id=<%= comment.video_id %> data-comment-id=<%= comment.id %> type="submit" class="btn btn-success reply-update-button">更新</button>
+                      </div>
+                    </div>
+                    <div class="content-show-comment-bottom-view-reply-top-icons-delete">
+                      <%= link_to video_comment_reply_path(comment.video_id, reply.comment_id, reply.id), method: :delete, remote: true, data: { confirm: "削除しますか？" } do %>
+                        <i class="far fa-trash-alt" color=red></i>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>      
+            </div> 
+          </div>
+        <% end %>
+      </div>
     <% else %>
       <p>コメントの返信はありません</p>
     <% end %>
   </div>
-
-  <!-- 返信部分 -->
-  <% if comment.replies.includes(:system_admin, :user, :viewer).present? %>
-    <% comment.replies.includes(:system_admin, :user, :viewer).each do |reply| %>
-      <div class="content-show-comment-bottom-view-reply">
-        <div class="content-show-comment-bottom-view-reply-top">
-          <div class="content-show-comment-bottom-view-reply-top-user">
-            <!-- アカウントのアイコンを表示 -->
-            <div class="content-show-comment-bottom-view-reply-top-user-icon">
-              <% if reply.system_admin.present? && reply.system_admin.image.present? %>
-                <%= image_tag reply.system_admin.image.url, class:"reply-image", size: "40x40" %>
-              <% elsif (reply.user.present? && !reply.user&.is_valid) || (reply.viewer.present? && !reply.viewer&.is_valid) %>
-                <%= image_tag "default.png", class:"reply-image", size: "40x40" %>
-              <% elsif reply.user.present? && reply.user.image.present? %>
-                <%= image_tag reply.user.image.url, class:"reply-image", size: "40x40" %>
-              <% elsif reply.viewer.present? && reply.viewer.image.present? %>
-                <%= image_tag reply.viewer.image.url, class:"reply-image", size: "40x40" %>
-              <% else %>
-                <%= image_tag "default.png", class:"reply-image", size: "40x40" %>
-              <% end %>
-            <!-- アカウントの名前を表示 -->
-            <div class="content-show-comment-bottom-view-reply-top-user-name">
-              <% if reply.system_admin.present? %>
-                <%= reply.system_admin.name %>さん
-              <% elsif (reply.user.present? && !reply.user&.is_valid) || (reply.viewer.present? && !reply.viewer&.is_valid) %>
-                削除されたユーザー
-              <% elsif reply.user.present? %>
-                <%= reply.user.name %>さん
-              <% elsif reply.viewer.present? %> 
-                <%= reply.viewer.name %>さん
-              <% end %>
-            </div>
-            <!-- 返信を表示 -->
-            <div id="js-reply-label-<%= reply.id %>">
-              <%= simple_format(reply.reply) %>
-              <%= l reply.created_at, format: :short %>
-            </div>
-            <!-- 返信編集ボタン、削除ボタンを表示 -->
-            <div class="content-show-comment-bottom-view-reply-top-icons">
-              <!-- ログイン済みかつ返信したアカウントの場合、編集ボタン、削除ボタンを表示 -->
-              <% if current_system_admin || (reply.user_id == current_user&.id && current_user.present?) || (reply.viewer_id == current_viewer&.id && current_viewer.present?) %>
-                <div data-reply-id='<%= reply.id %>' class="js-edit-reply-button">
-                  <i class="fas fa-edit text-primary"></i>
-                </div><br>
-                <div id="js-reply-<%= reply.id %>">
-                  <div id="js-reply-post-error-<%= reply.id %>" class="text-danger"></div>
-                  <textarea style="display: none;" id="js-textarea-reply-<%= reply.id %>" class="form-control reply-post-error"><%= reply.reply %></textarea>
-                  <div id="js-reply-button-<%= reply.id %>" style="display: none;">
-                    <button data-cancel-id=<%= reply.id %> type="button" class="btn btn-light reply-cancel-button">キャンセル</button>
-                    <button data-update-id=<%= reply.id %> data-video-id=<%= comment.video_id %> data-comment-id=<%= comment.id %> type="submit" class="btn btn-success reply-update-button">更新</button>
-                  </div>
-                </div>
-                <div class="content-show-comment-bottom-view-reply-top-icons-delete">
-                  <%= link_to video_comment_reply_path(comment.video_id, reply.comment_id, reply.id), method: :delete, remote: true, data: { confirm: "削除しますか？" } do %>
-                    <i class="far fa-trash-alt" color=red></i>
-                  <% end %>
-                </div>
-              <% end %>
-            </div>
-          </div>      
-        </div> 
-      </div>
-    <% end %>
-  <% end %>
   <hr>
 <% end %>
