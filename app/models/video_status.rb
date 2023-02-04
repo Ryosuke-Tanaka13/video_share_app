@@ -14,18 +14,6 @@ class VideoStatus < ApplicationRecord
     false
   end
 
-  def not_valid?
-    return true if self.is_valid == false
-
-    false
-  end
-
-  def valid_true?
-    return true if self.is_valid == true
-
-    false
-  end
-
   def not_watched_at_all?
     return if self.watched_ratio.zero?
 

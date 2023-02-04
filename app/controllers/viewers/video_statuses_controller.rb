@@ -18,12 +18,9 @@ class Viewers::VideoStatusesController < ApplicationController
                  Viewer.viewer_has(@video.organization.id)
                end
     # 視聴完了している視聴者
-    @complete_viewers = if current_user
-                          @viewers.completely_watched_valid_true(@video.id)
-                        elsif current_system_admin
-                          @viewers.completely_watched(@video.id)
-                        end
-    @complete_viewers_rate = (@complete_viewers.count / @viewers.count.to_f.to_f * 100).round(0)
+    @complete_viewers = @viewers.completely_watched(@video.id)
+    # 視聴完了している視聴者の割合
+    @complete_viewers_rate = (@complete_viewers.count / @viewers.count.to_f.to_f * 100).round(0) if @viewers.exists?
     # 視聴状況が作成されていない場合は、視聴率が0.0%のインスタンスを生成
     set_video_statuses
     # 視聴率が100.0%未満のインスタンスをグラフ表示
@@ -36,9 +33,9 @@ class Viewers::VideoStatusesController < ApplicationController
       && @video_status.correct_latest_end_point?(params[:video_status][:latest_end_point].to_f)
       @video_status.update!(video_status_params)
       if completely_watched?
-        @video_status.update!(watched_ratio: 100.0, watched_at: Time.current, is_valid: true)
+        @video_status.update!(watched_ratio: 100.0, watched_at: Time.current)
       else
-        @video_status.update!(watched_ratio: culuculate_watched_ratio, is_valid: true)
+        @video_status.update!(watched_ratio: culuculate_watched_ratio)
       end
     end
   end
@@ -81,20 +78,9 @@ class Viewers::VideoStatusesController < ApplicationController
 
     @viewers.each do |viewer|
       @video_status = viewer.video_statuses.find_by(video_id: @video.id)
-      if current_user
-        if @video_status.not_completely_watched? || (@video_status.completely_watched? && @video_status.not_valid?)
-          @side.push(viewer.name)
-          if @video_status.valid_true?
-            @vertical.push(@video_status.watched_ratio)
-          else
-            @vertical.push(0.0)
-          end
-        end
-      elsif current_system_admin
-        if @video_status.not_completely_watched?
-          @side.push(viewer.name)
-          @vertical.push(@video_status.watched_ratio)
-        end
+      if @video_status.not_completely_watched?
+        @side.push(viewer.name)
+        @vertical.push(@video_status.watched_ratio)
       end
     end
   end

@@ -15,52 +15,20 @@ module ViewerDecorator
   end
 
   def name_show
-    if current_user&.role != 'owner'
-      self.name
-    else
+    if current_user&.owner? || current_system_admin
       link_to self.name, viewer_path(self)
+    else
+      self.name
     end
   end
 
-  def complete_video_status_hidden_button(video_id)
-    if self.complete_video_status(video_id).valid_true?
-      link_to '視聴状況の削除', video_status_hidden_path(self.complete_video_status(video_id), video_id: video_id), class: 'btn btn-md btn-danger'
-    else
-      'オーナー削除済み'
+  def not_valid_flag
+    if current_system_admin && (self.is_valid == false)
+      '(退会)'
     end
   end
 
   def incomplete_video_status_watched_ratio(video_id)
-    if current_user
-      if self.incomplete_video_status(video_id)&.valid_true?
-        self.incomplete_video_status(video_id).watched_ratio
-      elsif self.incomplete_video_status(video_id)&.not_valid? || self.complete_video_status(video_id)&.not_valid?
-        0.0
-      end
-    elsif current_system_admin
-      if self.incomplete_video_status(video_id)
-        self.incomplete_video_status(video_id).watched_ratio
-      elsif self.incomplete_video_status(video_id).not_valid?
-        0.0
-      end
-    end
-  end
-
-  def incomplete_video_status_hidden_button(video_id)
-    if current_user&.owner?
-      if self.not_zero_video_status(video_id)&.valid_true?
-        link_to '視聴状況の削除', video_status_hidden_path(self.not_zero_video_status(video_id), video_id: video_id), class: 'btn btn-md btn-danger'
-      else
-        '未視聴'
-      end
-    elsif current_system_admin
-      if self.not_zero_video_status(video_id)&.valid_true?
-        link_to '視聴状況の削除', video_status_hidden_path(self.not_zero_video_status(video_id), video_id: video_id), class: 'btn btn-md btn-danger'
-      elsif self.not_zero_video_status(video_id)&.not_valid?
-        'オーナー削除済み'
-      else
-        '未視聴'
-      end
-    end
+    self.incomplete_video_status(video_id).watched_ratio if self.incomplete_video_status(video_id).present?
   end
 end

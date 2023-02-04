@@ -28,14 +28,6 @@ class Viewer < ApplicationRecord
   scope :subscribed, -> { where(is_valid: true) }
 
   # viewers::video_statuses#indexで呼び出し
-  scope :completely_watched_valid_true, lambda { |video_id|
-                                          includes(:video_statuses).where(
-                                                                          video_statuses: {
-                                                                            video_id: video_id, watched_ratio: 100.0, is_valid: true
-                                                                          }
-                                                                        )
-                                        }
-
   scope :completely_watched, lambda { |video_id|
                                includes(:video_statuses).where(video_statuses: { video_id: video_id, watched_ratio: 100.0 })
                              }

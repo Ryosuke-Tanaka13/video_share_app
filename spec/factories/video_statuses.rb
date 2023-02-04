@@ -16,13 +16,4 @@ FactoryBot.define do
     video_id { 1 }
     viewer_id { 3 }
   end
-
-  factory :video_deleted_status, class: 'VideoStatus' do
-    latest_end_point { 6.0 }
-    total_time { 12.97 }
-    watched_ratio { 46.0 }
-    watched_at { nil }
-    video_id { 4 }
-    viewer_id { 1 }
-  end
 end

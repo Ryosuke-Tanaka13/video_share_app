@@ -72,11 +72,6 @@ Rails.application.routes.draw do
   # =================================================================
 
   # video関連==========================================================
-  scope module: :viewers do
-    get 'videos/:video_id/video_statuses/:id/hidden' => 'hiddens#confirm', as: :video_status_hidden
-    patch 'videos/:video_id/video_statuses/:id/withdraw' => 'hiddens#withdraw', as: :video_status_withdraw
-  end
-
   resources :videos do
     member do
       scope module: :viewers do

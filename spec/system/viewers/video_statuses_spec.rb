@@ -52,20 +52,18 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
         expect(page).to have_link viewer1.name, href: viewer_path(viewer1)
         expect(page).to have_text '視聴完了時刻'
         expect(page).to have_text '08/14 18:06'
-        expect(page).to have_link '視聴状況の削除', href: video_status_hidden_path(video_sample_status1, video_id: video_sample.id)
-        expect(page).to have_link '視聴状況の完全削除', href: video_status_path(video_sample_status1, video_id: video_sample.id)
+        expect(page).to have_link '視聴状況の削除', href: video_status_path(video_sample_status1, video_id: video_sample.id)
         expect(page).to have_text '●視聴が完了していない視聴者'
         expect(page).to have_text '名前'
         expect(page).to have_text '視聴率'
         expect(page).to have_link viewer.name, href: viewer_path(viewer)
         expect(page).to have_text video_sample_status.watched_ratio
-        expect(page).to have_link '視聴状況の削除', href: video_status_hidden_path(video_sample_status, video_id: video_sample.id)
-        expect(page).to have_link '視聴状況の完全削除', href: video_status_path(video_sample_status, video_id: video_sample.id)
+        expect(page).to have_link '視聴状況の削除', href: video_status_path(video_sample_status, video_id: video_sample.id)
         find('#myChart')
       end
 
       it '視聴状況(100%)削除' do
-        find(:xpath, '//*[@id="viewers-video_statuses-index"]/div[1]/div[1]/div[2]/div[1]/div/table/tbody/tr[2]/td[4]/a').click
+        find(:xpath, '//*[@id="viewers-video_statuses-index"]/div[1]/div[1]/div[2]/div[1]/div/table/tbody/tr[2]/td[3]/a').click
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '視聴者1の視聴状況を削除します。本当によろしいですか？'
           page.driver.browser.switch_to.alert.accept
@@ -74,7 +72,7 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
       end
 
       it '視聴状況(100%)削除キャンセル' do
-        find(:xpath, '//*[@id="viewers-video_statuses-index"]/div[1]/div[1]/div[2]/div[1]/div/table/tbody/tr[2]/td[4]/a').click
+        find(:xpath, '//*[@id="viewers-video_statuses-index"]/div[1]/div[1]/div[2]/div[1]/div/table/tbody/tr[2]/td[3]/a').click
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '視聴者1の視聴状況を削除します。本当によろしいですか？'
           page.driver.browser.switch_to.alert.dismiss
@@ -82,7 +80,7 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
       end
 
       it '視聴状況(100%未満)削除' do
-        find(:xpath, '//*[@id="viewers-video_statuses-index"]/div[1]/div[1]/div[2]/div[2]/div/table/tbody/tr[2]/td[4]/a').click
+        find(:xpath, '//*[@id="viewers-video_statuses-index"]/div[1]/div[1]/div[2]/div[2]/div/table/tbody/tr[2]/td[3]/a').click
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '視聴者の視聴状況を削除します。本当によろしいですか？'
           page.driver.browser.switch_to.alert.accept
@@ -91,7 +89,7 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
       end
 
       it '視聴状況(100%未満)削除キャンセル' do
-        find(:xpath, '//*[@id="viewers-video_statuses-index"]/div[1]/div[1]/div[2]/div[2]/div/table/tbody/tr[2]/td[4]/a').click
+        find(:xpath, '//*[@id="viewers-video_statuses-index"]/div[1]/div[1]/div[2]/div[2]/div/table/tbody/tr[2]/td[3]/a').click
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '視聴者の視聴状況を削除します。本当によろしいですか？'
           page.driver.browser.switch_to.alert.dismiss
@@ -115,15 +113,13 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
         expect(page).to have_link viewer1.name, href: viewer_path(viewer1)
         expect(page).to have_text '視聴完了時刻'
         expect(page).to have_text '08/14 18:06'
-        expect(page).to have_link '視聴状況の削除', href: video_status_hidden_path(video_sample_status1, video_id: video_sample.id)
-        expect(page).to have_no_link '視聴状況の完全削除', href: video_status_path(video_sample_status1, video_id: video_sample.id)
+        expect(page).to have_no_link '視聴状況の削除', href: video_status_path(video_sample_status1, video_id: video_sample.id)
         expect(page).to have_text '●視聴が完了していない視聴者'
         expect(page).to have_text '名前'
         expect(page).to have_text '視聴率'
         expect(page).to have_link viewer.name, href: viewer_path(viewer)
         expect(page).to have_text video_sample_status.watched_ratio
-        expect(page).to have_link '視聴状況の削除', href: video_status_hidden_path(video_sample_status, video_id: video_sample.id)
-        expect(page).to have_no_link '視聴状況の完全削除', href: video_status_path(video_sample_status, video_id: video_sample.id)
+        expect(page).to have_no_link '視聴状況の削除', href: video_status_path(video_sample_status, video_id: video_sample.id)
         find('#myChart')
       end
     end
@@ -134,7 +130,7 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
         visit video_statuses_path(video_sample)
       end
 
-      it 'レイアウトに物理削除のリンクなし、論理削除のリンクなし、視聴者の名前はリンクではなくテキスト表示' do
+      it 'レイアウトに物理削除のリンクなし、視聴者の名前はリンクではなくテキスト表示' do
         expect(page).to have_text '●視聴が完了している視聴者の割合'
         expect(page).to have_text '→ 50 % (2人中1人が完了)'
         expect(page).to have_text '●視聴が完了している視聴者'
@@ -143,16 +139,14 @@ RSpec.xdescribe 'VideoStatusesSystem', type: :system, js: true do
         expect(page).to have_text viewer1.name
         expect(page).to have_text '視聴完了時刻'
         expect(page).to have_text '08/14 18:06'
-        expect(page).to have_no_link '視聴状況の削除', href: video_status_hidden_path(video_sample_status1, video_id: video_sample.id)
-        expect(page).to have_no_link '視聴状況の完全削除', href: video_status_path(video_sample_status1, video_id: video_sample.id)
+        expect(page).to have_no_link '視聴状況の削除', href: video_status_path(video_sample_status1, video_id: video_sample.id)
         expect(page).to have_text '●視聴が完了していない視聴者'
         expect(page).to have_text '名前'
         expect(page).to have_text '視聴率'
         expect(page).to have_no_link viewer.name, href: viewer_path(viewer)
         expect(page).to have_text viewer.name
         expect(page).to have_text video_sample_status.watched_ratio
-        expect(page).to have_no_link '視聴状況の削除', href: video_status_hidden_path(video_sample_status, video_id: video_sample.id)
-        expect(page).to have_no_link '視聴状況の完全削除', href: video_status_path(video_sample_status, video_id: video_sample.id)
+        expect(page).to have_no_link '視聴状況の削除', href: video_status_path(video_sample_status, video_id: video_sample.id)
         find('#myChart')
       end
     end
