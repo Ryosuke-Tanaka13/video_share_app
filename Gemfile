@@ -8,7 +8,7 @@ ruby '3.0.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.3', '>= 6.1.3.1'
 # Use mysql as the database for Active Record
-gem 'mysql2', '~> 0.5'
+# gem 'mysql2', '~> 0.5'
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
 # Use SCSS for stylesheets
@@ -53,6 +53,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'letter_opener_web', '~> 1.0'
+  gem 'mysql2', '~> 0.5'
   gem 'pry-rails'
   gem 'rspec-rails'
 end
@@ -98,3 +99,7 @@ end
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 gem 'ffi', '~> 1.15'
+
+group :production do
+  gem 'pg'
+end
