@@ -64,24 +64,6 @@ $(document).on('turbolinks:load', function() {
     });
   });
 
-  // 返信フォーム開閉
-  $(function () {
-    $(document).on("click", ".js-reply-form-button", function () {
-      const commentId = $(this).data("reply-form-id");
-
-      $("#content-show-comment-bottom-reply-form-" + commentId).toggle();
-    });
-  });
-
-  // 返信内容開閉
-  $(function () {
-    $(document).on("click", ".js-reply-content-button", function () {
-      const commentId = $(this).data("reply-content-id");
-
-      $("#content-show-comment-bottom-reply-content-" + commentId).toggle();
-    });
-  });
-
   // 返信編集エリア表示
   $(function () {
     $(document).on("click", ".js-edit-reply-button", function () {
