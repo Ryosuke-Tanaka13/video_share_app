@@ -131,3 +131,22 @@ $(document).on('turbolinks:load', function() {
     });
   });
 });
+
+
+// 返信フォーム開閉
+$(function () {
+  $(document).on("click", ".js-reply-form-button", function () {
+    const commentId = $(this).data("reply-form-id");
+
+    $("#content-show-comment-bottom-reply-form-" + commentId).toggle();
+  });
+});
+
+// 返信内容開閉
+$(function () {
+  $(document).on("click", ".js-reply-count-button", function () {
+    const commentId = $(this).data("reply-count-id");
+
+    $("#content-show-comment-bottom-reply-content-" + commentId).toggle();
+  });
+});

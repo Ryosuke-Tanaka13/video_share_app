@@ -7,7 +7,7 @@ class Reply < ApplicationRecord
 
   # バリデーション
   validates :reply, presence: true
-  # TODO:モデルにメソッド管理できればリファクタリング
+  # TODO: モデルにメソッド管理できればリファクタリング
   # validate :system_admin_or_correct_replyer
 
   # システム管理者またはコメント返信した本人しか編集・削除ができない

@@ -12,7 +12,7 @@ class Comment < ApplicationRecord
 
   # バリデーション
   validates :comment, presence: true
-  # TODO:エラー発生のため改修が必要　CommentsControllerで一旦制御
+  # TODO: エラー発生のため改修が必要　CommentsControllerで一旦制御
   # validate :system_admin_or_correct_commenter
   # attr_accessor :current_system_admin, :current_user, :current_viewer
 

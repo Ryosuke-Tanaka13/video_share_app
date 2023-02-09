@@ -17,10 +17,11 @@ class RepliesController < ApplicationController
     set_replyer_id
     if @reply.save
       flash.now[:success] = 'コメント返信に成功しました。'
+      redirect_to video_url(@comment.video_id)
     else
       flash.now[:danger] = 'コメント返信に失敗しました。'
+      render template: 'comments/index'
     end
-    render template: 'comments/index'
   end
 
   def update
