@@ -40,9 +40,20 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: 'システム管理者のコメント'
-                }, format: :js
+                }
               }
           }.to change(Comment, :count).by(1)
+        end
+
+        it 'videos#showにリダイレクトされる' do
+          expect(
+            post(video_comments_path(video_id: video_it.id),
+              params: {
+                comment: {
+                  comment: 'システム管理者のコメント'
+                }
+              })
+          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -57,9 +68,20 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: '動画投稿者のコメント'
-                }, format: :js
+                }
               }
           }.to change(Comment, :count).by(1)
+        end
+
+        it 'videos#showにリダイレクトされる' do
+          expect(
+            post(video_comments_path(video_id: video_it.id),
+              params: {
+                comment: {
+                  comment: '動画投稿者のコメント'
+                }
+              })
+          ).to redirect_to video_path(video_it)
         end
       end
 
@@ -74,9 +96,20 @@ RSpec.describe 'Comments', type: :request do
               params: {
                 comment: {
                   comment: '動画視聴者のコメント'
-                }, format: :js
+                }
               }
           }.to change(Comment, :count).by(1)
+        end
+
+        it 'videos#showにリダイレクトされる' do
+          expect(
+            post(video_comments_path(video_id: video_it.id),
+              params: {
+                comment: {
+                  comment: '動画視聴者のコメント'
+                }
+              })
+          ).to redirect_to video_path(video_it)
         end
       end
     end

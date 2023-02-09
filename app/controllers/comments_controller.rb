@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
       redirect_to video_url(@comment.video_id)
     else
       flash.now[:danger] = 'コメント投稿に失敗しました。'
-      render :indexrender :index
+      render :index
     end
   end
 
