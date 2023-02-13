@@ -57,7 +57,13 @@
   margin-left:10px;
 }
 
+// 動画のfloat解除
+#videos-index .content{
+  overflow: hidden;
+}
+
 // videos#showページ
 .video-title-and-action-show{
   margin-left:50px;
 }
+
