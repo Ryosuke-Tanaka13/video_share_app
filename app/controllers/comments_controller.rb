@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
     # コメント投稿したアカウントをセット
     set_commenter_id
     if @comment.save
-      flash.now[:success] = 'コメント投稿に成功しました。' 
+      flash[:success] = 'コメント投稿に成功しました。'
       redirect_to video_url(@comment.video_id)
     else
       flash.now[:danger] = 'コメント投稿に失敗しました。'
