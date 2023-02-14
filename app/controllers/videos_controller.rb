@@ -28,6 +28,7 @@ class VideosController < ApplicationController
   end
 
   def create
+    # params[:video][:expire_type].to_sym if params[:video][:expire_type]
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
     if @video.save
@@ -70,7 +71,7 @@ class VideosController < ApplicationController
   end
 
   def video_params
-    params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
+    params.require(:video).permit(:title, :video, :open_period, :expire_type, :range, :comment_public, :login_set, :popup_before_video,
       :popup_after_video)
   end
 

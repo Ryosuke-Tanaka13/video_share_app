@@ -42,6 +42,7 @@ gem 'dotenv-rails'
 gem 'activestorage-validator'
 # gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
 gem 'active_decorator'
+gem 'enum_help'
 
 group :development, :test do
   # ERD生成

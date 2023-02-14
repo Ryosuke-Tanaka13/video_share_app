@@ -15,4 +15,20 @@ document.addEventListener("turbolinks:load", function() {
       fileReader.readAsDataURL(file);
     });
   });
+  
+  // 公開期間設定後の対応選択エリア表示・非表示
+  jQuery(function($){
+    $('#open_period').on('input', function(){
+      if ($('#open_period').val()) {
+        $('.expire_type_choice').show().css('background-color', '#FFDDFF');
+      }else{
+        $('.expire_type_choice').hide();
+      }
+    });
+
+    // バリデーションエラーでrender:newした際に、選択エリアが非表示になるのを防止
+    if ($('#open_period').val()) {
+      $('.expire_type_choice').show().css('background-color', '#FFDDFF');
+    }
+  });
 })

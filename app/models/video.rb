@@ -7,10 +7,18 @@ class Video < ApplicationRecord
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }, if: :video_exists?
   validates :video, presence: true, blob: { content_type: :video }
+  validate :open_period_is_greater_than_time_now
+
+  # 初期値 private
+  enum expire_type: { nonpublic: 0, deactivate: 1 }
 
   def video_exists?
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
     video.present?
+  end
+
+  def open_period_is_greater_than_time_now
+    errors.add(:open_period, "は現在時刻より後の日時を選択してください") if open_period&.<= Time.now
   end
 
   scope :user_has, lambda { |organization_id|

@@ -20,7 +20,18 @@
         </div>
         <div class="field">
           <%= f.label :open_period, class: "video-label" %><br>
-          <%= f.datetime_field :open_period , id:"open_period" %> 
+          <%= f.datetime_field :open_period, id:"open_period" %>
+          <!-- 公開期間を過ぎた後の対応の選択エリア -->
+          <div class="expire_type_choice" style="display: none;">
+            <span>公開期間を過ぎた後の対応を選択してください</span><br>
+            <%= f.radio_button :expire_type, Video.expire_types.key(0), checked: "checked" %>
+            <%= f.label :expire_type, Video.expire_types_i18n[:nonpublic], value: Video.expire_types.key(0), class: "video_label" %>
+            <% if current_user.owner? %>
+              <%= f.radio_button :expire_type, Video.expire_types.key(1) %>
+              <%= f.label :expire_type, Video.expire_types_i18n[:deactivate], value: Video.expire_types.key(1), class: "video_label" %>
+            <% end %>
+          </div>
+          <!-- ここまで -->
         </div>
         <div class="field">
           <%= f.label :range, class: "video-label" %><br>
@@ -52,4 +63,3 @@
     </div>
   <% end %>
 </div>
-
