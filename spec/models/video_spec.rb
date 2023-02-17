@@ -73,5 +73,13 @@ RSpec.describe Video, type: :model do
         expect(video_sample.errors.full_messages).to include('ビデオのファイル形式が不正です。')
       end
     end
+
+    describe '公開期間' do
+      it '公開期間が現在時刻以前' do
+        video_sample.open_period = Time.now
+        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.errors.full_messages).to include('公開期間は現在時刻より後の日時を選択してください')
+      end
+    end
   end
 end

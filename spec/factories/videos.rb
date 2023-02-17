@@ -2,7 +2,9 @@ FactoryBot.define do
   # 組織セレブエンジニアのオーナーが投稿したビデオ
   factory :video_sample, class: 'Video' do
     title { 'サンプルビデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    # 公開期間を現在時刻+2分に設定。(←+1分にするとテストに落ちる。requestsテストでは+1分でも通る。)
+    open_period { Time.now + 2 }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { false }
@@ -22,7 +24,8 @@ FactoryBot.define do
   # 組織セレブエンジニアのスタッフが投稿したビデオ
   factory :video_test, class: 'Video' do
     title { 'テストビデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    open_period { Time.now + 5 }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { false }
@@ -40,9 +43,10 @@ FactoryBot.define do
   end
 
   # 組織セレブエンジニアのオーナーが投稿したビデオ(視聴にはログイン必須)
-  factory :video_it, class: 'Video' do
-    title { 'ITビデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+  factory :video_login_must, class: 'Video' do
+    title { 'ログイン必須ビデオ' }
+    open_period { nil }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { true }
@@ -54,15 +58,16 @@ FactoryBot.define do
     user
 
     # afterメソッド。Videoインスタンスをbuildした後、動画をつける。
-    after(:build) do |video_it|
-      video_it.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    after(:build) do |video_login_must|
+      video_login_must.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 
   # 組織セレブエンジニアのオーナーが投稿したビデオ(論理削除されたもの)
   factory :video_deleted, class: 'Video' do
     title { 'デリートビデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    open_period { nil }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { false }
@@ -83,7 +88,8 @@ FactoryBot.define do
   # 組織テックリーダーズのオーナーが投稿したビデオ
   factory :another_video, class: 'Video' do
     title { 'アナザービデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    open_period { nil }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { false }

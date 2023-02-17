@@ -14,7 +14,7 @@ RSpec.describe 'Videos', type: :request do
     create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id)
   end
   let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
-  let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+  let(:video_login_must) { create(:video_login_must, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, organization_id: another_organization.id, confirmed_at: Time.now) }
@@ -40,7 +40,7 @@ RSpec.describe 'Videos', type: :request do
     organization_viewer3
     video_sample
     video_test
-    video_it
+    video_login_must
   end
 
   describe 'GET #index' do
@@ -235,7 +235,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  open_period:        Time.now + 1,
                   range:              false,
                   comment_public:     false,
                   popup_before_video: false,
@@ -252,7 +252,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  open_period:        Time.now + 1,
                   range:              false,
                   comment_public:     false,
                   popup_before_video: false,
@@ -277,7 +277,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  open_period:        Time.now + 1,
                   range:              false,
                   comment_public:     false,
                   popup_before_video: false,
@@ -294,7 +294,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  open_period:        Time.now + 1,
                   range:              false,
                   comment_public:     false,
                   popup_before_video: false,
@@ -358,6 +358,19 @@ RSpec.describe 'Videos', type: :request do
           }.not_to change(Video, :count)
         end
 
+        it '公開期間が現在時刻以前だと新規作成されない' do
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title:       'サンプルビデオ2',
+                  video:       fixture_file_upload('/flower.mp4'),
+                  open_period: Time.now
+                }
+              }
+          }.not_to change(Video, :count)
+        end
+
         it '登録失敗するとエラーを出す' do
           expect(
             post(videos_path,
@@ -383,7 +396,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  open_period:        nil,
                   range:              false,
                   comment_public:     false,
                   popup_before_video: false,
@@ -408,7 +421,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  open_period:        nil,
                   range:              false,
                   comment_public:     false,
                   popup_before_video: false,
@@ -429,7 +442,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'サンプルビデオ2',
-                  open_period:        'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+                  open_period:        nil,
                   range:              false,
                   comment_public:     false,
                   popup_before_video: false,
@@ -542,9 +555,23 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
+    describe '異常(公開期間を過ぎている)' do
+      before(:each) do
+        # 2分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 2)
+        sign_in viewer
+        get video_path(video_sample)
+      end
+
+      it 'アクセス権限なしのためリダイレクト' do
+        expect(response).to have_http_status ' 302'
+        expect(response).to redirect_to videos_expire_path
+      end
+    end
+
     describe '異常(非ログイン)' do
       before(:each) do
-        get video_path(video_it)
+        get video_path(video_login_must)
       end
 
       it 'アクセス権限なし(login_setがtrue)のためリダイレクト' do
@@ -567,7 +594,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'テストビデオ2',
-                  open_period:        'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00',
+                  open_period:        Time.now + 2,
                   range:              true,
                   comment_public:     true,
                   login_set:          true,
@@ -584,7 +611,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'テストビデオ２',
-                  open_period:        'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00',
+                  open_period:        Time.now + 2,
                   range:              true,
                   comment_public:     true,
                   login_set:          true,
@@ -613,7 +640,18 @@ RSpec.describe 'Videos', type: :request do
             patch video_path(video_test),
               params: {
                 video: {
-                  title: 'ITビデオ'
+                  title: 'ログイン必須ビデオ'
+                }, format: :js
+              }
+          }.not_to change { Video.find(video_test.id).title }
+        end
+
+        it '公開期間が現在時刻以前でなくアップデートされない' do
+          expect {
+            patch video_path(video_test),
+              params: {
+                video: {
+                  open_period: Time.now
                 }, format: :js
               }
           }.not_to change { Video.find(video_test.id).title }
@@ -643,7 +681,13 @@ RSpec.describe 'Videos', type: :request do
             patch video_path(video_test),
               params: {
                 video: {
-                  title: 'テストビデオ2'
+                  title:              'テストビデオ2',
+                  open_period:        Time.now + 2,
+                  range:              true,
+                  comment_public:     true,
+                  login_set:          true,
+                  popup_before_video: true,
+                  popup_after_video:  true
                 }
               }
           }.to change { Video.find(video_test.id).title }.from(video_test.title).to('テストビデオ2')
@@ -654,7 +698,13 @@ RSpec.describe 'Videos', type: :request do
             patch(video_path(video_test),
               params: {
                 video: {
-                  title: 'テストビデオ２'
+                  title:              'テストビデオ２',
+                  open_period:        Time.now + 2,
+                  range:              true,
+                  comment_public:     true,
+                  login_set:          true,
+                  popup_before_video: true,
+                  popup_after_video:  true
                 }
               })
           ).to redirect_to video_path(video_test)
@@ -673,7 +723,13 @@ RSpec.describe 'Videos', type: :request do
             patch video_path(video_test),
               params: {
                 video: {
-                  title: 'テストビデオ2'
+                  title:              'テストビデオ2',
+                  open_period:        Time.now + 2,
+                  range:              true,
+                  comment_public:     true,
+                  login_set:          true,
+                  popup_before_video: true,
+                  popup_after_video:  true
                 }
               }
           }.to change { Video.find(video_test.id).title }.from(video_test.title).to('テストビデオ2')
@@ -684,7 +740,13 @@ RSpec.describe 'Videos', type: :request do
             patch(video_path(video_test),
               params: {
                 video: {
-                  title: 'テストビデオ２'
+                  title:              'テストビデオ２',
+                  open_period:        Time.now + 2,
+                  range:              true,
+                  comment_public:     true,
+                  login_set:          true,
+                  popup_before_video: true,
+                  popup_after_video:  true
                 }
               })
           ).to redirect_to video_path(video_test)
@@ -700,13 +762,13 @@ RSpec.describe 'Videos', type: :request do
       describe '異常' do
         it '本人以外はアップデートできない' do
           expect {
-            patch video_path(video_it),
+            patch video_path(video_login_must),
               params: {
                 video: {
-                  title: 'ITビデオ2'
+                  title: 'ログイン必須ビデオ2'
                 }
               }
-          }.not_to change { Video.find(video_it.id).title }
+          }.not_to change { Video.find(video_login_must.id).title }
         end
       end
     end
