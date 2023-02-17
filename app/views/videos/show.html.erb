@@ -8,6 +8,8 @@
   </div>
   <div class="video-title-and-action-show">
     <%= @video.title %>
+    <!-- 非公開中である場合、視聴者以外にはその旨を表示 -->
+    <%= @video.notice_expire %>
     <div class="btn-area">
       <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
       <%= @video.hidden_button %>

@@ -9,6 +9,14 @@ module VideoDecorator
     end
   end
 
+  def notice_expire
+    if (self.open_period&.<=Time.now) && self.nonpublic?
+      tag.span style: ['color: red; border: dotted'] do
+        '非公開中'
+      end
+    end
+  end
+
   def selected_before_range
     return ['限定公開', 1] if self.range
   end

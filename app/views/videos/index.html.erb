@@ -14,6 +14,8 @@
       </div>
       <div class="video-title-and-action-index">
         <%= link_to organization_video.title, video_path(organization_video) %>
+        <!-- 非公開中である場合、視聴者以外にはその旨を表示 -->
+        <%= organization_video.notice_expire %>
         <% if current_system_admin %> 
           <% if organization_video.is_valid == false %>
             <span>オーナー削除済み</span>

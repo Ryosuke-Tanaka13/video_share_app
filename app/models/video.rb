@@ -18,7 +18,7 @@ class Video < ApplicationRecord
   end
 
   def open_period_is_greater_than_time_now
-    errors.add(:open_period, "は現在時刻より後の日時を選択してください") if open_period&.<= Time.now
+    errors.add(:open_period, 'は現在時刻より後の日時を選択してください') if open_period&.<= Time.now
   end
 
   scope :user_has, lambda { |organization_id|
@@ -28,6 +28,9 @@ class Video < ApplicationRecord
   scope :current_user_has, lambda { |current_user|
     includes(:video_blob).where(organization_id: current_user.organization_id)
   }
+
+  scope :not_expire, -> { where('open_period > ?', Time.current) }
+  scope :free_open_period, -> { where(open_period: nil) }
 
   scope :current_viewer_has, lambda { |organization_id|
     includes(:video_blob).where(organization_id: organization_id)

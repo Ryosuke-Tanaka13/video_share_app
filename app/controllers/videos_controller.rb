@@ -9,6 +9,10 @@ class VideosController < ApplicationController
   before_action :ensure_my_organization_set_video, only: %i[show edit update destroy]
   # 視聴者がログインしている場合、表示されているビデオの視聴グループ＝現在の視聴者の視聴グループでなければ、締め出す下記のメソッド追加予定
   # before_action :limited_viewer, only: %i[show]
+
+  # 視聴者と非ログインユーザーは、公開中の動画しか見れない
+  before_action :ensure_public_now, only: %i[show]
+
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
 
@@ -18,7 +22,7 @@ class VideosController < ApplicationController
     elsif current_user
       @organization_videos = Video.current_user_has(current_user).available
     elsif current_viewer
-      @organization_videos = Video.current_viewer_has(params[:organization_id]).available
+      @organization_videos = Video.not_expire.or(Video.free_open_period).current_viewer_has(params[:organization_id]).available
       # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
     end
   end
@@ -28,7 +32,6 @@ class VideosController < ApplicationController
   end
 
   def create
-    # params[:video][:expire_type].to_sym if params[:video][:expire_type]
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
     if @video.save
@@ -122,6 +125,12 @@ class VideosController < ApplicationController
         flash[:danger] = '権限がありません。'
         redirect_back(fallback_location: root_url)
       end
+    end
+  end
+
+  def ensure_public_now
+    if (current_viewer || !logged_in?) && (Video.find(params[:id]).open_period&.<=Time.current)
+      redirect_to videos_expire_url
     end
   end
 
