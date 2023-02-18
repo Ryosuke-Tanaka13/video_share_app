@@ -55,4 +55,13 @@ FactoryBot.define do
     role             { 'staff' }
     is_valid         { false }
   end
+
+  factory :same_email_user, class: 'User' do
+    id               { 7 }
+    name             { '同メールの投稿者' }
+    email            { 'staff_spec3@example.com' }
+    password         { 'password2' }
+    organization_id  { 1 }
+    role             { 'staff' }
+  end
 end

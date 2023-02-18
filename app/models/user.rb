@@ -29,4 +29,15 @@ class User < ApplicationRecord
     user = User.subscribed.where(email: self.email).where.not(id: self.id)
     user.present?
   end
+
+  # session#create時経由　論理削除状態を参照しないように仕様変更
+  def self.find_first_by_auth_conditions(warden_conditions)
+    conditions = warden_conditions.dup
+    login = conditions.delete(:login)
+    if login
+      where(conditions).where(['lower(email) = lower(:email)', { email: email }]).subscribed.first
+    else
+      where(conditions).subscribed.first
+    end
+  end
 end

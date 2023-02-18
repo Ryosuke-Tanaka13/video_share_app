@@ -30,7 +30,7 @@ module Viewers
     #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
     # end
     def reject_inactive_viewer
-      @viewer = Viewer.find_by(email: params[:viewer][:email])
+      @viewer = Viewer.find_by(email: params[:viewer][:email], is_valid: true)
       if @viewer && (@viewer.valid_password?(params[:viewer][:password]) && !@viewer.is_valid)
         flash[:notice] = 'Eメールまたはパスワードが違います。'
         redirect_to new_viewer_session_url

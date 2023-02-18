@@ -30,7 +30,7 @@ module Users
     #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
     # end
     def reject_inactive_user
-      @user = User.find_by(email: params[:user][:email])
+      @user = User.find_by(email: params[:user][:email], is_valid: true)
       if @user && (@user.valid_password?(params[:user][:password]) && !@user.is_valid)
         flash[:notice] = 'Eメールまたはパスワードが違います。'
         redirect_to new_user_session_url

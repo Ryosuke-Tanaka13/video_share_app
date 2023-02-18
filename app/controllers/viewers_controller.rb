@@ -2,7 +2,6 @@ class ViewersController < ApplicationController
   before_action :ensure_logged_in
   before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_admin_or_user, only: %i[index]
-  before_action :not_exist, only: %i[show edit update]
   before_action :ensure_admin_or_owner_in_same_organization_as_set_viewer_or_correct_viewer, only: %i[show edit update]
   before_action :set_viewer, except: %i[index]
 
