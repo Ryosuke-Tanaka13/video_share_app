@@ -31,12 +31,15 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   describe '正常' do
     describe '動画一覧ページ' do
       before(:each) do
+        # 2分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 2)
         sign_in system_admin
         visit videos_path(organization_id: organization.id)
       end
 
       it 'レイアウト' do
         expect(page).to have_link 'サンプルビデオ', href: video_path(video_sample)
+        expect(page).to have_text '非公開中'
         expect(page).to have_link '削除', href: video_path(video_sample)
         expect(page).to have_link 'テストビデオ', href: video_path(video_test)
         expect(page).to have_link '削除', href: video_path(video_test)
@@ -64,6 +67,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画詳細' do
       before(:each) do
+        # 5分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 5)
         sign_in user_owner || system_admin
         visit video_path(video_test)
       end
@@ -72,6 +77,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         # ビデオが表示されていることのテスト(テストに通るか未確認)
         # expect(page).to have_selector("video[src$='flower.mp4']")
         expect(page).to have_text 'テストビデオ'
+        expect(page).to have_text '非公開中'
         expect(page).to have_link '設定'
         expect(page).to have_link '削除'
       end
@@ -79,7 +85,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe 'モーダル画面' do
       before(:each) do
-        sign_in system_admin || user_owner || user_staff
+        sign_in system_admin || user_owner
         visit video_path(video_test)
         click_link('設定')
       end
@@ -92,7 +98,12 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_button '設定を変更'
         expect(page).to have_button '閉じる'
         expect(page).to have_field 'title_edit', with: video_test.title
-        expect(page).to have_field 'open_period_edit', with: '2022-08-14T18:06'
+        expect(page).to have_field 'open_period_edit', with: Time.now + 5
+        # 公開期間の既存値が存在するので、非公開/自動削除のラジオボタンが表示されている
+        expect(find('.expire_type_choice_edit', visible: true)).to be_visible
+        expect(page).to have_checked_field('非公開')
+        expect(page).to have_field('自動削除')
+        # ==========================================
         expect(page).to have_select('range_edit', selected: '一般公開')
         expect(page).to have_select('comment_public_edit', selected: '公開')
         expect(page).to have_select('login_set_edit', selected: 'ログイン不要')
@@ -102,7 +113,11 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
       it '設定を変更で動画情報が更新される' do
         fill_in 'title_edit', with: 'テストビデオ２'
-        # fill_in 'open_period_edit', with: 'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00'
+        fill_in 'open_period_edit', with: Time.now + 10
+        # 今回は自動削除を選択する
+        choose 'video_expire_type_deactivate'
+        expect(page).to have_checked_field('自動削除')
+        # ==========================================
         select '限定公開', from: 'range_edit'
         select '非公開', from: 'comment_public_edit'
         select 'ログイン必要', from: 'login_set_edit'
@@ -115,7 +130,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画投稿画面' do
       before(:each) do
-        sign_in user_owner || user_staff
+        sign_in user_owner
         visit new_video_path
       end
 
@@ -124,6 +139,9 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_field 'title'
         expect(page).to have_field 'post'
         expect(page).to have_field 'open_period'
+        # 公開期間を入力していない状態では、非公開/自動削除の選択エリアは表示されていない
+        expect(find('.expire_type_choice', visible: false)).not_to be_visible
+        # ==========================================
         expect(page).to have_selector '#range'
         expect(page).to have_selector '#comment_public'
         expect(page).to have_selector '#login_set'
@@ -134,7 +152,13 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       it '新規作成で動画が作成される' do
         fill_in 'title', with: 'サンプルビデオ２'
         attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/rec.webm')
-        # fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
+        fill_in 'open_period', with: Time.now + 1
+        # 公開期間を入力すると、非公開/自動削除の選択エリアが表示される。(今回は自動削除を選択する。デフォルトでは非公開が選択されている)
+        expect(find('.expire_type_choice', visible: true)).to be_visible
+        expect(page).to have_checked_field('非公開')
+        choose 'video_expire_type_deactivate'
+        expect(page).to have_checked_field('自動削除')
+        # ==========================================
         select '限定公開', from: 'range'
         select '非公開', from: 'comment_public'
         select 'ログイン必要', from: 'login_set'
@@ -148,6 +172,21 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   end
 
   describe '異常' do
+    describe '動画投稿画面(動画投稿者)' do
+      before(:each) do
+        sign_in user_staff
+        visit new_video_path
+      end
+
+      it '自動削除のラジオボタンは表示されない' do
+        fill_in 'open_period', with: Time.now + 1
+        # 公開期間を入力すると、非公開の選択エリアが表示される。
+        expect(find('.expire_type_choice', visible: true)).to be_visible
+        expect(page).to have_checked_field('非公開')
+        expect(page).to have_no_field('自動削除')
+      end
+    end
+
     describe '動画投稿画面' do
       before(:each) do
         sign_in user_owner
@@ -180,6 +219,57 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         click_button '新規投稿'
         expect(page).to have_text 'ビデオのファイル形式が不正です。'
       end
+
+      it '公開期間が現在時刻以前' do
+        fill_in 'open_period', with: Time.now
+        click_button '新規投稿'
+        expect(page).to have_text '公開期間は現在時刻より後の日時を選択してください'
+      end
+    end
+
+    describe 'モーダル画面(動画投稿者本人)' do
+      before(:each) do
+        sign_in user_staff
+        visit video_path(video_test)
+        click_link('設定')
+      end
+
+      it 'モーダルが表示されていること' do
+        expect(page).to have_selector('.modal')
+      end
+
+      it '自動削除のラジオボタンは表示されない' do
+        expect(find('.expire_type_choice_edit', visible: true)).to be_visible
+        expect(page).to have_checked_field('非公開')
+        expect(page).to have_no_field('自動削除')
+      end
+    end
+
+    describe 'モーダル画面(本人でない動画投稿者)' do
+      before(:each) do
+        sign_in user_staff
+        visit video_path(video_sample)
+        click_link('設定')
+      end
+
+      it 'モーダルが表示されていること' do
+        expect(page).to have_selector('.modal')
+      end
+
+      it 'レイアウトに設定を変更リンクなし' do
+        expect(page).to have_no_link '設定を変更'
+        expect(page).to have_button '閉じる'
+        expect(page).to have_field 'title_edit'
+        expect(page).to have_field 'open_period_edit'
+        expect(find('.expire_type_choice_edit', visible: true)).to be_visible
+        expect(page).to have_checked_field('非公開')
+        expect(page).to have_no_field('自動削除')
+        expect(page).to have_selector '#range_edit'
+        expect(page).to have_selector '#comment_public_edit'
+        expect(page).to have_selector '#login_set_edit'
+        expect(page).to have_selector '#popup_before_video_edit'
+        expect(page).to have_selector '#popup_after_video_edit'
+      end
     end
 
     describe 'モーダル画面' do
@@ -201,16 +291,25 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         click_button '設定を変更'
         expect(page).to have_text 'タイトルを入力してください'
       end
+
+      it '公開期間が現在時刻以前' do
+        fill_in 'open_period_edit', with: Time.now
+        click_button '設定を変更'
+        expect(page).to have_text '公開期間は現在時刻より後の日時を選択してください'
+      end
     end
 
     describe '動画一覧画面(オーナー、動画投稿者)' do
       before(:each) do
+        # 2分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 2)
         sign_in user_owner || user
         visit videos_path(organization_id: organization.id)
       end
 
       it 'レイアウトに物理削除リンクなし、論理削除された動画は表示されない' do
         expect(page).to have_link 'サンプルビデオ', href: video_path(video_sample)
+        expect(page).to have_text '非公開中'
         expect(page).to have_no_link '削除', href: video_path(video_sample)
         expect(page).to have_link 'テストビデオ', href: video_path(video_test)
         expect(page).to have_no_link '削除', href: video_path(video_test)
@@ -221,41 +320,19 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画一覧画面(視聴者)' do
       before(:each) do
+        # 2分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 2)
         sign_in viewer
         visit videos_path(organization_id: organization.id)
       end
 
-      it 'レイアウトに物理削除リンクなし、論理削除された動画は表示されない' do
-        expect(page).to have_link 'サンプルビデオ', href: video_path(video_sample)
+      it 'レイアウトに物理削除リンクなし、論理削除された動画は表示されない、公開期間が終了した動画(video_sample)は表示されない' do
+        expect(page).to have_no_link 'サンプルビデオ', href: video_path(video_sample)
         expect(page).to have_no_link '削除', href: video_path(video_sample)
         expect(page).to have_link 'テストビデオ', href: video_path(video_test)
         expect(page).to have_no_link '削除', href: video_path(video_test)
         expect(page).to have_no_link 'デリートビデオ', href: video_path(video_deleted)
         expect(page).to have_no_link '削除', href: video_path(video_deleted)
-      end
-    end
-
-    describe 'モーダル画面(本人でない動画投稿者)' do
-      before(:each) do
-        sign_in user_staff
-        visit video_path(video_sample)
-        click_link('設定')
-      end
-
-      it 'モーダルが表示されていること' do
-        expect(page).to have_selector('.modal')
-      end
-
-      it 'レイアウトに設定を変更リンクなし' do
-        expect(page).to have_no_link '設定を変更'
-        expect(page).to have_button '閉じる'
-        expect(page).to have_field 'title_edit'
-        expect(page).to have_field 'open_period_edit'
-        expect(page).to have_selector '#range_edit'
-        expect(page).to have_selector '#comment_public_edit'
-        expect(page).to have_selector '#login_set_edit'
-        expect(page).to have_selector '#popup_before_video_edit'
-        expect(page).to have_selector '#popup_after_video_edit'
       end
     end
 
