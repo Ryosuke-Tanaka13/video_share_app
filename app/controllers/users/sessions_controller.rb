@@ -31,7 +31,7 @@ module Users
     # end
     def reject_inactive_user
       @user = User.find_by(email: params[:user][:email], is_valid: true)
-      if @user && (@user.valid_password?(params[:user][:password]) && !@user.is_valid)
+      unless @user && @user.valid_password?(params[:user][:password])
         flash[:notice] = 'Eメールまたはパスワードが違います。'
         redirect_to new_user_session_url
       end

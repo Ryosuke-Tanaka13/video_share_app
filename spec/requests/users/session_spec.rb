@@ -131,8 +131,8 @@ RSpec.describe 'UserSession', type: :request do
         get new_user_session_path
         expect(response).to have_http_status(:success)
         post user_session_path, params: { user: { email: deactivated_user.email, password: deactivated_user.password } }
-        expect(response).to have_http_status(:ok)
-        expect(response).to render_template :new
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to 'http://www.example.com/users/sign_in'
       end
     end
   end
