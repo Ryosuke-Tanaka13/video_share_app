@@ -6,6 +6,9 @@ RSpec.describe 'UserSession', type: :request do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
+  let(:deactivated_user) { create(:deactivated_user, confirmed_at: Time.now) }
+  let(:same_email_user) { create(:same_email_user, confirmed_at: Time.now) }
+
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
 
@@ -24,6 +27,8 @@ RSpec.describe 'UserSession', type: :request do
     organization
     user_owner
     user_staff
+    deactivated_user
+    same_email_user
     viewer
     viewer1
     another_organization
@@ -42,6 +47,16 @@ RSpec.describe 'UserSession', type: :request do
         get new_user_session_path
         expect(response).to have_http_status(:success)
         post user_session_path, params: { user: { email: user_owner.email, password: user_owner.password } }
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to 'http://www.example.com/organizations/1/folders'
+      end
+    end
+
+    context '論理削除と同じメールを使いまわせることを確認' do
+      it do
+        get new_user_session_path
+        expect(response).to have_http_status(:success)
+        post user_session_path, params: { user: { email: same_email_user.email, password: same_email_user.password } }
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to 'http://www.example.com/organizations/1/folders'
       end
@@ -108,6 +123,16 @@ RSpec.describe 'UserSession', type: :request do
           get new_user_session_path
           expect(response).to redirect_to 'http://www.example.com/'
         end
+      end
+    end
+
+    context '退会アカウントはログインできないこと' do
+      it do
+        get new_user_session_path
+        expect(response).to have_http_status(:success)
+        post user_session_path, params: { user: { email: deactivated_user.email, password: deactivated_user.password } }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template :new
       end
     end
   end

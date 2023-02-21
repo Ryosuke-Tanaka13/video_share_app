@@ -5,6 +5,7 @@ RSpec.describe 'UserSystem', type: :system do
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:user_staff1) { create(:user_staff1, confirmed_at: Time.now) }
+  let(:deactivated_user) { create(:deactivated_user, confirmed_at: Time.now) }
 
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
@@ -18,6 +19,7 @@ RSpec.describe 'UserSystem', type: :system do
     user_owner
     user_staff
     user_staff1
+    deactivated_user
     another_organization
     another_user_owner
     another_user_staff
@@ -338,6 +340,14 @@ RSpec.describe 'UserSystem', type: :system do
           expect(page).to have_current_path users_path, ignore_query: true
           expect(page).to have_text '更新しました'
         end
+
+        it '非アクティブアカウントと同じメールアドレスは更新可能' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: deactivated_user.email
+          click_button '更新'
+          expect(page).to have_current_path users_path, ignore_query: true
+          expect(page).to have_text '更新しました'
+        end
       end
 
       context 'スタッフ新規作成' do
@@ -357,6 +367,16 @@ RSpec.describe 'UserSystem', type: :system do
         it '登録でスタッフが新規作成される' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: 'sample@email.com'
+          fill_in 'パスワード', with: 'password'
+          fill_in 'パスワード（確認用）', with: 'password'
+          click_button '登録'
+          expect(page).to have_current_path users_path, ignore_query: true
+          expect(page).to have_text 'testの作成に成功しました'
+        end
+
+        it '非アクティブアカウントと同じメールアドレスは新規作成可能' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: deactivated_user.email
           fill_in 'パスワード', with: 'password'
           fill_in 'パスワード（確認用）', with: 'password'
           click_button '登録'

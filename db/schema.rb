@@ -127,7 +127,6 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
     t.integer "organization_id", default: 1, null: false
     t.boolean "is_valid", default: true, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
@@ -179,12 +178,10 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
     t.string "name"
     t.boolean "is_valid", default: true, null: false
     t.index ["confirmation_token"], name: "index_viewers_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_viewers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_viewers_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_viewers_on_unlock_token", unique: true
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"

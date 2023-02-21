@@ -15,6 +15,8 @@ RSpec.describe 'Organization', type: :request do
   let(:another_user_staff) { create(:another_user_staff, confirmed_at: Time.now) }
   let(:another_viewer) { create(:another_viewer, confirmed_at: Time.now) }
 
+  let(:deactivated_organization) { create(:deactivated_organization) }
+
   let(:organization_viewer) { create(:organization_viewer) }
   let(:organization_viewer1) { create(:organization_viewer1) }
   let(:organization_viewer2) { create(:organization_viewer2) }
@@ -32,6 +34,7 @@ RSpec.describe 'Organization', type: :request do
     another_user_owner
     another_user_staff
     another_viewer
+    deactivated_organization
     organization_viewer
     organization_viewer1
     organization_viewer2
@@ -238,6 +241,25 @@ RSpec.describe 'Organization', type: :request do
               }
             )
           ).to redirect_to user_session_path
+        end
+
+        it '非アクティブ組織と同じメールアドレスは使用可能' do
+          expect {
+            post organizations_path,
+              params: {
+                organization: {
+                  name:  '組織1',
+                  email: 'sample1@email.com',
+                  users: {
+                    name:                  'オーナー1',
+                    email:                 deactivated_organization.email,
+                    password:              'password',
+                    password_confirmation: 'password'
+                  }
+                }
+              }
+          }.to change(Organization, :count).by(1)
+            .and change(User, :count).by(1)
         end
       end
 
@@ -781,6 +803,19 @@ RSpec.describe 'Organization', type: :request do
                   }
                 })
             ).to redirect_to organization_path(organization)
+          end
+
+          it '非アクティブ組織と同じメールアドレスは使用可能' do
+            expect {
+              patch organization_path(organization),
+                params: {
+                  organization: {
+                    name:  'test',
+                    email: deactivated_organization.email
+                  }
+                }
+            }.to change { Organization.find(organization.id).name }.from(organization.name).to('test')
+              .and change { Organization.find(organization.id).email }.from(organization.email).to(deactivated_organization.email)
           end
         end
 

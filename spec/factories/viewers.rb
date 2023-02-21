@@ -21,4 +21,19 @@ FactoryBot.define do
     email    { 'viewer_spec2@example.com' }
     password { 'password' }
   end
+
+  factory :deactivated_viewer, class: 'Viewer' do
+    id       { 4 }
+    name     { '非アクティブ視聴者' }
+    email    { 'viewer_spec3@example.com' }
+    password { 'password' }
+    is_valid { false }
+  end
+
+  factory :same_email_viewer, class: 'Viewer' do
+    id       { 5 }
+    name     { '同じメールの視聴者' }
+    email    { 'viewer_spec3@example.com' }
+    password { 'password2' }
+  end
 end

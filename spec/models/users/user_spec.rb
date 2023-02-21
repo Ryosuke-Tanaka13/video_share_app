@@ -5,10 +5,12 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   let(:organization) { create(:organization) }
   let(:user_staff) { build(:user_staff) }
+  let(:deactivated_user) { create(:deactivated_user) }
 
   before(:each) do
     organization
     user_staff
+    deactivated_user
   end
 
   describe 'バリデーションについて' do
@@ -40,6 +42,8 @@ RSpec.describe User, type: :model do
         before :each do
           user_staff = create(:user_staff)
           subject.email = user_staff.email
+          # 同じidだとバリデーションが反応しない為ずらす
+          subject.id = user_staff.id + 1
         end
 
         it 'バリデーションに落ちること' do
@@ -71,6 +75,16 @@ RSpec.describe User, type: :model do
             subject.valid?
             expect(subject.errors.full_messages).to include('Eメールは不正な値です')
           end
+        end
+      end
+
+      context '非アクティブアカウントと同じemailを使用した場合' do
+        before :each do
+          subject.email = deactivated_user.email
+        end
+
+        it 'バリデーションが通ること' do
+          expect(subject).to be_valid
         end
       end
     end
@@ -138,6 +152,63 @@ RSpec.describe User, type: :model do
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
           expect(subject.errors.full_messages).to include('Nameを入力してください')
+        end
+      end
+    end
+
+    describe '#password' do
+      context '存在しない場合' do
+        before :each do
+          subject.password = nil
+        end
+
+        it 'バリデーションに落ちること' do
+          expect(subject).to be_invalid
+        end
+
+        it 'バリデーションのエラーが正しいこと' do
+          subject.valid?
+          expect(subject.errors.full_messages).to include('パスワードを入力してください')
+        end
+      end
+
+      context '文字数が6文字の場合' do
+        before :each do
+          subject.password = 'a' * 6
+        end
+
+        it 'バリデーションが通ること' do
+          expect(subject).to be_valid
+        end
+      end
+
+      context '文字数が129文字の場合' do
+        before :each do
+          subject.password = 'a' * 129
+        end
+
+        it 'バリデーションに落ちること' do
+          expect(subject).to be_invalid
+        end
+
+        it 'バリデーションのエラーが正しいこと' do
+          subject.valid?
+          expect(subject.errors.full_messages).to include('パスワードは128文字以内で入力してください')
+        end
+      end
+
+      context '空白の場合' do
+        before :each do
+          subject.password = ' '
+        end
+
+        it 'バリデーションに落ちること' do
+          expect(subject).to be_invalid
+        end
+
+        it 'バリデーションのエラーが正しいこと' do
+          subject.valid?
+          expect(subject.errors.full_messages).to include('パスワードを入力してください')
         end
       end
     end

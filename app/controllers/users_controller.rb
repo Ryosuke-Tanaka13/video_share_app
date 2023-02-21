@@ -3,7 +3,6 @@ class UsersController < ApplicationController
   before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_owner, only: %i[new create]
   before_action :ensure_admin_or_user, only: %i[index]
-  before_action :not_exist, only: %i[show edit update]
   before_action :ensure_admin_or_owner_in_same_organization_as_set_user_or_correct_user, only: %i[show edit update]
   before_action :set_user, except: %i[index new create]
 

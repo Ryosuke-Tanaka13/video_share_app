@@ -8,6 +8,8 @@ RSpec.describe 'ViewerSession', type: :request do
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
+  let(:deactivated_viewer) { create(:deactivated_viewer, confirmed_at: Time.now) }
+  let(:same_email_viewer) { create(:same_email_viewer, confirmed_at: Time.now) }
 
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
@@ -26,6 +28,8 @@ RSpec.describe 'ViewerSession', type: :request do
     user_staff
     viewer
     viewer1
+    deactivated_viewer
+    same_email_viewer
     another_organization
     another_user_owner
     another_user_staff
@@ -44,6 +48,16 @@ RSpec.describe 'ViewerSession', type: :request do
         post viewer_session_path, params: { viewer: { email: viewer.email, password: viewer.password } }
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to 'http://www.example.com/viewers/1'
+      end
+    end
+
+    context '論理削除と同じメールを使いまわせることを確認' do
+      it do
+        get new_viewer_session_path
+        expect(response).to have_http_status(:success)
+        post viewer_session_path, params: { viewer: { email: same_email_viewer.email, password: same_email_viewer.password } }
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to 'http://www.example.com/viewers/5'
       end
     end
 
@@ -85,6 +99,16 @@ RSpec.describe 'ViewerSession', type: :request do
           get new_viewer_session_path
           expect(response).to redirect_to 'http://www.example.com/'
         end
+      end
+    end
+
+    context '退会アカウントはログインできないこと' do
+      it do
+        get new_viewer_session_path
+        expect(response).to have_http_status(:success)
+        post viewer_session_path, params: { viewer: { email: deactivated_viewer.email, password: deactivated_viewer.password } }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template :new
       end
     end
   end

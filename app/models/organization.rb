@@ -6,12 +6,14 @@ class Organization < ApplicationRecord
   has_many :videos, dependent: :destroy
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
+  validates :email, presence: true, uniqueness: { if: :organization_exists? }, format: { with: VALID_EMAIL_REGEX }
   validates :name,  presence: true, length: { in: 1..10 }
 
   # 引数のviewer_idと一致するorganizationの絞り込み
   scope :viewer_has, ->(viewer_id) { includes(:organization_viewers).where(organization_viewers: { viewer_id: viewer_id }) }
   scope :viewer_existence_confirmation, ->(viewer_id) { find_by(organization_viewers: { viewer_id: viewer_id }) }
+  # 退会者は省く絞り込み
+  scope :subscribed, -> { where(is_valid: true) }
 
   # 組織に属するオーナーを紐づける
   class << self
@@ -40,5 +42,11 @@ class Organization < ApplicationRecord
       end
     end
     all_valid
+  end
+
+  # アクティブorganizationと同じemailが存在すればtrueを返す（trueでuniqueness検知する）
+  def organization_exists?
+    organization = Organization.subscribed.where(email: self.email).where.not(id: self.id)
+    organization.present?
   end
 end

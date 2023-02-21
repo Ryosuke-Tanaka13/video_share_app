@@ -7,6 +7,7 @@ RSpec.describe 'User', type: :request do
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:user_staff1) { create(:user_staff1, confirmed_at: Time.now) }
+  let(:deactivated_user) { create(:deactivated_user, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
 
@@ -25,6 +26,7 @@ RSpec.describe 'User', type: :request do
     organization
     user_owner
     user_staff
+    deactivated_user
     viewer
     viewer1
     another_organization
@@ -266,6 +268,20 @@ RSpec.describe 'User', type: :request do
             }
           )
         ).to redirect_to users_url
+      end
+
+      it '非アクティブアカウントと同じメールアドレスは仕様可能' do
+        expect {
+          post users_path,
+            params: {
+              user: {
+                name:                  'staff',
+                email:                 deactivated_user.email,
+                password:              'password',
+                password_confirmation: 'password'
+              }
+            }
+        }.to change(User, :count).by(1)
       end
     end
 

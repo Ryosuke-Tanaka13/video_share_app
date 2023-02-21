@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
+RSpec.describe 'ViewerSystem', type: :system, js: true do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -8,6 +8,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
+  let(:deactivated_viewer) { create(:deactivated_viewer, confirmed_at: Time.now) }
 
   let(:organization_viewer) { create(:organization_viewer) }
   let(:organization_viewer2) { create(:organization_viewer2) }
@@ -20,6 +21,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
     user_staff
     viewer
     viewer1
+    deactivated_viewer
     organization_viewer
     organization_viewer2
   end
@@ -302,6 +304,14 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
         it '更新で登録情報が更新される' do
           fill_in 'Name', with: 'test'
           fill_in 'Eメール', with: 'sample@email.com'
+          click_button '更新'
+          expect(page).to have_current_path viewer_path(viewer), ignore_query: true
+          expect(page).to have_text '更新しました'
+        end
+
+        it '非アクティブアカウントと同じメールアドレスは更新可能' do
+          fill_in 'Name', with: 'test'
+          fill_in 'Eメール', with: deactivated_viewer.email
           click_button '更新'
           expect(page).to have_current_path viewer_path(viewer), ignore_query: true
           expect(page).to have_text '更新しました'
