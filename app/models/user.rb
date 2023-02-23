@@ -11,7 +11,7 @@ class User < ApplicationRecord
   enum role: { owner: 0, staff: 1 }
 
   belongs_to :organization
-  :videos, dependent: :nullify
+  has_many :videos, dependent: :nullify
   has_many :comments, dependent: :destroy
   has_many :replies, dependent: :destroy
 
