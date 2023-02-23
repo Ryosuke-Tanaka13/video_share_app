@@ -26,7 +26,7 @@ class RepliesController < ApplicationController
   def update
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
     if @reply.update(reply_params)
-      flash[:success] = 'コメント返信の編集に成功しました。'
+      flash.now[:success] = 'コメント返信の編集に成功しました。'
     else
       flash.now[:danger] = 'コメント返信の編集に失敗しました。'
     end
@@ -46,7 +46,7 @@ class RepliesController < ApplicationController
   private
 
   def reply_params
-    params.require(:reply).permit(:reply, :video_id, :comment_id, :organization_id).merge(
+    params.require(:reply).permit(:reply, :comment_id, :organization_id).merge(
       comment_id: @comment.id, organization_id: @video.organization_id
     )
   end

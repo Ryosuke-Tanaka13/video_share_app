@@ -31,7 +31,7 @@ class CommentsController < ApplicationController
     else
       flash.now[:danger] = 'コメント編集に失敗しました。'
     end
-    render :index
+      render :index
   end
 
   def destroy

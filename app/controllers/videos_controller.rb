@@ -44,7 +44,6 @@ class VideosController < ApplicationController
   end
 
   def show
-    # ログインしているアカウントをセット
     set_account
     @comment = Comment.new
     @reply = Reply.new
