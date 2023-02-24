@@ -10,12 +10,10 @@ class Videos::HiddensController < VideosController
 
   def withdraw
     set_video
-    if @video.update(is_valid: false)
-      flash[:success] = '削除しました。'
-      redirect_to videos_url(organization_id: @video.organization.id)
-    else
-      render :show
-    end
+    @video.assign_attributes(is_valid: false)
+    @video.save!(validate: false)
+    flash[:success] = '削除しました。'
+    redirect_to videos_url(organization_id: @video.organization.id)
   end
 
   private
