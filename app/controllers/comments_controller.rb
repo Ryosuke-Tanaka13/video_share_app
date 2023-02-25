@@ -6,6 +6,7 @@ class CommentsController < ApplicationController
   protect_from_forgery { :except => [:destroy] }
 
   def create
+    @reply = Reply.new
     set_video_id
     # videoに紐づいたコメントを取得
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
@@ -22,6 +23,7 @@ class CommentsController < ApplicationController
   end
 
   def update
+    @reply = Reply.new
     set_video_id
     set_commenter_id
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
@@ -35,6 +37,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
+    @reply = Reply.new
     set_video_id
     set_commenter_id
     @comment = Comment.find(params[:id])
