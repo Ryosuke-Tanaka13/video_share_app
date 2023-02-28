@@ -8,7 +8,7 @@
       <div class="content-show-comment-bottom-top-user-icon">
         <% if comment.system_admin.present? && comment.system_admin.image.present? %>
           <%= image_tag comment.system_admin.image.url, class:"comment-image", size: "40x40" %>
-        <% elsif  (comment.user.present? && !comment.user&.is_valid) || (comment.viewer.present? && !comment.viewer&.is_valid) %>
+        <% elsif (comment.user.present? && !comment.user&.is_valid) || (comment.viewer.present? && !comment.viewer&.is_valid) %>
           <%= image_tag "default.png", class:"comment-image", size: "40x40" %>
         <% elsif comment.user.present? && comment.user.image.present? %>
           <%= image_tag comment.user.image.url, class:"comment-image", size: "40x40" %>
