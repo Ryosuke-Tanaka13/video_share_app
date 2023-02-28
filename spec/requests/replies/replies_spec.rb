@@ -45,39 +45,39 @@ RSpec.describe 'Replies', type: :request do
           }.to change(Reply, :count).by(1)
         end
       end
-    end
 
-    describe '動画投稿者' do
-      before(:each) do
-        current_user(user)
+      describe '動画投稿者' do
+        before(:each) do
+          current_user(user)
+        end
+
+        it '返信が新規作成される' do
+          expect {
+            post video_comment_replies_path(video_id: video_it.id, comment_id: user_reply.comment_id),
+              params: {
+                reply: {
+                  reply: '動画投稿者の返信'
+                }, format: :js
+              }
+          }.to change(Reply, :count).by(1)
+        end
       end
 
-      it '返信が新規作成される' do
-        expect {
-          post video_comment_replies_path(video_id: video_it.id, comment_id: user_reply.comment_id),
-            params: {
-              reply: {
-                reply: '動画投稿者の返信'
-              }, format: :js
-            }
-        }.to change(Reply, :count).by(1)
-      end
-    end
+      describe '動画視聴者' do
+        before(:each) do
+          current_viewer(viewer)
+        end
 
-    describe '動画視聴者' do
-      before(:each) do
-        current_viewer(viewer)
-      end
-
-      it '返信が新規作成される' do
-        expect {
-          post video_comment_replies_path(video_id: video_it.id, comment_id: viewer_reply.comment_id),
-            params: {
-              reply: {
-                reply: '動画視聴者のコメント'
-              }, format: :js
-            }
-        }.to change(Reply, :count).by(1)
+        it '返信が新規作成される' do
+          expect {
+            post video_comment_replies_path(video_id: video_it.id, comment_id: viewer_reply.comment_id),
+              params: {
+                reply: {
+                  reply: '動画視聴者のコメント'
+                }, format: :js
+              }
+          }.to change(Reply, :count).by(1)
+        end
       end
     end
 
@@ -219,46 +219,44 @@ RSpec.describe 'Replies', type: :request do
               }
           }.not_to change { Reply.find(user_reply.id).reply }
         end
-      end
-    end
 
-    describe '別の動画投稿者' do
-      before(:each) do
-        current_user(user_staff1)
-      end
+        describe '別の動画投稿者' do
+          before(:each) do
+            current_user(user_staff1)
+          end
 
-      describe '異常' do
-        it '動画投稿者はシステム管理者の返信をアップデートできない' do
-          expect {
-            patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: system_admin_reply.id),
-              params: {
-                reply: {
-                  reply: '別の動画投稿者の返信'
-                }, format: :js
-              }
-          }.not_to change { Reply.find(system_admin_reply.id).reply }
-        end
+          it '動画投稿者はシステム管理者の返信をアップデートできない' do
+            expect {
+              patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: system_admin_reply.id),
+                params: {
+                  reply: {
+                    reply: '別の動画投稿者の返信'
+                  }, format: :js
+                }
+            }.not_to change { Reply.find(system_admin_reply.id).reply }
+          end
 
-        it '別の動画投稿者はアップデートできない' do
-          expect {
-            patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: {
-                reply: {
-                  reply: '別の動画投稿者の返信'
-                }, format: :js
-              }
-          }.not_to change { Reply.find(user_reply.id).reply }
-        end
+          it '別の動画投稿者はアップデートできない' do
+            expect {
+              patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
+                params: {
+                  reply: {
+                    reply: '別の動画投稿者の返信'
+                  }, format: :js
+                }
+            }.not_to change { Reply.find(user_reply.id).reply }
+          end
 
-        it '動画投稿者は動画視聴者の返信をアップデートできない' do
-          expect {
-            patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-              params: {
-                reply: {
-                  reply: '別の動画投稿者の返信'
-                }, format: :js
-              }
-          }.not_to change { Reply.find(viewer_reply.id).reply }
+          it '動画投稿者は動画視聴者の返信をアップデートできない' do
+            expect {
+              patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
+                params: {
+                  reply: {
+                    reply: '別の動画投稿者の返信'
+                  }, format: :js
+                }
+            }.not_to change { Reply.find(viewer_reply.id).reply }
+          end
         end
       end
     end
@@ -292,14 +290,12 @@ RSpec.describe 'Replies', type: :request do
               }
           }.not_to change { Reply.find(viewer_reply.id).reply }
         end
-      end
 
-      describe '別の動画視聴者' do
-        before(:each) do
-          current_user(another_viewer)
-        end
+        describe '別の動画視聴者' do
+          before(:each) do
+            current_user(another_viewer)
+          end
 
-        describe '異常' do
           it '動画視聴者はシステム管理者の返信をアップデートできない' do
             expect {
               patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),

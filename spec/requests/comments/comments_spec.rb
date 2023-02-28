@@ -185,9 +185,7 @@ RSpec.describe 'Comments', type: :request do
               }
           }.to change { Comment.find(system_admin_comment.id).comment }.from(system_admin_comment.comment).to('システム管理者のアップデートコメント')
         end
-      end
 
-      describe '正常' do
         it '動画投稿者のコメントがアップデートされる' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: user_comment.id),
@@ -295,7 +293,18 @@ RSpec.describe 'Comments', type: :request do
       end
 
       describe '異常' do
-        it '別の動画投稿者はアップデートできない' do
+        it '動画投稿者はシステム管理者のコメントをアップデートできない' do
+          expect {
+            patch video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
+              params: {
+                comment: {
+                  comment: '別の動画投稿者のコメント'
+                }, format: :js
+              }
+          }.not_to change { Comment.find(system_admin_comment.id).comment }
+        end
+
+        it '別の動画投稿者は動画投稿者のコメントをアップデートできない' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: user_comment.id),
               params: {
@@ -304,6 +313,17 @@ RSpec.describe 'Comments', type: :request do
                 }, format: :js
               }
           }.not_to change { Comment.find(user_comment.id).comment }
+        end
+
+        it '動画投稿者は動画視聴者のコメントをアップデートできない' do
+          expect {
+            patch video_comment_path(video_id: video_it.id, id: viewer_comment.id),
+              params: {
+                comment: {
+                  comment: '別の動画投稿者のコメント'
+                }, format: :js
+              }
+          }.not_to change { Comment.find(viewer_comment.id).comment }
         end
       end
     end
@@ -314,7 +334,18 @@ RSpec.describe 'Comments', type: :request do
       end
 
       describe '異常' do
-        it '別の動画視聴者はアップデートできない' do
+        it '動画視聴者はシステム管理者のコメントをアップデートできない' do
+          expect {
+            patch video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
+              params: {
+                comment: {
+                  comment: '別の動画視聴者のコメント'
+                }, format: :js
+              }
+          }.not_to change { Comment.find(system_admin_comment.id).comment }
+        end
+
+        it '動画視聴者は動画投稿者のコメントをアップデートできない' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: user_comment.id),
               params: {
@@ -323,6 +354,17 @@ RSpec.describe 'Comments', type: :request do
                 }, format: :js
               }
           }.not_to change { Comment.find(user_comment.id).comment }
+        end
+        
+        it '別の動画視聴者は動画視聴者のコメントをアップデートできない' do
+          expect {
+            patch video_comment_path(video_id: video_it.id, id: viewer_comment.id),
+              params: {
+                comment: {
+                  comment: '別の動画視聴者のコメント'
+                }, format: :js
+              }
+          }.not_to change { Comment.find(viewer_comment.id).comment }
         end
       end
     end
@@ -369,7 +411,7 @@ RSpec.describe 'Comments', type: :request do
           ).to redirect_to video_path(video_it)
         end
 
-        it 'コメントを削除する' do
+        it '動画視聴者のコメントを削除する' do
           expect {
             delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id }
           }.to change(Comment, :count).by(-1)
