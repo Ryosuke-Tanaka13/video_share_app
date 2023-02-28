@@ -80,7 +80,7 @@
       </div>
       <br>
       <div id="content-show-comment-bottom-reply-content-<%= comment.id %>" style="display: none;">
-        <% comment.replies.includes(:system_admin, :user, :viewer).each do |reply| %>
+        <% comment.replies.includes(:system_admin, :user, :viewer).order(created_at: :desc).each do |reply| %>
           <div class="content-show-comment-bottom-view-reply">
             <div class="content-show-comment-bottom-view-reply-top">
               <div class="content-show-comment-bottom-view-reply-top-user">
