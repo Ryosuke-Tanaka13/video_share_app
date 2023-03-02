@@ -1,7 +1,9 @@
 FactoryBot.define do
+  # 組織セレブエンジニアのオーナーが投稿したビデオ
   factory :video_sample, class: 'Video' do
     title { 'サンプルビデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    open_period { Time.now + 1 }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { false }
@@ -11,22 +13,18 @@ FactoryBot.define do
     user_id { 1 }
     organization
     user
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/111111111' }
 
-    # requestsとsystemのdestroyのテスト用に、実際にvimeoに動画データをアップロードする。
-    # requestsとsystemのテストまとめて行うと、too many api requests. wait a minute or so, then try again.エラーが生じ、テストに落ちるためコメントアウトしている。(別個にテストを行えば通る)
-    # after(:build) do |video_sample|
-    #   video = File.open('spec/fixtures/files/rec.webm')
-    #   video_client = VimeoMe2::User.new(ENV['VIMEO_API_TOKEN'])
-    #   video_data = video_client.upload_video(video)
-    #   video_sample.data_url = video_data['uri']
-    # end
+    # afterメソッド。Videoインスタンスをbuildした後、動画をつける。
+    after(:build) do |video_sample|
+      video_sample.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
+  # 組織セレブエンジニアのスタッフが投稿したビデオ
   factory :video_test, class: 'Video' do
     title { 'テストビデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    open_period { Time.now + 5 }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { false }
@@ -36,13 +34,18 @@ FactoryBot.define do
     user_id { 3 }
     organization
     user
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/222222222' }
+
+    # afterメソッド。Videoインスタンスをbuildした後、動画をつける。
+    after(:build) do |video_test|
+      video_test.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
-  factory :video_it, class: 'Video' do
-    title { 'ITビデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+  # 組織セレブエンジニアのオーナーが投稿したビデオ(視聴にはログイン必須)
+  factory :video_login_must, class: 'Video' do
+    title { 'ログイン必須ビデオ' }
+    open_period { nil }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { true }
@@ -52,13 +55,40 @@ FactoryBot.define do
     user_id { 1 }
     organization
     user
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/333333333' }
+
+    # afterメソッド。Videoインスタンスをbuildした後、動画をつける。
+    after(:build) do |video_login_must|
+      video_login_must.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
+  # 組織セレブエンジニアのオーナーが投稿したビデオ(論理削除されたもの)
+  factory :video_deleted, class: 'Video' do
+    title { 'デリートビデオ' }
+    open_period { nil }
+    expire_type { 0 }
+    range { false }
+    comment_public { false }
+    login_set { false }
+    popup_before_video { false }
+    popup_after_video { false }
+    is_valid { false }
+    organization_id { 1 }
+    user_id { 1 }
+    organization
+    user
+
+    # afterメソッド。Videoインスタンスをbuildした後、動画をつける。
+    after(:build) do |video_delete|
+      video_delete.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
+  end
+
+  # 組織テックリーダーズのオーナーが投稿したビデオ
   factory :another_video, class: 'Video' do
     title { 'アナザービデオ' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    open_period { nil }
+    expire_type { 0 }
     range { false }
     comment_public { false }
     login_set { false }
@@ -68,7 +98,10 @@ FactoryBot.define do
     user_id { 2 }
     organization
     user
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/444444444' }
+
+    # afterメソッド。Videoインスタンスをbuildした後、動画をつける。
+    after(:build) do |another_video|
+      another_video.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 end

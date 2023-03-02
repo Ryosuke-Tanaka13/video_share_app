@@ -115,6 +115,11 @@ ja:
       viewer: 視聴者
       organization: 組織
       video: 動画
+  enums:
+    video:
+      expire_type:
+        nonpublic: "非公開"
+        deactivate: "自動削除"
   shared:
       links:
         back: 戻る

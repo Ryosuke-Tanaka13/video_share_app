@@ -94,4 +94,8 @@ RSpec.configure do |config|
     add_group 'Files', '/lib/**/*'
     track_files 'lib/vimeo_mw2/**/*.rb'
   end
+
+  # rspecテストで未来の時間に移動することなどを可能にするために追記
+  require 'active_support/testing/time_helpers'
+  config.include ActiveSupport::Testing::TimeHelpers
 end

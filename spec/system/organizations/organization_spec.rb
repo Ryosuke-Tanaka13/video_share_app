@@ -14,6 +14,10 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
 
+  # RSpecではTime.currentで日時を設定するタイミングが異なるため正確な日時を特定することはできない。
+  # → travel_toを用いて現在日時を固定して対応
+  around(:each) { |e| travel_to(Time.current) { e.run } }
+
   before(:each) do
     organization
     user_owner

@@ -20,6 +20,10 @@ RSpec.describe 'Organization', type: :request do
   let(:organization_viewer2) { create(:organization_viewer2) }
   let(:organization_viewer3) { create(:organization_viewer3) }
 
+  # RSpecではTime.currentで日時を設定するタイミングが異なるため正確な日時を特定することはできない。
+  # → travel_toを用いて現在日時を固定して対応
+  around(:each) { |e| travel_to(Time.current) { e.run } }
+
   before(:each) do
     system_admin
     organization
