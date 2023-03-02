@@ -26,6 +26,10 @@ RSpec.describe 'Videos', type: :request do
   # another_orgとviewer1の紐付け
   let(:organization_viewer3) { create(:organization_viewer3, organization_id: 2, viewer_id: 3) }
 
+  # RSpecではTime.currentで日時を設定するタイミングが異なるため正確な日時を特定することはできない。
+  # → travel_toを用いて現在日時を固定して対応
+  around(:each) { |e| travel_to(Time.current) { e.run } }
+
   before(:each) do
     system_admin
     organization
@@ -557,8 +561,8 @@ RSpec.describe 'Videos', type: :request do
 
     describe '異常(公開期間を過ぎている)' do
       before(:each) do
-        # 2分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
-        travel_to(Time.now + 2)
+        # 1分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 1)
         sign_in viewer
         get video_path(video_sample)
       end
@@ -594,7 +598,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'テストビデオ2',
-                  open_period:        Time.now + 2,
+                  open_period:        Time.now + 10,
                   range:              true,
                   comment_public:     true,
                   login_set:          true,
@@ -611,7 +615,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'テストビデオ２',
-                  open_period:        Time.now + 2,
+                  open_period:        Time.now + 10,
                   range:              true,
                   comment_public:     true,
                   login_set:          true,
@@ -682,7 +686,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'テストビデオ2',
-                  open_period:        Time.now + 2,
+                  open_period:        Time.now + 10,
                   range:              true,
                   comment_public:     true,
                   login_set:          true,
@@ -699,7 +703,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'テストビデオ２',
-                  open_period:        Time.now + 2,
+                  open_period:        Time.now + 10,
                   range:              true,
                   comment_public:     true,
                   login_set:          true,
@@ -724,7 +728,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'テストビデオ2',
-                  open_period:        Time.now + 2,
+                  open_period:        Time.now + 10,
                   range:              true,
                   comment_public:     true,
                   login_set:          true,
@@ -741,7 +745,7 @@ RSpec.describe 'Videos', type: :request do
               params: {
                 video: {
                   title:              'テストビデオ２',
-                  open_period:        Time.now + 2,
+                  open_period:        Time.now + 10,
                   range:              true,
                   comment_public:     true,
                   login_set:          true,

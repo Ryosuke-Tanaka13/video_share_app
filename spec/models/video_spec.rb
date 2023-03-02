@@ -8,6 +8,10 @@ RSpec.describe Video, type: :model do
   let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
   let(:video_deleted) { create(:video_deleted, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
+  # RSpecではTime.currentで日時を設定するタイミングが異なるため正確な日時を特定することはできない。
+  # → travel_toを用いて現在日時を固定して対応
+  around(:each) { |e| travel_to(Time.current) { e.run } }
+
   before(:each) do
     organization
     user_owner

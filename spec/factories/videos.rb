@@ -2,8 +2,7 @@ FactoryBot.define do
   # 組織セレブエンジニアのオーナーが投稿したビデオ
   factory :video_sample, class: 'Video' do
     title { 'サンプルビデオ' }
-    # 公開期間を現在時刻+2分に設定。(←+1分にするとテストに落ちる。requestsテストでは+1分でも通る。)
-    open_period { Time.now + 2 }
+    open_period { Time.now + 1 }
     expire_type { 0 }
     range { false }
     comment_public { false }

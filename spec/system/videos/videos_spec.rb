@@ -16,6 +16,10 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   # orgとviewerの紐付け
   let(:organization_viewer) { create(:organization_viewer) }
 
+  # RSpecではTime.currentで日時を設定するタイミングが異なるため正確な日時を特定することはできない。
+  # → travel_toを用いて現在日時を固定して対応
+  around(:each) { |e| travel_to(Time.current) { e.run } }
+
   before(:each) do
     system_admin
     organization
@@ -31,8 +35,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   describe '正常' do
     describe '動画一覧ページ' do
       before(:each) do
-        # 2分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
-        travel_to(Time.now + 2)
+        # 1分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 1)
         sign_in system_admin
         visit videos_path(organization_id: organization.id)
       end
@@ -67,7 +71,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画詳細' do
       before(:each) do
-        # 5分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        # 5分後に時間移動することで、現在保存されているvideo_testの公開期間が過ぎたという状況を作り出す。
         travel_to(Time.now + 5)
         sign_in user_owner || system_admin
         visit video_path(video_test)
@@ -152,6 +156,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       it '新規作成で動画が作成される' do
         fill_in 'title', with: 'サンプルビデオ２'
         attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/rec.webm')
+        # 公開期間を現在時刻+1分に設定。
         fill_in 'open_period', with: Time.now + 1
         # 公開期間を入力すると、非公開/自動削除の選択エリアが表示される。(今回は自動削除を選択する。デフォルトでは非公開が選択されている)
         expect(find('.expire_type_choice', visible: true)).to be_visible
@@ -301,8 +306,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画一覧画面(オーナー、動画投稿者)' do
       before(:each) do
-        # 2分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
-        travel_to(Time.now + 2)
+        # 1分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 1)
         sign_in user_owner || user
         visit videos_path(organization_id: organization.id)
       end
@@ -320,8 +325,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
     describe '動画一覧画面(視聴者)' do
       before(:each) do
-        # 2分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
-        travel_to(Time.now + 2)
+        # 1分後に時間移動することで、現在保存されているvideo_sampleの公開期間が過ぎたという状況を作り出す。
+        travel_to(Time.now + 1)
         sign_in viewer
         visit videos_path(organization_id: organization.id)
       end
