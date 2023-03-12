@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_07_213435) do
+ActiveRecord::Schema.define(version: 2023_03_12_055530) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -44,6 +44,13 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
     t.string "name"
     t.integer "organization_id"
     t.integer "video_folder_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "organization_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -151,6 +158,15 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
     t.index ["user_id"], name: "index_videos_on_user_id"
   end
 
+  create_table "viewer_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "viewer_id", null: false
+    t.bigint "group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_viewer_groups_on_group_id"
+    t.index ["viewer_id"], name: "index_viewer_groups_on_viewer_id"
+  end
+
   create_table "viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -190,4 +206,6 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
   add_foreign_key "organization_viewers", "viewers"
   add_foreign_key "videos", "organizations"
   add_foreign_key "videos", "users"
+  add_foreign_key "viewer_groups", "groups"
+  add_foreign_key "viewer_groups", "viewers"
 end

@@ -3,6 +3,8 @@
 class Viewer < ApplicationRecord
   has_many :organization_viewers, dependent: :destroy
   has_many :organizations, through: :organization_viewers
+  has_many :viewer_groups
+  has_many :groups, through: :viewer_groups
 
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
