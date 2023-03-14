@@ -15,5 +15,4 @@ import '../stylesheets/videos';
 import "@fortawesome/fontawesome-free/js/all";
 
 // 追記
-import "./video"
-
+import "./videos/new"

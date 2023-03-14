@@ -6,14 +6,12 @@
   // これがないと、後述のz-indexが効かない
   position: absolute;
 }
-
 // file_fieldでvideoBoxの範囲を覆い尽くす
 #post{
   @include videoBox;
   background-color: aqua;
   z-index: 1;
 }
-
 // choice_boxクラスでvideoBoxの範囲を覆い尽くす
 .choice_box{
   @include videoBox;
@@ -26,7 +24,6 @@
   border: 2px dashed black;
   position:relative;
 }
-
 #show{
   height: 300px;
   width: 600px;
@@ -39,22 +36,23 @@
     object-fit: cover;
   }
 }
-
 .video-label{
   margin-top:10px;
 }
-
 .video-post-actions{
   margin-top:20px;
 }
-
 .video-info{
   z-index: 3;
 }
-
 // videos#indexページ
 .video-title-and-action-index{
   margin-left:10px;
+}
+
+// 動画のfloat解除
+#videos-index .content{
+  overflow: hidden;
 }
 
 // videos#showページ
