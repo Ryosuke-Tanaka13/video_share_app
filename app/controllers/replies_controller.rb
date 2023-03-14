@@ -12,7 +12,6 @@ class RepliesController < ApplicationController
     # videoに紐づいたコメントを取得
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
     @reply = @comment.replies.build(reply_params)
-    @replies = @comment.replies.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
     # コメント返信したアカウントをセット
     set_replyer_id
     if @reply.save

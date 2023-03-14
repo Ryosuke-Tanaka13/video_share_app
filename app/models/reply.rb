@@ -4,7 +4,6 @@ class Reply < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :viewer, optional: true
   belongs_to :comment
-
   # バリデーション
   validates :reply, presence: true
   # TODO: モデルにメソッド管理できればリファクタリング
