@@ -11,6 +11,6 @@ class SystemAdmin < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validates :name,  presence: true, length: { in: 1..10 }
 
-  has_many :comments
-  has_many :replies
+  has_many :comments, dependent: :destroy
+  has_many :replies, dependent: :destroy
 end
