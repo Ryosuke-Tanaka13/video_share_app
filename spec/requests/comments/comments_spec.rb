@@ -322,7 +322,7 @@ RSpec.describe 'Comments', type: :request do
               }
           }.not_to change { Comment.find(user_comment.id).comment }
         end
-        
+
         it '別の動画視聴者は動画視聴者のコメントをアップデートできない' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: viewer_comment.id),

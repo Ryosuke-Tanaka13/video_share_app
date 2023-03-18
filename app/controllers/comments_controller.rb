@@ -2,6 +2,7 @@ class CommentsController < ApplicationController
   include CommentReply
   before_action :ensure_system_admin_or_user_or_viewer
   before_action :correct_system_admin_or_user_or_viewer_comment, only: %i[update destroy]
+  before_action :account_logged_in?
   helper_method :account_logged_in?
   protect_from_forgery { :except => [:destroy] }
 
