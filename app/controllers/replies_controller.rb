@@ -3,6 +3,7 @@ class RepliesController < ApplicationController
   before_action :set_comment_id
   before_action :ensure_system_admin_or_user_or_viewer
   before_action :system_admin_or_correct_user_viewer_reply, only: %i[update destroy]
+  before_action :account_logged_in?
   helper_method :account_logged_in?
   protect_from_forgery { :except => [:destroy] }
 

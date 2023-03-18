@@ -49,6 +49,9 @@ class OrganizationsController < ApplicationController
         video.delete
       end
     end
+    # コメントを先に削除しなければ外部キーエラーとなる
+    comments = Comment.where(organization_id: @organization.id)
+    comments.destroy_all
     @organization.destroy!
     flash[:danger] = "#{@organization.name}を削除しました"
     redirect_to organizations_url
