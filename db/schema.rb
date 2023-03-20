@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 2022_09_07_213435) do
     t.string "data_url", null: false
     t.boolean "is_valid", default: true, null: false
     t.bigint "organization_id", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["organization_id"], name: "index_videos_on_organization_id"
