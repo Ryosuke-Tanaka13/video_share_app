@@ -8,6 +8,7 @@ RSpec.describe 'Organization', type: :request do
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
+  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
@@ -26,6 +27,7 @@ RSpec.describe 'Organization', type: :request do
     user_staff
     viewer
     viewer1
+    video_sample
     another_organization
     another_user_owner
     another_user_staff
@@ -822,7 +824,7 @@ RSpec.describe 'Organization', type: :request do
         it '組織を削除する' do
           expect {
             delete organization_path(organization), params: { id: organization.id }
-          }.to change(Organization, :count).by(-1)
+          }.to change(Organization, :count).by(-1) && change(Video, :count).by(-1)
         end
 
         it 'indexにリダイレクトされる' do
