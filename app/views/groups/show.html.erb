@@ -1,0 +1,13 @@
+<h1><%= @group.name %></h1>
+<p>作成日：<%= @group.created_at %></p>
+<p>更新日：<%= @group.updated_at %></p>
+
+<h2>視聴者一覧</h2>
+<ul>
+  <% @group.viewers.each do |viewer| %>
+    <li><%= viewer.name %></li>
+  <% end %>
+</ul>
+
+<%= link_to "編集", edit_group_path(@group) %>
+<%= link_to "削除", group_path(@group), method: :delete, data: { confirm: "本当に削除してもよろしいですか？" } %>

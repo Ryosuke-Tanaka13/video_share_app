@@ -13,6 +13,7 @@ class GroupsController < ApplicationController
 
   def create
     @group = Group.new(group_params)
+    @group.organization_id = current_user.organization_id
     if @group.save
       redirect_to groups_path
     else
@@ -36,6 +37,14 @@ class GroupsController < ApplicationController
   def destroy
     @group = Group.find(params[:id])
     @group.destroy
+    redirect_to groups_path, notice: "グループを削除しました。"
+  end
+
+  def remove_viewer
+    group = Group.find(params[:id])
+    viewer = Viewer.find(params[:viewer_id])
+    group.viewers.delete(viewer)
+
     redirect_to groups_path
   end
 

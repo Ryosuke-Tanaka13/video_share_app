@@ -63,7 +63,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :groups
+  resources :groups do
+    member do
+      delete 'remove_viewer/:viewer_id', to: 'groups#remove_viewer', as: 'remove_viewer'
+    end
+  end
   # =================================================================
 
   # 共通==============================================================
