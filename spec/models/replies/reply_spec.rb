@@ -6,10 +6,12 @@ RSpec.describe Reply, type: :model do
   let(:user) { create(:user, organization_id: organization.id) }
   let(:viewer) { create(:viewer) }
   let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id) }
-  let(:comment) { create(:comment, organization_id: organization.id, video_id: video_it.id) }
-  let(:system_admin_reply) { create(:system_admin_reply, organization_id: user.organization_id, comment_id: comment.id) }
-  let(:user_reply) { create(:user_reply, organization_id: user.organization_id, comment_id: comment.id) }
-  let(:viewer_reply) { create(:viewer_reply, organization_id: user.organization_id, comment_id: comment.id) }
+  let(:comment) { create(:comment, organization_id: organization.id, video_id: video_it.id, user_id: user.id) }
+  let(:system_admin_reply) do
+    create(:system_admin_reply, organization_id: user.organization_id, comment_id: comment.id, system_admin_id: system_admin.id)
+  end
+  let(:user_reply) { create(:user_reply, organization_id: user.organization_id, comment_id: comment.id, user_id: user.id) }
+  let(:viewer_reply) { create(:viewer_reply, organization_id: user.organization_id, comment_id: comment.id, viewer_id: viewer.id) }
 
   before(:each) do
     organization

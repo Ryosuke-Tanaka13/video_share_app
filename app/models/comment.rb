@@ -12,7 +12,7 @@ class Comment < ApplicationRecord
   validate :ensure_account_present
 
   def ensure_account_present
-    errors.add("問題が発生しました。") if (system_admin_id.blank? && user_id.blank? && viewer_id.blank?)
+    errors.add('問題が発生しました。') if system_admin_id.blank? && user_id.blank? && viewer_id.blank?
   end
   # TODO: エラー発生のため改修が必要　CommentsControllerで一旦制御
   # validate :system_admin_or_correct_commenter

@@ -8,8 +8,10 @@ RSpec.describe 'Replies', type: :request do
   let(:viewer) { create(:viewer) }
   let(:another_viewer) { create(:another_viewer) }
   let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id) }
-  let(:comment) { create(:comment, organization_id: organization.id, video_id: video_it.id) }
-  let(:system_admin_reply) { create(:system_admin_reply, organization_id: user.organization_id, comment_id: comment.id) }
+  let(:comment) { create(:comment, organization_id: organization.id, video_id: video_it.id, user_id: user.id) }
+  let(:system_admin_reply) do
+    create(:system_admin_reply, organization_id: user.organization_id, comment_id: comment.id, system_admin_id: system_admin.id)
+  end
   let(:user_reply) { create(:user_reply, organization_id: user.organization_id, comment_id: comment.id, user_id: user.id) }
   let(:viewer_reply) { create(:viewer_reply, organization_id: user.organization_id, comment_id: comment.id, viewer_id: viewer.id) }
 
@@ -296,15 +298,15 @@ RSpec.describe 'Replies', type: :request do
             current_user(another_viewer)
           end
 
-          it '動画視聴者はシステム管理者の返信をアップデートできない' do
+          it '別の動画視聴者はシステム管理者の返信をアップデートできない' do
             expect {
-              patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
+              patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: system_admin_reply.id),
                 params: {
                   reply: {
                     reply: '別の動画視聴者の返信'
                   }, format: :js
                 }
-            }.not_to change { Reply.find(viewer_reply.id).reply }
+            }.not_to change { Reply.find(system_admin_reply.id).reply }
           end
 
           it '別の動画視聴者は動画投稿者の返信をアップデートできない' do
@@ -318,7 +320,7 @@ RSpec.describe 'Replies', type: :request do
             }.not_to change { Reply.find(user_reply.id).reply }
           end
 
-          it '別の動画視聴者はアップデートできない' do
+          it '別の動画視聴者は動画視聴者の返信をアップデートできない' do
             expect {
               patch video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
                 params: {
@@ -342,56 +344,23 @@ RSpec.describe 'Replies', type: :request do
       describe '正常' do
         it '返信を削除する' do
           expect {
-            delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: { id: user_reply.id }
+            delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: system_admin_reply.id),
+              params: { id: system_admin.id, format: :js }
           }.to change(Reply, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: {
-                reply: {
-                  reply: 'システム管理者の返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
 
         it '動画投稿者の返信を削除する' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: { id: user_reply.id }
+              params: { id: user_reply.id, format: :js }
           }.to change(Reply, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: {
-                reply: {
-                  reply: '動画投稿者の返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
 
         it '動画視聴者の返信を削除する' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-              params: { id: viewer_reply.id }
+              params: { id: viewer_reply.id, format: :js }
           }.to change(Reply, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-              params: {
-                reply: {
-                  reply: '動画視聴者の返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
     end
@@ -405,19 +374,8 @@ RSpec.describe 'Replies', type: :request do
         it '返信を削除する' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: { id: user_reply.id }
+              params: { id: user_reply.id, format: :js }
           }.to change(Reply, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: {
-                reply: {
-                  reply: '動画投稿者の返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
     end
@@ -431,19 +389,8 @@ RSpec.describe 'Replies', type: :request do
         it '返信を削除する' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-              params: { id: viewer_reply.id }
+              params: { id: viewer_reply.id, format: :js }
           }.to change(Reply, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-              params: {
-                reply: {
-                  reply: '動画視聴者の返信'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
     end
@@ -457,21 +404,21 @@ RSpec.describe 'Replies', type: :request do
         it '別の動画投稿者はシステム管理者の返信を削除できない' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: system_admin_reply.id),
-              params: { id: system_admin_reply.id }
+              params: { id: system_admin_reply.id, format: :js }
           }.not_to change(Reply, :count)
         end
 
         it '別の動画投稿者は動画投稿者の返信を削除できない' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: { id: user_reply.id }
+              params: { id: user_reply.id, format: :js }
           }.not_to change(Reply, :count)
         end
 
         it '別の動画投稿者は動画視聴者の返信を削除できない' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-              params: { id: viewer_reply.id }
+              params: { id: viewer_reply.id, format: :js }
           }.not_to change(Reply, :count)
         end
       end
@@ -486,22 +433,22 @@ RSpec.describe 'Replies', type: :request do
         it '別の動画視聴者はシステム管理者の返信を削除できない' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: system_admin_reply.id),
-              params: { id: system_admin_reply.id }
-          }.not_to change(Comment, :count)
+              params: { id: system_admin_reply.id, format: :js }
+          }.not_to change(Reply, :count)
         end
 
         it '別の動画視聴者は動画投稿者の返信を削除できない' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: user_reply.id),
-              params: { id: user_reply.id }
-          }.not_to change(Comment, :count)
+              params: { id: user_reply.id, format: :js }
+          }.not_to change(Reply, :count)
         end
 
         it '別の動画視聴者は動画視聴者の返信を削除できない' do
           expect {
             delete video_comment_reply_path(video_id: video_it.id, comment_id: user_reply.comment_id, id: viewer_reply.id),
-              params: { id: viewer_reply.id }
-          }.not_to change(Comment, :count)
+              params: { id: viewer_reply.id, format: :js }
+          }.not_to change(Reply, :count)
         end
       end
     end

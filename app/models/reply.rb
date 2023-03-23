@@ -9,7 +9,7 @@ class Reply < ApplicationRecord
   validate :ensure_account_present
 
   def ensure_account_present
-    errors.add("問題が発生しました。") if (system_admin_id.blank? && user_id.blank? && viewer_id.blank?)
+    errors.add('問題が発生しました。') if system_admin_id.blank? && user_id.blank? && viewer_id.blank?
   end
   # TODO: モデルにメソッド管理できればリファクタリング
   # validate :system_admin_or_correct_replyer

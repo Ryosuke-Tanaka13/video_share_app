@@ -42,12 +42,12 @@ class CommentsController < ApplicationController
     set_commenter_id
     @comment = Comment.find(params[:id])
     if @comment.destroy
-      flash[:success] = 'コメント削除に成功しました。'
-      redirect_to video_url(@comment.video_id)
+      flash.now[:success] = 'コメント削除に成功しました。'
+      @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
     else
       flash.now[:danger] = 'コメント削除に失敗しました。'
-      render :index
     end
+    render :index
   end
 
   private

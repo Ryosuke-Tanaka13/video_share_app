@@ -22,4 +22,10 @@ FactoryBot.define do
     comment_id { 1 }
     reply { 'viewerの返信' }
   end
+
+  factory :another_viewer_reply, class: 'Reply' do
+    organization_id { 1 }
+    comment_id { 1 }
+    reply { 'another_viewerの返信' }
+  end
 end

@@ -35,12 +35,12 @@ class RepliesController < ApplicationController
 
   def destroy
     if @reply.destroy
-      flash[:success] = 'コメント返信の削除に成功しました。'
-      redirect_to video_url(@comment.video_id)
+      flash.now[:success] = 'コメント返信の削除に成功しました。'
+      @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
     else
       flash.now[:danger] = 'コメント返の削除に失敗しました。'
-      render template: 'comments/index'
     end
+    render template: 'comments/index'
   end
 
   private

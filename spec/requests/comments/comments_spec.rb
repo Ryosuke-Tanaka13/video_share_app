@@ -9,7 +9,7 @@ RSpec.describe 'Comments', type: :request do
   let(:viewer) { create(:viewer) }
   let(:another_viewer) { create(:another_viewer) }
   let(:system_admin_comment) do
-    create(:system_admin_comment, organization_id: user.organization_id, video_id: video_it.id, system_admin_id: system_admin)
+    create(:system_admin_comment, organization_id: user.organization_id, video_id: video_it.id, system_admin_id: system_admin.id)
   end
   let(:user_comment) { create(:user_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user.id) }
   let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video_it.id, viewer_id: viewer.id) }
@@ -346,53 +346,21 @@ RSpec.describe 'Comments', type: :request do
       describe '正常' do
         it 'コメントを削除する' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: system_admin_comment.id), params: { id: system_admin_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
+              params: { id: system_admin_comment.id, format: :js }
           }.to change(Comment, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
-              params: {
-                comment: {
-                  comment: 'システム管理者のコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
 
         it '動画投稿者のコメントを削除する' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id, format: :js }
           }.to change(Comment, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_path(video_id: video_it.id, id: user_comment.id),
-              params: {
-                comment: {
-                  comment: '動画投稿者のコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
 
         it '動画視聴者のコメントを削除する' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id, format: :js }
           }.to change(Comment, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_path(video_id: video_it.id, id: viewer_comment.id),
-              params: {
-                comment: {
-                  comment: '動画視聴者のコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
     end
@@ -405,19 +373,8 @@ RSpec.describe 'Comments', type: :request do
       describe '正常' do
         it 'コメントを削除する' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id, format: :js }
           }.to change(Comment, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_path(video_id: video_it.id, id: user_comment.id),
-              params: {
-                comment: {
-                  comment: '動画投稿者のコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
     end
@@ -430,19 +387,8 @@ RSpec.describe 'Comments', type: :request do
       describe '正常' do
         it 'コメントを削除する' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id, format: :js }
           }.to change(Comment, :count).by(-1)
-        end
-
-        it 'videos#showにリダイレクトされる' do
-          expect(
-            delete(video_comment_path(video_id: video_it.id, id: viewer_comment.id),
-              params: {
-                comment: {
-                  comment: '動画視聴者のコメント'
-                }
-              })
-          ).to redirect_to video_path(video_it)
         end
       end
     end
@@ -455,19 +401,20 @@ RSpec.describe 'Comments', type: :request do
 
         it '動画投稿者はシステム管理者のコメントを削除できない' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: system_admin_comment.id), params: { id: system_admin_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
+              params: { id: system_admin_comment.id, format: :js }
           }.not_to change(Comment, :count)
         end
 
         it '別の動画投稿者は動画投稿者のコメントを削除できない' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id, format: :js }
           }.not_to change(Comment, :count)
         end
 
         it '動画投稿者は動画視聴者のコメントを削除できない' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id, format: :js }
           }.not_to change(Comment, :count)
         end
       end
@@ -479,19 +426,20 @@ RSpec.describe 'Comments', type: :request do
 
         it '動画視聴者はシステム管理者のコメント削除できない' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: system_admin_comment.id), params: { id: system_admin_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
+              params: { id: system_admin_comment.id, format: :js }
           }.not_to change(Comment, :count)
         end
 
         it '動画視聴者は動画投稿者のコメント削除できない' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id, format: :js }
           }.not_to change(Comment, :count)
         end
 
         it '別の動画視聴者は動画視聴者のコメント削除できない' do
           expect {
-            delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id }
+            delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id, format: :js }
           }.not_to change(Comment, :count)
         end
       end
