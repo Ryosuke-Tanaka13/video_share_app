@@ -59,3 +59,34 @@
 .video-title-and-action-show{
   margin-left:50px;
 }
+
+// 動画詳細ページのURLコピー関連
+.copy-button {
+  position: relative;                  /* 指定した分だけ相対的に移動 */
+  cursor   : pointer;                  /* カーソルをポインターで表示 */
+}
+.copied {
+  display: none;                        /* 要素を非表示 */
+}
+ /* --- 吹き出し ------------------ */
+.copied-notice {
+  position: absolute;                   /* 親要素を基準 */
+  display: inline;                      /* インライン要素として表示 */
+  padding: 2px;                         /* テキストの前後の余白 */
+  background-color: rgba(255, 127, 127, 0.75);  /* 背景色（透明度） */
+  width:180px;                          /* 吹き出し全体の幅 */
+  left : 30%;                           /* 表示位置 */
+  top : 100%;                           /* 表示位置 */
+  margin-top : 12px;                    /* 表示位置 */
+  font-size: 80%;                       /* 文字サイズ */
+}
+
+.copied-notice:after{
+  border-bottom: 12px solid rgba(255, 127, 127, 0.75);  /* 吹き出し口の高さ・色 */
+  border-left: 10px solid transparent;   /* 吹き出し口の幅１／２ */
+  border-right: 10px solid transparent;  /* 吹き出し口の幅１／２ */
+  top: -12px;                            /* 吹き出し口の位置調整 */
+  left : 5%;                         /* 吹き出し口の横位置 */
+  content: "";                       /* コンテンツの挿入 */
+  position: absolute;                /* 親要素を基準 */
+}

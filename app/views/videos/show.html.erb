@@ -8,11 +8,20 @@
   </div>
   <div class="video-title-and-action-show">
     <%= @video.title %>
-    <div class="btn-area">
-      <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
-      <%= @video.hidden_button %>
+    <div class="btn-area row">
+      <div class="col-md-9">
+        <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
+        <%= @video.hidden_button %>
+      </div>
+      <% if user_signed_in? || system_admin_signed_in? %>
+        <div class="col-md-3">
+          <button class="copy-button" id="id-copy-button">URLをコピー
+            <span class="copied" id="id-copied">URLをコピーしました</span>
+          </button>
+        </div>
+      <% end %>
     </div>
   </div>
-</div>
+</div> 
 
-<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+ <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div> 
