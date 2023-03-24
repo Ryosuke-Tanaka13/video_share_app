@@ -6,6 +6,22 @@ class Video < ApplicationRecord
   validates :title, uniqueness: { scope: :organization }, if: :video_exists?
   validates :video, presence: true, blob: { content_type: :video }
 
+  # saveが完了した後に呼び出されるコールバック
+  after_save :create_id_digest
+
+  # showやeditページへのリンクを踏んだ際に呼び出される。idではなく、id_digestを渡せるようになる。
+  def to_param
+    id_digest
+  end
+
+  # after_saveによって呼び出されるメソッド。id_digestカラムの値に、idを暗号化して格納
+  def create_id_digest
+    if id_digest.nil?
+      new_digest = Digest::MD5.hexdigest(id.to_s)
+      update_column(:id_digest, new_digest)
+    end
+  end
+
   def video_exists?
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
     video.present?
