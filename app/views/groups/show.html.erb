@@ -10,4 +10,8 @@
 </ul>
 
 <%= link_to "編集", edit_group_path(@group) %>
-<%= link_to "削除", group_path(@group), method: :delete, data: { confirm: "本当に削除してもよろしいですか？" } %>
+<%
+=begin%>
+ <%= link_to "削除", group_path(@group), method: :delete, data: { confirm: "本当に削除してもよろしいですか？" } %> 
+<%
+=end%>
