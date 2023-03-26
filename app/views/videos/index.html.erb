@@ -3,19 +3,24 @@
   <% @organization_videos.each do |organization_video| %>
     <div style="float:left;margin:15px;"> 
       <div class="video-display-index">
-        <iframe src="https://player.vimeo.com/video/<%= organization_video.data_url[8..17].to_i %>" width="200px" height="100px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-        </iframe>
+        <% if current_system_admin || current_user %>
+          <video width="300" height="200" id="mv" controls>
+          <source src="<%= url_for(organization_video.video) %>">
+        <% else %>
+          <video width="300" height="200" id="mv">
+          <source src="<%= url_for(organization_video.video) %>">
+        <% end %>
+        <!-- vimeoの動画表示の場合は<iframe>で対応-->
       </div>
       <div class="video-title-and-action-index">
         <%= link_to organization_video.title, video_path(organization_video) %>
-        <% if organization_video.is_valid == false %>
-          <span>オーナー削除済み</span>
-        <% end %><br>
-        <% if current_system_admin.present? %>   
-          <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？ この動画はvimeoからも完全に削除されます"}, class: "btn btn-danger mt-2" %><br> 
+        <% if current_system_admin %> 
+          <% if organization_video.is_valid == false %>
+            <span>オーナー削除済み</span>
+          <% end %><br>
+          <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？"}, class: "btn btn-danger mt-2" %><br> 
         <% end %>  
       </div>
     </div>
   <% end %> 
 </div>
-
