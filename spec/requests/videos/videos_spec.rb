@@ -456,6 +456,9 @@ RSpec.describe 'Videos', type: :request do
 
       it '正常値レスポンス' do
         expect(response).to have_http_status '200'
+        # 暗号化したidを復号することで、元のidと一致しているかをテスト
+        str = Base64.decode64(request.fullpath.split('/').last)
+        expect(str[0, 3]).to eq(video_sample.id.to_s)
       end
     end
 
@@ -471,6 +474,9 @@ RSpec.describe 'Videos', type: :request do
 
       it '正常値レスポンス' do
         expect(response).to have_http_status '200'
+        # 暗号化したidを復号することで、元のidと一致しているかをテスト
+        str = Base64.decode64(request.fullpath.split('/').last)
+        expect(str[0, 3]).to eq(video_sample.id.to_s)
       end
     end
 
@@ -486,6 +492,9 @@ RSpec.describe 'Videos', type: :request do
 
       it '正常値レスポンス' do
         expect(response).to have_http_status '200'
+        # 暗号化したidを復号することで、元のidと一致しているかをテスト
+        str = Base64.decode64(request.fullpath.split('/').last)
+        expect(str[0, 3]).to eq(video_sample.id.to_s)
       end
     end
 
@@ -501,6 +510,9 @@ RSpec.describe 'Videos', type: :request do
 
       it '正常値レスポンス' do
         expect(response).to have_http_status '200'
+        # 暗号化したidを復号することで、元のidと一致しているかをテスト
+        str = Base64.decode64(request.fullpath.split('/').last)
+        expect(str[0, 3]).to eq(video_sample.id.to_s)
       end
     end
 
@@ -515,6 +527,9 @@ RSpec.describe 'Videos', type: :request do
 
       it '正常値レスポンス' do
         expect(response).to have_http_status '200'
+        # 暗号化したidを復号することで、元のidと一致しているかをテスト
+        str = Base64.decode64(request.fullpath.split('/').last)
+        expect(str[0, 3]).to eq(video_sample.id.to_s)
       end
     end
 

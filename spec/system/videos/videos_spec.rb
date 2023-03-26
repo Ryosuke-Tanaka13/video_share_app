@@ -78,25 +78,11 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_button 'URLをコピー'
       end
 
-      # URLが正しいことをテストする際に、暗号化されていることも確認
-      it '適切なURLであること' do
-        expected_url = 'http://www.example.com/videos/c81e728d9d4c2f636f067f89cc14862c'
-        actual_url = current_url # current_urlはCapybaraのメソッドで、現在のページのURLを取得
-        expect(actual_url).to eq(expected_url)
-      end
-
       it 'URLコピーボタン押下で動画詳細ページのURLがコピーされる' do
         click_button 'URLをコピー'
-        # コピー
-        page.execute_script('
-          var copy_target = document.getElementById("id-copied");
-          copy_target.select();
-          document.execCommand("copy");
-        ')
-        # ペースト
-        find_by_id('paste_target').send_keys [:control, 'V']
-        # URLをコピーした旨を表示
-        expect(page).to have_text 'URLをコピーしました'
+        # URLコピーボタン押下で、jsのnavigator.clipboard.writeText(location.href);が実行され、クリップボードにURLをコピーする
+        # クリップボードにきちんとコピーされているかをテスト
+        expect(page.evaluate_script('navigator.clipboard.readText()')).to eq(current_url.to_s)
       end
     end
 
@@ -296,13 +282,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_no_link '削除'
         expect(page).to have_button 'URLをコピー'
       end
-
-      # URLが正しいことをテストする際に、暗号化されていることも確認
-      it '適切なURLであること' do
-        expected_url = 'http://www.example.com/videos/c81e728d9d4c2f636f067f89cc14862c'
-        actual_url = current_url # current_urlはCapybaraのメソッドで、現在のページのURLを取得
-        expect(actual_url).to eq(expected_url)
-      end
     end
 
     describe '動画詳細(視聴者)' do
@@ -319,13 +298,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_no_link '削除'
         expect(page).to have_no_button 'URLをコピー'
       end
-
-      # URLが正しいことをテストする際に、暗号化されていることも確認
-      it '適切なURLであること' do
-        expected_url = 'http://www.example.com/videos/c81e728d9d4c2f636f067f89cc14862c'
-        actual_url = current_url # current_urlはCapybaraのメソッドで、現在のページのURLを取得
-        expect(actual_url).to eq(expected_url)
-      end
     end
 
     describe '動画詳細(非ログイン)' do
@@ -340,13 +312,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_no_link '設定'
         expect(page).to have_no_link '削除'
         expect(page).to have_no_button 'URLをコピー'
-      end
-
-      # URLが正しいことをテストする際に、暗号化されていることも確認
-      it '適切なURLであること' do
-        expected_url = 'http://www.example.com/videos/c81e728d9d4c2f636f067f89cc14862c'
-        actual_url = current_url # current_urlはCapybaraのメソッドで、現在のページのURLを取得
-        expect(actual_url).to eq(expected_url)
       end
     end
   end
