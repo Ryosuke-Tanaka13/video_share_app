@@ -110,4 +110,17 @@ organization_viewer = OrganizationViewer.new(
 organization_viewer.save!
 
 # =================================================================
-
+# video関連 ========================================================
+Video.create!(
+  title: 'テストビデオ',
+  open_period: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
+  range: false,
+  comment_public: false,
+  login_set: false,
+  popup_before_video: false,
+  popup_after_video: false,
+  organization_id: 1,
+  user_id: 1,
+  # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
+  data_url: '/videos/444444444'
+)
