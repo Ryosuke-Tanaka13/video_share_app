@@ -3,6 +3,7 @@ class Video < ApplicationRecord
   belongs_to :user
 
   has_one_attached :video
+  has_many :comments, dependent: :destroy
 
   has_many :video_folders, dependent: :destroy
   has_many :folders, through: :video_folders

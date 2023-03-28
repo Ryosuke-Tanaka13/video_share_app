@@ -64,6 +64,15 @@ Rails.application.routes.draw do
   end
   # =================================================================
 
+  # video関連=========================================================
+  resources :videos do
+    resources :comments, only: %i[create update destroy] do
+      resources :replies, only: %i[create update destroy]
+    end
+  end
+
+  # =================================================================
+
   # 共通==============================================================
   # 利用規約
   get 'use' => 'use#index'
