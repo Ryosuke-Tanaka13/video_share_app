@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe VideoFolder, type: :model do
   let(:video_sample) { create(:video_sample) }
   let(:folder_celeb) { create(:folder_celeb) }
-  let(:video_folder) { build(:video_folder) }
+  let(:video_folder) { build(:video_folder, video_id: video_sample.id, folder_id: folder_celeb.id) }
 
   before(:each) do
     video_sample
