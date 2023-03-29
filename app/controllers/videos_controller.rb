@@ -6,6 +6,7 @@ class VideosController < ApplicationController
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
   before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_my_organization_videos, only: %i[index]
+  before_action :ensure_exist_set_video, only: %i[show edit update destroy]
   before_action :ensure_my_organization_set_video, only: %i[show edit update destroy]
   # 視聴者がログインしている場合、表示されているビデオの視聴グループ＝現在の視聴者の視聴グループでなければ、締め出す下記のメソッド追加予定
   # before_action :limited_viewer, only: %i[show]
@@ -105,6 +106,13 @@ class VideosController < ApplicationController
         flash[:danger] = '権限がありません。'
         redirect_back(fallback_location: root_url)
       end
+    end
+  end
+
+  def ensure_exist_set_video
+    if Video.find_by(id_digest: params[:id]).nil?
+      flash[:danger] = '動画が存在しません。'
+      redirect_back(fallback_location: root_url)
     end
   end
 
