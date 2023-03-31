@@ -5,6 +5,9 @@ class Video < ApplicationRecord
   has_one_attached :video
   has_many :comments, dependent: :destroy
 
+  has_many :video_folders, dependent: :destroy
+  has_many :folders, through: :video_folders
+
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }, if: :video_exists?
 
