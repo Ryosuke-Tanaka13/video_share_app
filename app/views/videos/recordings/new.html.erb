@@ -6,6 +6,24 @@
     <div id="container">
       <h1>WebRTC - MediaStream Recording</h1>
       <button id="stream">デバイス取得</button>
+      <label for="select-element-video">映像：</label>
+        <select id="select-element-video">
+          <option value="none">映像なし</option>
+          <option value="camera-screen">Webカメラ + 画面キャプチャ</option>
+          <option value="camera">Webカメラのみ</option>
+          <option value="screen">画面キャプチャのみ</option>
+        </select>
+        <label for="select-element-audio">音声：</label>
+        <select id="select-element-audio">
+          <option value="none">音声なし</option>
+          <option value="mic-browser">マイク音声 + ブラウザ音声</option>
+          <option value="mic">マイク音声のみ</option>
+          <option value="browser">ブラウザ音声のみ</option>
+        </select>
+      <button id="stop-screen-capture">画面キャプチャを停止</button>
+      <button id="stop-web-camera">webカメラを停止</button>
+      <button id="stopBrowserAudio">ブラウザ音声を削除</button>
+      <button id="muteButton">マイク音声を削除</button><br>
       <select id="camera_list" size="1" style="width:160pt;">
         <option>(video)</option>
       </select>
@@ -23,8 +41,9 @@
         <video id="screen-capture" autoplay></video>
         <%# canvasから取得したStream %>
         <video id="player-canvas" controls autoplay width="640px" height="360px"></video><br>
-      </canvas><br>  
-      <audio id="mic-audio" controls autoplay></audio><br />
+      </canvas><br>
+      <audio id="audioPlayer" controls autoplay muted>ブラウザ音声</audio>
+      <audio id="mic-audio" controls autoplay muted>マイク音声</audio><br />
       <h3>録画プレビュー</h3><br/>
       <video id="recorded-video" playsinline width="480" height="270" style="object-fit: contain;" loop></video>
       <script src="../recording.js" async></script>

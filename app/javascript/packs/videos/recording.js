@@ -16,7 +16,192 @@ document.addEventListener("turbolinks:load", () => {
   // バイナリデータのフィールド定義
   let recordedBlobs;
   // マイクデバイスの音声プレイヤーの定義
+  const audioPlayer = document.getElementById("audioPlayer");
+  // マイクデバイスの音声プレイヤーの定義
   const micAudio = document.getElementById("mic-audio");
+
+  // 映像セレクター定義
+  const selectVideo = document.getElementById("select-element-video")
+  // 音声セレクター定義
+  const selectAudio = document.getElementById("select-element-audio")
+  
+  // 映像セレクターの処理
+  selectVideo.addEventListener("change", videoHandleSelection);
+  function videoHandleSelection() {
+    const selection = document.getElementById("select-element-video").value;
+    //　初期化　
+    if (webCamera.srcObject && videoStream) { //画面キャプチャとwebカメラ共に出力されている場合
+      stopWebCamera(); //webカメラの
+      stopScreenCapture(); //画面キャプチャの削除
+    } else if (videoStream){
+      stopScreenCapture(); //画面キャプチャの削除
+    } else if  (webCamera.srcObject){
+      stopWebCamera(); //webカメラの削除
+      stopScreenCapture(); //画面キャプチャの削除
+    }
+      
+    if (selection === "none") {// 映像なしの場合の処理
+      console.log("映像なしを選択しました");
+
+    } else if (selection === "camera-screen") {// Webカメラ + 画面キャプチャの場合の処理
+      canvas.style.display = "block"; // キャンバスの再表示
+      getWebCamera(webCamera); //webカメラの取得
+      getScreenCapture(screenCapture, audioPlayer); //画面キャプチャの取得
+      drawCanvasFromVideo(); // キャンバス再描画
+      console.log("Webカメラ + 画面キャプチャを選択しました");
+
+    } else if (selection === "camera") {// Webカメラのみの場合の処理
+      canvas.style.display = "block"; // キャンバスの再表示
+      getWebCamera(webCamera); //webカメラの取得
+      drawCanvasFromVideo(); // キャンバス再描画
+      console.log("Webカメラのみを選択しました");
+      
+    } else if (selection === "screen") {// 画面キャプチャのみの場合の処理
+      canvas.style.display = "block"; // キャンバスの再表示
+      getScreenCapture(screenCapture, audioPlayer); //画面キャプチャの取得
+      drawCanvasFromVideo(); // キャンバス再描画
+      console.log("画面キャプチャのみを選択しました");
+    }
+  }
+
+  // 音声セレクターの処理
+  selectAudio.addEventListener("change", audioHandleSelection);
+  function audioHandleSelection() {
+    const selection = document.getElementById("select-element-audio").value;
+      
+    if (selection === "none") {// 映像なしの場合の処理
+      console.log("音声なしを選択しました");
+      stopBrowser()
+
+    } else if (selection === "mic-browser") {// Webカメラ + 画面キャプチャの場合の処理
+      console.log("マイク音声 + ブラウザ音声を選択しました");
+
+    } else if (selection === "mic") {// Webカメラのみの場合の処理
+      console.log("マイク音声のみを選択しました");
+      
+    } else if (selection === "browser") {// 画面キャプチャのみの場合の処理
+      console.log("ブラウザ音声のみを選択しました");
+    }
+  }
+
+  // 画面キャプチャ用定義
+  let screenCaptureStream;
+  let videoStream;
+  let audioStream;
+
+  // カメラ映像取得
+  function getWebCamera(webCamera) {
+    navigator.mediaDevices
+    .getUserMedia({video: true})
+    .then(stream => {
+      webCamera.srcObject = stream;
+    })
+    .catch(e => alert("error" + e.message));
+  }
+  // webカメラOFFボタン定義
+  const stopWebCameraButton = document.getElementById("stop-web-camera");
+  // webカメラOFFボタン　→　webカメラ映像が停止する
+  stopWebCameraButton.addEventListener("click", stopWebCamera);
+    function stopWebCamera() {
+    const tracks = webCamera.srcObject.getTracks();
+    tracks.forEach(track => track.stop());
+    webCamera.srcObject = null; // <video>要素の映像をクリアする
+    stopCanvas(); // 映像自体消えないので視覚的に隠す
+  }
+
+  
+  // 画面キャプチャ映像取得
+  function getScreenCapture(screenCapture, audioPlayer) {
+    // 画面キャプチャの取得内容設定
+    const displayMediaOptions = {
+      video: {
+          cursor: "always"
+      },
+      audio: true
+    };
+
+    navigator.mediaDevices
+    .getDisplayMedia(displayMediaOptions)
+    .then(stream => {
+      screenCaptureStream = stream;
+
+      // 映像トラックを抽出して、videoタグに設定する
+      const videoTracks = stream.getVideoTracks();
+      if (videoTracks.length > 0) {
+        videoStream = new MediaStream([videoTracks[0]]);
+        screenCapture.srcObject = videoStream;
+      }
+  
+      // 音声トラックを抽出して、audioタグに設定する
+      const audioTracks = stream.getAudioTracks();
+      if (audioTracks.length > 0) {
+        audioStream = new MediaStream([audioTracks[0]]);
+        audioPlayer.srcObject = audioStream;
+      }
+      })
+    .catch(e => alert("error" + e.message));
+  }
+
+  // 画面キャプチャOFFボタン定義
+  const stopScreenCaptureButton = document.getElementById("stop-screen-capture");
+  // 画面キャプチャOFFボタン押下処理　→　画面キャプチャ映像が停止する
+  stopScreenCaptureButton.addEventListener("click", stopScreenCapture);
+  function stopScreenCapture() {
+     // 映像トラックが存在する場合
+    if (videoStream) {
+      // 映像トラックを停止
+      videoStream.getVideoTracks()[0].stop();
+      // 映像トラックをnullに設定
+      videoStream = null;
+    }
+    stopCanvas(); // 映像自体消えないので視覚的に隠す
+  }
+
+  // カメラ映像とキャプチャ映像がない場合、出力画面を隠す
+  function stopCanvas() {
+      if (!webCamera.srcObject && !videoStream) {
+      canvas.style.display = "none";
+    }
+  }
+
+  // 音声停止ボタンを取得
+  const stopBrowserAudioButton = document.getElementById("stopBrowserAudio");
+  function stopBrowser(){
+    // 音声トラックが存在する場合
+    if (audioStream) {
+      // 音声トラックを停止
+      audioStream.getAudioTracks()[0].stop();
+      // 音声トラックをnullに設定
+      audioStream = null;
+    }
+  }
+  // 音声停止ボタンがクリックされたときの処理
+  stopBrowserAudioButton.addEventListener("click", () => {
+    stopBrowser()
+  });
+
+  // マイクデバイス音声取得
+  function getMicrophoneAudio(micAudio) {
+    let audioStream;
+  
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        audioStream = stream;
+        micAudio.srcObject = stream;
+      })
+      .catch(e => alert("error" + e.message));
+  
+    const muteButton = document.getElementById('muteButton');
+    muteButton.addEventListener('click', () => {
+      // 音声トラックが存在する場合
+    if (audioStream) {
+      // 音声トラックを停止
+      audioStream.getAudioTracks()[0].stop();
+      // 音声トラックをnullに設定
+      audioStream = null;
+    }
+    });
+  }
   
   //blobにイベントデータをpush
   function handleDataAvailable(event) {
@@ -25,57 +210,24 @@ document.addEventListener("turbolinks:load", () => {
     }
   }
 
-  // 音声トラックの取得
-  function getAudioTrack() {
-    // 以下31～58行　コメントアウト部分はシンセサイザーの音源
-    // const audioContext = new AudioContext();
-    // const t0 = audioContext.currentTime;
-    // let t = 0;
-    // const oscillator = audioContext.createOscillator();
-    // const gainNode = audioContext.createGain();
-   
-    // oscillator.type = "square";
-    // [440, 480, 440, 480, 420, 500, 420, 500].forEach((s) => {
-    //   const vol = 1;
-    //   const hz = s;
-    //   const d = (60 / 80) * (4 / 4);
-    //   const sm = d / 3 > 0.08 ? 0.08 : Number((d / 3).toFixed(5));
-    //   oscillator.frequency.setValueAtTime(hz, t0 + t);
-    //   gainNode.gain.setValueCurveAtTime([vol * 0.03, vol * 0.025], t0 + t, sm);
-    //   gainNode.gain.setValueCurveAtTime(
-    //     [vol * 0.025, vol * 0.01],
-    //     t0 + t + d - sm,
-    //     sm
-    //   );
-    //   t += d;
-    // });
-    // oscillator.start(t0);
-    // oscillator.stop(t0 + t);
-    // oscillator.connect(gainNode);
-  
-    // var streamDestination = audioContext.createMediaStreamDestination();
-    // gainNode.connect(streamDestination);
-    // return streamDestination.stream.getTracks()[0];
-
-
-    // 以下61~67行　micAudioの音声データのトラック抽出
-    const audioContext = new AudioContext();
-    const sourceNode = audioContext.createMediaElementSource(micAudio);
-    sourceNode.connect(audioContext.destination);
-    var streamDestination = audioContext.createMediaStreamDestination();
-    sourceNode.connect(streamDestination);
-    return streamDestination.stream.getTracks()[0];
-  };
-
   // 録画開始ボタン開始をクリックで発火 → キャンバス映像と音声データの合成
   function startRecording() {
     const ms = new MediaStream();
-    ms.addTrack(canvasStream.getTracks()[0]);
-    ms.addTrack(getAudioTrack());
-    console.log(ms);
+    // 映像がない場合はキャンバスを録画しない
+    if (webCamera.srcObject || videoStream) {
+      ms.addTrack(canvasStream.getTracks()[0]);
+    }
+    ms.addTrack(micAudio.srcObject.getTracks()[0]);
+    //ms.addTrack(browserAudio.srcObject.getTracks()[0]);
 
     recordedBlobs = [];
-    const options = { mimeType: "video/webm;codecs=vp9" };
+    // const options = { mimeType: "video/webm;codecs=vp9" };
+    let options; 
+    if (webCamera.srcObject || videoStream) {
+      options = { mimeType: "video/webm;codecs=vp9" };
+    } else {
+      options = { mimeType: "audio/webm" };
+    }
   
     try {
       mediaRecorder = new MediaRecorder(ms, options);
@@ -107,6 +259,7 @@ document.addEventListener("turbolinks:load", () => {
   // 録画開始ボタンをクリックで発火 → 録画が開始される
   recordButton.addEventListener("click", () => {
     if (recordButton.textContent === "録画開始") {
+      clearRecordedVideo();
       startRecording();
 
     } else {
@@ -126,15 +279,31 @@ document.addEventListener("turbolinks:load", () => {
     recordedVideo.controls = true;
     recordedVideo.play();
   });
+
+  // 録画情報を削除
+  function clearRecordedVideo() {
+    recordedVideo.pause();
+    recordedVideo.src = "";
+    recordedVideo.removeAttribute("srcObject");
+    recordedVideo.controls = false;
+  }
   
   // ダウンロードボタンクリックで発火 → blob格納からurl定義し、ダウンロードされる
   downloadButton.addEventListener("click", () => {
-    const blob = new Blob(recordedBlobs, { type: "video/webm" });
+    // const blob = new Blob(recordedBlobs, { type: "video/webm" });
+
+    let blob
+    if (webCamera.srcObject || videoStream) {
+      blob = new Blob(recordedBlobs, { type: "video/webm" });
+    } else {
+      blob = new Blob(recordedBlobs, { type: "audio/webm" });
+    }
+
+    a.download = "rec.webm";
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.style.display = "none";
     a.href = url;
-    a.download = "rec.webm";
     document.body.appendChild(a);
     a.click();
     setTimeout(() => {
@@ -143,49 +312,29 @@ document.addEventListener("turbolinks:load", () => {
     }, 100);
   });
 
-  // 画面キャプチャの設定の定義
-  const displayMediaOptions = {
-    video: {
-        cursor: "always"
-    },
-    audio: true
-  };
+  
   // デバイス取得ボタンを定義
   const streamButton = document.getElementById("stream");
   // キャンバス伝達変数にnullを代入
   let canvasStream = null;
 
-  // ストリームボタンクリックで発火 → 
+  // デバイス取得ボタンクリックで発火 → 
   streamButton.addEventListener("click", () => {
+    // キャンバスの再表示
+    canvas.style.display = "block";
     // デバイスリストの表示
     getDeviceList();
     // 録画ボタンの無効化
     recordButton.disabled = false;
-    // カメラ映像取得
-    navigator.mediaDevices
-      .getUserMedia({video: true})
-      .then(stream => {
-        webCamera.srcObject = stream;
-      })
-      .catch(e => alert("error" + e.message));
 
-    // 画面キャプチャ映像取得
-    navigator.mediaDevices
-      .getDisplayMedia(displayMediaOptions)
-      .then(stream => {
-        screenCapture.srcObject = stream;
-      })
-      .catch(e => alert("error" + e.message));
-
+    // webカメラ映像取得
+    getWebCamera(webCamera);
+    // 画面キャプチャ映像取得(映像, 音声)
+    getScreenCapture(screenCapture, audioPlayer);
     // マイクデバイス音声取得
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then(Stream => {
-        micAudio.srcObject = Stream;
-      })
-      .catch(e => alert("error" + e.message));
+    getMicrophoneAudio(micAudio);
       
-    // キャンバスの描画を走らす
+    // キャンバスの描画
     drawCanvasFromVideo();
   });
   
@@ -216,7 +365,7 @@ document.addEventListener("turbolinks:load", () => {
   // カメラリストのid定義
   var cameraList = document.getElementById("camera_list");
 
-  // デバイス情報（マイク・カメラ）をクリアするメソッド
+  // デバイス情報（マイク・カメラ）を初期化
   function clearDeviceList() {
     while(micList.lastChild) {
     micList.removeChild(micList.lastChild);
@@ -226,20 +375,19 @@ document.addEventListener("turbolinks:load", () => {
     }
   }
 
-  // デバイスをリストへ追加するメソッド
+  // デバイスをリストへ追加する
   function addDevice(device) {
     if (device.kind === 'audioinput') {
       var id = device.deviceId;
       var label = device.label || 'microphone'; // label is available for https 
       var option = document.createElement('option');
       option.setAttribute('value', id);
-      option.innerHTML = label + '(' + id + ')';;
+      option.innerHTML = label + '(' + id + ')';
       micList.appendChild(option);
-   }
+    }
     else if (device.kind === 'videoinput') {
       var id = device.deviceId;
       var label = device.label || 'camera'; // label is available for https 
-  
       var option = document.createElement('option');
       option.setAttribute('value', id);
       option.innerHTML = label + '(' + id + ')';
@@ -247,29 +395,29 @@ document.addEventListener("turbolinks:load", () => {
     }
   }
 
-  // デバイスリストを取得するメソッド
+  // デバイスリストを取得する
   function getDeviceList() {
     clearDeviceList();
     navigator.mediaDevices.enumerateDevices()
     .then(function(devices) {
-    devices.forEach(function(device) {
-      console.log(device.kind + ": " + device.label +
-                  " id = " + device.deviceId);
-      addDevice(device);
-    });
+      devices.forEach(function(device) {
+        console.log(device.kind + ": " + device.label +
+                    " id = " + device.deviceId);
+        addDevice(device);
+      });
     })
     .catch(function(err) {
-    console.error('enumerateDevide ERROR:', err);
+      console.error('enumerateDevice ERROR:', err);
     });
   }
-
-  // カメラデバイスを取得するメソッド
-    function getSelectedVideo() {
+  
+  // カメラデバイスを取得する
+  function getSelectedVideo() {
     var id = cameraList.options[cameraList.selectedIndex].value;
     return id;
   }
 
-  // マイクデバイスを取得するメソッド
+  // マイクデバイスを取得
   function getSelectedAudio() {
     var id = micList.options[micList.selectedIndex].value;
     return id;
@@ -283,7 +431,7 @@ document.addEventListener("turbolinks:load", () => {
     startSelectedVideoAudio();
   });
 
-  // 選択したメソッドを反映する
+  // デバイスの選択を反映する
   function startSelectedVideoAudio() {
     // マイクデバイスのid定義
     var audioId = getSelectedAudio();
