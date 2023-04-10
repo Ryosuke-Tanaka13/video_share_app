@@ -107,6 +107,7 @@ ja:
         organization: 組織
         user_id: 動画投稿者ID
         user: 投稿者
+        folders: フォルダー割り振り
         created_at: 作成日
         updated_at: 更新日
     models:

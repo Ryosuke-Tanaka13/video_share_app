@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Folder, type: :model do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
-  let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
+  let(:folder_celeb) { build(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
 
   before(:each) do
@@ -15,7 +15,8 @@ RSpec.describe Folder, type: :model do
 
   describe '正常' do
     it '正常値で保存可能' do
-      folder_celeb = create(:folder_celeb, name: 'セレブエンジニア2')
+      # folder_celeb = create(:folder_celeb, name: 'セレブエンジニア2')
+      # ↑ コメントアウトし、代わりに、buildしたfolder_celebに対して、保存可能かを検証
       expect(folder_celeb.valid?).to eq(true)
     end
   end
@@ -29,9 +30,9 @@ RSpec.describe Folder, type: :model do
       end
 
       it '重複' do
-        folder_tech.name = 'セレブエンジニア'
-        expect(folder_tech.valid?).to eq(false)
-        expect(folder_tech.errors.full_messages).to include('名前はすでに存在します')
+        folder_celeb.name = 'テックリーダーズ'
+        expect(folder_celeb.valid?).to eq(false)
+        expect(folder_celeb.errors.full_messages).to include('名前はすでに存在します')
       end
     end
 

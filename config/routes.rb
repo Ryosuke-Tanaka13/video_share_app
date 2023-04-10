@@ -64,6 +64,15 @@ Rails.application.routes.draw do
   end
   # =================================================================
 
+  # video関連=========================================================
+  resources :videos do
+    resources :comments, only: %i[create update destroy] do
+      resources :replies, only: %i[create update destroy]
+    end
+  end
+
+  # =================================================================
+
   # 共通==============================================================
   # 利用規約
   get 'use' => 'use#index'
@@ -77,7 +86,11 @@ Rails.application.routes.draw do
         resource :recording
       end
     end
+    scope module: :videos do
+      resources :video_folders, only: :destroy
+    end
   end
+
   # 動画の論理削除(データは残すが表示しないという意味でhiddensコントローラと命名)
   scope module: :videos do
     get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
