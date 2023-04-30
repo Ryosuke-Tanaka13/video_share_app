@@ -35,7 +35,7 @@ class Viewers::VideoStatusesController < ApplicationController
       if completely_watched?
         @video_status.update!(watched_ratio: 100.0, watched_at: Time.current)
       else
-        @video_status.update!(watched_ratio: culuculate_watched_ratio)
+        @video_status.update!(watched_ratio: caluculate_watched_ratio)
       end
     end
   end
@@ -86,7 +86,7 @@ class Viewers::VideoStatusesController < ApplicationController
   end
 
   # 視聴率を計算し戻り値を返す
-  def culuculate_watched_ratio
+  def caluculate_watched_ratio
     # 下記の数字の例は、左が再生完了地点、右が動画の総時間。(最後まで再生した場合でも、再生完了時点と動画の総時間はぴったりイコールにはならない。)
     # 12.5と12.8などの場合 → 12/12*100 → 視聴率は100.0%
     if params[:video_status][:latest_end_point].to_i == params[:video_status][:total_time].to_i
@@ -104,7 +104,7 @@ class Viewers::VideoStatusesController < ApplicationController
 
   # 最後まで視聴が完了していればtrueを返す
   def completely_watched?
-    return true if culuculate_watched_ratio == 100
+    return true if caluculate_watched_ratio == 100
 
     false
   end
