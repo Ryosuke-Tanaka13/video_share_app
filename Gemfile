@@ -43,6 +43,9 @@ gem 'font-awesome-rails'
 gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
 
+# s3保存
+gem "aws-sdk-s3", require: false
+
 group :development, :test do
   # ERD生成
   gem 'rails-erd'

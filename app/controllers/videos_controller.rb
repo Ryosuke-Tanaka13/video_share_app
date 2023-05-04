@@ -10,7 +10,7 @@ class VideosController < ApplicationController
   before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_my_organization, exept: %i[new create]
   # 視聴者がログインしている場合、表示されているビデオの視聴グループ＝現在の視聴者の視聴グループでなければ、締め出す下記のメソッド追加予定
-  # before_action :limited_viewer, only: %i[show]
+  # before_action :limited_viewer, only: %i[show]Vhk.
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
 
