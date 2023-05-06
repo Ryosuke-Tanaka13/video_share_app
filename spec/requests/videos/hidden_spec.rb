@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'UserUnsubscribe', type: :request do
+RSpec.describe 'VideoUnsubscribe', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -25,6 +25,7 @@ RSpec.describe 'UserUnsubscribe', type: :request do
     user_staff
     viewer
     organization_viewer
+    video_test
   end
 
   describe '動画論理削除' do

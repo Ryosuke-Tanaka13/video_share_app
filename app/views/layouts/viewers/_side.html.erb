@@ -21,7 +21,8 @@
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"> 
         <% current_viewer.organization_viewers.includes([:organization]).each do |organization_viewer| %>
         <li class="nav-item">
-          <%= link_to videos_path(organization_id: organization_viewer.organization_id), class:"nav-link" do %>  
+        <!-- videos.htmlを使用するページ間で遷移すると、動画の再生状況が無限に取得され続けるバグが発生していたので、turbolinksを無効に-->
+          <%= link_to videos_path(organization_id: organization_viewer.organization_id), 'data-turbolinks': false, class:"nav-link" do %>  
             <i class="nav-icon fas fa-th"></i> 
             <p>
               <%= organization_viewer.organization.name %><br><span class="ml-5">動画一覧</span>

@@ -1,0 +1,2 @@
+module Viewers::VideoStatusesHelper
+end

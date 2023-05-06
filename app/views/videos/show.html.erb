@@ -3,18 +3,33 @@
 
 <div class="content">
   <div class="video-display-show">
-    <!-- vimeoの動画詳細ページのパスから、id部分のみを取得し、数字型に変換したものをsrcの中に記載 -->
-    <iframe src="https://player.vimeo.com/video/<%= @video.data_url[8..17].to_i %>" width="1000px" height="500px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-    </iframe>
+  <!--playsinlineは、視聴状況の取得のために追加 -->
+    <video width="1000" height="500" id="mv" controls playsinline>
+      <source src="<%= url_for(@video.video) %>#t=<%= @video_status.latest_end_point if @video_status.present? %>">
+    </video><br> 
+    <!-- vimeoの動画表示の場合は<iframe>で対応-->
   </div>
   <div class="video-title-and-action-show">
-    <%= @video.title %><br>
-    <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
-    <% if @video.is_valid == true %>
-      <%= link_to "削除", videos_hidden_path(@video), class: "btn btn-danger" if system_admin_signed_in? || current_user.present? && current_user.role == "owner" %>
-    <% else %>
-      <p>オーナー削除済み</p>
-    <% end %>
+    <%= @video.title %>
+    <div class="btn-area">
+      <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
+      <%= @video.hidden_button %>
+      <%= link_to "視聴状況の確認", video_statuses_path, local: true, class: "text-white btn btn-warning" if user_signed_in? || system_admin_signed_in? %>
+    </div>
+    <!--以下、視聴率の計算に必要なデータを表示(cssのdisplay:noneで隠している)-->
+    <div class="video-statuses mt-3">
+      <% if current_viewer %>
+        <p class="viewer-id" id = "<%= current_viewer.id %>"><%= current_viewer.id %></p>
+        <p class="video-id" id = "<%= @video.id %>"><%= @video.id %></p>
+        <p class="video-status-id" id = "<%= @video_status&.id %>"><%= @video_status&.id %>
+    
+        <p>動画の総再生時間: <span id="total"></span></p>
+
+        <P>再生開始地点の記録: <span id="latest_start_point"></span></p>  
+        <P>再生終了地点の記録: <span id="latest_end_point"></span></p>
+      <% end %>
+    </div>
+    <!-- ここまで -->
   </div>
 </div>
 
