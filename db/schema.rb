@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_27_114800) do
+ActiveRecord::Schema.define(version: 2022_12_11_084603) do
+
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -165,6 +166,15 @@ ActiveRecord::Schema.define(version: 2022_11_27_114800) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  create_table "video_folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "video_id", null: false
+    t.bigint "folder_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["folder_id"], name: "index_video_folders_on_folder_id"
+    t.index ["video_id"], name: "index_video_folders_on_video_id"
+  end
+
   create_table "video_statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -176,14 +186,6 @@ ActiveRecord::Schema.define(version: 2022_11_27_114800) do
     t.integer "viewer_id", null: false
     t.boolean "is_valid", default: true
     t.index ["viewer_id", "video_id"], name: "index_video_statuses_on_viewer_id_and_video_id", unique: true
-
-  create_table "video_folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "video_id", null: false
-    t.bigint "folder_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["folder_id"], name: "index_video_folders_on_folder_id"
-    t.index ["video_id"], name: "index_video_folders_on_video_id"
   end
 
   create_table "videos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -247,14 +249,14 @@ ActiveRecord::Schema.define(version: 2022_11_27_114800) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
-  add_foreign_key "video_folders", "folders"
-  add_foreign_key "video_folders", "videos"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"
   add_foreign_key "replies", "system_admins"
   add_foreign_key "replies", "users"
   add_foreign_key "replies", "viewers"
   add_foreign_key "users", "organizations"
+  add_foreign_key "video_folders", "folders"
+  add_foreign_key "video_folders", "videos"
   add_foreign_key "videos", "organizations"
   add_foreign_key "videos", "users"
 end

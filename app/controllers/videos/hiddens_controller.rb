@@ -4,11 +4,11 @@ class Videos::HiddensController < VideosController
   before_action :ensure_my_organization_set_video
 
   def confirm
-    set_video
+    @video = set_video
   end
 
   def withdraw
-    set_video
+    @video = set_video
     if @video.update(is_valid: false)
       flash[:success] = '削除しました。'
       redirect_to videos_url(organization_id: @video.organization.id)

@@ -77,9 +77,9 @@ Rails.application.routes.draw do
       scope module: :viewers do
         resources :video_statuses, only: %i[index update destroy]
       end
-      scope module: :videos do
-        resources :video_folders, only: :destroy
-      end
+    end
+    scope module: :videos do
+      resources :video_folders, only: :destroy
     end
     resources :comments, only: %i[create update destroy] do
       resources :replies, only: %i[create update destroy]

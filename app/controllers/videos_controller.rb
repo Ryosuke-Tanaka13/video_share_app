@@ -42,7 +42,7 @@ class VideosController < ApplicationController
   end
 
   def show
-    set_video
+    @video = set_video
     # current_viewerの視聴状況が未作成の場合、視聴率が0.0%のインスタンスを生成
     set_current_viewer_video_status
     set_account
@@ -53,11 +53,11 @@ class VideosController < ApplicationController
   end
 
   def edit
-    set_video
+    @video = set_video
   end
 
   def update
-    set_video
+    @video = set_video
     if @video.update(video_params)
       flash[:success] = '動画情報を更新しました。'
       redirect_to video_url
@@ -67,7 +67,7 @@ class VideosController < ApplicationController
   end
 
   def destroy
-    set_video
+    @video = set_video
     @video.destroy!
     flash[:success] = '削除しました。'
     redirect_to videos_url(organization_id: @video.organization.id)
@@ -76,7 +76,7 @@ class VideosController < ApplicationController
   private
 
   def set_video
-    @video = Video.find(params[:id])
+    Video.find(params[:id])
   end
 
   def video_params
@@ -86,12 +86,12 @@ class VideosController < ApplicationController
 
   def set_current_viewer_video_status
     if current_viewer
-      set_video
-      @video_status = current_viewer.video_status_of_the_set_video(@video.id)
+      video = set_video
+      @video_status = current_viewer.video_status_of_the_set_video(video.id)
       unless @video_status.present?
-        current_viewer.video_statuses.create!(video_id: @video.id, watched_ratio: 0.0)
+        current_viewer.video_statuses.create!(video_id: video.id, watched_ratio: 0.0)
       end
-      @video_status = current_viewer.video_status_of_the_set_video(@video.id)
+      @video_status = current_viewer.video_status_of_the_set_video(video.id)
     end
   end
 
@@ -109,7 +109,8 @@ class VideosController < ApplicationController
 
   # before_actionとして記載(下記はいずれも、videosコントローラでの独自定義)
   def ensure_admin_or_owner_or_correct_user
-    unless current_system_admin || Video.find(params[:id]).my_upload?(current_user) || current_user.owner?
+    video = set_video
+    unless current_system_admin || video.my_upload?(current_user) || current_user.owner?
       redirect_to video_url, flash: { danger: '権限がありません。' }
     end
   end
@@ -131,14 +132,15 @@ class VideosController < ApplicationController
 
   def ensure_my_organization_set_video
     # userは、自組織のvideoに対してのみshow,edit,update,destroy可能
+    video = set_video
     if current_user
-      if Video.find(params[:id]).user_no_available?(current_user)
+      if video.user_no_available?(current_user)
         flash[:danger] = '権限がありません。'
         redirect_to videos_url(organization_id: current_user.organization_id)
       end
     # viewerは、自組織のvideoに対してのみshow可能
     elsif current_viewer
-      if current_viewer.ensure_member(Video.find(params[:id]).organization_id).empty?
+      if current_viewer.ensure_member(video.organization_id).empty?
         flash[:danger] = '権限がありません。'
         redirect_back(fallback_location: root_url)
       end
@@ -146,13 +148,15 @@ class VideosController < ApplicationController
   end
 
   def ensure_logged_in_viewer
-    if !logged_in? && Video.find(params[:id]).login_need?
+    video = set_video
+    if !logged_in? && video.login_need?
       redirect_to new_viewer_session_url, flash: { danger: '視聴者ログインしてください。' }
     end
   end
 
   def ensure_admin_for_access_hidden
-    if current_system_admin.nil? && Video.find(params[:id]).not_valid?
+    video = set_video
+    if current_system_admin.nil? && video.not_valid?
       flash[:danger] = 'すでに削除された動画です。'
       redirect_back(fallback_location: root_url)
     end

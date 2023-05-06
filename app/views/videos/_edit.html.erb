@@ -34,7 +34,7 @@
           </div> 
           <div class="field">
             <%= f.label :popup_after_video, class: "video-label" %><br>
-            <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ表示',0],['動画視聴終了時ポップアップ非表示',1]], { include_blank: false, selected: selected_before_popup_after_video }, id:"popup_after_video_edit" %>
+            <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ表示',0],['動画視聴終了時ポップアップ非表示',1]], { include_blank: false, selected: @video.selected_before_popup_after_video }, id:"popup_after_video_edit" %>
           </div>
 
           <%= f.label :folders, class: "video-label" %><br>
