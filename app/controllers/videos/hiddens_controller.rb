@@ -19,7 +19,7 @@ class Videos::HiddensController < VideosController
 
   private
 
-  # before_actionとして記載(organization::foldersコントローラでも定義)
+  # before_actionとして記載(hiddensコントローラでの独自定義)
   def ensure_admin_or_owner
     if !current_system_admin? && (current_user&.role != 'owner')
       redirect_to users_url, flash: { danger: '権限がありません。' }
