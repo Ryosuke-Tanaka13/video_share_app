@@ -1,4 +1,6 @@
 class VideosController < ApplicationController
+  include CommentReply
+  helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
   before_action :ensure_admin_or_user, only: %i[edit update]
@@ -25,6 +27,7 @@ class VideosController < ApplicationController
 
   def new
     @video = Video.new
+    @video.video_folders.build
   end
 
   def create
@@ -42,6 +45,11 @@ class VideosController < ApplicationController
     set_video
     # current_viewerの視聴状況が未作成の場合、視聴率が0.0%のインスタンスを生成
     set_current_viewer_video_status
+    set_account
+    @comment = Comment.new
+    @reply = Reply.new
+    # 新着順で表示
+    @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
   end
 
   def edit
@@ -73,7 +81,7 @@ class VideosController < ApplicationController
 
   def video_params
     params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
-      :popup_after_video)
+      :popup_after_video, { folder_ids: [] }, :data_url)
   end
 
   def set_current_viewer_video_status

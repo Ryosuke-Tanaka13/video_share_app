@@ -1,4 +1,6 @@
 <% provide(:title,  "ビデオ詳細") %>
+<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
 <div class="content">
   <div class="video-display-show">
   <!--playsinlineは、視聴状況の取得のために追加 -->
@@ -30,5 +32,27 @@
     <!-- ここまで -->
   </div>
 </div>
+
+<!-- 動画コメント ------------------------------------------------------------------------>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <% if account_logged_in? %>
+        <div class="comment-create">
+          <h4 class="text-left">コメントを投稿する</h4>
+            <%= render partial: 'comments/form' %>
+        </div><br>
+      <% end %>
+      <hr>
+      <div class="comment-create">
+        <h4 class="text-left title">コメント</h4>
+      </div>
+      <div id="comments_area">
+        <%= render partial: 'comments/index' if @comments.present? %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 動画コメント ------------------------------------------------------------------------>
 
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

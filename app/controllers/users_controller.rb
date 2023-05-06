@@ -51,6 +51,8 @@ class UsersController < ApplicationController
   def destroy
     # userが削除される前にorganization_idを保存しておく
     organization_id = @user.organization_id
+    # コメントを先に削除しなければ外部キーエラーとなる
+    @user.comments.destroy_all
     @user.destroy!
     flash[:danger] = "#{@user.name}のユーザー情報を削除しました"
     redirect_to users_url(organization_id: organization_id)

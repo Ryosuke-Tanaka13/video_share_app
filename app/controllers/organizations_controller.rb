@@ -41,6 +41,9 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
+    # コメントを先に削除しなければ外部キーエラーとなる
+    comments = Comment.where(organization_id: @organization.id)
+    comments.destroy_all
     @organization.destroy!
     flash[:danger] = "#{@organization.name}を削除しました"
     redirect_to organizations_url
@@ -64,7 +67,7 @@ class OrganizationsController < ApplicationController
     params.require(:organization).permit(users: %i[name email password password_confirmation])[:users]
   end
 
-  # システム管理者　set_organizationのオーナー　のみ許可
+  # システム管理者 set_organizationのオーナー のみ許可
   def ensure_admin_or_owner_of_set_organization
     if !current_system_admin? && (current_user&.role != 'owner' || !user_of_set_organization?)
       flash[:danger] = '権限がありません。'
@@ -72,7 +75,7 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  # システム管理者　set_organizationと同組織投稿者　のみ許可
+  # システム管理者 set_organizationと同組織投稿者 のみ許可
   def ensure_admin_or_user_in_same_organization_as_set_organization
     if current_system_admin.nil? && !user_of_set_organization?
       flash[:danger] = '権限がありません。'

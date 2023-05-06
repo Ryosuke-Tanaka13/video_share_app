@@ -10,10 +10,12 @@ RSpec.describe 'Videos', type: :request do
   # orgとanother_orgの両方に属す
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
 
+  let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
+  let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
   let(:video_sample) do
-    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id)
+    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
   end
-  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
+  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
   let(:another_organization) { create(:another_organization) }
@@ -41,6 +43,8 @@ RSpec.describe 'Videos', type: :request do
     video_sample
     video_test
     video_it
+    folder_celeb
+    folder_tech
   end
 
   describe 'GET #index' do
@@ -240,7 +244,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  video:              fixture_file_upload('/flower.mp4')
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.to change(Video, :count).by(1)
@@ -257,7 +262,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  video:              fixture_file_upload('/flower.mp4')
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               })
           ).to redirect_to video_path(Video.last)
@@ -282,7 +288,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  video:              fixture_file_upload('/flower.mp4')
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.to change(Video, :count).by(1)
@@ -299,7 +306,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  video:              fixture_file_upload('/flower.mp4')
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               })
           ).to redirect_to video_path(Video.last)
@@ -388,7 +396,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  video:              fixture_file_upload('/flower.mp4')
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.not_to change(Video, :count)
@@ -413,7 +422,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  video:              fixture_file_upload('/flower.mp4')
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.not_to change(Video, :count)
@@ -434,7 +444,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  video:              fixture_file_upload('/flower.mp4')
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.not_to change(Video, :count)
@@ -572,7 +583,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     true,
                   login_set:          true,
                   popup_before_video: true,
-                  popup_after_video:  true
+                  popup_after_video:  true,
+                  folder_ids:         [1]
                 }
               }
           }.to change { Video.find(video_test.id).title }.from(video_test.title).to('テストビデオ2')
@@ -589,7 +601,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     true,
                   login_set:          true,
                   popup_before_video: true,
-                  popup_after_video:  true
+                  popup_after_video:  true,
+                  folder_ids:         [1]
                 }
               })
           ).to redirect_to video_path(video_test)
