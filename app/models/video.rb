@@ -14,14 +14,6 @@ class Video < ApplicationRecord
     id_digest
   end
 
-  # after_saveによって呼び出されるメソッド。id_digestカラムの値に、idを暗号化して格納
-  def create_id_digest
-    if id_digest.nil?
-      new_digest = Base64.encode64(id.to_s)
-      update_column(:id_digest, new_digest)
-    end
-  end
-
   def video_exists?
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
     video.present?
@@ -74,5 +66,14 @@ class Video < ApplicationRecord
     return true if self.is_valid == false
 
     false
+  end
+
+  private
+  # after_saveによって呼び出されるメソッド。id_digestカラムの値に、idを暗号化して格納
+  def create_id_digest
+    if id_digest.nil?
+      new_digest = Base64.encode64(id.to_s)
+      update_column(:id_digest, new_digest)
+    end
   end
 end
