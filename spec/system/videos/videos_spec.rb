@@ -80,9 +80,24 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
 
       it 'URLコピーボタン押下で動画詳細ページのURLがコピーされる' do
         click_button 'URLをコピー'
-        # URLコピーボタン押下で、jsのnavigator.clipboard.writeText(location.href);が実行され、クリップボードにURLをコピーする
         # クリップボードにきちんとコピーされているかをテスト
-        expect(page.evaluate_script('navigator.clipboard.readText()')).to eq(current_url.to_s)
+        clipboard_content = page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          const textarea = document.createElement('textarea');
+          textarea.textContent = location.href;
+          document.body.appendChild(textarea);
+          textarea.select();
+
+          try {
+            document.execCommand('copy');
+            done(textarea.value);
+          } catch (err) {
+            done(null);
+          } finally {
+            document.body.removeChild(textarea);
+          }
+        JS
+        expect(clipboard_content).to eq(current_url.to_s)
       end
     end
 
