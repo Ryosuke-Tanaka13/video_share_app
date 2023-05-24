@@ -110,17 +110,21 @@ organization_viewer = OrganizationViewer.new(
 organization_viewer.save!
 
 # =================================================================
-# video関連 ========================================================
-Video.create!(
-  title: 'テストビデオ',
-  open_period: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00',
-  range: false,
-  comment_public: false,
-  login_set: false,
-  popup_before_video: false,
-  popup_after_video: false,
-  organization_id: 1,
-  user_id: 1,
-  # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-  data_url: '/videos/444444444'
-)
+# video関連==================================================
+# video1 = Video.new(title: "flower", organization_id: 1, user_id: 1)
+# video1.video.attach(io: File.open('public/flower.mp4'), filename: 'flower.mp4')
+# video1.save
+
+# video2 = Video.new(title: "aurora", organization_id: 1, user_id: 1)
+# video2.video.attach(io: File.open('public/aurora.mp4'), filename: 'aurora.mp4')
+# video2.save
+
+# video3 = Video.new(title: "sea", organization_id: 2, user_id: 3)
+# video3.video.attach(io: File.open('public/sea.mp4'), filename: 'sea.mp4')
+# video3.save
+
+# video4 = Video.new(title: "snow", organization_id: 2, user_id: 3)
+# video4.video.attach(io: File.open('public/snow.mp4'), filename: 'snow.mp4')
+# video4.save
+
+# # =================================================================

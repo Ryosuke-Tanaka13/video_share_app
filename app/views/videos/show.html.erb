@@ -3,9 +3,11 @@
 
 <div class="content">
   <div class="video-display-show">
-    <!-- vimeoの動画詳細ページのパスから、id部分のみを取得し、数字型に変換したものをsrcの中に記載 -->
-    <iframe src="https://player.vimeo.com/video/<%= @video.data_url[8..17].to_i %>" width="1000px" height="500px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-    </iframe>
+  <!--playsinlineは、視聴状況の取得のために追加 -->
+    <video width="1000" height="500" id="mv" controls playsinline>
+      <source src="<%= url_for(@video.video) %>#t=<%= @video_status.latest_end_point if @video_status.present? %>">
+    </video><br> 
+    <!-- vimeoの動画表示の場合は<iframe>で対応-->
   </div>
   <div class="video-title-and-action-show">
     <%= @video.title %><br>
