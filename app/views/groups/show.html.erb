@@ -1,17 +1,23 @@
-<h1><%= @group.name %></h1>
-<p>作成日：<%= @group.created_at %></p>
-<p>更新日：<%= @group.updated_at %></p>
+<% provide(:title, "視聴グループ詳細") %>
 
-<h2>視聴者一覧</h2>
-<ul>
-  <% @group.viewers.each do |viewer| %>
-    <li><%= viewer.name %></li>
-  <% end %>
-</ul>
-
-<%= link_to "編集", edit_group_path(@group) %>
-<%
-=begin%>
- <%= link_to "削除", group_path(@group), method: :delete, data: { confirm: "本当に削除してもよろしいですか？" } %> 
-<%
-=end%>
+<div class="card">
+  <div class="card-body table-responsive p-0">
+    <table class="table table-hover text-nowrap">
+      <tbody>
+        <tr>
+          <th><%= Group.human_attribute_name(:name) %></th>
+          <td><%= @group.name %></td>
+        </tr>
+        <tr>
+          <th><%= Group.human_attribute_name(:viewer) %></th>
+          <td><%= Viewer.where(id: @group.viewer_ids).pluck(:name).join(', ') %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer">
+    <%= link_to "編集", edit_group_path(@group.uuid), class: "btn btn-md btn-block btn-success" %>
+    <%= link_to "削除", group_path(@group.uuid), method: :delete, data: { confirm: "#{@group.name}の視聴グループを削除します。本当によろしいですか？" }, class: "btn btn-md btn-block btn-danger" %></br>
+    <%= link_to "一覧画面へ", groups_path, class: "btn btn-md btn-block btn-secondary" %>
+  </div>
+</div>
