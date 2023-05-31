@@ -35,48 +35,48 @@ RSpec.describe 'グループ新規登録', type: :system do
     organization_viewer2
     organization_viewer3
   end
-  
+
   describe 'グループの新規登録' do
     before(:each) do
       login(user_owner)
       current_user(user_owner)
       visit groups_path
     end
-          
+
     it '正しい情報を入力すればグループ新規登録ができて一覧画面に移動する' do
       # 一覧ページに移動する
-      #visit groups_path
+      # visit groups_path
       # 一覧ページに新規入力ページへ遷移するボタンがあることを確認する
       expect(page).to have_content('視聴グループ　新規作成画面へ')
       # 新規登録ページへ移動する
       visit new_group_path
-      
+
       # グループ情報を入力する
       fill_in 'group[name]', with: 'New Group Name'
       # 登録ボタンを押すとグループモデルのカウントが1つ上がることを確認する
-      expect{
+      expect {
         find('input[name="commit"]').click
-      }.to change { Group.count }.by(1)
+      }.to change(Group, :count).by(1)
       # 一覧ページへ遷移したことを確認する
-      expect(current_path).to eq groups_path
+      expect(page).to have_current_path groups_path, ignore_query: true
     end
-    
+
     it '誤った情報ではグループ新規登録ができずに新規登録ページへ戻ってくる' do
       # 一覧ページに移動する
-      #visit groups_path
+      # visit groups_path
       # 一覧ページに新規登録ページへ遷移するボタンがあることを確認する
       expect(page).to have_content('視聴グループ　新規作成画面へ')
       # 新規登録ページへ移動する
       visit new_group_path
-      
+
       # グループ情報を入力する
-      fill_in 'group[name]',  with: ''
+      fill_in 'group[name]', with: ''
       # 登録ボタンを押してもグループモデルのカウントは上がらないことを確認する
-      expect{
+      expect {
         find('input[name="commit"]').click
-      }.to change { Group.count }.by(0)
+      }.to change(Group, :count).by(0)
       # 新規登録ページへ戻されることを確認する
-      expect(current_path).to eq('/groups')
+      expect(page).to have_current_path('/groups')
     end
   end
 end
