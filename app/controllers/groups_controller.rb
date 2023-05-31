@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :remove_viewer]
+  before_action :set_group, only: %i[show edit update destroy remove_viewer]
 
   def index
     @groups = Group.all
@@ -33,7 +33,7 @@ class GroupsController < ApplicationController
 
   def destroy
     @group.destroy
-    redirect_to groups_path, notice: "グループを削除しました。"
+    redirect_to groups_path, notice: 'グループを削除しました。'
   end
 
   def remove_viewer
@@ -44,7 +44,7 @@ class GroupsController < ApplicationController
   end
 
   private
-  
+
   def set_group
     @group = Group.find_by(uuid: params[:uuid])
   end

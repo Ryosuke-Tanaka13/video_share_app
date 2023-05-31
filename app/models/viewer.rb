@@ -6,7 +6,7 @@ class Viewer < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :replies, dependent: :destroy
   has_many :viewer_groups
-  has_many :groups, through: :viewer_groups,dependent: :destroy
+  has_many :groups, through: :viewer_groups, dependent: :destroy
 
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
