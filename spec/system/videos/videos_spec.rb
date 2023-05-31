@@ -8,8 +8,14 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   let(:user_staff) { create(:user_staff, organization_id: organization.id, confirmed_at: Time.now) }
   # orgにのみ属す
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
-  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
+
+  let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
+  let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
+
+  let(:video_sample) do
+    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
+  end
+  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
   # orgとviewerの紐付け
@@ -21,6 +27,10 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
     user_owner
     user_staff
     viewer
+    video_sample
+    video_test
+    folder_celeb
+    folder_tech
     organization_viewer
   end
 
@@ -85,23 +95,26 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       it 'レイアウト' do
         expect(page).to have_button '設定を変更'
         expect(page).to have_button '閉じる'
-        expect(page).to have_field 'title_edit'
-        expect(page).to have_field 'open_period_edit'
-        expect(page).to have_selector '#range_edit'
-        expect(page).to have_selector '#comment_public_edit'
-        expect(page).to have_selector '#login_set_edit'
-        expect(page).to have_selector '#popup_before_video_edit'
-        expect(page).to have_selector '#popup_after_video_edit'
+        expect(page).to have_field 'title_edit', with: video_test.title
+        expect(page).to have_field 'open_period_edit', with: '2022-08-14T18:06'
+        expect(page).to have_select('range_edit', selected: '一般公開')
+        expect(page).to have_select('comment_public_edit', selected: '公開')
+        expect(page).to have_select('login_set_edit', selected: 'ログイン不要')
+        expect(page).to have_select('popup_before_video_edit', selected: '動画視聴開始時ポップアップ表示')
+        expect(page).to have_select('popup_after_video_edit', selected: '動画視聴終了時ポップアップ表示')
+        expect(page).to have_field 'セレブエンジニア'
+        expect(page).to have_field 'テックリーダーズ'
       end
 
       it '設定を変更で動画情報が更新される' do
         fill_in 'title_edit', with: 'テストビデオ２'
         # fill_in 'open_period_edit', with: 'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00'
-        expect(page).to have_selector '#range_edit', text: '一般公開'
-        expect(page).to have_selector '#comment_public_edit', text: '公開'
-        expect(page).to have_selector '#login_set_edit', text: 'ログイン不要'
-        expect(page).to have_selector '#popup_before_video_edit', text: '動画視聴開始時ポップアップ表示'
-        expect(page).to have_selector '#popup_after_video_edit', text: '動画視聴終了時ポップアップ表示'
+        select '限定公開', from: 'range_edit'
+        select '非公開', from: 'comment_public_edit'
+        select 'ログイン必要', from: 'login_set_edit'
+        select '動画視聴開始時ポップアップ非表示', from: 'popup_before_video_edit'
+        select '動画視聴終了時ポップアップ非表示', from: 'popup_after_video_edit'
+        check 'video_folder_ids_2'
         click_button '設定を変更'
         expect(page).to have_text '動画情報を更新しました'
       end
@@ -123,6 +136,9 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#login_set'
         expect(page).to have_selector '#popup_before_video'
         expect(page).to have_selector '#popup_after_video'
+        expect(page).to have_field 'セレブエンジニア'
+        expect(page).to have_field 'テックリーダーズ'
+        expect(page).to have_link 'フォルダ新規作成はこちら'
       end
 
       # videosのインスタンス生成に必要なdata_urlの入力方法がわからず、テスト実施できず
@@ -130,11 +146,12 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       #   fill_in 'title', with: 'サンプルビデオ２'
       #   attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/rec.webm')
       #   fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
-      #   expect(page).to have_selector '#range', text: false
-      #   expect(page).to have_selector '#comment_public', text: false
-      #   expect(page).to have_selector '#login_set', text: false
-      #   expect(page).to have_selector '#popup_before_video', text: false
-      #   expect(page).to have_selector '#popup_after_video', text: false
+      #   select '限定公開', from: 'range'
+      #   select '非公開', from: 'comment_public'
+      #   select 'ログイン必要', from: 'login_set'
+      #   select '動画視聴開始時ポップアップ非表示', from: 'popup_before_video'
+      #   select '動画視聴終了時ポップアップ非表示', from: 'popup_after_video'
+      #   check "video_folder_ids_1"
       #   click_button '新規投稿'
       #   expect(page).to have_current_path video_path(Video.last), ignore_query: true
       #   expect(page).to have_text '動画を投稿しました'
@@ -247,6 +264,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#login_set_edit'
         expect(page).to have_selector '#popup_before_video_edit'
         expect(page).to have_selector '#popup_after_video_edit'
+        expect(page).to have_field 'セレブエンジニア'
+        expect(page).to have_field 'テックリーダーズ'
       end
     end
 

@@ -3,6 +3,8 @@
 class Viewer < ApplicationRecord
   has_many :organization_viewers, dependent: :destroy
   has_many :organizations, through: :organization_viewers
+  has_many :comments, dependent: :destroy
+  has_many :replies, dependent: :destroy
   has_many :viewer_groups
   has_many :groups, through: :viewer_groups,dependent: :destroy
 
