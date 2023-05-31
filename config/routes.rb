@@ -63,7 +63,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :groups, only: [:index, :new, :create, :edit, :update, :destroy]
+  resources :groups, param: :uuid
   # =================================================================
 
   # 共通==============================================================

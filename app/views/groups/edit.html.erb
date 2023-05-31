@@ -1,42 +1,14 @@
-<h1>Edit Group</h1>
+<% provide(:title, "視聴グループ編集") %>
+<% provide(:btn_text, "更新") %>
 
-<%= form_for @group do |f| %>
-  <% if @group.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@group.errors.count, "error") %> prohibited this group from being saved:</h2>
-
-      <ul>
-      <% @group.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+<div class="card">
+  <%= form_with model: @group, url:group_path(@group.uuid), local: true do |f| %>
+    <div class="card-body">
+      <%= render partial: "form", locals: { f: f, group: @group } %>
+    </div>
+    <div class="card-footer">
+      <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-success" %><br>
+      <%= link_to "一覧画面へ", groups_path, class: "btn btn-md btn-block btn-secondary" %>
     </div>
   <% end %>
-
-  <div class="form-group">
-    <%= f.label :name %>
-    <%= f.text_field :name, class: "form-control" %>
-  </div>
-
-  <h3>Current Members</h3>
-  <ul>
-    <% @group.viewers.each do |viewer| %>
-      <li>
-        <%= viewer.name %>
-        <%
-=begin%>
- <%= link_to "Remove", viewer_group_path(viewer_id: viewer.id, group_id: @group.id), method: :delete, data: { confirm: "Are you sure you want to remove #{viewer.name} from this group?" } %> 
-<%
-=end%>
-      </li>
-    <% end %>
-  </ul>
-
-  <h3>Add Member</h3>
-  <%= f.collection_select :viewer_ids, Viewer.all, :id, :name, {}, { multiple: true, class: "form-control" } %>
-
-  <div class="form-group">
-    <%= f.submit "Edit Group", class: "btn btn-primary" %>
-    <%= link_to "Cancel", groups_path, class: "btn btn-secondary" %>
-  </div>
-<% end %>
+</div>

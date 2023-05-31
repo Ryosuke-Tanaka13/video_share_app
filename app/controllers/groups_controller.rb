@@ -1,11 +1,11 @@
 class GroupsController < ApplicationController
+  before_action :set_group, only: [:show, :edit, :update, :destroy, :remove_viewer]
+
   def index
     @groups = Group.all
   end
 
-  def show
-    @group = Group.find(params[:id])
-  end
+  def show; end
 
   def new
     @group = Group.new
@@ -21,12 +21,9 @@ class GroupsController < ApplicationController
     end
   end
 
-  def edit
-    @group = Group.find(params[:id])
-  end
+  def edit; end
 
   def update
-    @group = Group.find(params[:id])
     if @group.update(group_params)
       redirect_to groups_path
     else
@@ -35,13 +32,11 @@ class GroupsController < ApplicationController
   end
 
   def destroy
-    @group = Group.find(params[:id])
     @group.destroy
     redirect_to groups_path, notice: "グループを削除しました。"
   end
 
   def remove_viewer
-    group = Group.find(params[:id])
     viewer = Viewer.find(params[:viewer_id])
     group.viewers.delete(viewer)
 
@@ -49,6 +44,10 @@ class GroupsController < ApplicationController
   end
 
   private
+  
+  def set_group
+    @group = Group.find_by(uuid: params[:uuid])
+  end
 
   def group_params
     params.require(:group).permit(:name, viewer_ids: [])
