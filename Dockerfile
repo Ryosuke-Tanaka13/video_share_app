@@ -1,5 +1,11 @@
 FROM ruby:3.0.3
 
+# Add Chrome installation
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update -y \
+    && apt-get -y install google-chrome-stable
+
 RUN apt-get update -y && \
     apt-get install default-mysql-client nodejs npm vim graphviz -y && \
     npm uninstall yarn -g && \
@@ -29,4 +35,3 @@ RUN SECRET_KEY_BASE=placeholder RAILS_ENV=production bundle exec rails assets:pr
 EXPOSE 3000
 
 CMD bash -c "rm -f tmp/pids/server.pid && bundle exec puma -C config/puma.rb"
-
