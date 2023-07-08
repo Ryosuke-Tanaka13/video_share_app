@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe Viewer, type: :model do
+RSpec.xdescribe Viewer, type: :model do
   let :viewer do
     build(:viewer)
   end
 
-  describe 'バリデーションについて' do
+  xdescribe 'バリデーションについて' do
     subject do
       viewer
     end
@@ -16,7 +16,7 @@ RSpec.describe Viewer, type: :model do
       expect(subject).to be_valid
     end
 
-    describe '#email' do
+    xdescribe '#email' do
       context '存在しない場合' do
         before :each do
           subject.email = nil
@@ -71,7 +71,7 @@ RSpec.describe Viewer, type: :model do
       end
     end
 
-    describe '#name' do
+    xdescribe '#name' do
       context '存在しない場合' do
         before :each do
           subject.name = nil

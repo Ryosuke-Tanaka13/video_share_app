@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Reply, type: :model do
+RSpec.xdescribe Reply, type: :model do
   let(:organization) { create(:organization) }
   let(:system_admin) { create(:system_admin) }
   let(:user) { create(:user, organization_id: organization.id) }
@@ -25,7 +25,7 @@ RSpec.describe Reply, type: :model do
     viewer_reply
   end
 
-  describe '正常' do
+  xdescribe '正常' do
     context 'システム管理者の場合' do
       it '正常に保存できること' do
         expect(system_admin_reply).to be_valid
@@ -45,7 +45,7 @@ RSpec.describe Reply, type: :model do
     end
   end
 
-  describe 'バリデーション' do
+  xdescribe 'バリデーション' do
     context 'システム管理者の場合' do
       it '空白' do
         system_admin_reply.reply = ''

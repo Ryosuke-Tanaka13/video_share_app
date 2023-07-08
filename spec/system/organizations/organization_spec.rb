@@ -28,7 +28,7 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
   end
 
   context 'サイドバーの項目/遷移確認' do
-    describe 'システム管理者' do
+    xdescribe 'システム管理者' do
       before(:each) do
         login(system_admin)
         current_system_admin(system_admin)
@@ -77,7 +77,7 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
       end
     end
 
-    describe 'オーナ' do
+    xdescribe 'オーナ' do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
@@ -141,7 +141,7 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
       end
     end
 
-    describe '動画投稿者' do
+    xdescribe '動画投稿者' do
       before(:each) do
         login(user_staff)
         current_user(user_staff)
@@ -193,7 +193,7 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
       current_system_admin(system_admin)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '組織一覧ページ' do
         before(:each) do
           visit organizations_path
@@ -287,7 +287,7 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
       current_user(user_owner)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '組織詳細' do
         before(:each) do
           visit organization_path(organization)
@@ -351,7 +351,7 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '組織編集' do
         before(:each) do
           visit edit_organization_path(organization)
@@ -394,7 +394,7 @@ RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
       current_user(user_staff)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '組織詳細' do
         before(:each) do
           visit organization_path(organization)

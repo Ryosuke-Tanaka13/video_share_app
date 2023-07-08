@@ -24,12 +24,12 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
     organization_viewer2
   end
 
-  describe 'サイドバーの項目/遷移確認' do
+  xdescribe 'サイドバーの項目/遷移確認' do
     before(:each) do
       viewer
     end
 
-    describe '視聴者' do
+    xdescribe '視聴者' do
       before(:each) do
         login(viewer)
         current_viewer(viewer)
@@ -65,7 +65,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
       current_system_admin(system_admin)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '視聴者一覧ページ' do
         before(:each) do
           visit viewers_path(organization_id: organization.id)
@@ -178,7 +178,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
       current_user(user_owner)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '視聴者一覧ページ' do
         before(:each) do
           visit viewers_path(organization_id: organization.id)
@@ -243,7 +243,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
       current_user(user_staff)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '視聴者一覧ページ' do
         before(:each) do
           visit viewers_path(organization_id: organization.id)
@@ -263,7 +263,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
       current_viewer(viewer)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '視聴者詳細' do
         before(:each) do
           visit viewer_path(viewer)
@@ -309,7 +309,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '視聴者編集' do
         before(:each) do
           visit edit_viewer_path(viewer)

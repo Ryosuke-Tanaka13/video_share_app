@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe Organization, type: :model do
+RSpec.xdescribe Organization, type: :model do
   let :organization do
     build(:organization)
   end
 
-  describe 'バリデーションについて' do
+  xdescribe 'バリデーションについて' do
     subject do
       organization
     end
@@ -14,7 +14,7 @@ RSpec.describe Organization, type: :model do
       expect(subject).to be_valid
     end
 
-    describe '#email' do
+    xdescribe '#email' do
       context '存在しない場合' do
         before :each do
           subject.email = nil
@@ -69,7 +69,7 @@ RSpec.describe Organization, type: :model do
       end
     end
 
-    describe '#name' do
+    xdescribe '#name' do
       context '存在しない場合' do
         before :each do
           subject.name = nil

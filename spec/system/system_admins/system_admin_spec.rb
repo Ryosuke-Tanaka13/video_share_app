@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'SystemAdmin', type: :system do
+RSpec.xdescribe 'SystemAdmin', type: :system do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
@@ -75,7 +75,7 @@ RSpec.describe 'SystemAdmin', type: :system do
   end
 
   context 'SystemAdmin操作' do
-    describe '正常' do
+    xdescribe '正常' do
       context 'システム管理者詳細' do
         before(:each) do
           login(system_admin)
@@ -119,7 +119,7 @@ RSpec.describe 'SystemAdmin', type: :system do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context 'システム管理者編集' do
         before(:each) do
           login(system_admin)

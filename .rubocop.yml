@@ -6,9 +6,9 @@ require:
 AllCops:
   TargetRubyVersion: 3.0
   Exclude:
-    - 'db/**/*'                                   # DBのマイグレーション関連ファイル
-    - 'vendor/**/*'                               # ベンダーが提供するファイル
-    - 'bin/{bundle,rails,rake,setup,update,yarn}' # Railsが生成するスクリプト
+    - "db/**/*" # DBのマイグレーション関連ファイル
+    - "vendor/**/*" # ベンダーが提供するファイル
+    - "bin/{bundle,rails,rake,setup,update,yarn}" # Railsが生成するスクリプト
   SuggestExtensions: false
 
 # エイリアスの指定を `alias_method` に統一
@@ -100,7 +100,7 @@ Layout/ArgumentAlignment:
 # テストではカッコ省略を許可
 Lint/AmbiguousBlockAssociation:
   Exclude:
-    - 'spec/**/*'
+    - "spec/**/*"
 
 # 垂直調整のためのスペースを許可
 Layout/ExtraSpacing:
@@ -123,18 +123,18 @@ Layout/HashAlignment:
 Layout/LineLength:
   Max: 140
   Exclude:
-    - 'app/system_admin/**/*'                  # ActiveSystemAdminのDSL
-    - 'app/libs/system_admins/components/**/*' # ActiveSystemAdminのコンポーネントDSL
+    - "app/system_admin/**/*" # ActiveSystemAdminのDSL
+    - "app/libs/system_admins/components/**/*" # ActiveSystemAdminのコンポーネントDSL
   IgnoredPatterns:
-    - "'.+'"                                                               # 文字リテラルが含まれる行
-    - '".+"'                                                               # 文字リテラルが含まれる行
-    - '#.+'                                                                # コメントが含まれる行
-    - '/.+/'                                                               # 正規表現が含まれる行
-    - '([A-Z][A-Za-z\d]+::){2,}[A-Z]'                                      # モジュール名が3つ以上含まれる行
-    - '([A-Z]+_){4,}[A-Z]'                                                 # 長い定数が含まれる行
+    - "'.+'" # 文字リテラルが含まれる行
+    - '".+"' # 文字リテラルが含まれる行
+    - "#.+" # コメントが含まれる行
+    - "/.+/" # 正規表現が含まれる行
+    - '([A-Z][A-Za-z\d]+::){2,}[A-Z]' # モジュール名が3つ以上含まれる行
+    - "([A-Z]+_){4,}[A-Z]" # 長い定数が含まれる行
     - '\s+(has_one|has_many|belongs_to|validate|validates|delegate)\s+:.+' # モデル定義DSL
-    - '\s+(indexes)\s+:.+'                                                 # ESのスキーマ定義DSL
-    - '(^|\s+)def [^\(]+\(.+\)'                                            # 引数付きのメソッドが定義されている行
+    - '\s+(indexes)\s+:.+' # ESのスキーマ定義DSL
+    - '(^|\s+)def [^\(]+\(.+\)' # 引数付きのメソッドが定義されている行
 
 # クラスを継承したクラスの initialize で super 呼出を必須とする警告を解除
 # @note 不必要なところでも呼ばなければ行けないのってDRYではないし冗長じゃない？
@@ -157,47 +157,46 @@ Layout/SpaceInsideBlockBraces:
 # テストでは例外の握りつぶしを許容する
 Lint/SuppressedException:
   Exclude:
-    - 'spec/**/*'
+    - "spec/**/*"
 
 # コードの複雑さ判定(ABC)のしきい値を調整
 Metrics/AbcSize:
   Exclude:
-    - 'lib/tasks/helpers/test_data_helper.rb' # テストデータ定義
+    - "lib/tasks/helpers/test_data_helper.rb" # テストデータ定義
   Max: 50
 
 # コードの複雑さ判定を無効
 Metrics/PerceivedComplexity:
   Enabled: false
 
-
 # ブロック長警告を無効にするメソッドを指定
 Metrics/BlockLength:
   Exclude:
-    - 'app/admin/**/*'                        # ActiveAdminのDSL
-    - 'app/libs/admins/components/**/*'       # ActiveAdminのコンポーネントDSL
-    - 'spec/**/*'                             # RspecのDSL
-    - 'lib/tasks/helpers/test_data_helper.rb' # テストデータ定義
-    - '*.gemspec'                             # Gem定義
-    - 'config/routes.rb'                      # Rails.application.routes.draw doの無効化
+    - "app/admin/**/*" # ActiveAdminのDSL
+    - "app/libs/admins/components/**/*" # ActiveAdminのコンポーネントDSL
+    - "spec/**/*" # RspecのDSL
+    - "lib/tasks/helpers/test_data_helper.rb" # テストデータ定義
+    - "*.gemspec" # Gem定義
+    - "config/routes.rb" # Rails.application.routes.draw doの無効化
   ExcludedMethods:
-    - 'configure'
-    - 'class_eval'
-    - 'extended'
-    - 'helpers'
-    - 'included'
-    - 'instance_eval'
-    - 'namespace'
-    - 'resource'
-    - 'resources'
-    - 'route_param'
-    - 'transaction'
-    - 'class_methods'
+    - "configure"
+    - "class_eval"
+    - "extended"
+    - "helpers"
+    - "included"
+    - "instance_eval"
+    - "namespace"
+    - "resource"
+    - "resources"
+    - "route_param"
+    - "transaction"
+    - "class_methods"
 
 # 1クラスあたりの長さ制限を調整
 Metrics/ClassLength:
   Max: 250
   Exclude:
-    - 'app/api/*_apis/*/apis/*.rb' # APIのDSL
+    - "app/api/*_apis/*/apis/*.rb" # APIのDSL
 
 # コードの複雑さ判定のしきい値を調整
 Metrics/CyclomaticComplexity:
@@ -206,13 +205,13 @@ Metrics/CyclomaticComplexity:
 # メソッド長のしきい値を調整
 Metrics/MethodLength:
   Exclude:
-    - 'lib/tasks/helpers/test_data_helper.rb' # テストデータ定義
+    - "lib/tasks/helpers/test_data_helper.rb" # テストデータ定義
   Max: 50
 
 # モジュール長カウントの設定を調整
 Metrics/ModuleLength:
   Exclude:
-    - 'lib/tasks/helpers/test_data_helper.rb' # テストデータ定義
+    - "lib/tasks/helpers/test_data_helper.rb" # テストデータ定義
   CountAsOne:
     - array
     - hash

@@ -1,6 +1,6 @@
 # require 'rails_helper'
 
-# RSpec.describe 'Commnets', type: :system, js: true do
+# RSpec.xdescribe 'Commnets', type: :system, js: true do
 #   let(:organization) { create(:organization) }
 #   let(:system_admin) { create(:system_admin) }
 #   let(:user) { create(:user, organization_id: organization.id) }
@@ -27,8 +27,8 @@
 #     viewer_comment
 #   end
 
-#   describe '正常' do
-#     describe 'システム管理者' do
+#   xdescribe '正常' do
+#     xdescribe 'システム管理者' do
 #       before(:each) do
 #         login_system_admin(system_admin)
 #         current_system_admin(system_admin)
@@ -83,7 +83,7 @@
 #       end
 #     end
 
-#     describe '動画投稿者' do
+#     xdescribe '動画投稿者' do
 #       before(:each) do
 #         login(user_staff1)
 #         current_user(user_staff1)
@@ -135,7 +135,7 @@
 #       end
 #     end
 
-#     describe '動画視聴者' do
+#     xdescribe '動画視聴者' do
 #       before(:each) do
 #         login(viewer)
 #         current_viewer(organization_viewer)
@@ -187,7 +187,7 @@
 #       end
 #     end
 
-#     describe 'ログインなしユーザ' do
+#     xdescribe 'ログインなしユーザ' do
 #       before(:each) do
 #         visit video_path(id: user_comment.video_id)
 #       end
@@ -199,7 +199,7 @@
 #       end
 #     end
 
-#     describe 'フォーム画面' do
+#     xdescribe 'フォーム画面' do
 #       before(:each) do
 #         login(system_admin)
 #         current_user(system_admin)

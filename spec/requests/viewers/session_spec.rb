@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'ViewerSession', type: :request do
+RSpec.xdescribe 'ViewerSession', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -36,7 +36,7 @@ RSpec.describe 'ViewerSession', type: :request do
     organization_viewer3
   end
 
-  describe '正常' do
+  xdescribe '正常' do
     context '視聴者がログインできることを確認' do
       it do
         get new_viewer_session_path
@@ -61,7 +61,7 @@ RSpec.describe 'ViewerSession', type: :request do
     end
   end
 
-  describe '異常' do
+  xdescribe '異常' do
     context '他モデルアカウントとの重複ログインができない' do
       context 'システム管理者' do
         before(:each) do

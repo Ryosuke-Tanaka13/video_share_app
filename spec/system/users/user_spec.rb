@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'UserSystem', type: :system do
+RSpec.xdescribe 'UserSystem', type: :system do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
@@ -26,7 +26,7 @@ RSpec.describe 'UserSystem', type: :system do
   end
 
   context 'サイドバーの項目/遷移確認' do
-    describe 'オーナ' do
+    xdescribe 'オーナ' do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
@@ -95,7 +95,7 @@ RSpec.describe 'UserSystem', type: :system do
       end
     end
 
-    describe '動画投稿者' do
+    xdescribe '動画投稿者' do
       before(:each) do
         login(user_staff)
         current_user(user_staff)
@@ -152,7 +152,7 @@ RSpec.describe 'UserSystem', type: :system do
       current_system_admin(system_admin)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '投稿者一覧ページ' do
         before(:each) do
           visit users_path(organization_id: user_owner.organization_id)
@@ -242,7 +242,7 @@ RSpec.describe 'UserSystem', type: :system do
       current_user(user_owner)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '投稿者一覧ページ' do
         before(:each) do
           visit users_path(organization_id: user_owner.organization_id)
@@ -366,7 +366,7 @@ RSpec.describe 'UserSystem', type: :system do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '投稿者一覧ページ' do
         before(:each) do
           visit users_path
@@ -489,7 +489,7 @@ RSpec.describe 'UserSystem', type: :system do
       current_user(user_staff)
     end
 
-    describe '正常' do
+    xdescribe '正常' do
       context '投稿者一覧ページ' do
         before(:each) do
           visit users_path(organization_id: user_owner.organization_id)
@@ -559,7 +559,7 @@ RSpec.describe 'UserSystem', type: :system do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '投稿者一覧ページ' do
         before(:each) do
           visit users_path

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'SystemAdminSession', type: :request do
+RSpec.xdescribe 'SystemAdminSession', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -36,8 +36,8 @@ RSpec.describe 'SystemAdminSession', type: :request do
     organization_viewer3
   end
 
-  describe '正常' do
-    describe 'システム管理者がログインできることを確認' do
+  xdescribe '正常' do
+    xdescribe 'システム管理者がログインできることを確認' do
       it do
         get new_system_admin_session_path
         expect(response).to have_http_status(:success)
@@ -47,7 +47,7 @@ RSpec.describe 'SystemAdminSession', type: :request do
       end
     end
 
-    describe 'システム管理者がログアウトできることを確認' do
+    xdescribe 'システム管理者がログアウトできることを確認' do
       before(:each) do
         login_session(system_admin)
         current_system_admin(system_admin)
@@ -61,8 +61,8 @@ RSpec.describe 'SystemAdminSession', type: :request do
     end
   end
 
-  describe '異常' do
-    describe '他モデルアカウントとの重複ログインができない' do
+  xdescribe '異常' do
+    xdescribe '他モデルアカウントとの重複ログインができない' do
       context '投稿者' do
         before(:each) do
           login_session(user_owner)

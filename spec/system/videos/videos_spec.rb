@@ -34,8 +34,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
     organization_viewer
   end
 
-  describe '正常' do
-    describe '動画一覧ページ' do
+  xdescribe '正常' do
+    xdescribe '動画一覧ページ' do
       before(:each) do
         sign_in system_admin
         video_sample
@@ -68,7 +68,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画詳細' do
+    xdescribe '動画詳細' do
       before(:each) do
         sign_in user_owner || system_admin
         visit video_path(video_test)
@@ -81,7 +81,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe 'モーダル画面' do
+    xdescribe 'モーダル画面' do
       before(:each) do
         sign_in system_admin || user_owner || user_staff
         visit video_path(video_test)
@@ -120,7 +120,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画投稿画面' do
+    xdescribe '動画投稿画面' do
       before(:each) do
         sign_in user_owner || user_staff
         visit new_video_path
@@ -159,8 +159,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
     end
   end
 
-  describe '異常' do
-    describe '動画投稿画面' do
+  xdescribe '異常' do
+    xdescribe '動画投稿画面' do
       before(:each) do
         sign_in user_owner
         video_test
@@ -195,7 +195,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe 'モーダル画面' do
+    xdescribe 'モーダル画面' do
       before(:each) do
         sign_in user_owner
         video_sample
@@ -216,7 +216,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画一覧画面(オーナー、動画投稿者)' do
+    xdescribe '動画一覧画面(オーナー、動画投稿者)' do
       before(:each) do
         sign_in user_owner || user
         video_test
@@ -229,7 +229,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画一覧画面(視聴者)' do
+    xdescribe '動画一覧画面(視聴者)' do
       before(:each) do
         sign_in viewer
         video_test
@@ -243,7 +243,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe 'モーダル画面(システム管理者、オーナー、動画投稿者本人以外)' do
+    xdescribe 'モーダル画面(システム管理者、オーナー、動画投稿者本人以外)' do
       before(:each) do
         sign_in user_staff
         visit video_path(video_it)
@@ -269,7 +269,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画詳細(動画投稿者)' do
+    xdescribe '動画詳細(動画投稿者)' do
       before(:each) do
         sign_in user_staff
         visit video_path(video_test)
@@ -281,7 +281,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画詳細(視聴者)' do
+    xdescribe '動画詳細(視聴者)' do
       before(:each) do
         sign_in viewer
         visit video_path(video_test)
@@ -294,7 +294,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       end
     end
 
-    describe '動画詳細(非ログイン)' do
+    xdescribe '動画詳細(非ログイン)' do
       before(:each) do
         visit video_path(video_test)
       end

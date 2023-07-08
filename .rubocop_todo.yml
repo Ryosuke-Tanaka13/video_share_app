@@ -16,18 +16,18 @@ Layout/LineLength:
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: SkipBlocks, EnforcedStyle.
-# SupportedStyles: described_class, explicit
-RSpec/DescribedClass:
+# SupportedStyles: xdescribed_class, explicit
+RSpec/DescribedClass: # Or RSpec/DescribeClass: 
   Exclude:
-    - 'spec/vimeo_me2/video_spec.rb'
+    - "spec/vimeo_me2/video_spec.rb"
 
 # Offense count: 3
 # Configuration parameters: AssignmentOnly.
 RSpec/InstanceVariable:
   Exclude:
-    - 'spec/vimeo_me2/video_spec.rb'
+    - "spec/vimeo_me2/video_spec.rb"
 
 # Offense count: 4
 RSpec/RepeatedExampleGroupDescription:
   Exclude:
-    - 'spec/requests/videos/videos_spec.rb'
+    - "spec/requests/videos/videos_spec.rb"

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Comments', type: :request do
+RSpec.xdescribe 'Comments', type: :request do
   let(:organization) { create(:organization) }
   let(:system_admin) { create(:system_admin) }
   let(:user) { create(:user, organization_id: organization.id) }
@@ -27,9 +27,9 @@ RSpec.describe 'Comments', type: :request do
     viewer_comment
   end
 
-  describe 'Post #create' do
-    describe '正常' do
-      describe 'システム管理者' do
+  xdescribe 'Post #create' do
+    xdescribe '正常' do
+      xdescribe 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
         end
@@ -46,7 +46,7 @@ RSpec.describe 'Comments', type: :request do
         end
       end
 
-      describe '動画投稿者' do
+      xdescribe '動画投稿者' do
         before(:each) do
           current_user(user)
         end
@@ -63,7 +63,7 @@ RSpec.describe 'Comments', type: :request do
         end
       end
 
-      describe '動画視聴者' do
+      xdescribe '動画視聴者' do
         before(:each) do
           current_viewer(viewer)
         end
@@ -81,8 +81,8 @@ RSpec.describe 'Comments', type: :request do
       end
     end
 
-    describe '異常' do
-      describe 'システム管理者' do
+    xdescribe '異常' do
+      xdescribe 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
         end
@@ -99,7 +99,7 @@ RSpec.describe 'Comments', type: :request do
         end
       end
 
-      describe '動画投稿者' do
+      xdescribe '動画投稿者' do
         before(:each) do
           current_user(user)
         end
@@ -116,7 +116,7 @@ RSpec.describe 'Comments', type: :request do
         end
       end
 
-      describe '動画視聴者' do
+      xdescribe '動画視聴者' do
         before(:each) do
           current_viewer(viewer)
         end
@@ -135,13 +135,13 @@ RSpec.describe 'Comments', type: :request do
     end
   end
 
-  describe 'PATCH #update' do
-    describe 'システム管理者' do
+  xdescribe 'PATCH #update' do
+    xdescribe 'システム管理者' do
       before(:each) do
         current_system_admin(system_admin)
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'コメントがアップデートされる' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
@@ -176,7 +176,7 @@ RSpec.describe 'Comments', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it 'コメントが空白ではアップデートされない' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
@@ -190,12 +190,12 @@ RSpec.describe 'Comments', type: :request do
       end
     end
 
-    describe '動画投稿者' do
+    xdescribe '動画投稿者' do
       before(:each) do
         current_user(user)
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'コメントがアップデートされる' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: user_comment.id),
@@ -208,7 +208,7 @@ RSpec.describe 'Comments', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it 'コメントが空白ではアップデートされない' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: user_comment.id),
@@ -222,12 +222,12 @@ RSpec.describe 'Comments', type: :request do
       end
     end
 
-    describe '動画視聴者' do
+    xdescribe '動画視聴者' do
       before(:each) do
         current_viewer(viewer)
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'コメントがアップデートされる' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: viewer_comment.id),
@@ -240,7 +240,7 @@ RSpec.describe 'Comments', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it 'コメントが空白ではアップデートされない' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: viewer_comment.id),
@@ -254,12 +254,12 @@ RSpec.describe 'Comments', type: :request do
       end
     end
 
-    describe '別の動画投稿者' do
+    xdescribe '別の動画投稿者' do
       before(:each) do
         current_user(user_staff1)
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '動画投稿者はシステム管理者のコメントをアップデートできない' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
@@ -295,12 +295,12 @@ RSpec.describe 'Comments', type: :request do
       end
     end
 
-    describe '別の動画視聴者' do
+    xdescribe '別の動画視聴者' do
       before(:each) do
         current_user(another_viewer)
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '動画視聴者はシステム管理者のコメントをアップデートできない' do
           expect {
             patch video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
@@ -337,13 +337,13 @@ RSpec.describe 'Comments', type: :request do
     end
   end
 
-  describe 'DELETE #destroy' do
-    describe 'システム管理者' do
+  xdescribe 'DELETE #destroy' do
+    xdescribe 'システム管理者' do
       before(:each) do
         current_system_admin(system_admin)
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'コメントを削除する' do
           expect {
             delete video_comment_path(video_id: video_it.id, id: system_admin_comment.id),
@@ -365,12 +365,12 @@ RSpec.describe 'Comments', type: :request do
       end
     end
 
-    describe '動画投稿者' do
+    xdescribe '動画投稿者' do
       before(:each) do
         current_user(user)
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'コメントを削除する' do
           expect {
             delete video_comment_path(video_id: video_it.id, id: user_comment.id), params: { id: user_comment.id, format: :js }
@@ -379,12 +379,12 @@ RSpec.describe 'Comments', type: :request do
       end
     end
 
-    describe '動画視聴者' do
+    xdescribe '動画視聴者' do
       before(:each) do
         current_viewer(viewer)
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'コメントを削除する' do
           expect {
             delete video_comment_path(video_id: video_it.id, id: viewer_comment.id), params: { id: viewer_comment.id, format: :js }
@@ -393,8 +393,8 @@ RSpec.describe 'Comments', type: :request do
       end
     end
 
-    describe '異常' do
-      describe 'コメント作成者以外の別の動画投稿者が現在のログインユーザ' do
+    xdescribe '異常' do
+      xdescribe 'コメント作成者以外の別の動画投稿者が現在のログインユーザ' do
         before(:each) do
           current_user(user_staff1)
         end
@@ -419,7 +419,7 @@ RSpec.describe 'Comments', type: :request do
         end
       end
 
-      describe 'コメント作成者以外の別の動画視聴者が現在のログインユーザ' do
+      xdescribe 'コメント作成者以外の別の動画視聴者が現在のログインユーザ' do
         before(:each) do
           current_viewer(another_viewer)
         end

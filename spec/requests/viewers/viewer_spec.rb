@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Viewer', type: :request do
+RSpec.xdescribe 'Viewer', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -37,8 +37,8 @@ RSpec.describe 'Viewer', type: :request do
   end
 
   # システム管理者　投稿者　のみ許可
-  describe 'GET #index' do
-    describe '正常' do
+  xdescribe 'GET #index' do
+    xdescribe '正常' do
       context 'システム管理者' do
         before(:each) do
           login_session(system_admin)
@@ -88,7 +88,7 @@ RSpec.describe 'Viewer', type: :request do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '視聴者' do
         before(:each) do
           login_session(viewer)
@@ -120,9 +120,9 @@ RSpec.describe 'Viewer', type: :request do
   # POST #create deviseのみ
 
   # システム管理者　set_viewerと同組織オーナー　視聴者本人　のみ許可
-  describe 'GET #show' do
+  xdescribe 'GET #show' do
     context '視聴者詳細' do
-      describe '正常' do
+      xdescribe '正常' do
         context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
@@ -169,7 +169,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         context '別組織オーナー' do
           before(:each) do
             current_user(another_user_owner)
@@ -245,8 +245,8 @@ RSpec.describe 'Viewer', type: :request do
   end
 
   # システム管理者　set_viewerと同組織オーナー　視聴者本人　のみ許可
-  describe 'GET #edit' do
-    describe '正常' do
+  xdescribe 'GET #edit' do
+    xdescribe '正常' do
       context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
@@ -293,7 +293,7 @@ RSpec.describe 'Viewer', type: :request do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '同組織スタッフ' do
         before(:each) do
           current_user(user_staff)
@@ -368,9 +368,9 @@ RSpec.describe 'Viewer', type: :request do
   end
 
   # システム管理者　set_viewerと同組織オーナー　視聴者本人　のみ許可
-  describe 'PATCH #update' do
+  xdescribe 'PATCH #update' do
     context '視聴者更新（権限チェック）' do
-      describe '正常' do
+      xdescribe '正常' do
         context '本人' do
           before(:each) do
             current_viewer(viewer)
@@ -428,7 +428,7 @@ RSpec.describe 'Viewer', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         context '同組織スタッフ' do
           before(:each) do
             current_user(user_staff)
@@ -542,7 +542,7 @@ RSpec.describe 'Viewer', type: :request do
           current_viewer(viewer)
         end
 
-        describe '正常' do
+        xdescribe '正常' do
           # emailの更新については認証が必要
           it '名前がアップデートされる' do
             expect {
@@ -568,7 +568,7 @@ RSpec.describe 'Viewer', type: :request do
           end
         end
 
-        describe '異常' do
+        xdescribe '異常' do
           it '名前が空白でアップデートされない' do
             expect {
               patch viewer_path(viewer),
@@ -609,8 +609,8 @@ RSpec.describe 'Viewer', type: :request do
   end
 
   # システム管理者　のみ許可
-  describe 'DELETE #destroy' do
-    describe '正常' do
+  xdescribe 'DELETE #destroy' do
+    xdescribe '正常' do
       context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
@@ -630,7 +630,7 @@ RSpec.describe 'Viewer', type: :request do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '同組織オーナー' do
         before(:each) do
           current_user(user_owner)

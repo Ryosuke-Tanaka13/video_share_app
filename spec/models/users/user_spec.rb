@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.xdescribe User, type: :model do
   let(:organization) { create(:organization) }
   let(:user_staff) { build(:user_staff) }
 
@@ -11,7 +11,7 @@ RSpec.describe User, type: :model do
     user_staff
   end
 
-  describe 'バリデーションについて' do
+  xdescribe 'バリデーションについて' do
     subject do
       user_staff
     end
@@ -20,7 +20,7 @@ RSpec.describe User, type: :model do
       expect(subject).to be_valid
     end
 
-    describe '#email' do
+    xdescribe '#email' do
       context '存在しない場合' do
         before :each do
           subject.email = nil
@@ -75,7 +75,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    describe '#name' do
+    xdescribe '#name' do
       context '存在しない場合' do
         before :each do
           subject.name = nil

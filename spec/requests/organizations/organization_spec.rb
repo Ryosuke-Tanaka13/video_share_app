@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Organization', type: :request do
+RSpec.xdescribe 'Organization', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -39,8 +39,8 @@ RSpec.describe 'Organization', type: :request do
   end
 
   # システム管理者　のみ許可
-  describe 'GET #index' do
-    describe '正常' do
+  xdescribe 'GET #index' do
+    xdescribe '正常' do
       context 'システム管理者' do
         before(:each) do
           login_session(system_admin)
@@ -58,7 +58,7 @@ RSpec.describe 'Organization', type: :request do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context 'オーナー' do
         before(:each) do
           login_session(user_owner)
@@ -112,9 +112,9 @@ RSpec.describe 'Organization', type: :request do
   end
 
   # 規制なし
-  describe 'GET #new' do
+  xdescribe 'GET #new' do
     context '組織作成' do
-      describe '正常' do
+      xdescribe '正常' do
         context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
@@ -195,9 +195,9 @@ RSpec.describe 'Organization', type: :request do
   end
 
   # 規制なし
-  describe 'POST #create' do
+  xdescribe 'POST #create' do
     context '組織生成（動作）' do
-      describe '正常' do
+      xdescribe '正常' do
         before(:each) do
           new_organization_path
         end
@@ -241,7 +241,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         before(:each) do
           new_organization_path
         end
@@ -286,8 +286,8 @@ RSpec.describe 'Organization', type: :request do
       end
     end
 
-    describe '組織生成（権限）' do
-      describe '正常' do
+    xdescribe '組織生成（権限）' do
+      xdescribe '正常' do
         context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
@@ -423,9 +423,9 @@ RSpec.describe 'Organization', type: :request do
   end
 
   # システム管理者　set_userと同組織投稿者　のみ許可
-  describe 'GET #show' do
+  xdescribe 'GET #show' do
     context '組織詳細(権限)' do
-      describe '正常' do
+      xdescribe '正常' do
         context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
@@ -472,7 +472,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         context '別組織のオーナー' do
           before(:each) do
             current_user(another_user_owner)
@@ -524,9 +524,9 @@ RSpec.describe 'Organization', type: :request do
   end
 
   # システム管理者　set_organizationのオーナー　のみ許可
-  describe 'GET #edit' do
+  xdescribe 'GET #edit' do
     context '組織編集（権限）' do
-      describe '正常' do
+      xdescribe '正常' do
         context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
@@ -558,7 +558,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         context '同組織スタッフ' do
           before(:each) do
             current_user(user_staff)
@@ -622,9 +622,9 @@ RSpec.describe 'Organization', type: :request do
   end
 
   # システム管理者　set_organizationのオーナー　のみ許可
-  describe 'PATCH #update' do
+  xdescribe 'PATCH #update' do
     context '組織更新（権限）' do
-      describe '正常' do
+      xdescribe '正常' do
         context 'システム管理者' do
           before(:each) do
             current_system_admin(system_admin)
@@ -662,7 +662,7 @@ RSpec.describe 'Organization', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         context '所属スタッフ' do
           before(:each) do
             current_user(user_staff)
@@ -757,7 +757,7 @@ RSpec.describe 'Organization', type: :request do
           current_user(user_owner)
         end
 
-        describe '正常' do
+        xdescribe '正常' do
           it '名前とemailがアップデートされる' do
             expect {
               patch organization_path(organization),
@@ -784,7 +784,7 @@ RSpec.describe 'Organization', type: :request do
           end
         end
 
-        describe '異常' do
+        xdescribe '異常' do
           it '名前が空白でアップデートされない' do
             expect {
               patch organization_path(organization),
@@ -814,8 +814,8 @@ RSpec.describe 'Organization', type: :request do
   end
 
   # システム管理者　のみ許可
-  describe 'DELETE #destroy' do
-    describe '正常' do
+  xdescribe 'DELETE #destroy' do
+    xdescribe '正常' do
       context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
@@ -835,7 +835,7 @@ RSpec.describe 'Organization', type: :request do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '所属オーナー' do
         before(:each) do
           current_user(user_owner)

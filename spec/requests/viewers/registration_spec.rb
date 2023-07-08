@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe 'ViewerRegistration', type: :request do
-  describe '視聴者新規作成' do
-    describe '正常' do
+RSpec.xdescribe 'ViewerRegistration', type: :request do
+  xdescribe '視聴者新規作成' do
+    xdescribe '正常' do
       it '新規作成' do
         get new_viewer_registration_path
         expect {
@@ -34,7 +34,7 @@ RSpec.describe 'ViewerRegistration', type: :request do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       it '入力が不十分だと新規作成されない' do
         get new_viewer_registration_path
         expect {

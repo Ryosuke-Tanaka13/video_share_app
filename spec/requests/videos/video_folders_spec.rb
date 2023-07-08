@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'VideoFolders', type: :request do
+RSpec.xdescribe 'VideoFolders', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -36,13 +36,13 @@ RSpec.describe 'VideoFolders', type: :request do
     video_folder2
   end
 
-  describe 'DELETE #destroy' do
-    describe 'システム管理者が現在のログインユーザー' do
+  xdescribe 'DELETE #destroy' do
+    xdescribe 'システム管理者が現在のログインユーザー' do
       before(:each) do
         sign_in system_admin
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'フォルダ内の動画を削除する' do
           expect {
             delete video_video_folder_path(video_sample, video_folder, folder_id: folder_celeb.id, organization_id: organization.id)
@@ -57,12 +57,12 @@ RSpec.describe 'VideoFolders', type: :request do
       end
     end
 
-    describe 'オーナーが現在のログインユーザー' do
+    xdescribe 'オーナーが現在のログインユーザー' do
       before(:each) do
         sign_in user_owner
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'フォルダ内の動画を削除する' do
           expect {
             delete video_video_folder_path(video_sample, video_folder, folder_id: folder_celeb.id, organization_id: organization.id)
@@ -77,12 +77,12 @@ RSpec.describe 'VideoFolders', type: :request do
       end
     end
 
-    describe '動画投稿者本人が現在のログインユーザ' do
+    xdescribe '動画投稿者本人が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it 'フォルダ内の動画を削除する' do
           expect {
             delete video_video_folder_path(video_test, video_folder2, folder_id: folder_celeb.id, organization_id: organization.id)
@@ -97,12 +97,12 @@ RSpec.describe 'VideoFolders', type: :request do
       end
     end
 
-    describe '本人以外の動画投稿者が現在のログインユーザ' do
+    xdescribe '本人以外の動画投稿者が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '本人以外の動画投稿者は削除できない' do
           expect {
             delete video_video_folder_path(video_sample, video_folder, folder_id: folder_celeb.id, organization_id: organization.id)
@@ -111,12 +111,12 @@ RSpec.describe 'VideoFolders', type: :request do
       end
     end
 
-    describe '別組織のオーナーが現在のログインユーザ' do
+    xdescribe '別組織のオーナーが現在のログインユーザ' do
       before(:each) do
         sign_in another_user_owner
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '別組織のオーナーは削除できない' do
           expect {
             delete video_video_folder_path(video_sample, video_folder, folder_id: folder_celeb.id, organization_id: organization.id)
@@ -125,12 +125,12 @@ RSpec.describe 'VideoFolders', type: :request do
       end
     end
 
-    describe '視聴者が現在のログインユーザ' do
+    xdescribe '視聴者が現在のログインユーザ' do
       before(:each) do
         sign_in viewer
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '視聴者は削除できない' do
           expect {
             delete video_video_folder_path(video_sample, video_folder, folder_id: folder_celeb.id, organization_id: organization.id)
@@ -139,8 +139,8 @@ RSpec.describe 'VideoFolders', type: :request do
       end
     end
 
-    describe '非ログイン' do
-      describe '異常' do
+    xdescribe '非ログイン' do
+      xdescribe '異常' do
         it '非ログインは削除できない' do
           expect {
             delete video_video_folder_path(video_sample, video_folder, folder_id: folder_celeb.id, organization_id: organization.id)

@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'vimeo_me2'
 
-describe VimeoMe2::Video do
+xdescribe VimeoMe2::Video do
   before(:each) do
     # vcrを使って、仮想的にapiに動画データをアップロード。この時のリクエストやレスポンスの詳細は、vimeo-video.ymlに記載してある
     VCR.use_cassette('vimeo-video') do

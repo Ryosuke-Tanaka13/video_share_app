@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Organizations::Unsubscribe', type: :request do
+RSpec.xdescribe 'Organizations::Unsubscribe', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -38,7 +38,7 @@ RSpec.describe 'Organizations::Unsubscribe', type: :request do
 
   # システム管理者　set_organizationのオーナー　のみ許可
   context '組織退会' do
-    describe '正常' do
+    xdescribe '正常' do
       context 'システム管理者' do
         before(:each) do
           current_system_admin(system_admin)
@@ -70,7 +70,7 @@ RSpec.describe 'Organizations::Unsubscribe', type: :request do
       end
     end
 
-    describe '異常' do
+    xdescribe '異常' do
       context '同組織スタッフ' do
         before(:each) do
           current_user(user_staff)

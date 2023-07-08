@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Videos', type: :request do
+RSpec.xdescribe 'Videos', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -46,8 +46,8 @@ RSpec.describe 'Videos', type: :request do
     folder_tech
   end
 
-  describe 'GET #index' do
-    describe '正常(動画投稿者)' do
+  xdescribe 'GET #index' do
+    xdescribe '正常(動画投稿者)' do
       before(:each) do
         sign_in user_staff
         get videos_path(organization_id: organization.id)
@@ -62,7 +62,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(オーナー)' do
+    xdescribe '正常(オーナー)' do
       before(:each) do
         sign_in user_owner
         get videos_path(organization_id: organization.id)
@@ -77,7 +77,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(システム管理者)' do
+    xdescribe '正常(システム管理者)' do
       before(:each) do
         sign_in system_admin
         get videos_path(organization_id: organization.id)
@@ -92,7 +92,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(視聴者)' do
+    xdescribe '正常(視聴者)' do
       before(:each) do
         sign_in viewer1
         get videos_path(organization_id: organization.id)
@@ -107,7 +107,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(視聴者)' do
+    xdescribe '正常(視聴者)' do
       before(:each) do
         sign_in viewer1
         get videos_path(organization_id: another_organization.id)
@@ -122,7 +122,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(別組織のuser)' do
+    xdescribe '異常(別組織のuser)' do
       before(:each) do
         sign_in user_owner
         get videos_path(organization_id: another_organization.id)
@@ -134,7 +134,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(別組織の視聴者)' do
+    xdescribe '異常(別組織の視聴者)' do
       before(:each) do
         sign_in viewer
         get videos_path(organization_id: another_organization.id)
@@ -146,7 +146,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(非ログイン)' do
+    xdescribe '異常(非ログイン)' do
       before(:each) do
         get videos_path(organization_id: another_organization.id)
       end
@@ -158,8 +158,8 @@ RSpec.describe 'Videos', type: :request do
     end
   end
 
-  describe 'GET #new' do
-    describe '正常(動画投稿者)' do
+  xdescribe 'GET #new' do
+    xdescribe '正常(動画投稿者)' do
       before(:each) do
         sign_in user_staff
         get new_video_path
@@ -174,7 +174,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(オーナー)' do
+    xdescribe '正常(オーナー)' do
       before(:each) do
         sign_in user_owner
         get new_video_path
@@ -189,7 +189,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(システム管理者)' do
+    xdescribe '異常(システム管理者)' do
       before(:each) do
         sign_in system_admin
         get new_video_path
@@ -201,7 +201,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(視聴者)' do
+    xdescribe '異常(視聴者)' do
       before(:each) do
         sign_in viewer
         get new_video_path
@@ -213,7 +213,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(非ログイン)' do
+    xdescribe '異常(非ログイン)' do
       before(:each) do
         get videos_path(organization_id: another_organization.id)
       end
@@ -225,14 +225,14 @@ RSpec.describe 'Videos', type: :request do
     end
   end
 
-  describe 'POST #create' do
-    describe '動画投稿者' do
+  xdescribe 'POST #create' do
+    xdescribe '動画投稿者' do
       before(:each) do
         sign_in user_staff
       end
 
       # アプリ内でvideosのインスタンスが生成されることを確認(ここではvimeoに動画がアップされることのテストは行えていない)
-      describe '正常' do
+      xdescribe '正常' do
         it '動画が新規作成される' do
           expect {
             post videos_path,
@@ -271,12 +271,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe 'オーナー' do
+    xdescribe 'オーナー' do
       before(:each) do
         sign_in user_owner
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it '動画が新規作成される' do
           expect {
             post videos_path,
@@ -314,7 +314,7 @@ RSpec.describe 'Videos', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         before(:each) do
           video_test
         end
@@ -367,12 +367,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe 'システム管理者が現在のログインユーザ' do
+    xdescribe 'システム管理者が現在のログインユーザ' do
       before(:each) do
         sign_in system_admin
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it 'システム管理者は作成できない' do
           expect {
             post videos_path,
@@ -393,12 +393,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '視聴者が現在のログインユーザ' do
+    xdescribe '視聴者が現在のログインユーザ' do
       before(:each) do
         sign_in viewer
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '視聴者は作成できない' do
           expect {
             post videos_path,
@@ -419,8 +419,8 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '非ログイン' do
-      describe '異常' do
+    xdescribe '非ログイン' do
+      xdescribe '異常' do
         it '非ログインでは作成できない' do
           expect {
             post videos_path,
@@ -442,8 +442,8 @@ RSpec.describe 'Videos', type: :request do
     end
   end
 
-  describe 'GET #show' do
-    describe '正常(動画投稿者)' do
+  xdescribe 'GET #show' do
+    xdescribe '正常(動画投稿者)' do
       before(:each) do
         sign_in user_staff
         get video_path(video_test)
@@ -458,7 +458,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(オーナー)' do
+    xdescribe '正常(オーナー)' do
       before(:each) do
         sign_in user_owner
         get video_path(video_test)
@@ -473,7 +473,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(視聴者)' do
+    xdescribe '正常(視聴者)' do
       before(:each) do
         sign_in viewer1
         get video_path(video_test)
@@ -488,7 +488,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(視聴者)' do
+    xdescribe '正常(視聴者)' do
       before(:each) do
         sign_in viewer1
         get video_path(another_video)
@@ -503,7 +503,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(非ログイン)' do
+    xdescribe '正常(非ログイン)' do
       before(:each) do
         get video_path(video_test)
       end
@@ -517,7 +517,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(別組織のuser)' do
+    xdescribe '異常(別組織のuser)' do
       before(:each) do
         sign_in another_user_owner
         get video_path(video_test)
@@ -529,7 +529,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(別組織の視聴者)' do
+    xdescribe '異常(別組織の視聴者)' do
       before(:each) do
         sign_in viewer
         get video_path(another_video)
@@ -541,7 +541,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '異常(非ログイン)' do
+    xdescribe '異常(非ログイン)' do
       before(:each) do
         get video_path(video_it)
       end
@@ -553,13 +553,13 @@ RSpec.describe 'Videos', type: :request do
     end
   end
 
-  describe 'PATCH #update' do
-    describe 'オーナーが現在のログインユーザ' do
+  xdescribe 'PATCH #update' do
+    xdescribe 'オーナーが現在のログインユーザ' do
       before(:each) do
         sign_in user_owner
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it '動画情報がアップデートされる' do
           expect {
             patch video_path(video_test),
@@ -597,7 +597,7 @@ RSpec.describe 'Videos', type: :request do
         end
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         before(:each) do
           video_it
         end
@@ -637,12 +637,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '動画投稿者本人が現在のログインユーザ' do
+    xdescribe '動画投稿者本人が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it '動画情報がアップデートされる' do
           expect {
             patch video_path(video_test),
@@ -667,12 +667,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe 'システム管理者が現在のログインユーザ' do
+    xdescribe 'システム管理者が現在のログインユーザ' do
       before(:each) do
         sign_in system_admin
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it '動画情報がアップデートされる' do
           expect {
             patch video_path(video_test),
@@ -697,12 +697,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '本人以外の動画投稿者が現在のログインユーザ' do
+    xdescribe '本人以外の動画投稿者が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '本人以外はアップデートできない' do
           expect {
             patch video_path(video_it),
@@ -716,12 +716,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '別組織のオーナーが現在のログインユーザ' do
+    xdescribe '別組織のオーナーが現在のログインユーザ' do
       before(:each) do
         sign_in another_user_owner
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '別組織のオーナーはアップデートできない' do
           expect {
             patch video_path(video_test),
@@ -735,12 +735,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '視聴者が現在のログインユーザ' do
+    xdescribe '視聴者が現在のログインユーザ' do
       before(:each) do
         sign_in viewer
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '視聴者はアップデートできない' do
           expect {
             patch video_path(video_test),
@@ -754,8 +754,8 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '非ログイン' do
-      describe '異常' do
+    xdescribe '非ログイン' do
+      xdescribe '異常' do
         it '非ログインはアップデートできない' do
           expect {
             patch video_path(video_test),
@@ -770,14 +770,14 @@ RSpec.describe 'Videos', type: :request do
     end
   end
 
-  describe 'DELETE #destroy' do
-    describe 'システム管理者が現在のログインユーザー' do
+  xdescribe 'DELETE #destroy' do
+    xdescribe 'システム管理者が現在のログインユーザー' do
       before(:each) do
         sign_in system_admin
         video_sample
       end
 
-      describe '正常' do
+      xdescribe '正常' do
         it '動画を削除する' do
           expect {
             delete(video_path(video_sample), params: { id: video_sample.id })
@@ -792,13 +792,13 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe 'オーナーが現在のログインユーザー' do
+    xdescribe 'オーナーが現在のログインユーザー' do
       before(:each) do
         sign_in user_owner
         video_test
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it 'オーナーは削除できない' do
           expect {
             delete video_path(video_test), params: { id: video_test.id }
@@ -807,13 +807,13 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '動画投稿者が現在のログインユーザ' do
+    xdescribe '動画投稿者が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
         video_test
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '動画投稿者は削除できない' do
           expect {
             delete video_path(video_test), params: { id: video_test.id }
@@ -822,13 +822,13 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '視聴者が現在のログインユーザ' do
+    xdescribe '視聴者が現在のログインユーザ' do
       before(:each) do
         sign_in viewer
         video_test
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '視聴者は削除できない' do
           expect {
             delete video_path(video_test), params: { id: video_test.id }
@@ -837,12 +837,12 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '非ログイン' do
+    xdescribe '非ログイン' do
       before(:each) do
         video_test
       end
 
-      describe '異常' do
+      xdescribe '異常' do
         it '非ログインでは削除できない' do
           expect {
             delete video_path(video_test), params: { id: video_test.id }

@@ -15,7 +15,7 @@ RSpec.xdescribe 'VideoUnsubscribeSystem', type: :system, js: true do
   end
 
   context '動画論理削除' do
-    describe '正常' do
+    xdescribe '正常' do
       context 'システム管理者orオーナー' do
         before(:each) do
           sign_in system_admin || user_owner

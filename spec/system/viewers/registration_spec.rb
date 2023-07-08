@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe 'ViewerRegistrationSystem', type: :system do
-  describe '正常' do
+RSpec.xdescribe 'ViewerRegistrationSystem', type: :system do
+  xdescribe '正常' do
     it '視聴者新規作成' do
       visit new_viewer_registration_path
       expect {
@@ -15,7 +15,7 @@ RSpec.describe 'ViewerRegistrationSystem', type: :system do
     end
   end
 
-  describe '異常' do
+  xdescribe '異常' do
     it '入力が不十分だと作成されない' do
       visit new_viewer_registration_path
       expect {

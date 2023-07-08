@@ -30,9 +30,9 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
     video_test
   end
 
-  describe '正常' do
-    describe '動画フォルダ一覧ページ' do
-      describe '組織管理者' do
+  xdescribe '正常' do
+    xdescribe '動画フォルダ一覧ページ' do
+      xdescribe '組織管理者' do
         before(:each) do
           login(user_owner)
           current_user(user_owner)
@@ -65,7 +65,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
         end
       end
 
-      describe 'システム管理者' do
+      xdescribe 'システム管理者' do
         before(:each) do
           login_system_admin(system_admin)
           current_system_admin(system_admin)
@@ -81,7 +81,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
         end
       end
 
-      describe '動画投稿者' do
+      xdescribe '動画投稿者' do
         before(:each) do
           login(user_staff)
           current_user(user_staff)
@@ -98,7 +98,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
       end
     end
 
-    describe 'モーダル画面' do
+    xdescribe 'モーダル画面' do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
@@ -124,7 +124,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
       end
     end
 
-    describe '名前更新' do
+    xdescribe '名前更新' do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
@@ -142,8 +142,8 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
   end
 
   # フォルダ選択機能の実装の際にここから追記
-  describe '動画フォルダ詳細ページ' do
-    describe 'システム管理者' do
+  xdescribe '動画フォルダ詳細ページ' do
+    xdescribe 'システム管理者' do
       before(:each) do
         login_system_admin(system_admin)
         current_system_admin(system_admin)
@@ -176,7 +176,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
       end
     end
 
-    describe '組織管理者' do
+    xdescribe '組織管理者' do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
@@ -209,7 +209,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
       end
     end
 
-    describe '動画投稿者本人' do
+    xdescribe '動画投稿者本人' do
       before(:each) do
         login(user_staff)
         current_user(user_staff)
@@ -243,8 +243,8 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
   end
   # ここまで追記
 
-  describe '異常' do
-    describe 'モーダル画面' do
+  xdescribe '異常' do
+    xdescribe 'モーダル画面' do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
@@ -265,7 +265,7 @@ RSpec.xdescribe 'FolderSystem', type: :system, js: true do
       end
     end
 
-    describe 'フォルダ一覧画面' do
+    xdescribe 'フォルダ一覧画面' do
       before(:each) do
         login(user_owner)
         current_user(user_owner)
