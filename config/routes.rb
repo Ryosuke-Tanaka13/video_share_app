@@ -77,4 +77,9 @@ Rails.application.routes.draw do
     get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
     patch 'videos/:id/withdraw' => 'hiddens#withdraw', as: :videos_withdraw
   end
+
+# popup関連
+  resources :questionnaires
+  scope module: :questionnaires do
+  end  
 end

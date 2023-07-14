@@ -1091,10 +1091,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@popperjs/core@^2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.9.2.tgz#adea7b6953cbb34651766b0548468e743c6a2353"
-  integrity sha512-VZMYa7+fXHdwIq1TDhSXoVmSPEGM/aa+6Aiq3nVVJ9bXr24zScr+NlKFKC3iPljA7ho/GAZr+d2jOf5GIRC30Q==
+"@popperjs/core@^2.11.6":
+  version "2.11.6"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
+  integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
 "@rails/actioncable@^6.0.0":
   version "6.1.3"
@@ -1108,10 +1108,10 @@
   dependencies:
     spark-md5 "^3.0.0"
 
-"@rails/ujs@^6.0.0":
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.3.tgz#90ef26caa0925492b1a3b1495db09cfbe49e745e"
-  integrity sha512-9mip5o+LVouWAqLMNJWhxda+D5uP+4RziNECgOGJlL6k3rc5SC/ljCHpV9Cym4i3oeGZkpZJ2tu4frCwt84kzQ==
+"@rails/ujs@^7.0.4-2":
+  version "7.0.4-2"
+  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-7.0.4-2.tgz#62b108cc297c0c60f415720295673ee73f08e210"
+  integrity sha512-ec6e2+YSfg4DgrVzIYzpo7ayze6dOu+lZ6RsIR+COkuZCp2QGMEyHZQzNdHt065FjCtpv6wRZQIybAtWrzPqlQ==
 
 "@rails/webpacker@5.4.3":
   version "5.4.3"
@@ -1871,10 +1871,10 @@ bootstrap@^4.5.2, bootstrap@^4.6.0:
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.0.tgz#97b9f29ac98f98dfa43bf7468262d84392552fd7"
   integrity sha512-Io55IuQY3kydzHtbGvQya3H+KorS/M9rSNyfCGCg9WZ4pyT/lCxIlpJgG1GXW/PswzC84Tr2fBYi+7+jFVQQBw==
 
-bootstrap@^5.1.3:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.1.3.tgz#ba081b0c130f810fa70900acbc1c6d3c28fa8f34"
-  integrity sha512-fcQztozJ8jToQWXxVuEyXWW+dSo8AiXWKwiSSrKWsRB/Qt+Ewwza+JWoLKiTuQLaEPhdNAJ7+Dosc9DOIqNy7Q==
+bootstrap@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.2.3.tgz#54739f4414de121b9785c5da3c87b37ff008322b"
+  integrity sha512-cEKPM+fwb3cT8NzQZYEu4HilJ3anCrWqh3CHAok1p9jXqMPsPTBhU25fBckEJHJ/p+tTxTFTsFQGM+gaHpi3QQ==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -4830,6 +4830,11 @@ jquery@>=1.10, jquery@>=1.12.0, jquery@>=1.7, "jquery@>=1.8.0 <4.0.0", jquery@>=
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
   integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
+
+jquery@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.3.tgz#23ed2ffed8a19e048814f13391a19afcdba160e6"
+  integrity sha512-bZ5Sy3YzKo9Fyc8wH2iIQK4JImJ6R0GWI9kL1/k7Z91ZBNgkRXE6U0JfHIizZbort8ZunhSI3jw9I6253ahKfg==
 
 jqvmap-novulnerability@^1.5.1:
   version "1.5.1"
@@ -8145,7 +8150,7 @@ webpack-assets-manifest@^3.1.1:
     tapable "^1.0.0"
     webpack-sources "^1.0.0"
 
-webpack-cli@^3.1.0, webpack-cli@^3.3.12:
+webpack-cli@^3.3.12:
   version "3.3.12"
   resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.3.12.tgz#94e9ada081453cd0aa609c99e500012fd3ad2d4a"
   integrity sha512-NVWBaz9k839ZH/sinurM+HcDvJOTXwSjYp1ku+5XKeOC03z8v5QitnK/x+lAxGXFyhdayoIf/GOpv85z3/xPag==
@@ -8173,7 +8178,7 @@ webpack-dev-middleware@^3.7.2:
     range-parser "^1.2.1"
     webpack-log "^2.0.0"
 
-webpack-dev-server@^3.1.8:
+webpack-dev-server@^3:
   version "3.11.3"
   resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-3.11.3.tgz#8c86b9d2812bf135d3c9bce6f07b718e30f7c3d3"
   integrity sha512-3x31rjbEQWKMNzacUZRE6wXvUFuGpH7vr0lIEbYpMAG9BOxi0928QU1BBswOAP3kg3H1O4hiS+sq4YyAn6ANnA==

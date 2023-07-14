@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+    
+        <head>
+            <title>アンケートカスタム</title>
+            <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+            <%= stylesheet_pack_tag 'questionnaires', media: 'all', 'data-turbolinks-track': 'reload' %>
+            <%= csrf_meta_tags %>
+            <%= csp_meta_tag %>
+            <%= javascript_pack_tag 'questionnaires' %>
+            <script src="https://kit.fontawesome.com/eea364082e.js" crossorigin="anonymous"></script>
+        </head>
+
+        <body>
+            <h1 class="text-center">アンケートカスタム</h1>
+            <div class="box10">
+                <div jsname="yrriRe" jsaction="touchend:ufphYd; input:q3884e; paste:QD1hyc; drop:HZC9qb;" class="T2Ybvb KRoqRc editable" role="textbox" aria-label="フォームのタイトル"  aria-multiline="true" id="T2Ybvb0" g_editable="true" contenteditable="true" placeholder="無題のフォーム"></div>
+                <div class="Y0xAIe tDDvMb NpcyEe-n5T17d-Bz112c-htvI8d-LkdAo-i5vt6e" aria-hidden="true">&nbsp;</div>
+                <div jsname="yrriRe" jsaction="touchend:ufphYd; input:q3884e; paste:QD1hyc; drop:HZC9qb;" class="T2Ybvb KRoqRc editable" role="textbox" aria-label="フォームの説明" aria-multiline="true" id="T2Ybvb1" g_editable="true" contenteditable="true"  placeholder="フォームの説明"><br></div>
+                <div class="tsIGMc mIZh1c"></div>
+             </div>
+            
+           
+                <span class="border border-primary border-5">
+                    <div id="form_area" clas="text-right">
+                        <input id = "add_button" type="button" value="フォーム追加"  class= "fas fa-plus-circle btn-large">
+                    </div>
+                    <!--div id="dropZone" ondragover="sampleAllowDrop(event)"-->
+                        <ul id="dropSampleA" ondrop="sampleDrop( event, this );" ondragover="sampleDrop( event );">
+                            <li id="itemA" draggable="true" ondragstart="sampleDrop ( event );">
+                                <div id="container">
+                                    <input type="radio" id="inputradio" placehoider="ラジオ">            
+                                </div>
+                                <div>
+                                    <input id="onputradio" type="radio" value="ラジオボタンの追加" class= "fas fa-solid fa-circle-dot">
+                                </div>
+                            </li>
+                            <div id="itemB" draggable="true" ondragstart="sampleDrag( event );">
+                                <div class="container">
+                                    <input type="date" name="date">
+                                    <p id="output"></p>
+                                </div>
+                            </div>
+                            <div id="itemC" draggable="true" ondragstart="sampleDrag( event );">
+                                <input type="text" name="name" aria-label="フォームのタイトル" placeholder="質問"></p>
+                                <label for="switch" class="switch_label" >
+                                    <div class="switch">
+                                        <input type="checkbox" id="switch" />
+                                        <div class="circle"></div>
+                                        <div class="base"></div>
+                                    </div>
+                            </div>
+                        </ul>
+                        <div
+                            id="dropSampleB"
+                            ondrop="sampleDrop( event, this );" ondragover="sampleDrop( event );">
+                        </div>
+                    <!--/div-->
+                <div style="clear: both;"></div>
+                 <script type="text/javascript" src="questionnaires"></script>
+
+                   
+                    <script>
+                        // function sampleDrag( $event ) {
+                        //     $event.preventDefault();
+                        //     // const draggable = document.querySelector('#draggable');
+                        //     // const firstElement = $event.firstElementChild; // 最初の要素を取得
+                        //     // const clone = firstElement.cloneNode(true); // 最初の要素のクローンを作成
+                        //     // $event.dataTransfer.setData('Text', clone.textContent); // 
+                        //     $event.dataTransfer.setData( "Text", $event.target.id );
+                            
+                        // }
+
+                        // function sampleDrop( $event) {
+                        //     $event.preventDefault();
+                            
+                        //     // $event.dataTransfer.dropEffect= 'copy'
+                        //     var $data = $event.dataTransfer.getData( "Text" );
+                        //     // $this.appendChild(document.getElementById( $data ));
+                        //     // var data = event.dataTransfer.getData("text/plain");
+
+                        //     var $clone = document.getElementById("$data").cloneNode(true);
+                        //     $event.appendChild($clone);
+                        //     $clone.removeAttribute('draggable'); //コピーした要素をコピーできなくする。
+                        //     // dropSampleB.insertBefore($clone, referenceElement);
+                        //     // $clone.cloneNode.insertBefore(dropZone,$clone);
+                        // };
+
+                        // function sampleAllowDrop( $event ) {
+                        //     $event.preventDefault();
+                        // };
+
+                          
+                             
+
+                        //     // ドラッグ元の要素を非表示にする
+                        //     // $clone.style.display = 'none';
+                        
+
+                        //     // function sampleDrop( $event ) {
+                        //     //     $event.preventDefault();
+                        //     //         var area = document.querySelector(".area");
+                        //     //         var $data = $event.dataTransfer.getData( "Text" );
+                        //     //         var $clone = document.getElementById($data);
+                        //     //         $clone.removeAttribute('draggable');
+                        //     //         // マウスボタンを押した時
+                        //     //         $clone.onmousedown = function ($event){
+                        //     //             let adjustX =
+                        //     //             event.clientX -
+                        //     //             $clone.getBoundingClientRect().left +
+                        //     //             area.getBoundingClientRect().left;
+                        //     //             let adjustY =
+                        //     //             event.clientY -
+                        //     //             $clone.getBoundingClientRect().top +
+                        //     //             area.getBoundingClientRect().top;
+
+                        //     //             // この位置まで移動
+                        //     //             function moveAt(x, y) {
+                        //     //             $clone.style.left = x - adjustX + "px";
+                        //     //             $clone.style.top = y - adjustY + "px";
+                        //     //             }
+                                        
+                        //     //             // マウスムーブしているときの処理
+                        //     //             function onMouseMove(e) {
+                        //     //             moveAt(e.x, e.y);
+                        //     //             }
+                        //     //             document.addEventListener("mousemove", onMouseMove);
+            
+                        //     //             // マウスボタンを離した時の処理
+                        //     //             $clone.onmouseup = function () {
+                        //     //             document.removeEventListener("mousemove", onMouseMove);
+                        //     //             $clone.onmouseup = null;
+                        //     //             };
+                        //     //         };
+                            
+                        //     // $clone.addEventListener("click", function ($event) {
+                        //     // let x = elem.clientX;
+                        //     // let y = elem.clientY;
+                        //     // let propertyX = elem.getBoundingClientRect();
+                        //     // let propertyY = elem.getBoundingClientRect();
+                            
+                        //     // console.log("要素左上角からの(X, Y)座標 : (" + (x - propertyX) +", " + (y - propertyY) +")px ");
+
+                        //     // var dropSampleA = document.getElementById("dropSampleA");
+                        //     // var dropSampleB = document.getElementById("dropSampleB"); 
+                            
+                        //     // var range = new Range();
+                            
+                        //     // var startOffset = 0;
+                            
+                        //     // var endOffset = 1;
+
+                        //     // range.setStart(dropSampleA, startOffset);
+                        //     // range.setEnd(dropSampleB, endOffset);
+
+
+                        //     // var selectedText = range.toString();
+
+                        //     // var dropZone = document.getElementById("dropZone");
+                        //     // dropZone.addEventListener("dragover", sampleAllowDrop);
+                        
+                        window.onload = function () {
+                                var $getListAItems = document.getElementById( "dropSampleA" ).children;
+                                for( var $i = 0; $i < $getListAItems.length; $i++ ){
+                                    $getListAItems[$i].onclick =
+                                        function(){
+                                            sampleDrop( this );
+                                        };
+                                }
+                            }
+                            
+                            function sampleDrop( $getItem ) {
+                                var $cloneNode = $getItem.cloneNode( true );
+                                var dropSampleB = document.getElementById( "dropSampleB" );
+                                dropSampleB.appendChild( $cloneNode );
+                            }
+
+                            
+                                $getItem.ondragstart = function sampleDrop () {
+                                    return false;
+                                };
+
+                                dropSampleB.addEventListener("dragenter", function(evt){
+                                     evt.preventDefault();
+                                }, false);
+                               
+
+                                  dropSampleB.addEventListener("dragover", function(evt){
+                                     evt.preventDefault();
+                                }, false);
+                            
+                                
+
+                                            
+                    </script>
+
+
+                    <div id="mydiv">
+                    <form>
+                        <input type="text" name="name" aria-label="フォームのタイトル" placeholder="質問"></p>
+                        <label for="switch" class="switch_label" >
+                            <div class="switch">
+                                <input type="checkbox" id="switch" />
+                                <div class="circle"></div>
+                                <div class="base"></div>
+                            </div>
+                            <span class="title">必須</span><br>
+                        </label>
+                    </form>
+                    <div id="delete" clas="text-right">
+                        <input id = "delete" type="button" value="">
+                    </div>
+                    <p class="nav-open active">オプション</p>
+                        <nav>
+                            <ul>
+                                <li>
+                                    <div id="container">
+                                        <input type="radio" id="inputradio" placehoider="ラジオ">            
+                                    </div>
+                                    <div>
+                                        <input id="onputradio" type="radio" value="ラジオボタンの追加" class= "fas fa-solid fa-circle-dot">
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="container">
+                                        <input type="date" name="date">
+                                        <p id="output"></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </span>
+                   <button>保存</button>
+                   <button>削除</button>
+
+
+         
+        
+        </body>  

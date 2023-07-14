@@ -1,0 +1,217 @@
+@import "bootstrap";
+@import "admin-lte";
+@import '@fortawesome/fontawesome-free';
+
+
+.box10 {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    color: #00BCD4;
+    background: #e4fcff;/*背景色*/
+    border-top: solid 6px #1dc1d6;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32);/*影*/
+}
+
+.box10 p {
+    margin: 0; 
+    padding: 0;
+}
+
+.boy.boxwrap.h1 {
+    text-align: center;
+
+}
+
+.square {
+	width: 150px;
+	height: 150px;
+	// background: #0091EA;
+}
+
+.circle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    background-color: white;
+    transition: 0.5s;
+  }
+  
+  input:checked ~ .base {
+    background-color: rgb(219, 234, 254);
+    transition: 0.5s;
+    display: flex;
+
+  }
+
+  
+  input:checked ~ .base {
+    background-color: rgb(219, 234, 254);
+  }
+  
+  input:checked ~ .circle {
+    transform: translateX(100%);
+    background-color: blue;
+  }
+
+  .switch_label {
+    position: relative;
+    right: -93%;
+    bottom: -130px;
+    // line-height: 10%;
+  }
+  
+  input[type='checkbox'] {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  
+  .base {
+    width: 56px;
+    border-radius: 16px;
+    height: 32px;
+    background-color: #ddd;
+  }
+
+  input:checked ~ .base {
+    background-color: rgb(219, 234, 254);
+  }
+
+  #mydiv {
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3), -3px -3px 3px rgba(255, 255, 255, 0.3);
+    // border-right:!important;
+    width: 900px;
+    height: 250px;
+    margin: 0 auto !important;
+    border-right: 3px solid #00bfff;
+    border-style: dotted;
+	border-width: 5px;
+	border-color: black;
+}
+  
+
+//削除ボタン
+input#delete {
+    position: relative;
+    right: -85%;
+    bottom: -71px;
+    font-size: 30px;
+	position: relative;
+	width: 0.9em;
+	height: 1.2em;
+	border-left: 0.1em solid #39a9d6;
+	border-right: 0.1em solid #39a9d6;
+	border-bottom: 0.1em solid #39a9d6;
+	border-radius: 0 0 0.1em 0.1em;
+	background:
+		linear-gradient(to bottom, #39a9d6 0%, #39a9d6 100%) 0.2em 0.2em,
+		linear-gradient(to bottom, #39a9d6 0%, #39a9d6 100%) 0.4em 0.2em,
+		linear-gradient(to bottom, #39a9d6 0%, #39a9d6 100%) 0.6em 0.2em
+	;
+	background-size: 0.1em 0.8em;
+	background-repeat: no-repeat;
+  }
+
+  /* 蓋 */
+  input#delete::before {
+	content: "";
+	position: absolute;
+	top: -0.1em;
+	left: -0.2em;
+	width: 1.3em;
+	height: 0.1em;
+	background-color: #39a9d6;
+}
+/* 取っ手 */
+input#delete::after {
+	content: "";
+	position: absolute;
+	top: -0.3em;
+	left: 0.1em;
+	width: 0.5em;
+	height: 0.2em;
+	border-top: 0.1em solid #39a9d6;
+	border-left: 0.1em solid #39a9d6;
+	border-right: 0.1em solid #39a9d6;
+	border-radius: 0.1em 0.1em 0 0;
+}
+
+
+// アコーディング
+
+nav { 
+    display: none; 
+}
+
+  .nav-open{
+	padding: 12px;
+	color: #fff;
+	font-size: 2px;
+	background: #2073c8;
+	position: relative;
+    width: 134px;
+    right: -85%;
+    bottom: 150px;
+}
+
+.nav-open::before{/* 閉じている時 */
+	content: "＋";
+	position: absolute;
+	right: 20px;
+}
+
+.nav-open.active::before{/* 開いている時 */
+	content: "－";
+}
+
+ul{
+    position: relative;
+    right: -84%;
+    bottom: 122px;
+}
+
+#dropSampleA {
+  border: 2px solid #aaa;
+  width: 400px;
+  padding: 2em;
+}
+
+#dropSampleB {
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3), -3px -3px 3px rgba(255, 255, 255, 0.3);
+  // border-right:!important;
+  width: 900px;
+  height: 250px;
+  margin: 0 auto !important;
+  border-right: 3px solid #00bfff;
+  border-style: dotted;
+border-width: 5px;
+border-color: black;
+}
+// #dropSampleA {
+    // background-color: red;
+// }
+// #dropSampleB {
+//     background-color: blue;
+// }
+#dragSampleA,
+#dragSampleB,
+#dragSampleC {
+    width: 258px;
+    margin: 10px 0;
+    padding: 10px;
+    // border: 1px solid gray;
+    text-align: center;
+}
+// #dragSampleA {
+    // background-color: pink;
+// }
+// #dragSampleB {
+//     background-color: lightblue;
+// }
+// #dragSampleC {
+//     background-color: lightgreen;
+// }
+

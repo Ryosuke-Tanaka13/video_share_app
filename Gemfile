@@ -31,16 +31,19 @@ gem 'rexml', '~> 3.2', '>= 3.2.4'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.9.3', require: false
-
+gem 'bootstrap', '~> 4.1.1'
+gem 'jquery-rails'
 gem 'devise'
 gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
 gem 'rails-i18n', '~> 6.0'
 
+gem 'sassc-rails'
+
 gem 'dotenv-rails'
 
 gem 'activestorage-validator'
-gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
+gem 'vimeo_me2', :git => 'https://github.com/bo-oz/vimeo_me2.git'
 
 group :development, :test do
   # ERD生成
