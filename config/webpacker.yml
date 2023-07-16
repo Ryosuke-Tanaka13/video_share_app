@@ -77,7 +77,8 @@ test:
   compile: true
 
   # Compile test packs to a separate directory
-  public_output_path: packs-test
+  # RSpecのテスト中に、/spec/requests/viewers/video_status_spec.rbで発生するWebpacker::Manifest::MissingEntryErrorを防止するためコメントアウト
+  # public_output_path: packs-test
 
 production:
   <<: *default
