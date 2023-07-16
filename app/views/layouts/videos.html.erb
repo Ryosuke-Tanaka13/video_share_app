@@ -2,11 +2,53 @@
 <html>
   <head>
     <title>App</title>
+    <!--視聴状況の取得のために追加 -->
+    <link rel="canonical" href="https://syncer.jp/Web/API_Interface/Reference/IDL/HTMLMediaElement/played/"> 
+    <!-- ここまで -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_pack_tag 'videos', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'videos', 'data-turbolinks-track': 'reload' %>
+    <!--視聴状況の取得のために追加 -->
+    <script src="https://demo.syncer.jp/js/demo-web_api_interface.js"></script>
+    <script>
+      window.addEventListener( "load", function () {
+      // document.addEventListener("turbolinks:load", function(){
+	      syncer.setup({
+		      property: {
+			      get:{
+				      use: true ,
+				      callback: (typeof getProperty === "function" ? getProperty : null),
+				      observe: true,
+			      },
+		      },
+		      error: {
+			    use: true,
+		      },
+		      console: {
+			    use: true,
+		      },
+	      });
+     
+        // 監視にチェックが入るとプロパティを取得(デフォルトで入っている)
+        function getProperty(){
+          // 動画を取得
+          const media = document.getElementById("mv");
+          // 動画の再生状況を取得
+          const returnValue = media.played ;
+          // 再生状況のデータの個数を取得
+          const n = returnValue.length
+    
+          media.addEventListener('timeupdate', function(){
+            document.getElementById('latest_start_point').innerHTML = returnValue.start(n-1);
+            document.getElementById('latest_end_point').innerHTML = returnValue.end(n-1);
+          });
+        // console.log( "プロパティの値", returnValue);
+        };
+      });
+    </script>
+    <!--ここまで--> 
   </head>
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
     <div class="wrapper">
