@@ -39,31 +39,14 @@
         <%= render partial: 'comments/index' if @comments.present? %>
       </div>
 
-      <script>
-        var button = document.getElementById("toggle-comments-button");
-        var commentsArea = document.getElementById("comments_area");
-
-        button.addEventListener("click", function() {
-          if (commentsArea.style.display === "none") {
-            commentsArea.style.display = "block";
-            button.textContent = "コメントを非表示にする";
-          } else {
-            commentsArea.style.display = "none";
-            button.textContent = "コメントを表示する";
-          }
-        });
-      </script>
-
       <div class="comment-create">
         <h4 class="text-left title">コメント</h4>
-      </div>
-      <div id="comments_area">
-        <%= render partial: 'comments/index' if @comments.present? %>
       </div>
     </div>
   </div>
 </div>
 <!-- 動画コメント ------------------------------------------------------------------------>
 
-<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<%= javascript_pack_tag 'videos/show' %>
 
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
