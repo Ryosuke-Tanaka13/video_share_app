@@ -7,7 +7,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   # orgにのみ属す
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
 
-<<<<<<< HEAD
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
 
@@ -16,13 +15,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   end
   let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-=======
-  let(:video_sample) do
-    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id)
-  end
-  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
   let(:video_deleted) { create(:video_deleted, organization_id: user_owner.organization.id, user_id: user_owner.id) }
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
 
   # orgとviewerの紐付け
   let(:organization_viewer) { create(:organization_viewer) }
@@ -113,11 +106,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_select('login_set_edit', selected: 'ログイン不要')
         expect(page).to have_select('popup_before_video_edit', selected: '動画視聴開始時ポップアップ表示')
         expect(page).to have_select('popup_after_video_edit', selected: '動画視聴終了時ポップアップ表示')
-<<<<<<< HEAD
         expect(page).to have_field 'セレブエンジニア'
         expect(page).to have_field 'テックリーダーズ'
-=======
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
       end
 
       it '設定を変更で動画情報が更新される' do
@@ -128,10 +118,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         select 'ログイン必要', from: 'login_set_edit'
         select '動画視聴開始時ポップアップ非表示', from: 'popup_before_video_edit'
         select '動画視聴終了時ポップアップ非表示', from: 'popup_after_video_edit'
-<<<<<<< HEAD
         check 'video_folder_ids_2'
-=======
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
         click_button '設定を変更'
         expect(page).to have_text '動画情報を更新しました。'
       end
@@ -158,23 +145,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_link 'フォルダ新規作成はこちら'
       end
 
-<<<<<<< HEAD
-      # videosのインスタンス生成に必要なdata_urlの入力方法がわからず、テスト実施できず
-      # it '新規作成で動画が作成される' do
-      #   fill_in 'title', with: 'サンプルビデオ２'
-      #   attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/rec.webm')
-      #   fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
-      #   select '限定公開', from: 'range'
-      #   select '非公開', from: 'comment_public'
-      #   select 'ログイン必要', from: 'login_set'
-      #   select '動画視聴開始時ポップアップ非表示', from: 'popup_before_video'
-      #   select '動画視聴終了時ポップアップ非表示', from: 'popup_after_video'
-      #   check "video_folder_ids_1"
-      #   click_button '新規投稿'
-      #   expect(page).to have_current_path video_path(Video.last), ignore_query: true
-      #   expect(page).to have_text '動画を投稿しました'
-      # end
-=======
       it '新規作成で動画が作成される' do
         fill_in 'title', with: 'サンプルビデオ２'
         attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/rec.webm')
@@ -188,7 +158,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_current_path video_path(Video.last), ignore_query: true
         expect(page).to have_text '動画を投稿しました。'
       end
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
     end
   end
 

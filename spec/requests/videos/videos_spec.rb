@@ -10,19 +10,12 @@ RSpec.describe 'Videos', type: :request do
   # orgとanother_orgの両方に属す
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
 
-<<<<<<< HEAD
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
   let(:video_sample) do
     create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
   end
   let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
-=======
-  let(:video_sample) do
-    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id)
-  end
-  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
   let(:another_organization) { create(:another_organization) }
@@ -47,14 +40,11 @@ RSpec.describe 'Videos', type: :request do
     organization_viewer
     organization_viewer2
     organization_viewer3
-<<<<<<< HEAD
-    folder_celeb
-    folder_tech
-=======
     video_sample
     video_test
     video_it
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
+    folder_celeb
+    folder_tech
   end
 
   describe 'GET #index' do
@@ -254,12 +244,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-<<<<<<< HEAD
-                  folder_ids:         [1],
-                  data_url:           '/videos/999999999'
-=======
-                  video:              fixture_file_upload('/flower.mp4')
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.to change(Video, :count).by(1)
@@ -276,12 +262,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-<<<<<<< HEAD
-                  folder_ids:         [1],
-                  data_url:           '/videos/999999999'
-=======
-                  video:              fixture_file_upload('/flower.mp4')
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               })
           ).to redirect_to video_path(Video.last)
@@ -306,12 +288,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-<<<<<<< HEAD
-                  folder_ids:         [1],
-                  data_url:           '/videos/999999999'
-=======
-                  video:              fixture_file_upload('/flower.mp4')
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.to change(Video, :count).by(1)
@@ -328,12 +306,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-<<<<<<< HEAD
-                  folder_ids:         [1],
-                  data_url:           '/videos/999999999'
-=======
-                  video:              fixture_file_upload('/flower.mp4')
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               })
           ).to redirect_to video_path(Video.last)
@@ -422,12 +396,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-<<<<<<< HEAD
-                  folder_ids:         [1],
-                  data_url:           '/videos/999999999'
-=======
-                  video:              fixture_file_upload('/flower.mp4')
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.not_to change(Video, :count)
@@ -452,12 +422,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-<<<<<<< HEAD
-                  folder_ids:         [1],
-                  data_url:           '/videos/999999999'
-=======
-                  video:              fixture_file_upload('/flower.mp4')
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.not_to change(Video, :count)
@@ -478,12 +444,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-<<<<<<< HEAD
-                  folder_ids:         [1],
-                  data_url:           '/videos/999999999'
-=======
-                  video:              fixture_file_upload('/flower.mp4')
->>>>>>> 2494044 (vimeoとの連携解除に伴う動画アップロード周りのrspec修正)
+                  video:              fixture_file_upload('/flower.mp4'),
+                  folder_ids:         [1]
                 }
               }
           }.not_to change(Video, :count)
