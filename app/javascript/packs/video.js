@@ -16,3 +16,4 @@ jQuery(function($){
   });
 });
 })
+import "./videos/show"
