@@ -16,7 +16,7 @@
       <p>オーナー削除済み</p>
     <% end %>
   </div>
-</div>
+</div>    
 
 <!-- 動画コメント ------------------------------------------------------------------------>
 <div class="container">
@@ -37,10 +37,6 @@
       <!-- コメントエリア -->
       <div id="comments_area" style="display: none;">
         <%= render partial: 'comments/index' if @comments.present? %>
-      </div>
-
-      <div class="comment-create">
-        <h4 class="text-left title">コメント</h4>
       </div>
     </div>
   </div>
