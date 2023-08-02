@@ -64,15 +64,6 @@ Rails.application.routes.draw do
   end
   # =================================================================
 
-  # video関連=========================================================
-  resources :videos do
-    resources :comments, only: %i[create update destroy] do
-      resources :replies, only: %i[create update destroy]
-    end
-  end
-
-  # =================================================================
-
   # 共通==============================================================
   # 利用規約
   get 'use' => 'use#index'
@@ -80,9 +71,18 @@ Rails.application.routes.draw do
   root 'use#top'
   # =================================================================
 
+  # video関連==========================================================
   resources :videos do
+    member do
+      scope module: :viewers do
+        resources :video_statuses, only: %i[index update destroy]
+      end
+    end
     scope module: :videos do
       resources :video_folders, only: :destroy
+    end
+    resources :comments, only: %i[create update destroy] do
+      resources :replies, only: %i[create update destroy]
     end
   end
 
@@ -91,4 +91,5 @@ Rails.application.routes.draw do
     get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
     patch 'videos/:id/withdraw' => 'hiddens#withdraw', as: :videos_withdraw
   end
+  # =================================================================
 end
