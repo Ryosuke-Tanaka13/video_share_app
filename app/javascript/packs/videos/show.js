@@ -12,7 +12,7 @@ document.addEventListener('turbolinks:load', function() {
         button.text("コメントを表示する");
       }
     });
-  }t
+  }
 });
 
 
