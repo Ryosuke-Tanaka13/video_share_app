@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+Webdrivers::Chromedriver.required_version = '114.0.5735.90'
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
