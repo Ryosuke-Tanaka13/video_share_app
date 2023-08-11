@@ -55,8 +55,6 @@ RSpec.configure do |config|
   Bullet.raise = true
   Bullet.unused_eager_loading_enable = false
 
-  Selenium::WebDriver::Chrome.driver_path = '/usr/local/bin/chromedriver'
-
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
