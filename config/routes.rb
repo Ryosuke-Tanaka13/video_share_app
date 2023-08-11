@@ -83,7 +83,7 @@ Rails.application.routes.draw do
   resources :videos do
     collection do
       scope module: :videos do
-        resource :recording
+        resource :recording, only: :new
       end
     end
     scope module: :videos do

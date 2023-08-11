@@ -61,3 +61,26 @@
 .video-title-and-action-show{
   margin-left:50px;
 }
+
+// recording の css  以下から
+#recording-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #f7f7f7;
+}
+
+#recording-controls-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #ffffff;
+  margin-top: 20px;
+}
+
+#recording-controls-container button,
+#recording-controls-container select {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+// recording の css 以上まで
