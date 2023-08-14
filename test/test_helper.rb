@@ -3,6 +3,10 @@
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
+require 'webdrivers' # 追加: webdrivers gemが必要
+
+# ブラウザドライバーのバージョンを設定
+Webdrivers::Chromedriver.required_version = "114.0.5735.90" # 追加
 
 module ActiveSupport
   class TestCase
