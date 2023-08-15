@@ -5,8 +5,6 @@ require_relative '../config/environment'
 require 'rails/test_help'
 require 'webdrivers' # 追加: webdrivers gemが必要
 
-
-
 module ActiveSupport
   class TestCase
     # Run tests in parallel with specified workers
@@ -18,4 +16,3 @@ module ActiveSupport
     # Add more helper methods to be used by all tests here...
   end
 end
-
