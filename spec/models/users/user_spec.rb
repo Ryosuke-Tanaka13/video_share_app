@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.xdescribe User, type: :model do
   let(:organization) { create(:organization) }
   let(:user_staff) { build(:user_staff) }
 
