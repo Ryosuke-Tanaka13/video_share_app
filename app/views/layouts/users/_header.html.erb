@@ -9,5 +9,12 @@
       <%= link_to "ログアウト", destroy_user_session_path, class:"nav-link", method: :delete %>
     </li>
   </ul>
+  <% if current_user.role == 'owner' %>
+    <% if current_user.organization.payment_success.nil? %>
+      <span class="nav-link navbar-danger">プランを選択してください。</span>
+    <% else %>
+      <span class="nav-link navbar-danger">支払いが失敗しています。再度プランを選択してください。</span>
+    <% end %>
+  <% end %>
 </nav>
 <!-- /.navbar -->

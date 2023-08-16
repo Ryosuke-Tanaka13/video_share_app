@@ -15,12 +15,21 @@
           <th><%= "メールアドレス" %></th>
           <td><%= @organization.email %></td>
         </tr>
+        <tr>
+          <th>プラン</th>
+          <% if @organization.plan.nil? %>
+            <td>プランを選択してください。</td>
+          <% else %>
+            <td><%= @organization.plan %>円プラン</td>
+          <% end %>
+        </tr>
       </tbody>
     </table>
   </div>
     <div class="card-footer">
     <% if current_user&.role == 'owner' || current_system_admin %>
       <%= link_to "編集", edit_organization_path, class: "btn btn-md btn-block btn-success" %>
+      <%= link_to "プラン変更", new_organizations_payment_path, class: "btn btn-md btn-block btn-primary" %>
       <%= link_to "退会ページ", organizations_unsubscribe_path(@organization), class: "btn btn-md btn-block btn-danger" %><br>
     <% end %>
     <%= link_to "投稿者一覧", users_path(organization_id: @organization.id), class: "btn btn-md btn-block btn-default" %>

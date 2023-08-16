@@ -8,6 +8,16 @@ class Organizations::UnsubscribesController < OrganizationsController
 
   def update
     if Organization.bulk_update(params[:id])
+      begin
+        # Stripeのサブスクリプションをキャンセル
+        Stripe::Subscription.cancel(@organization.subscription_id)
+        # Stripe上の顧客情報を削除
+        Stripe::Customer.delete(@organization.customer_id)
+      rescue => e
+        # Stripeとの通信でエラーが発生した場合のエラーハンドリング
+        flash[:error] = 'Stripeのサブスクリプション解約でエラーが発生しました'
+      end
+
       if current_system_admin
         flash[:notice] = '退会処理が完了しました。'
         redirect_to organizations_url
