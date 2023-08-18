@@ -3,7 +3,6 @@ FactoryBot.define do
     title { 'サンプルビデオ' }
     open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
     range { false }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -28,7 +27,6 @@ FactoryBot.define do
     title { 'テストビデオ' }
     open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
     range { false }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -44,7 +42,6 @@ FactoryBot.define do
     title { 'ITビデオ' }
     open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
     range { false }
-    comment_public { false }
     login_set { true }
     popup_before_video { false }
     popup_after_video { false }
@@ -60,7 +57,6 @@ FactoryBot.define do
     title { 'アナザービデオ' }
     open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
     range { false }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }

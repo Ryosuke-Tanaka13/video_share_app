@@ -27,10 +27,6 @@
           <%= f.select :range, [['一般公開',0],['限定公開',1]], { include_blank: false, selected: 0 }, id:"range" %>
         </div> 
         <div class="field">
-          <%= f.label :comment_public, class: "video-label" %><br>
-          <%= f.select :comment_public, [['公開',0],['非公開',1]], { include_blank: false, selected: 0 }, id:"comment_public" %>
-        </div>
-        <div class="field">
           <%= f.label :login_set, class: "video-label" %><br>
           <%= f.select :login_set, [['ログイン不要',0],['ログイン必要',1]], { include_blank: false, selected: 0 }, id:"login_set" %>
         </div>
