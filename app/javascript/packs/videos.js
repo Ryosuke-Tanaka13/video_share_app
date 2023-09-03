@@ -18,4 +18,3 @@ import "@fortawesome/fontawesome-free/js/all";
 import "./video";
 import "./video-comment";
 import "./videos/show"
-
