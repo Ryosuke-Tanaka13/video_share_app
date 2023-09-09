@@ -23,6 +23,34 @@ class Video < ApplicationRecord
   scope :current_user_has, ->(current_user) { where(organization_id: current_user.organization_id) }
   scope :current_viewer_has, ->(organization_id) { where(organization_id: organization_id) }
   scope :available, -> { where(is_valid: true) }
+  # ビデオ検索機能
+  scope :search, -> (search_params) do
+    # 検索フォームが空であれば何もしない
+    return if search_params.blank?
+
+    title_like(search_params[:title])
+      .created_at_from(search_params[:created_at_from])
+      .created_at_to(search_params[:created_at_to])
+      .range(search_params[:range])
+      .user_like(search_params[:user])
+  end
+
+  scope :title_like, -> (title) { where('title LIKE ?', "%#{title}%") if title.present? }
+  scope :created_at_from, -> (from) { where('? <= videos.created_at', from) if from.present? }
+  scope :created_at_to, -> (to) { where('videos.created_at <= ?', to) if to.present? }
+  scope :range, -> (range) { where('range ?', "#{range}") if range.present? }
+  scope :user_like, -> (user_name) do
+    if user_name.present?
+      sql = <<~SQL
+        EXISTS (
+          SELECT * FROM users user
+          WHERE user.organization_id = videos.organization_id
+          AND user.name LIKE ?
+        )
+        where(sql, "%#{user_name}%")
+      SQL
+    end
+  end
 
   def identify_organization_and_user(current_user)
     self.organization_id = current_user.organization.id
