@@ -28,29 +28,27 @@ class Video < ApplicationRecord
     # 検索フォームが空であれば何もしない
     return if search_params.blank?
 
-    title_like(search_params[:title])
+    title_like(search_params[:title_like])
       .created_at_from(search_params[:created_at_from])
       .created_at_to(search_params[:created_at_to])
       .range(search_params[:range])
-      .user_like(search_params[:user])
+      .user_like(search_params[:user_name])
   end
 
   scope :title_like, -> (title) { where('title LIKE ?', "%#{title}%") if title.present? }
+  # userのcreated_atかvideoのcreated_atか区別できないのでvideosを追加
   scope :created_at_from, -> (from) { where('? <= videos.created_at', from) if from.present? }
   scope :created_at_to, -> (to) { where('videos.created_at <= ?', to) if to.present? }
-  scope :range, -> (range) { where('range ?', "#{range}") if range.present? }
-  scope :user_like, -> (user_name) do
-    if user_name.present?
-      sql = <<~SQL
-        EXISTS (
-          SELECT * FROM users user
-          WHERE user.organization_id = videos.organization_id
-          AND user.name LIKE ?
-        )
-        where(sql, "%#{user_name}%")
-      SQL
+  scope :range, -> (range) { 
+    if range.present?
+      if range == "all"
+        return
+      else
+        where(range: range)
+      end
     end
-  end
+  }
+  scope :user_like, -> (user_name) { joins(:user).where('users.name LIKE ?', "%#{user_name}%") if user_name.present? }
 
   def identify_organization_and_user(current_user)
     self.organization_id = current_user.organization.id

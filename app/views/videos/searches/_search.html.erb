@@ -7,8 +7,15 @@
   <%= f.date_field :created_at_from, value: @search_params[:created_at_from] %> ~
   <%= f.date_field :created_at_to, value: @search_params[:created_at_to] %><br>
 
-  <%= f.label :range, "公開範囲" %>
-  <%= f.select :range, value: @search_params[:range] %><br>
+  <h5>公開範囲を指定して検索</h5>
+  <%= f.radio_button :range, "all", value: @search_params[:range] == "all" %>
+  <%= f.label :range_all, "すべての動画" %><br>
+
+  <%= f.radio_button :range, "true", value: @search_params[:range] == "true" %>
+  <%= f.label :range_true, "公開動画のみ" %><br>
+
+  <%= f.radio_button :range, "false", value: @search_params[:range] == "false" %>
+  <%= f.label :range_false, "非公開動画のみ" %><br>
 
   <%= f.label :user, "動画投稿者" %>
   <%= f.text_field :user_name, value: @search_params[:user_name] %><br>
