@@ -1,0 +1,33 @@
+<%= render layout: 'shared/search_box' do %>
+
+<div class="row">
+  <div class="col-sm-6">
+    <%= form_with(scope: :search, url:videos_search_videos_path, method: :get, local: true) do |f| %>
+      <div class="form-group form-inline">
+        <%= f.label :title, "タイトル", class: 'm-2' %>
+        <%= f.text_field :title_like, value: @search_params[:title_like], id: 'search-title', class: 'form-control col-sm-6' %>
+      </div>
+      <div class="form-group form-inline">
+        <%= f.label :created_at, "公開日", class: 'm-3' %>
+        <%= f.date_field :created_at_from, value: @search_params[:created_at_from], id: 'search-created_at_from', class: 'form-control' %> 〜
+        <%= f.date_field :created_at_to, value: @search_params[:created_at_to], id: 'search-created_at_to', class: 'form-control' %>
+      </div>
+      <div class="form-group form-inline">
+        <%= f.radio_button :range, "all", value: @search_params[:range] == "all", id: 'search-range-all' %>
+        <%= f.label :range_all, "すべての動画", class: 'm-1' %>
+        <%= f.radio_button :range, "true", value: @search_params[:range] == "true", id: 'search-range-true' %>
+        <%= f.label :range_true, "公開動画のみ", class: 'm-1' %>
+        <%= f.radio_button :range, "false", value: @search_params[:range] == "false", id: 'search-range-false' %>
+        <%= f.label :range_false, "非公開動画のみ", class: 'm-1' %>
+      </div>
+      <div class="form-group form-inline">
+        <%= f.label :user, "動画投稿者", class: 'm-1' %>
+        <%= f.text_field :user_name, value: @search_params[:user_name], id: 'search-user-name', class: 'form-control col-sm-6' %>
+      </div>
+        <button class="btn btn-default m-1" id="video-form-reset">リセット</button>
+        <button class="btn btn-primary m-1" type="submit" id="video-form-reset"><i class="fa fa-search"></i> 検索</button>
+    <% end %>
+  </div>
+</div>
+
+<% end %>

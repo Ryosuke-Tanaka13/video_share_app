@@ -1,7 +1,14 @@
 <% provide(:title,  "ビデオ一覧") %>
+<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
 <div class="content">
   <div class="video-search-form">
-    <%= render partial: "videos/searches/search" %>
+    <%= render partial: "videos/searches/search_form" %>
+  </div>
+  <div class="video-search-result">
+    <% if @search_params.present? %>
+    検索結果
+    <% end %>
   </div>
   <% @organization_videos.each do |organization_video| %>
     <div style="float:left;margin:15px;">
