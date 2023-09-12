@@ -11,7 +11,11 @@
           <p class="card-text">基本プランの詳細や特徴をここに記述します。</p>
           <%= form_with url: organizations_payment_path, method: :post do |form| %>
             <%= form.hidden_field :priceId, value: "price_1NT2vAD3GXsNBZ1zw9YMTKCc" %>
-            <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+            <% if @organization.plan == 0 %>
+              <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
+            <% else %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -26,7 +30,11 @@
           <p class="card-text">スタンダードプランの詳細や特徴をここに記述します。</p>
           <%= form_with url: organizations_payment_path, method: :post do |form| %>
             <%= form.hidden_field :priceId, value: "price_1NNDFBD3GXsNBZ1zC2sMJLFh" %>
-            <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+            <% if @organization.plan == 1000 %>
+              <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
+            <% else %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -41,7 +49,11 @@
           <p class="card-text">プレミアムプランの詳細や特徴をここに記述します。</p>
           <%= form_with url: organizations_payment_path, method: :post do |form| %>
             <%= form.hidden_field :priceId, value: "price_1NTu0QD3GXsNBZ1zpIVjM0gV" %>
-            <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+            <% if @organization.plan == 2000 %>
+              <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
+            <% else %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+            <% end %>
           <% end %>
         </div>
       </div>

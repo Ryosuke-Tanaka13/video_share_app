@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2023_07_08_203829) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "plan"
-    t.boolean "payment_success", default: false
+    t.boolean "payment_success"
     t.string "customer_id"
     t.string "subscription_id"
   end

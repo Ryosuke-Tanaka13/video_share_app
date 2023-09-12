@@ -12,7 +12,7 @@
   <% if current_user.role == 'owner' %>
     <% if current_user.organization.payment_success.nil? %>
       <span class="nav-link navbar-danger">プランを選択してください。</span>
-    <% else %>
+    <% elsif current_user.organization.payment_success == false %>
       <span class="nav-link navbar-danger">支払いが失敗しています。再度プランを選択してください。</span>
     <% end %>
   <% end %>

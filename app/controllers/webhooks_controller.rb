@@ -55,11 +55,10 @@ class WebhooksController < ApplicationController
         organization.payment_success = true
         organization.save!
       end
-      # You may want to redirect the user to a success page
 
     # サブスクリプション情報更新成功時のイベント
     when 'customer.subscription.updated'
-      session = event.data.object # sessionの取得
+      session = event.data.object
       organization = Organization.find_by(customer_id: session.customer)
       
       ApplicationRecord.transaction do
@@ -78,7 +77,6 @@ class WebhooksController < ApplicationController
         organization.subscription_id = nil
         organization.save!
       end
-      # You may want to notify the customer about the payment failure
 
     # 顧客情報削除時のイベント
     when 'customer.deleted'
