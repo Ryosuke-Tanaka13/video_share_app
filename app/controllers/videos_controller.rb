@@ -84,7 +84,7 @@ class VideosController < ApplicationController
   end
 
   def video_search_params
-    params.fetch(:search, {}).permit(:title_like, :created_at_from, :created_at_to, :range, :user_name)
+    params.fetch(:search, {}).permit(:title_like, :open_period_from, :open_period_to, :range, :user_name)
   end
 
   # 共通メソッド(organization::foldersコントローラにも記載)

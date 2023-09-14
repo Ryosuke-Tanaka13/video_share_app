@@ -14,6 +14,6 @@ class Videos::SearchesController < VideosController
   private
 
   def video_search_params
-    params.fetch(:search, {}).permit(:title_like, :created_at_from, :created_at_to, :range, :user_name)
+    params.fetch(:search, {}).permit(:title_like, :open_period_from, :open_period_to, :range, :user_name)
   end
 end

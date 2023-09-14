@@ -6,9 +6,9 @@
     <%= render partial: "videos/searches/search_form" %>
   </div>
   <div class="video-search-result">
-    <% if @organization_videos.count != 0 %>
+    <% if @search_params.present? && @organization_videos.count != 0 %>
       <%= @organization_videos.count %>件ヒットしました。
-    <% else %>
+    <% elsif @search_params.present? %>
       該当する動画はありませんでした。
     <% end %>
   </div>

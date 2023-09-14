@@ -29,16 +29,16 @@ class Video < ApplicationRecord
     return if search_params.blank?
 
     title_like(search_params[:title_like])
-      .created_at_from(search_params[:created_at_from])
-      .created_at_to(search_params[:created_at_to])
+      .open_period_from(search_params[:open_period_from])
+      .open_period_to(search_params[:open_period_to])
       .range(search_params[:range])
       .user_like(search_params[:user_name])
   end
 
   scope :title_like, -> (title) { where('title LIKE ?', "%#{title}%") if title.present? }
   # userのcreated_atかvideoのcreated_atか区別できないのでvideosを追加
-  scope :created_at_from, -> (from) { where('? <= videos.created_at', from) if from.present? }
-  scope :created_at_to, -> (to) { where('videos.created_at <= ?', to) if to.present? }
+  scope :open_period_from, -> (from) { where('? <= open_period', from) if from.present? }
+  scope :open_period_to, -> (to) { where('open_period <= ?', to) if to.present? }
   scope :range, -> (range) { 
     if range.present?
       if range == "all"
