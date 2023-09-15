@@ -36,7 +36,6 @@ class Video < ApplicationRecord
   end
 
   scope :title_like, -> (title) { where('title LIKE ?', "%#{title}%") if title.present? }
-  # userのcreated_atかvideoのcreated_atか区別できないのでvideosを追加
   scope :open_period_from, -> (from) { where('? <= open_period', from) if from.present? }
   scope :open_period_to, -> (to) { where('open_period <= ?', to) if to.present? }
   scope :range, -> (range) { 
