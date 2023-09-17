@@ -6,6 +6,7 @@ RSpec.describe 'Videos::Searches', type: :request do
   let(:user_owner) { create(:user_owner) }
   let(:user_staff) { create(:user_staff) }
   let(:viewer) { create(:viewer) }
+  let(:organization_viewer) { create(:organization_viewer) }
   let(:video_jan_public_owner) { create(:video_jan_public_owner) }
 
   before(:each) do
@@ -14,6 +15,7 @@ RSpec.describe 'Videos::Searches', type: :request do
     user_owner
     user_staff
     viewer
+    organization_viewer
     video_jan_public_owner
   end
 
