@@ -23,31 +23,6 @@ class Video < ApplicationRecord
   scope :current_user_has, ->(current_user) { where(organization_id: current_user.organization_id) }
   scope :current_viewer_has, ->(organization_id) { where(organization_id: organization_id) }
   scope :available, -> { where(is_valid: true) }
-  # ビデオ検索機能
-  scope :search, -> (search_params) do
-    # 検索フォームが空であれば何もしない
-    return if search_params.blank?
-
-    title_like(search_params[:title_like])
-      .open_period_from(search_params[:open_period_from])
-      .open_period_to(search_params[:open_period_to])
-      .range(search_params[:range])
-      .user_like(search_params[:user_name])
-  end
-
-  scope :title_like, -> (title) { where('title LIKE ?', "%#{title}%") if title.present? }
-  scope :open_period_from, -> (from) { where('? <= open_period', from) if from.present? }
-  scope :open_period_to, -> (to) { where('open_period <= ?', to) if to.present? }
-  scope :range, -> (range) { 
-    if range.present?
-      if range == "all"
-        return
-      else
-        where(range: range)
-      end
-    end
-  }
-  scope :user_like, -> (user_name) { joins(:user).where('users.name LIKE ?', "%#{user_name}%") if user_name.present? }
 
   def identify_organization_and_user(current_user)
     self.organization_id = current_user.organization.id
@@ -104,4 +79,32 @@ class Video < ApplicationRecord
       errors.add(:video, 'をアップロードしてください')
     end
   end
+
+  # ビデオ検索機能
+  scope :search, -> (search_params) do
+    # 検索フォームが空であれば何もしない
+    return if search_params.blank?
+
+    # ひらがな・カタカナは区別しない
+    title_like(search_params[:title_like])
+      .open_period_from(search_params[:open_period_from])
+      .open_period_to(search_params[:open_period_to])
+      .range(search_params[:range])
+      .user_like(search_params[:user_name])
+  end
+
+  scope :title_like, -> (title) { where('title LIKE ?', "%#{title}%") if title.present? }
+  # DBには世界時間で検索されるため9時間マイナスする必要がある
+  scope :open_period_from, -> (from) { where('? <= open_period', DateTime.parse(from) - 9.hours) if from.present? }
+  scope :open_period_to, -> (to) { where('open_period <= ?', DateTime.parse(to) - 9.hours) if to.present? }
+  scope :range, -> (range) { 
+    if range.present?
+      if range == "all"
+        return
+      else
+        where(range: range)
+      end
+    end
+  }
+  scope :user_like, -> (user_name) { joins(:user).where('users.name LIKE ?', "%#{user_name}%") if user_name.present? }
 end
