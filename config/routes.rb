@@ -85,7 +85,7 @@ Rails.application.routes.draw do
       resources :video_folders, only: :destroy
       # 動画検索機能
       collection do
-        get 'videos/search', to: 'searches#search'
+        get 'videos/search' => 'searches#search'
       end
     end
   end
