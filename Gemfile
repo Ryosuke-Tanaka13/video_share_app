@@ -75,7 +75,6 @@ group :test do
   gem 'launchy', '~> 2.4.3' # 追記
   gem 'selenium-webdriver'
   gem 'turnip'
-  gem 'webdrivers' # 追記
   gem 'webrick'
   # Coverage
   # カバレッジ測定ツール
