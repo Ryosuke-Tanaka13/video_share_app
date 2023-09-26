@@ -30,8 +30,9 @@ RSpec.describe 'Videos::Searches', type: :request do
         it '正常値レスポンス' do
           expect(response).to have_http_status '302'
         end
+
         it 'videos#indexにリダイレクトされる' do
-          expect(redirect_to videos_url(organization_id: organization.id))
+          expect(response).to redirect_to videos_url(organization_id: organization.id)
         end
       end
     end
@@ -46,8 +47,9 @@ RSpec.describe 'Videos::Searches', type: :request do
         it '正常値レスポンス' do
           expect(response).to have_http_status '302'
         end
+
         it 'videos#indexにリダイレクトされる' do
-          expect(redirect_to videos_url(organization_id: organization.id))
+          expect(response).to redirect_to videos_url(organization_id: organization.id)
         end
       end
     end
@@ -62,8 +64,9 @@ RSpec.describe 'Videos::Searches', type: :request do
         it '正常値レスポンス' do
           expect(response).to have_http_status '302'
         end
+
         it 'videos#indexにリダイレクトされる' do
-          expect(redirect_to videos_url(organization_id: organization.id))
+          expect(response).to redirect_to videos_url(organization_id: organization.id)
         end
       end
     end
@@ -78,8 +81,9 @@ RSpec.describe 'Videos::Searches', type: :request do
         it '正常値レスポンス' do
           expect(response).to have_http_status '302'
         end
+
         it 'videos#indexにリダイレクトされる' do
-          expect(redirect_to videos_url(organization_id: organization.id))
+          expect(response).to redirect_to videos_url(organization_id: organization.id)
         end
       end
     end
@@ -93,8 +97,9 @@ RSpec.describe 'Videos::Searches', type: :request do
         it '正常値レスポンス' do
           expect(response).to have_http_status '302'
         end
+
         it 'root_pathにリダイレクトされる' do
-          expect(redirect_to root_url)
+          expect(response).to redirect_to root_url
         end
       end
     end

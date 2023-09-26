@@ -81,7 +81,7 @@ class Video < ApplicationRecord
   end
 
   # ビデオ検索機能
-  scope :search, -> (search_params) do
+  scope :search, lambda { |search_params|
     # 検索フォームが空であれば何もしない
     return if search_params.blank?
 
@@ -91,20 +91,20 @@ class Video < ApplicationRecord
       .open_period_to(search_params[:open_period_to])
       .range(search_params[:range])
       .user_like(search_params[:user_name])
-  end
+  }
 
-  scope :title_like, -> (title) { where('title LIKE ?', "%#{title}%") if title.present? }
+  scope :title_like, ->(title) { where('title LIKE ?', "%#{title}%") if title.present? }
   # DBには世界時間で検索されるため9時間マイナスする必要がある
-  scope :open_period_from, -> (from) { where('? <= open_period', DateTime.parse(from) - 9.hours) if from.present? }
-  scope :open_period_to, -> (to) { where('open_period <= ?', DateTime.parse(to) - 9.hours) if to.present? }
-  scope :range, -> (range) { 
+  scope :open_period_from, ->(from) { where('? <= open_period', DateTime.parse(from) - 9.hours) if from.present? }
+  scope :open_period_to, ->(to) { where('open_period <= ?', DateTime.parse(to) - 9.hours) if to.present? }
+  scope :range, lambda { |range|
     if range.present?
-      if range == "all"
+      if range == 'all'
         return
       else
         where(range: range)
       end
     end
   }
-  scope :user_like, -> (user_name) { joins(:user).where('users.name LIKE ?', "%#{user_name}%") if user_name.present? }
+  scope :user_like, ->(user_name) { joins(:user).where('users.name LIKE ?', "%#{user_name}%") if user_name.present? }
 end
