@@ -35,8 +35,8 @@ gem 'bootsnap', '>= 1.9.3', require: false
 gem 'devise'
 gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
-gem 'rails-i18n', '~> 6.0'
 gem 'rails-html-sanitizer', '~> 1.4.3'
+gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
 gem 'font-awesome-rails'
