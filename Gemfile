@@ -42,6 +42,7 @@ gem 'font-awesome-rails'
 
 gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
+gem 'rails-html-sanitizer', '~> 1.4.3'
 
 group :development, :test do
   # ERD生成
