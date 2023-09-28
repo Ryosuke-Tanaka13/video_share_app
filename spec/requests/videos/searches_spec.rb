@@ -53,9 +53,10 @@ RSpec.describe 'Videos::Searches', type: :request do
     another_video_feb_private_another_user_staff
   end
 
+  # response.bodyに検索結果の動画リンクが含まれているかをテスト
   describe 'GET #search' do
     describe '正常' do
-      context 'システム管理者が現在のログインユーザーの場合' do
+      describe 'システム管理者が現在のログインユーザーの場合' do
         before(:each) do
           sign_in system_admin
           get videos_path(organization_id: organization.id)
@@ -72,12 +73,12 @@ RSpec.describe 'Videos::Searches', type: :request do
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -86,22 +87,22 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59'
+                  open_period_to:   '2023-01-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
-          context '公開期間のみ入力する場合' do
+          context '公開範囲のみ入力する場合' do
             it '公開範囲を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
@@ -113,10 +114,10 @@ RSpec.describe 'Videos::Searches', type: :request do
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -131,11 +132,11 @@ RSpec.describe 'Videos::Searches', type: :request do
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -143,20 +144,20 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトル、公開期間を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59'
+                  open_period_to:   '2023-01-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -165,18 +166,18 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画1月',
-                  range: 'true'
+                  range:      'true'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -185,18 +186,18 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画1月',
-                  user_name: 'オーナー'
+                  user_name:  'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -205,19 +206,19 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -226,19 +227,19 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -246,19 +247,19 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '公開範囲、動画投稿者を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  range: 'true',
+                  range:     'true',
                   user_name: 'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -266,21 +267,21 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトル、公開期間、公開範囲を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -288,21 +289,21 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトル、公開期間、動画投稿者を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -311,20 +312,20 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -332,22 +333,22 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトル、公開期間、公開範囲、動画投稿者を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
         end
@@ -361,14 +362,14 @@ RSpec.describe 'Videos::Searches', type: :request do
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -377,18 +378,18 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59'
+                  open_period_to:   '2022-12-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -400,14 +401,14 @@ RSpec.describe 'Videos::Searches', type: :request do
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -415,20 +416,20 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59'
+                  open_period_to:   '2022-12-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -436,39 +437,39 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトルを満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59'
+                  open_period_to:   '2023-01-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59'
+                  open_period_to:   '2022-12-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -477,36 +478,36 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画10月',
-                  range: 'all'
+                  range:      'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画1月',
-                  range: 'false'
+                  range:      'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -515,18 +516,18 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画10月',
-                  user_name: 'オーナー10'
+                  user_name:  'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -535,36 +536,36 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画10月',
-                  user_name: 'オーナー'
+                  user_name:  'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画1月',
-                  user_name: 'オーナー10'
+                  user_name:  'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -573,38 +574,38 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -613,19 +614,19 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -634,38 +635,38 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -673,159 +674,159 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  range: 'false',
+                  range:     'false',
                   user_name: 'スタッフ1'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  range: 'all',
+                  range:     'all',
                   user_name: 'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
-          
+
           context 'タイトル、公開期間、公開範囲いずれかを満たさない場合' do
             it 'タイトルのみを満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'all'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間のみを満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲のみを満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it 'タイトル、公開期間を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it 'タイトル、公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間、公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'false'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -833,21 +834,21 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -855,121 +856,121 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトルのみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間のみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者のみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it 'タイトル、公開期間を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it 'タイトル、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
-                  open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー10'
+                  title_like:       'テスト動画1月',
+                  open_period_from: '2023-06-01T00:00',
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -978,120 +979,120 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲のみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者のみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間、公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2023-06-30T23:59',
-                  range: 'false',
-                  user_name: 'スタッフ1'
+                  open_period_to:   '2023-06-30T23:59',
+                  range:            'false',
+                  user_name:        'スタッフ1'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2023-06-30T23:59',
-                  range: 'all',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-06-30T23:59',
+                  range:            'all',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1099,28 +1100,28 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
         end
       end
 
-      context 'オーナー、スタッフ、動画視聴者が現在のログインユーザーの場合' do
+      describe 'オーナー、スタッフ、動画視聴者が現在のログインユーザーの場合' do
         before(:each) do
           sign_in user_owner || user_staff || viewer
           get videos_path(organization_id: organization.id)
@@ -1136,13 +1137,13 @@ RSpec.describe 'Videos::Searches', type: :request do
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1151,22 +1152,22 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59'
+                  open_period_to:   '2023-01-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
-          context '公開期間のみ入力する場合' do
+          context '公開範囲のみ入力する場合' do
             it '公開範囲を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
@@ -1177,11 +1178,11 @@ RSpec.describe 'Videos::Searches', type: :request do
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1195,12 +1196,12 @@ RSpec.describe 'Videos::Searches', type: :request do
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1208,20 +1209,20 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトル、公開期間を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59'
+                  open_period_to:   '2023-01-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1230,18 +1231,18 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画1月',
-                  range: 'true'
+                  range:      'true'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1250,18 +1251,18 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画1月',
-                  user_name: 'オーナー'
+                  user_name:  'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1270,19 +1271,19 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1291,19 +1292,19 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1311,19 +1312,19 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '公開範囲、動画投稿者を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  range: 'true',
+                  range:     'true',
                   user_name: 'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1331,21 +1332,21 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトル、公開期間、公開範囲を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1353,21 +1354,21 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトル、公開期間、動画投稿者を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1376,20 +1377,20 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1397,22 +1398,22 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトル、公開期間、公開範囲、動画投稿者を満たす動画を取得すること' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
               expect(response.body).to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
         end
@@ -1426,14 +1427,14 @@ RSpec.describe 'Videos::Searches', type: :request do
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1442,18 +1443,18 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59'
+                  open_period_to:   '2022-12-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1465,14 +1466,14 @@ RSpec.describe 'Videos::Searches', type: :request do
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1480,20 +1481,20 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59'
+                  open_period_to:   '2022-12-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1501,39 +1502,39 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトルを満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59'
+                  open_period_to:   '2023-01-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59'
+                  open_period_to:   '2022-12-31T23:59'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1542,36 +1543,36 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画10月',
-                  range: 'all'
+                  range:      'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画1月',
-                  range: 'false'
+                  range:      'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1580,18 +1581,18 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画10月',
-                  user_name: 'オーナー10'
+                  user_name:  'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1600,36 +1601,36 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画10月',
-                  user_name: 'オーナー'
+                  user_name:  'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   title_like: 'テスト動画1月',
-                  user_name: 'オーナー10'
+                  user_name:  'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1638,38 +1639,38 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1678,19 +1679,19 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1699,38 +1700,38 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1738,139 +1739,139 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  range: 'false',
+                  range:     'false',
                   user_name: 'スタッフ1'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  range: 'all',
+                  range:     'all',
                   user_name: 'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
-          
+
           context 'タイトル、公開期間、公開範囲いずれかを満たさない場合' do
             it 'タイトルのみを満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'all'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間のみを満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲のみを満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it 'タイトル、公開期間を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it 'タイトル、公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1878,21 +1879,21 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -1900,121 +1901,121 @@ RSpec.describe 'Videos::Searches', type: :request do
             it 'タイトルのみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間のみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者のみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
+                  title_like:       'テスト動画1月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it 'タイトル、公開期間を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  user_name: 'オーナー'
+                  open_period_to:   '2022-12-31T23:59',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it 'タイトル、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画1月',
-                  open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  user_name: 'オーナー10'
+                  title_like:       'テスト動画1月',
+                  open_period_from: '2023-06-01T00:00',
+                  open_period_to:   '2023-12-31T23:59',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -2023,120 +2024,120 @@ RSpec.describe 'Videos::Searches', type: :request do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲のみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false',
-                  user_name: 'オーナー'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false',
+                  user_name:        'オーナー'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '動画投稿者のみ満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'true',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'true',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間、公開範囲を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2023-06-30T23:59',
-                  range: 'false',
-                  user_name: 'スタッフ1'
+                  open_period_to:   '2023-06-30T23:59',
+                  range:            'false',
+                  user_name:        'スタッフ1'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開期間、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2023-06-30T23:59',
-                  range: 'all',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
 
             it '公開範囲、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
                   open_period_from: '2023-01-01T00:00',
-                  open_period_to: '2023-01-31T23:59',
-                  range: 'false',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2023-01-31T23:59',
+                  range:            'false',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
 
@@ -2144,22 +2145,22 @@ RSpec.describe 'Videos::Searches', type: :request do
             it '公開範囲、動画投稿者を満たさない場合、動画を取得しないこと' do
               get videos_search_videos_path, params: {
                 search: {
-                  title_like: 'テスト動画10月',
+                  title_like:       'テスト動画10月',
                   open_period_from: '2023-06-01T00:00',
-                  open_period_to: '2022-12-31T23:59',
-                  range: 'all',
-                  user_name: 'オーナー10'
+                  open_period_to:   '2022-12-31T23:59',
+                  range:            'all',
+                  user_name:        'オーナー10'
                 }
               }
               expect(response).to have_http_status(:success)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
-              expect(response.body).to_not match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（論理削除済み）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画3月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画4月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画5月<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画1月（組織外）<\/a>/i)
+              expect(response.body).not_to match(/<a [^>]*href=['"][^'"]+['"][^>]*>テスト動画2月（組織外）<\/a>/i)
             end
           end
         end
@@ -2171,7 +2172,7 @@ RSpec.describe 'Videos::Searches', type: :request do
         before(:each) do
           get videos_search_videos_path
         end
-  
+
         it '正常値レスポンス' do
           expect(response).to have_http_status '302'
         end

@@ -62,14 +62,6 @@ RSpec.describe 'Videos::Searches', type: :system, js: true do
       describe 'システム管理者' do
         before(:each) do
           sign_in system_admin
-          video_jan_public_owner
-          invalid_video_jan_public_owner
-          video_feb_private_owner
-          video_mar_public_staff
-          video_apr_private_staff
-          video_may_public_staff1
-          another_video_jan_public_another_user_owner
-          another_video_feb_private_another_user_staff
           visit videos_path(organization_id: organization.id)
         end
 
@@ -673,15 +665,9 @@ RSpec.describe 'Videos::Searches', type: :system, js: true do
         end
       end
 
-      describe '動画投稿者または動画視聴者' do
+      describe 'オーナー、スタッフ、動画視聴者' do
         before(:each) do
           sign_in user_owner || user_staff || viewer
-          video_jan_public_owner
-          invalid_video_jan_public_owner
-          video_feb_private_owner
-          video_mar_public_staff
-          video_apr_private_staff
-          video_may_public_staff1
           visit videos_path(organization_id: organization.id)
         end
 
@@ -2181,14 +2167,6 @@ RSpec.describe 'Videos::Searches', type: :system, js: true do
       describe '組織外のアカウント' do
         before(:each) do
           sign_in another_user_owner || another_user_staff || another_viewer
-          video_jan_public_owner
-          invalid_video_jan_public_owner
-          video_feb_private_owner
-          video_mar_public_staff
-          video_apr_private_staff
-          video_may_public_staff1
-          another_video_jan_public_another_user_owner
-          another_video_feb_private_another_user_staff
           visit videos_path(organization_id: another_organization.id)
         end
 
