@@ -10,7 +10,7 @@
 <%= f.label :name %>
 <%= f.text_field :name, class: "form-control" %><br>
 <%= f.label :viewer %>
-<%= f.collection_select :viewer_ids, @viewers, :id, :name, {}, { class: 'form-control select2', id: 'viewer-select', multiple: true, style: "width: 100%" } %>
+<%= f.collection_select :viewer_ids, @viewers || [], :id, :name, {}, { class: 'form-control select2', id: 'viewer-select', multiple: true, style: "width: 100%" } %>
 
 <script>
   $(document).ready(function(){
