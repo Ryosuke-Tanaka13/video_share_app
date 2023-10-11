@@ -1,0 +1,552 @@
+[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31mF[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[33m*[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[33m*[0m[32m.[0m[32m.[0m[32m.[0m
+
+Pending: (Failures listed here are expected and do not affect your suite's status)
+[33m
+  1) Webhooks GET /index add some examples (or delete) /webapp/spec/requests/webhooks_spec.rb[0m
+     [36m# Not yet implemented[0m
+[36m     # ./spec/requests/webhooks_spec.rb:5
+[0m[33m
+  2) FolderSystem 正常 動画フォルダ一覧ページ 組織管理者 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:42
+[0m[33m
+  3) FolderSystem 正常 動画フォルダ一覧ページ 組織管理者 フォルダ削除[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:50
+[0m[33m
+  4) FolderSystem 正常 動画フォルダ一覧ページ 組織管理者 フォルダ削除キャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:59
+[0m[33m
+  5) FolderSystem 正常 動画フォルダ一覧ページ システム管理者 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:75
+[0m[33m
+  6) FolderSystem 正常 動画フォルダ一覧ページ 動画投稿者 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:91
+[0m[33m
+  7) FolderSystem 正常 モーダル画面 モーダルが表示されていること[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:109
+[0m[33m
+  8) FolderSystem 正常 モーダル画面 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:113
+[0m[33m
+  9) FolderSystem 正常 モーダル画面 新規作成でフォルダが作成される[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:119
+[0m[33m
+  10) FolderSystem 正常 名前更新 名前を更新する[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:134
+[0m[33m
+  11) FolderSystem 動画フォルダ詳細ページ システム管理者 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:153
+[0m[33m
+  12) FolderSystem 動画フォルダ詳細ページ システム管理者 フォルダ内から削除[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:161
+[0m[33m
+  13) FolderSystem 動画フォルダ詳細ページ システム管理者 フォルダ内から削除キャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:170
+[0m[33m
+  14) FolderSystem 動画フォルダ詳細ページ 組織管理者 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:186
+[0m[33m
+  15) FolderSystem 動画フォルダ詳細ページ 組織管理者 フォルダ内から削除[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:194
+[0m[33m
+  16) FolderSystem 動画フォルダ詳細ページ 組織管理者 フォルダ内から削除キャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:203
+[0m[33m
+  17) FolderSystem 動画フォルダ詳細ページ 動画投稿者本人 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:219
+[0m[33m
+  18) FolderSystem 動画フォルダ詳細ページ 動画投稿者本人 フォルダ内から削除[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:226
+[0m[33m
+  19) FolderSystem 動画フォルダ詳細ページ 動画投稿者本人 フォルダ内から削除キャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:235
+[0m[33m
+  20) FolderSystem 異常 モーダル画面 名前重複[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:255
+[0m[33m
+  21) FolderSystem 異常 モーダル画面 名前空白[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:261
+[0m[33m
+  22) FolderSystem 異常 フォルダ一覧画面 他の組織のフォルダは見れない[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:275
+[0m[33m
+  23) FolderSystem 異常 フォルダ一覧画面 名前が空白で更新できない[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:279
+[0m[33m
+  24) FolderSystem 異常 フォルダ一覧画面 名前が重複していて更新できない[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/folder_spec.rb:286
+[0m[33m
+  25) OrganizationSystem サイドバーの項目/遷移確認 システム管理者 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:38
+[0m[33m
+  26) OrganizationSystem サイドバーの項目/遷移確認 システム管理者 レコブルへの遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:59
+[0m[33m
+  27) OrganizationSystem サイドバーの項目/遷移確認 システム管理者 自身の名前への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:64
+[0m[33m
+  28) OrganizationSystem サイドバーの項目/遷移確認 システム管理者 組織一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:69
+[0m[33m
+  29) OrganizationSystem サイドバーの項目/遷移確認 システム管理者 アカウント編集への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:74
+[0m[33m
+  30) OrganizationSystem サイドバーの項目/遷移確認 オーナ レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:87
+[0m[33m
+  31) OrganizationSystem サイドバーの項目/遷移確認 オーナ レコブルへの遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:113
+[0m[33m
+  32) OrganizationSystem サイドバーの項目/遷移確認 オーナ 自身の名前への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:118
+[0m[33m
+  33) OrganizationSystem サイドバーの項目/遷移確認 オーナ 動画フォルダ一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:123
+[0m[33m
+  34) OrganizationSystem サイドバーの項目/遷移確認 オーナ 投稿者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:128
+[0m[33m
+  35) OrganizationSystem サイドバーの項目/遷移確認 オーナ 視聴者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:133
+[0m[33m
+  36) OrganizationSystem サイドバーの項目/遷移確認 オーナ アカウント編集への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:138
+[0m[33m
+  37) OrganizationSystem サイドバーの項目/遷移確認 動画投稿者 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:151
+[0m[33m
+  38) OrganizationSystem サイドバーの項目/遷移確認 動画投稿者 レコブルへの遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:163
+[0m[33m
+  39) OrganizationSystem サイドバーの項目/遷移確認 動画投稿者 自身の名前への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:168
+[0m[33m
+  40) OrganizationSystem サイドバーの項目/遷移確認 動画投稿者 動画フォルダ一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:173
+[0m[33m
+  41) OrganizationSystem サイドバーの項目/遷移確認 動画投稿者 視聴者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:178
+[0m[33m
+  42) OrganizationSystem サイドバーの項目/遷移確認 動画投稿者 アカウント編集への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:183
+[0m[33m
+  43) OrganizationSystem システム管理者操作 正常 組織一覧ページ レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:202
+[0m[33m
+  44) OrganizationSystem システム管理者操作 正常 組織一覧ページ organization詳細への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:207
+[0m[33m
+  45) OrganizationSystem システム管理者操作 正常 組織一覧ページ another_organization詳細への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:212
+[0m[33m
+  46) OrganizationSystem システム管理者操作 正常 組織一覧ページ organization削除[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:217
+[0m[33m
+  47) OrganizationSystem システム管理者操作 正常 組織一覧ページ another_organization削除キャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:226
+[0m[33m
+  48) OrganizationSystem システム管理者操作 正常 組織詳細 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:240
+[0m[33m
+  49) OrganizationSystem システム管理者操作 正常 組織詳細 編集への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:251
+[0m[33m
+  50) OrganizationSystem システム管理者操作 正常 組織詳細 退会への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:256
+[0m[33m
+  51) OrganizationSystem システム管理者操作 正常 組織詳細 投稿者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:261
+[0m[33m
+  52) OrganizationSystem システム管理者操作 正常 組織詳細 視聴者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:266
+[0m[33m
+  53) OrganizationSystem システム管理者操作 正常 組織詳細 動画フォルダ一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:271
+[0m[33m
+  54) OrganizationSystem システム管理者操作 正常 組織詳細 戻るの遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:276
+[0m[33m
+  55) OrganizationSystem オーナー操作 正常 組織詳細 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:296
+[0m[33m
+  56) OrganizationSystem オーナー操作 正常 組織詳細 編集への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:306
+[0m[33m
+  57) OrganizationSystem オーナー操作 正常 組織詳細 退会への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:311
+[0m[33m
+  58) OrganizationSystem オーナー操作 正常 組織詳細 投稿者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:316
+[0m[33m
+  59) OrganizationSystem オーナー操作 正常 組織詳細 視聴者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:321
+[0m[33m
+  60) OrganizationSystem オーナー操作 正常 組織詳細 動画フォルダ一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:326
+[0m[33m
+  61) OrganizationSystem オーナー操作 正常 組織編集 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:337
+[0m[33m
+  62) OrganizationSystem オーナー操作 正常 組織編集 更新で登録情報が更新される[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:344
+[0m[33m
+  63) OrganizationSystem オーナー操作 異常 組織編集 組織名空白[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:360
+[0m[33m
+  64) OrganizationSystem オーナー操作 異常 組織編集 組織名10文字以上[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:367
+[0m[33m
+  65) OrganizationSystem オーナー操作 異常 組織編集 組織のEメール空白[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:374
+[0m[33m
+  66) OrganizationSystem オーナー操作 異常 組織編集 組織のEメール重複[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:381
+[0m[33m
+  67) OrganizationSystem スタッフ操作 正常 組織詳細 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:403
+[0m[33m
+  68) OrganizationSystem スタッフ操作 正常 組織詳細 投稿者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:411
+[0m[33m
+  69) OrganizationSystem スタッフ操作 正常 組織詳細 視聴者一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:416
+[0m[33m
+  70) OrganizationSystem スタッフ操作 正常 組織詳細 動画フォルダ一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/organizations/organization_spec.rb:421
+[0m[33m
+  71) VideoUnsubscribeSystem 動画論理削除 正常 システム管理者orオーナー レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/hidden_spec.rb:25
+[0m[33m
+  72) VideoUnsubscribeSystem 動画論理削除 正常 システム管理者orオーナー 詳細へ遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/hidden_spec.rb:30
+[0m[33m
+  73) VideoUnsubscribeSystem 動画論理削除 正常 システム管理者orオーナー 論理削除する[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/hidden_spec.rb:35
+[0m[33m
+  74) VideosSystem 正常 動画一覧ページ レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:46
+[0m[33m
+  75) VideosSystem 正常 動画一覧ページ 動画削除[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:53
+[0m[33m
+  76) VideosSystem 正常 動画一覧ページ 動画削除キャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:62
+[0m[33m
+  77) VideosSystem 正常 動画詳細 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:77
+[0m[33m
+  78) VideosSystem 正常 モーダル画面 モーダルが表示されていること[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:91
+[0m[33m
+  79) VideosSystem 正常 モーダル画面 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:95
+[0m[33m
+  80) VideosSystem 正常 モーダル画面 設定を変更で動画情報が更新される[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:109
+[0m[33m
+  81) VideosSystem 正常 動画投稿画面 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:129
+[0m[33m
+  82) VideosSystem 異常 動画投稿画面 タイトル空白[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:170
+[0m[33m
+  83) VideosSystem 異常 動画投稿画面 タイトル重複[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:177
+[0m[33m
+  84) VideosSystem 異常 動画投稿画面 動画データ空白[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:184
+[0m[33m
+  85) VideosSystem 異常 動画投稿画面 動画以外のファイル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:190
+[0m[33m
+  86) VideosSystem 異常 モーダル画面 タイトル重複[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:206
+[0m[33m
+  87) VideosSystem 異常 モーダル画面 タイトル空白[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:212
+[0m[33m
+  88) VideosSystem 異常 動画一覧画面(オーナー、動画投稿者) レイアウトに削除リンクなし[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:226
+[0m[33m
+  89) VideosSystem 異常 動画一覧画面(視聴者) レイアウトに設定リンク、削除リンクなし[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:239
+[0m[33m
+  90) VideosSystem 異常 モーダル画面(システム管理者、オーナー、動画投稿者本人以外) モーダルが表示されていること[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:253
+[0m[33m
+  91) VideosSystem 異常 モーダル画面(システム管理者、オーナー、動画投稿者本人以外) レイアウトに設定を変更リンクなし[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:257
+[0m[33m
+  92) VideosSystem 異常 動画詳細(動画投稿者) レイアウトに論理削除リンクなし[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:278
+[0m[33m
+  93) VideosSystem 異常 動画詳細(視聴者) レイアウトに設定リンクと論理削除リンクなし[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:290
+[0m[33m
+  94) VideosSystem 異常 動画詳細(非ログイン) レイアウトに設定リンクと論理削除リンクなし[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/videos/videos_spec.rb:302
+[0m[33m
+  95) ViewerSystem サイドバーの項目/遷移確認 視聴者 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:39
+[0m[33m
+  96) ViewerSystem サイドバーの項目/遷移確認 視聴者 自身の名前への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:45
+[0m[33m
+  97) ViewerSystem サイドバーの項目/遷移確認 視聴者 動画一覧への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:50
+[0m[33m
+  98) ViewerSystem サイドバーの項目/遷移確認 視聴者 アカウント編集への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:55
+[0m[33m
+  99) ViewerSystem システム管理者操作 正常 視聴者一覧ページ レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:74
+[0m[33m
+  100) ViewerSystem システム管理者操作 正常 視聴者一覧ページ 視聴者詳細への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:81
+[0m[33m
+  101) ViewerSystem システム管理者操作 正常 視聴者一覧ページ 視聴者1詳細への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:86
+[0m[33m
+  102) ViewerSystem システム管理者操作 正常 視聴者一覧ページ 視聴者削除[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:91
+[0m[33m
+  103) ViewerSystem システム管理者操作 正常 視聴者一覧ページ 視聴者削除キャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:100
+[0m[33m
+  104) ViewerSystem システム管理者操作 正常 視聴者一覧ページ 視聴者1削除[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:108
+[0m[33m
+  105) ViewerSystem システム管理者操作 正常 視聴者一覧ページ 視聴者1削除キャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:117
+[0m[33m
+  106) ViewerSystem システム管理者操作 正常 視聴者詳細 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:131
+[0m[33m
+  107) ViewerSystem システム管理者操作 正常 視聴者詳細 セレブエンジニアへの遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:140
+[0m[33m
+  108) ViewerSystem システム管理者操作 正常 視聴者詳細 脱退する[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:145
+[0m[33m
+  109) ViewerSystem システム管理者操作 正常 視聴者詳細 脱退するをキャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:154
+[0m[33m
+  110) ViewerSystem システム管理者操作 正常 視聴者詳細 編集への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:162
+[0m[33m
+  111) ViewerSystem システム管理者操作 正常 視聴者詳細 退会への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:167
+[0m[33m
+  112) ViewerSystem オーナー操作 正常 視聴者一覧ページ レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:187
+[0m[33m
+  113) ViewerSystem オーナー操作 正常 視聴者一覧ページ 視聴者詳細への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:192
+[0m[33m
+  114) ViewerSystem オーナー操作 正常 視聴者一覧ページ 視聴者1詳細への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:197
+[0m[33m
+  115) ViewerSystem オーナー操作 正常 視聴者詳細 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:208
+[0m[33m
+  116) ViewerSystem オーナー操作 正常 視聴者詳細 セレブエンジニアへの遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:215
+[0m[33m
+  117) ViewerSystem オーナー操作 正常 視聴者詳細 脱退する[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:220
+[0m[33m
+  118) ViewerSystem オーナー操作 正常 視聴者詳細 脱退するをキャンセル[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:229
+[0m[33m
+  119) ViewerSystem スタッフ操作 正常 視聴者一覧ページ レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:252
+[0m[33m
+  120) ViewerSystem 視聴者操作 正常 視聴者詳細 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:272
+[0m[33m
+  121) ViewerSystem 視聴者操作 正常 視聴者詳細 編集への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:279
+[0m[33m
+  122) ViewerSystem 視聴者操作 正常 視聴者詳細 退会への遷移[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:284
+[0m[33m
+  123) ViewerSystem 視聴者操作 正常 視聴者編集 レイアウト[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:295
+[0m[33m
+  124) ViewerSystem 視聴者操作 正常 視聴者編集 更新で登録情報が更新される[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:302
+[0m[33m
+  125) ViewerSystem 視聴者操作 異常 視聴者編集 Name空白[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:318
+[0m[33m
+  126) ViewerSystem 視聴者操作 異常 視聴者編集 Name10文字以上[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:325
+[0m[33m
+  127) ViewerSystem 視聴者操作 異常 視聴者編集 Eメール空白[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:332
+[0m[33m
+  128) ViewerSystem 視聴者操作 異常 視聴者編集 Eメール重複[0m
+     [36m# Temporarily skipped with xdescribe[0m
+[36m     # ./spec/system/viewers/viewer_spec.rb:339
+[0m
+
+Failures:
+
+  1) Organizations::Payments GET /new returns http success
+     [31mFailure/Error: [0mget [31m[1;31m"[0m[31m/organizations/payments/new[1;31m"[0m[31m[0m[0m
+     [31m[0m
+     [31mActionController::RoutingError:[0m
+     [31m  No route matches [GET] "/organizations/payments/new"[0m
+     [36m# /usr/local/bundle/gems/railties-6.1.3.2/lib/rails/rack/logger.rb:37:in `call_app'[0m
+     [36m# /usr/local/bundle/gems/railties-6.1.3.2/lib/rails/rack/logger.rb:26:in `block in call'[0m
+     [36m# /usr/local/bundle/gems/railties-6.1.3.2/lib/rails/rack/logger.rb:26:in `call'[0m
+     [36m# /usr/local/bundle/gems/rack-2.2.3/lib/rack/method_override.rb:24:in `call'[0m
+     [36m# /usr/local/bundle/gems/rack-2.2.3/lib/rack/runtime.rb:22:in `call'[0m
+     [36m# /usr/local/bundle/gems/rack-2.2.3/lib/rack/sendfile.rb:110:in `call'[0m
+     [36m# /usr/local/bundle/gems/railties-6.1.3.2/lib/rails/engine.rb:539:in `call'[0m
+     [36m# /usr/local/bundle/gems/rack-test-1.1.0/lib/rack/mock_session.rb:29:in `request'[0m
+     [36m# /usr/local/bundle/gems/rack-test-1.1.0/lib/rack/test.rb:266:in `process_request'[0m
+     [36m# /usr/local/bundle/gems/rack-test-1.1.0/lib/rack/test.rb:119:in `request'[0m
+     [36m# /usr/local/bundle/gems/rails-controller-testing-1.0.5/lib/rails/controller/testing/integration.rb:16:in `block (2 levels) in <module:Integration>'[0m
+     [36m# ./spec/requests/organizations/payments_spec.rb:6:in `block (3 levels) in <top (required)>'[0m
+     [36m# ./spec/rails_helper.rb:76:in `block (3 levels) in <top (required)>'[0m
+     [36m# /usr/local/bundle/gems/bullet-7.0.1/lib/bullet.rb:225:in `profile'[0m
+     [36m# ./spec/rails_helper.rb:75:in `block (2 levels) in <top (required)>'[0m
+     [36m# ./spec/rails_helper.rb:70:in `block (3 levels) in <top (required)>'[0m
+     [36m# /usr/local/bundle/gems/database_cleaner-core-2.0.1/lib/database_cleaner/strategy.rb:30:in `cleaning'[0m
+     [36m# /usr/local/bundle/gems/database_cleaner-core-2.0.1/lib/database_cleaner/cleaners.rb:34:in `block (2 levels) in cleaning'[0m
+     [36m# /usr/local/bundle/gems/database_cleaner-core-2.0.1/lib/database_cleaner/cleaners.rb:35:in `cleaning'[0m
+     [36m# ./spec/rails_helper.rb:69:in `block (2 levels) in <top (required)>'[0m
+
+Finished in 3 minutes 57.4 seconds (files took 2.91 seconds to load)
+[31m853 examples, 1 failure, 128 pending[0m
+
+Failed examples:
+
+[31mrspec ./spec/requests/organizations/payments_spec.rb:5[0m [36m# Organizations::Payments GET /new returns http success[0m
+

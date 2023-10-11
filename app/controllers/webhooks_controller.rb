@@ -5,7 +5,6 @@ class WebhooksController < ApplicationController
     webhook_secret = 'whsec_fbe2782c23506ffe71631ea6df862a52fac7f8518564a10d94fe2a864284cbb8'
     payload = request.body.read
     if !webhook_secret.empty?
-      # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
       sig_header = request.env['HTTP_STRIPE_SIGNATURE']
       event = nil
   
@@ -72,7 +71,7 @@ class WebhooksController < ApplicationController
       session = event.data.object
       organization = Organization.find_by(customer_id: session.customer)
       ApplicationRecord.transaction do
-        organization.plan = nil
+        organization.plan = -1
         organization.payment_success = false
         organization.subscription_id = nil
         organization.save!

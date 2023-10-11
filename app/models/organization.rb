@@ -10,7 +10,7 @@ class Organization < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validates :name,  presence: true, length: { in: 1..10 }
-  validates :plan, inclusion: { in: [0, 1000, 2000] }, allow_nil: true
+  validates :plan, inclusion: { in: [-1, 0, 1000, 2000] }, allow_nil: true
   validates :customer_id, uniqueness: true, allow_nil: true
   validates :subscription_id, uniqueness: true, allow_nil: true
 

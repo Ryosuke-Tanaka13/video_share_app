@@ -149,7 +149,7 @@ RSpec.describe Organization, type: :model do
 
       context '0, 1000, 2000を代入した場合' do
         it 'バリデーションが通ること' do
-          [0, 1000, 2000].each do |valid_plan|
+          [-1, 0, 1000, 2000].each do |valid_plan|
             subject.plan = valid_plan
             expect(subject).to be_valid
           end
