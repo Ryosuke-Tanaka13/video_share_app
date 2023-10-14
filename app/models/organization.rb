@@ -46,4 +46,9 @@ class Organization < ApplicationRecord
     end
     all_valid
   end
+
+  # 支払い失敗を判定するメソッド
+  def payment_failed?
+    plan.nil? || plan == -1
+  end
 end

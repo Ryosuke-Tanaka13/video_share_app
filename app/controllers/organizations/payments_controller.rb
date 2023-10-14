@@ -1,5 +1,5 @@
 class Organizations::PaymentsController < ApplicationController
-  before_action :ensure_admin_or_owner_of_set_organization
+  before_action :ensure_owner_of_set_organization
   layout 'payments'
 
   def new
@@ -52,9 +52,9 @@ class Organizations::PaymentsController < ApplicationController
     )
   end
 
-  # システム管理者　set_organizationのオーナー　のみ許可
-  def ensure_admin_or_owner_of_set_organization
-    if !current_system_admin? && (current_user&.role != 'owner' || !user_of_set_organization?)
+  # set_organizationのオーナーのみ許可
+  def ensure_owner_of_set_organization
+    unless current_user&.role == 'owner' && user_of_set_organization?
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_url)
     end

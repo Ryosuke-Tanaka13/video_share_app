@@ -17,7 +17,7 @@
         </tr>
         <tr>
           <th>プラン</th>
-          <% if @organization.plan.nil? || @organization.plan == -1 %>
+          <% if @organization.payment_failed? %>
             <td>プランを選択してください。</td>
           <% else %>
             <td><%= @organization.plan %>円プラン</td>

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Organizations::Payments", type: :request do
+RSpec.describe 'Organizations::Payments', type: :request do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:system_admin) { create(:system_admin) }
@@ -24,15 +24,15 @@ RSpec.describe "Organizations::Payments", type: :request do
   end
 
   describe 'GET #new' do
-    describe "正常" do
-      context "正規オーナー"do
+    describe '正常' do
+      context '正規オーナー' do
         before(:each) do
           login_session(user_owner)
           current_user(user_owner)
           get new_organizations_payment_path(organization)
         end
 
-        it "レスポンスに成功する" do
+        it 'レスポンスに成功する' do
           expect(response).to have_http_status(:success)
         end
 
@@ -42,12 +42,12 @@ RSpec.describe "Organizations::Payments", type: :request do
       end
     end
 
-    describe "異常" do
-      context "システム管理者"do
+    describe '異常' do
+      context 'システム管理者' do
         before(:each) do
           login_session(system_admin)
-          current_user(system_admin)
-          get organizations_path
+          current_system_admin(system_admin)
+          get new_organizations_payment_path(organization)
         end
 
         it 'アクセス権限なしのためリダイレクト' do
@@ -56,11 +56,11 @@ RSpec.describe "Organizations::Payments", type: :request do
         end
       end
 
-      context "別組織のオーナー"do
+      context '別組織のオーナー' do
         before(:each) do
           login_session(another_user_owner)
           current_user(another_user_owner)
-          get organizations_path
+          get new_organizations_payment_path(organization)
         end
 
         it 'アクセス権限なしのためリダイレクト' do
@@ -69,11 +69,11 @@ RSpec.describe "Organizations::Payments", type: :request do
         end
       end
 
-      context "スタッフ"do
+      context 'スタッフ' do
         before(:each) do
           login_session(user_staff)
           current_user(user_staff)
-          get organizations_path
+          get new_organizations_payment_path(organization)
         end
 
         it 'アクセス権限なしのためリダイレクト' do
@@ -82,11 +82,11 @@ RSpec.describe "Organizations::Payments", type: :request do
         end
       end
 
-      context "視聴者"do
+      context '視聴者' do
         before(:each) do
           login_session(viewer)
-          current_user(viewer)
-          get organizations_path
+          current_viewer(viewer)
+          get new_organizations_payment_path(organization)
         end
 
         it 'アクセス権限なしのためリダイレクト' do
