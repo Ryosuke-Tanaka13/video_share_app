@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_27_114800) do
+ActiveRecord::Schema.define(version: 2023_07_08_203829) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -80,6 +80,10 @@ ActiveRecord::Schema.define(version: 2022_11_27_114800) do
     t.boolean "is_valid", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "plan"
+    t.boolean "payment_success", default: false
+    t.string "customer_id"
+    t.string "subscription_id"
   end
 
   create_table "replies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -237,14 +241,14 @@ ActiveRecord::Schema.define(version: 2022_11_27_114800) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
-  add_foreign_key "video_folders", "folders"
-  add_foreign_key "video_folders", "videos"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"
   add_foreign_key "replies", "system_admins"
   add_foreign_key "replies", "users"
   add_foreign_key "replies", "viewers"
   add_foreign_key "users", "organizations"
+  add_foreign_key "video_folders", "folders"
+  add_foreign_key "video_folders", "videos"
   add_foreign_key "videos", "organizations"
   add_foreign_key "videos", "users"
 end
