@@ -339,9 +339,9 @@ document.addEventListener("turbolinks:load", () => {
     }
   
     // マイクリストのid
-    var micList = document.getElementById("mic_list");
+    const micList = document.getElementById("mic_list");
     // カメラリストのid
-    var cameraList = document.getElementById("camera_list");
+    const cameraList = document.getElementById("camera_list");
   
     // デバイス情報（マイク・カメラ）を初期化
     function clearDeviceList() {
@@ -356,17 +356,17 @@ document.addEventListener("turbolinks:load", () => {
     // デバイスをリストへ追加する
     function addDevice(device) {
       if (device.kind === 'audioinput') {
-        var id = device.deviceId;
-        var label = device.label || 'microphone'; // label is available for https 
-        var option = document.createElement('option');
+        const id = device.deviceId;
+        const label = device.label || 'microphone'; // label is available for https 
+        const option = document.createElement('option');
         option.setAttribute('value', id);
         option.innerHTML = label + '(' + id + ')';
         micList.appendChild(option);
       }
       else if (device.kind === 'videoinput') {
-        var id = device.deviceId;
-        var label = device.label || 'camera'; // label is available for https 
-        var option = document.createElement('option');
+        const id = device.deviceId;
+        const label = device.label || 'camera'; // label is available for https 
+        const option = document.createElement('option');
         option.setAttribute('value', id);
         option.innerHTML = label + '(' + id + ')';
         cameraList.appendChild(option);
@@ -391,13 +391,13 @@ document.addEventListener("turbolinks:load", () => {
   
     // カメラデバイスを取得する
     function getSelectedVideo() {
-      var id = cameraList.options[cameraList.selectedIndex].value;
+      const id = cameraList.options[cameraList.selectedIndex].value;
       return id;
     }
   
     // マイクデバイスを取得
     function getSelectedAudio() {
-      var id = micList.options[micList.selectedIndex].value;
+      const id = micList.options[micList.selectedIndex].value;
       return id;
     }
   
@@ -412,13 +412,13 @@ document.addEventListener("turbolinks:load", () => {
     // デバイスの選択を反映する
     function startSelectedVideoAudio() {
       // マイクデバイスのid
-      var audioId = getSelectedAudio();
+      const audioId = getSelectedAudio();
       // カメラデバイスのid
-      var deviceId = getSelectedVideo();
+      const deviceId = getSelectedVideo();
       console.log('selected video device id=' + deviceId + ' ,  audio=' + audioId);
   
       // カメラデバイスの制約
-      var video_constraints = {
+      const video_constraints = {
         video: { 
         deviceId: deviceId
         }
@@ -426,7 +426,7 @@ document.addEventListener("turbolinks:load", () => {
       console.log('mediaDevice.getMedia() constraints:', video_constraints);
   
       // マイクデバイスの制約
-      var audio_constraints = {
+      const audio_constraints = {
         audio: {
         deviceId: audioId
         }
