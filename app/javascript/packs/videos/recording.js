@@ -21,7 +21,6 @@ document.addEventListener("turbolinks:load", () => {
     const micAudio = document.getElementById("mic-audio");
   
     // 画面キャプチャ用
-    let screenCaptureStream;
     let videoStream;
     let audioStream;
     let audioMicStream;
@@ -33,22 +32,21 @@ document.addEventListener("turbolinks:load", () => {
       .then(stream => {
         webCamera.srcObject = stream;
       })
-      .catch(e => alert("error" + e.message));
+      .catch(e => alert("errorcamera" + e.message));
       stopWebCameraButton.disabled = false;
     }
     // webカメラOFFボタン
     const stopWebCameraButton = document.getElementById("stop-web-camera");
     // webカメラOFFボタン　→　webカメラ映像が停止する
     stopWebCameraButton.addEventListener("click", stopWebCamera);
-      function stopWebCamera() {
+    function stopWebCamera() {
       const tracks = webCamera.srcObject.getTracks();
       tracks.forEach(track => track.stop());
       webCamera.srcObject = null; // <video>要素の映像をクリアする
       stopCanvas(); // 映像自体消えないので視覚的に隠す
       stopWebCameraButton.disabled = true;
     }
-  
-  
+
     // 画面キャプチャ映像取得
     function getScreenCapture(screenCapture, browserAudio) {
       // 画面キャプチャの取得内容設定
@@ -61,9 +59,7 @@ document.addEventListener("turbolinks:load", () => {
   
       navigator.mediaDevices
       .getDisplayMedia(displayMediaOptions)
-      .then(stream => {
-        screenCaptureStream = stream;
-  
+      .then(stream => {  
         // 映像トラックを抽出して、videoタグに設定する
         const videoTracks = stream.getVideoTracks();
         if (videoTracks.length > 0) {
@@ -78,7 +74,7 @@ document.addEventListener("turbolinks:load", () => {
           browserAudio.srcObject = audioStream;
         }
         })
-      .catch(e => alert("error" + e.message));
+      .catch(e => alert("errorscreen" + e.message));
       stopScreenCaptureButton.disabled = false;
       stopBrowserAudioButton.disabled = false;
     }
@@ -94,6 +90,7 @@ document.addEventListener("turbolinks:load", () => {
         videoStream.getVideoTracks()[0].stop();
         // 映像トラックをnullに設定
         videoStream = null;
+        screenCapture.srcObject = null;
       }
       stopCanvas(); // 映像自体消えないので視覚的に隠す
       stopScreenCaptureButton.disabled = true;
@@ -115,6 +112,7 @@ document.addEventListener("turbolinks:load", () => {
         audioStream.getAudioTracks()[0].stop();
         // 音声トラックをnullに設定
         audioStream = null;
+        browserAudio.srcObject = null;
       }
     }
     // ブラウザ音声停止ボタンがクリックされたときの処理
@@ -125,15 +123,15 @@ document.addEventListener("turbolinks:load", () => {
   
     //マイク音声の取得
     function getMicrophoneAudio(micAudio) {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-          .then(stream => {
-            audioMicStream = stream;
-            micAudio.srcObject = stream;
-          })
-          .catch(e => alert("error" + e.message));
-          muteButton.disabled = false;     
-      }
-      // ブラウザ音声停止ボタンを取得
+      navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        audioMicStream = stream;
+        micAudio.srcObject = stream;
+      })
+      .catch(e => alert("errormic" + e.message));
+      muteButton.disabled = false;     
+    }
+      // マイク音声停止ボタンを取得
     const muteButton = document.getElementById('muteButton');
     function stopMicAudio(){
       // 音声トラックが存在する場合
@@ -142,15 +140,16 @@ document.addEventListener("turbolinks:load", () => {
         audioMicStream.getAudioTracks()[0].stop();
         // 音声トラックをnullに設定
         audioMicStream = null;
+        micAudio.srcObject = null;
       }
     }
-    // ブラウザ音声停止ボタンがクリックされたときの処理
+    // マイク音声停止ボタンがクリックされたときの処理
     muteButton.addEventListener("click", () => {
       stopMicAudio();
       muteButton.disabled = true;
     });
   
-    //blobにイベントデータをpush
+    // blobにイベントデータをpush
     function handleDataAvailable(event) {
       if (event.data && event.data.size > 0) {
         recordedBlobs.push(event.data);
@@ -178,15 +177,13 @@ document.addEventListener("turbolinks:load", () => {
   
       return mergedStream;
     }
-  
-  
+
     // 録画開始ボタン開始をクリックで発火 → キャンバス映像と音声データの合成
     function startRecording() {
       const ms = new MediaStream();
       const micAudioStream = micAudio.srcObject;
       const browserAudioStream = browserAudio.srcObject;
-  
-  
+
       // 映像がない場合はキャンバスを録画しない
       if (webCamera.srcObject || videoStream) {
         ms.addTrack(canvasStream.getTracks()[0]);
@@ -199,14 +196,13 @@ document.addEventListener("turbolinks:load", () => {
       }
   
       recordedBlobs = [];
-      // const options = { mimeType: "video/webm;codecs=vp9" };
       let options; 
       if (webCamera.srcObject || videoStream) {
         options = { mimeType: "video/webm;codecs=vp9" };
       } else {
         options = { mimeType: "audio/webm" };
       }
-  
+
       try {
         mediaRecorder = new MediaRecorder(ms, options);
       } catch (error) {
@@ -214,7 +210,6 @@ document.addEventListener("turbolinks:load", () => {
         return;
       }
   
-      console.log("Created MediaRecorder", mediaRecorder);
       recordButton.textContent = "録画停止";
       playButton.disabled = true;
       downloadButton.disabled = true;
@@ -228,18 +223,17 @@ document.addEventListener("turbolinks:load", () => {
       console.log("MediaRecorder started", mediaRecorder);
     }
   
-    // 録画停止ボタンクリックで発火 → 録画がストップする
+    // 録画停止ボタンクリックで発火 → 録画がストップするメソッド
     function stopRecording() {
       mediaRecorder.stop();
       console.log("Recorded media.");
     }
   
-    // 録画開始ボタンをクリックで発火 → 録画が開始される
+    // 録画開始or停止ボタンをクリックで発火 → 録画が開始or停止される
     recordButton.addEventListener("click", () => {
       if (recordButton.textContent === "録画開始") {
         clearRecordedVideo();
         startRecording();
-  
       } else {
         stopRecording();
         recordButton.textContent = "録画開始";
@@ -279,6 +273,7 @@ document.addEventListener("turbolinks:load", () => {
   
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
+      a.id = "download-link";
       a.style.display = "none";
       a.href = url;
       a.download = "rec.webm";
@@ -289,8 +284,7 @@ document.addEventListener("turbolinks:load", () => {
         window.URL.revokeObjectURL(url);
       }, 100);
     });
-  
-  
+
     // デバイス取得ボタンを
     const streamButton = document.getElementById("stream");
     // キャンバス伝達変数にnullを代入
@@ -302,7 +296,7 @@ document.addEventListener("turbolinks:load", () => {
       canvas.style.display = "block";
       // デバイスリストの表示
       getDeviceList();
-      // 録画ボタンの無効化
+      // 録画ボタンの有効化
       recordButton.disabled = false;
   
       // webカメラ映像取得
@@ -357,7 +351,7 @@ document.addEventListener("turbolinks:load", () => {
     function addDevice(device) {
       if (device.kind === 'audioinput') {
         const id = device.deviceId;
-        const label = device.label || 'microphone'; // label is available for https 
+        const label = device.label || 'microphone';
         const option = document.createElement('option');
         option.setAttribute('value', id);
         option.innerHTML = label + '(' + id + ')';
@@ -365,7 +359,7 @@ document.addEventListener("turbolinks:load", () => {
       }
       else if (device.kind === 'videoinput') {
         const id = device.deviceId;
-        const label = device.label || 'camera'; // label is available for https 
+        const label = device.label || 'camera';
         const option = document.createElement('option');
         option.setAttribute('value', id);
         option.innerHTML = label + '(' + id + ')';
@@ -379,8 +373,6 @@ document.addEventListener("turbolinks:load", () => {
       navigator.mediaDevices.enumerateDevices()
       .then(function(devices) {
         devices.forEach(function(device) {
-          console.log(device.kind + ": " + device.label +
-                      " id = " + device.deviceId);
           addDevice(device);
         });
       })
