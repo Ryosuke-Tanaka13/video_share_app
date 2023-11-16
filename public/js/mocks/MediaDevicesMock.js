@@ -1,4 +1,4 @@
-navigator.mediaDevices.originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+navigator.mediaDevices.originalGetUserMedia = navigator.mediaDevices.getUserMedia
 
 // 自動テスト用のダミーデバイスを取得
 
@@ -43,17 +43,15 @@ navigator.mediaDevices.getUserMedia = function(constraints) {
       resolve(createDummyAudioStream());
     } else if(constraints.video) {
       video_user_media += 2;
-      navigator.mediaDevices.originalGetUserMedia(constraints).then(resolve).catch(reject);
+      resolve(createDummyVideoStream());
     } else if(constraints.audio) {
       audio_user_media += 2;
-      navigator.mediaDevices.originalGetUserMedia(constraints).then(resolve).catch(reject);
+      resolve(createDummyAudioStream());
     } else {
       reject(new Error("No constraints provided"));
     }
   });
 };
-
-// ダミーデバイス取得用のメソッド
 
 const videoDevice1 ={
   deviceId: "videoDevice1",
@@ -81,6 +79,7 @@ const audioDevice2 ={
 };
 const devices = [videoDevice1,videoDevice2, audioDevice1, audioDevice2];
 
+// ダミーデバイス取得用のメソッド
 navigator.mediaDevices.enumerateDevices = function() {
   return new Promise((resolve, reject) => {
     resolve(devices);
