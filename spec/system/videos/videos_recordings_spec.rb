@@ -45,10 +45,10 @@ RSpec.describe 'Videos::Recordings', type: :system do
         expect(page).to have_button('record-button', disabled: true, text: '録画開始')
         expect(page).to have_button('play-button', disabled: true)
         expect(page).to have_button('download-button', disabled: true)
-        expect(page).to have_css('canvas[width="640px"][height="360px"]', visible: true)
-        expect(page).to have_selector('video#web-camera[playsinline][autoplay]', visible: false)
-        expect(page).to have_selector('video#screen-capture[autoplay]', visible: false)
-        expect(page).to have_selector('video#player-canvas[controls][autoplay][width="640px"][height="360px"]', visible: false)
+        expect(page).to have_css('canvas[width="640px"][height="360px"]', visible: :visible)
+        expect(page).to have_selector('video#web-camera[playsinline][autoplay]', visible: :hidden)
+        expect(page).to have_selector('video#screen-capture[autoplay]', visible: :hidden)
+        expect(page).to have_selector('video#player-canvas[controls][autoplay][width="640px"][height="360px"]', visible: :hidden)
         expect(page).to have_selector('audio#browser-audio[controls][autoplay][muted]')
         expect(page).to have_selector('audio#mic-audio[controls][autoplay][muted]')
         expect(page).to have_selector('video#recorded-video[playsinline][width="480"][height="270"][loop]')
@@ -156,7 +156,7 @@ RSpec.describe 'Videos::Recordings', type: :system do
         it '画面キャプチャ、webカメラを停止' do
           click_button 'webカメラを停止'
           click_button '画面キャプチャを停止'
-          expect(page).to have_css('canvas[style*="display: none;"]', visible: false)
+          expect(page).to have_css('canvas[style*="display: none;"]', visible: :hidden)
         end
 
         it 'ブラウザ音声を削除' do
@@ -218,7 +218,7 @@ RSpec.describe 'Videos::Recordings', type: :system do
 
             it 'ダウンロード' do
               click_button 'ダウンロード'
-              expect(page).to have_selector('a[style*="display: none;"]', visible: false)
+              expect(page).to have_selector('a[style*="display: none;"]', visible: :hidden)
               # 動画のURLが生成されたことを確認
               video_url = page.evaluate_script('document.getElementById("download-link").href')
               expect(video_url).to start_with('blob:')

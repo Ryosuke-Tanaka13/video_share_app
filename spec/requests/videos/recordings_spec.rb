@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Videos::Recordings", type: :request do
+RSpec.describe 'Videos::Recordings', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -15,7 +15,7 @@ RSpec.describe "Videos::Recordings", type: :request do
     user_staff
     viewer
   end
-  
+
   describe 'GET #new' do
     describe '正常' do
       context 'オーナー' do
@@ -30,7 +30,7 @@ RSpec.describe "Videos::Recordings", type: :request do
         end
 
         it '正常値レスポンス' do
-          expect(response).to have_http_status '200'
+          expect(response).to have_http_status :ok
         end
       end
 
@@ -46,7 +46,7 @@ RSpec.describe "Videos::Recordings", type: :request do
         end
 
         it '正常値レスポンス' do
-          expect(response).to have_http_status '200'
+          expect(response).to have_http_status :ok
         end
       end
     end
@@ -60,7 +60,7 @@ RSpec.describe "Videos::Recordings", type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status :found
           expect(response).to redirect_to root_url
         end
       end
@@ -73,7 +73,7 @@ RSpec.describe "Videos::Recordings", type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status :found
           expect(response).to redirect_to root_url
         end
       end

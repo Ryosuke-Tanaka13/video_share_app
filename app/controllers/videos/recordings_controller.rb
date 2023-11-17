@@ -2,9 +2,10 @@ class Videos::RecordingsController < ApplicationController
   before_action :ensure_current_user
   layout 'recordings'
 
-  def new;end
+  def new; end
 
   private
+
   # オーナー、動画投稿者のみ許可
   def ensure_current_user
     unless current_user?
