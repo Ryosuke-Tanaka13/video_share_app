@@ -70,7 +70,7 @@ class GroupsController < ApplicationController
 
   # set_viewerが退会済であるページは、システム管理者のみ許可
   def not_exist
-    if Viewer.find(current_user.id).is_valid == false && !current_system_admin?
+    if current_user && Viewer.find_by(id: current_user.id)&.is_valid == false && !current_system_admin?
       flash[:danger] = '存在しないアカウントです。'
       redirect_back(fallback_location: root_url)
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_12_055530) do
+ActiveRecord::Schema.define(version: 2023_09_24_111301) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -166,7 +166,7 @@ ActiveRecord::Schema.define(version: 2023_03_12_055530) do
     t.string "name"
     t.integer "role", default: 0, null: false
     t.bigint "organization_id", default: 1, null: false
-    t.boolean "is_valid", default: true, null: false
+    t.boolean "is_valid"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
@@ -198,6 +198,7 @@ ActiveRecord::Schema.define(version: 2023_03_12_055530) do
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "transcribed_text"
     t.index ["organization_id"], name: "index_videos_on_organization_id"
     t.index ["user_id"], name: "index_videos_on_user_id"
   end
@@ -254,14 +255,14 @@ ActiveRecord::Schema.define(version: 2023_03_12_055530) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
-  add_foreign_key "video_folders", "folders"
-  add_foreign_key "video_folders", "videos"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"
   add_foreign_key "replies", "system_admins"
   add_foreign_key "replies", "users"
   add_foreign_key "replies", "viewers"
   add_foreign_key "users", "organizations"
+  add_foreign_key "video_folders", "folders"
+  add_foreign_key "video_folders", "videos"
   add_foreign_key "videos", "organizations"
   add_foreign_key "videos", "users"
   add_foreign_key "viewer_groups", "groups"
