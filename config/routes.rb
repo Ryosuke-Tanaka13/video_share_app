@@ -76,6 +76,8 @@ Rails.application.routes.draw do
   # 共通==============================================================
   # 利用規約
   get 'use' => 'use#index'
+  # プライバシーポリシー
+  get 'use/privacy_policy' => 'use#privacy_policy', as: 'use_privacy_policy'
   # トップページ
   root 'use#top'
   # =================================================================

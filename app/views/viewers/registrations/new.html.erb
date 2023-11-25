@@ -1,7 +1,7 @@
 <div class="register-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="" class="h2"><b>Nature Technology</a>
+      <a href="" class="h2"><b>レコブル</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">アカウント登録を行いましょう！</p>
@@ -24,9 +24,9 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          
+
           <%= f.password_field :password, autocomplete: "new-password", class:"form-control", placeholder:"パスワード", required: true %>
-          
+
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -46,7 +46,7 @@
             <div class="icheck-primary" onclick="controlSubmit()">
               <input type="checkbox" id="agreeTerms" name="terms" required>
               <label for="agreeTerms">
-                <%= link_to "利用規約", use_path %>に同意する
+                <%= link_to "利用規約", use_path %>と<%= link_to "プライバシーポリシー", use_privacy_policy_path %>に同意する
               </label>
             </div>
           </div>
