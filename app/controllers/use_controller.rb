@@ -6,4 +6,6 @@ class UseController < ApplicationController
   def index; end
 
   def top; end
+
+  def privacy_policy; end
 end
