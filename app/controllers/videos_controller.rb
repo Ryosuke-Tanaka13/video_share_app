@@ -75,6 +75,12 @@ class VideosController < ApplicationController
     redirect_to videos_url(organization_id: @video.organization.id)
   end
 
+  def popup_before
+  end
+
+  def popup_after
+  end
+
   private
 
   def video_params
