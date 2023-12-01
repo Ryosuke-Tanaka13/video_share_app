@@ -9,10 +9,15 @@ RSpec.describe 'Comments', type: :system, js: true do
   let(:viewer) { create(:viewer) }
   let(:organization_viewer) { create(:organization_viewer, organization_id: user.organization_id, viewer_id: viewer.id) }
   let(:another_viewer) { create(:another_viewer) }
-  let(:system_admin_comment) { create(:system_admin_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user.id) }
+  let(:system_admin_comment) do
+    create(:system_admin_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user.id)
+  end
   let(:user_comment) { create(:user_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user_staff1.id) }
   let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video_it.id, viewer_id: viewer.id) }
-  let(:system_admin_reply) { create(:system_admin_reply, system_admin_id: system_admin.id, organization_id: user.organization_id, comment_id: system_admin_comment.id) }
+  let(:system_admin_reply) do
+    create(:system_admin_reply, system_admin_id: system_admin.id, organization_id: user.organization_id,
+      comment_id: system_admin_comment.id)
+  end
 
   before(:each) do
     organization
