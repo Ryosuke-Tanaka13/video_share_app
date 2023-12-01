@@ -42,7 +42,6 @@ gem 'font-awesome-rails'
 
 gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
-gem 'ruby-openai'
 
 group :development, :test do
   # ERD生成
@@ -76,7 +75,7 @@ group :test do
   gem 'launchy', '~> 2.4.3' # 追記
   gem 'selenium-webdriver'
   gem 'turnip'
-  gem 'webdrivers' # 追記
+  #gem 'webdrivers' # 追記
   gem 'webrick'
   # Coverage
   # カバレッジ測定ツール
