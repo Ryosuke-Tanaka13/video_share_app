@@ -70,6 +70,3 @@ yarn-debug.log*
 /public/uploads
 
 /.env
-
-# Ignore DEV.Dockerfile
-DEV.Dockerfile
