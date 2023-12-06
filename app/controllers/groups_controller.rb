@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  layout 'groups', only: [:index, :show, :new, :edit, :update, :create, :destroy, :remove_viewer]
+  layout 'groups', only: %i[index show new edit update create destroy remove_viewer]
   before_action :ensure_logged_in
   before_action :not_exist, only: %i[show edit update]
   before_action :set_group, only: %i[show edit update destroy remove_viewer]
