@@ -1,0 +1,60 @@
+/*app/javascript/stylesheets/uses/privacy_policy.scss*/
+
+/* プライバシーポリシーコンテナの最大幅を800pxに設定 */
+.privacy-policy-container {
+  max-width: 800px;
+  margin: 0 auto; /* 中央揃えにするための設定。左右のマージンを自動で調整 */
+  padding: 20px; /* 内側の余白（パディング）を20pxに設定 */
+}
+
+/* プライバシーポリシーの内容のテキストを左寄せに設定 */
+.privacy-policy-content {
+  text-align: left; /* テキストを左寄せにする */
+}
+
+/* プライバシーポリシーの内容の中で、h1タグを中央寄せにする設定 */
+.privacy-policy-content h1 {
+  color: black; /* 色を黒に変更 */
+  margin: 0 0 10px; /* 上下のマージンを0、左右のマージンを10pxに設定 */
+  text-align: center; /* 中央寄せにする */
+}
+
+/* h2タグの色を黒に変更し、マージンを設定 */
+.privacy-policy-content h2 {
+  color: black; /* 色を黒に変更 */
+  margin: 0 0 10px;/* タイトルのマージン設定 */
+}
+
+/* 段落とリストのフォントサイズ、行間、色、マージンを設定 */
+.privacy-policy-content p,
+.privacy-policy-content ol {
+  font-size: 16px; /* フォントサイズを16pxに設定 */
+  line-height: 1.6; /* 行の高さを1.6に設定 */
+  color: black; /* 色を黒に変更 */
+  margin: 0 0 10px; /* 上下のマージンを0、左右のマージンを10pxに設定 */
+}
+
+/* レスポンシブデザイン設定 */
+/* 大画面（デスクトップ）のスタイル */
+@media screen and (min-width: 1200px) {
+  .privacy-policy-container {
+    padding: 40px; /* より広い余白 */
+  }
+}
+
+/* 中画面（タブレット）のスタイル */
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+  .privacy-policy-container {
+    padding: 30px; /* 中間の余白 */
+  }
+}
+
+/* 小画面（モバイル）のスタイル */
+@media screen and (max-width: 767px) {
+  .privacy-policy-container {
+    padding: 15px; /* より狭い余白 */
+  }
+  .privacy-policy-content {
+    font-size: 14px; /* 小さいフォントサイズ */
+  }
+}
