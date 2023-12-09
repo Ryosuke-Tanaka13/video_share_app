@@ -11,7 +11,9 @@ require('admin-lte');
 require("jquery");
 
 import 'bootstrap';
-import '../stylesheets/uses'; // This file will contain your custom CSS
+
+import '../stylesheets/uses/main.scss';
+
 import "@fortawesome/fontawesome-free/js/all";
 
 document.addEventListener("turbolinks:load", () => {
