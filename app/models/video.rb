@@ -13,6 +13,7 @@ class Video < ApplicationRecord
 
   def video_exists?
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
+    puts "Debug: Video Query: #{video.to_sql}"
     video.present?
   end
 
