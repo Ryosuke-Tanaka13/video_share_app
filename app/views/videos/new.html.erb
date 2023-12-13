@@ -26,6 +26,13 @@
           <%= f.label :range, class: "video-label" %><br>
           <%= f.select :range, [['一般公開',0],['限定公開',1]], { include_blank: false, selected: 0 }, id:"range" %>
         </div> 
+        <div class="field" id="group_field" style="display: none;">
+          <%= f.label :group, class: "video-label" %><br>
+          <% @groups.each do |group| %>
+            <%= check_box_tag 'video[group][]', group.id %>
+            <%= label_tag "video_group_#{group.id}", group.name %><br>
+          <% end %>
+        </div>
         <div class="field">
           <%= f.label :comment_public, class: "video-label" %><br>
           <%= f.select :comment_public, [['公開',0],['非公開',1]], { include_blank: false, selected: 0 }, id:"comment_public" %>

@@ -100,6 +100,7 @@ ja:
         range: 動画公開範囲
         comment_public: コメント公開範囲
         login_set: ログイン有無設定
+        group: グループ名
         popup_before_video: 動画視聴開始時ポップアップ表示
         popup_after_video: 動画視聴終了時ポップアップ表示
         data_url: 動画データURL

@@ -28,6 +28,7 @@ class VideosController < ApplicationController
   def new
     @video = Video.new
     @video.video_folders.build
+    @groups = current_user.organization.groups if current_user.present?
   end
 
   def create
@@ -79,7 +80,7 @@ class VideosController < ApplicationController
 
   def video_params
     params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
-      :popup_after_video, { folder_ids: [] }, :data_url)
+      :popup_after_video, { folder_ids: [] }, :data_url, group: [])
   end
 
   # 共通メソッド(organization::foldersコントローラにも記載)
