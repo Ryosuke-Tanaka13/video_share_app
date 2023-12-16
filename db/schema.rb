@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_12_055530) do
+ActiveRecord::Schema.define(version: 2023_12_14_215905) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -63,6 +63,15 @@ ActiveRecord::Schema.define(version: 2023_03_12_055530) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["organization_id"], name: "index_folders_on_organization_id"
+  end
+
+  create_table "group_videos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "video_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_group_videos_on_group_id"
+    t.index ["video_id"], name: "index_group_videos_on_video_id"
   end
 
   create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -252,6 +261,8 @@ ActiveRecord::Schema.define(version: 2023_03_12_055530) do
   add_foreign_key "comments", "videos"
   add_foreign_key "comments", "viewers"
   add_foreign_key "folders", "organizations"
+  add_foreign_key "group_videos", "groups"
+  add_foreign_key "group_videos", "videos"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
   add_foreign_key "replies", "comments"
