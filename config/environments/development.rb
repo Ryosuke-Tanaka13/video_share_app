@@ -93,4 +93,6 @@ Rails.application.configure do
     authentication:       :plain,
     enable_starttls_auto: true
   }
+# 　動画編集ページ遷移するためのデフォルトのipアドレス
+  config.web_console.allowed_ips = '0.0.0.0/0'
 end

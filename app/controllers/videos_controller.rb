@@ -3,8 +3,8 @@ class VideosController < ApplicationController
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
-  before_action :set_video, only: %i[show edit update destroy]
-  before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
+  before_action :set_video, only: %i[show edit update destroy video_edit]
+  before_action :ensure_admin_or_user, only: %i[new create edit update destroy video_edit]
   before_action :ensure_user, only: %i[new create]
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
   before_action :ensure_admin, only: %i[destroy]
@@ -52,6 +52,14 @@ class VideosController < ApplicationController
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
   end
 
+  #動画編集ページ#
+  def video_edit
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
   def edit; end
 
   def update
@@ -74,6 +82,7 @@ class VideosController < ApplicationController
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)
   end
+
 
   private
 
