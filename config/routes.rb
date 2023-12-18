@@ -69,6 +69,9 @@ Rails.application.routes.draw do
     resources :comments, only: %i[create update destroy] do
       resources :replies, only: %i[create update destroy]
     end
+    member do
+      get '/video_edit', to:"videos#video_edit"
+     end
   end
 
   # =================================================================
