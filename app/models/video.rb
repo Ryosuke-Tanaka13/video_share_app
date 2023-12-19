@@ -73,7 +73,7 @@ class Video < ApplicationRecord
 
   validate :video_is_necessary
 
-  # ＝＝＝＝＝＝＝＝VIMEOにアップロードした動画データをローカルに保存する＝＝＝＝＝＝＝
+  # *1＝＝＝＝＝＝＝＝VIMEOにアップロードした動画データをローカルに保存する＝＝＝＝＝＝＝
   require 'open-uri'
 
 # Vimeo APIから動画データをダウンロード
