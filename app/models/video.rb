@@ -73,6 +73,40 @@ class Video < ApplicationRecord
 
   validate :video_is_necessary
 
+  # ＝＝＝＝＝＝＝＝VIMEOにアップロードした動画データをローカルに保存する＝＝＝＝＝＝＝
+  require 'open-uri'
+
+# Vimeo APIから動画データをダウンロード
+  def download_vimeo_video(vimeo_video_id, local_file_path)
+    vimeo_api_url = "https://api.vimeo.com/videos/#{vimeo_video_id}"
+    vimeo_access_token = VIMEO_API_TOKEN
+
+    # Vimeo APIへのリクエストには適切な認証が必要です
+    # ...
+
+    # Vimeo APIから動画ファイルのURLを取得
+    response = URI.open(vimeo_api_url, "Authorization" => "Bearer #{'VIMEO_API_TOKEN'}")
+    video_data = JSON.parse(response.read)
+
+    video_file_url = video_data['files'][0]['link']
+
+    # 動画ファイルをローカルにダウンロード
+    URI.open(video_file_url) do |file|
+      File.open(local_file_path, 'wb') do |local_file|
+        local_file.write(file.read)
+      end
+    end
+  end
+
+  serialize :video_to_be_edited, JSON
+
+  def store_video_blob(local_file_path)
+    # ローカルから動画データを読み込んでBlobとして保存
+    self.video_to_be_edited = File.read(local_file_path)
+    save
+  end
+  # ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
   def video_is_necessary
     # (acitvestorageで取り付けたvideoが存在しないまたはファイルの形式が不正) かつ、data_urlが存在しないならば、はじく。
     # && data_url.nil?を記述しないと、動画情報を更新する際も、動画の投稿が必須となってしまう。
