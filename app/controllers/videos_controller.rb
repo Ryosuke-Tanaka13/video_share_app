@@ -12,15 +12,6 @@ class VideosController < ApplicationController
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
 
-  def accessible_by?(viewer) 
-    if is_limited
-      viewer_groups = viewer.viewer_groups.pluck(:group_id)
-      self.groups.where(id: viewer_groups).exists?
-    else
-      true
-    end
-  end
-
   def index 
     if current_system_admin.present?
       @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
