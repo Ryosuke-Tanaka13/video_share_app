@@ -71,6 +71,7 @@ Rails.application.routes.draw do
     end
     member do
       get '/video_edit', to:"videos#video_edit"
+      get '/download_video', to:"videos#download_vimeo_video", as: :download_video
      end
   end
 
