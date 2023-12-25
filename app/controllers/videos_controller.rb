@@ -1,4 +1,5 @@
 class VideosController < ApplicationController
+  require 'open3'
   include CommentReply
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
@@ -13,6 +14,8 @@ class VideosController < ApplicationController
   # before_action :limited_viewer, only: %i[show]
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
+  before_action :set_vimeo_api_token, only: [:download_vimeo_video]
+  
 
   def index
     if current_system_admin.present?
@@ -83,6 +86,26 @@ class VideosController < ApplicationController
     redirect_to videos_url(organization_id: @video.organization.id)
   end
 
+  # --------Vimeoの動画を一時ダウンロードする場所ーーーーーーーーー
+  tmp_dir = Rails.root.join('tmp', 'videos')
+  FileUtils.mkdir_p(tmp_dir) unless File.directory?(tmp_dir)
+  
+
+  def download_vimeo_video
+    tmp_dir = Rails.root.join('tmp', 'videos')
+    video_url =  video_url = 'https://vimeo.com/manage/videos/896179079/download'
+    access_token = @vimeo_api_token
+    download_command = "curl '#{video_url}' -H 'Authorization: Bearer #{access_token}' -L -o '#{tmp_dir}/output_video.mp4'"
+    Open3.popen3(download_command) do |stdin, stdout, stderr, wait_thr|
+      exit_status = wait_thr.value
+      unless exit_status.success?
+        # エラーが発生した場合の処理
+        puts "エラーが発生しました: #{stderr.read}"
+      end
+    end
+  end
+ # -----------------------------------------------------------
+
 
   private
 
@@ -143,5 +166,9 @@ class VideosController < ApplicationController
       flash[:danger] = 'すでに削除された動画です。'
       redirect_back(fallback_location: root_url)
     end
+  end
+
+  def set_vimeo_api_token
+    @vimeo_api_token = ENV['VIMEO_API_TOKEN']
   end
 end
