@@ -87,15 +87,19 @@ class VideosController < ApplicationController
   end
 
   # --------Vimeoの動画を一時ダウンロードする場所ーーーーーーーーー
-  tmp_dir = Rails.root.join('tmp', 'videos')
-  FileUtils.mkdir_p(tmp_dir) unless File.directory?(tmp_dir)
+  desktop_path = Rails.root.join('public', 'videos')
+  # FileUtils.mkdir_p(tmp_dir) unless File.directory?(tmp_dir)
   
 
   def download_vimeo_video
-    tmp_dir = Rails.root.join('tmp', 'videos')
+    user_home_directory = Dir.home
+    desktop_path = File.join(user_home_directory, 'Desktop')
+    output_path = File.join(desktop_path, 'output_video.mp4')
+
     video_url =  video_url = 'https://vimeo.com/manage/videos/896179079/download'
     access_token = @vimeo_api_token
-    download_command = "curl '#{video_url}' -H 'Authorization: Bearer #{access_token}' -L -o '#{tmp_dir}/output_video.mp4'"
+
+    download_command = "curl '#{video_url}' -H 'Authorization: Bearer #{access_token}' -L -o '/Users/'shimatanitakahiro@MacBook-Pro/Desktop/output_video.mp4"
     Open3.popen3(download_command) do |stdin, stdout, stderr, wait_thr|
       exit_status = wait_thr.value
       unless exit_status.success?
@@ -105,8 +109,23 @@ class VideosController < ApplicationController
     end
   end
  # -----------------------------------------------------------
+ # --------動画編集ーーーーーーーーー
+ def cut_video
+  input_path = 'input_video.mp4'
+  output_path = 'output_video.mp4'
+  start_time = params[:start_time]
+  duration = params[:duration]
 
+  # ffmpegコマンドを生成
+  command = "ffmpeg -i #{input_path} -ss #{start_time} -t #{duration} -c copy #{output_path}"
 
+  # コマンドを実行
+  system(command)
+
+  # ここで保存などの後処理を行う
+end
+
+# -----------------------------------------------------------
   private
 
   def video_params
