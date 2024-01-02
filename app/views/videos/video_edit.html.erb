@@ -4,21 +4,21 @@
 
 <%= @video.data_url[8..17].to_i %>
 
-<%# <%= form_tag({ action: 'cut_video' }, method: :post) do %>
+<%= form_tag({ action: 'cut_video' }, method: :post) do
   <%# <label for="start_time">開始時間（秒）:</label>
   <%= text_field_tag 'start_time', nil, placeholder: '例: 10' %>
 
   <%# <label for="duration">切り抜く時間（秒）:</label>
   <%= text_field_tag 'duration', nil, placeholder: '例: 5' %>
 
-  <%# <%= submit_tag '動画を切り抜く' %>
-<%# <% end %> %> %> %> %>
+  <%= submit_tag '動画を切り抜く'%>
+ <% end %> 
 
 <!-- ここに動画のプレビューを表示するための部分 -->
-<%# <% if params[:start_time].present? && params[:duration].present? %> %>
-  <%# <p>動画を以下の条件で切り抜きます：</p>
+<% if params[:start_time].present? && params[:duration].present? %> %>
+ <p>動画を以下の条件で切り抜きます：</p>
   <p>開始時間： <%= params[:start_time] %> 秒</p>
-  <%# <p>切り抜く時間： <%= params[:duration] %> 秒</p> %> %>
+  <p>切り抜く時間： <%= params[:duration] %> 秒</p> 
 
   <!-- ここに動画のプレビューを表示するコードを追加 -->
 <%# <% end %> %> %>
