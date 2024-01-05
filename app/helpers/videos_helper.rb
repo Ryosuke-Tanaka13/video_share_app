@@ -3,10 +3,6 @@ module VideosHelper
     return ['限定公開', 1] if @video.range
   end
 
-  def selected_before_comment_public
-    return ['非公開', 1] if @video.comment_public
-  end
-
   def selected_before_login_set
     return ['ログイン必要', 1] if @video.login_set
   end
