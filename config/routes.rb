@@ -73,9 +73,10 @@ Rails.application.routes.draw do
       get '/video_edit', to:"videos#video_edit"
       get '/download_video', to:"videos#download_vimeo_video", as: :download_video
      end
-  
-    
   end
+  
+      get '/cut_video', to:"videos#cut_video"
+      patch '/cut_video_edit', to:"videos#cut_video_edit"
 
   # =================================================================
 

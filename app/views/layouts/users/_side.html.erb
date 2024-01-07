@@ -54,6 +54,15 @@
         </li>
 
         <li class="nav-item">
+          <%= link_to cut_video_path class:"nav-link" do %>
+            <i class="nav-icon fas fa-th"></i>
+            <p>
+              動画編集
+            </p>
+          <% end %>
+        </li>
+
+        <li class="nav-item">
           <%= link_to organization_folders_path(current_user.organization_id), class:"nav-link" do %>
             <i class="nav-icon fas fa-th"></i>
             <p>

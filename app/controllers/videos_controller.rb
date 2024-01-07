@@ -117,19 +117,23 @@ class VideosController < ApplicationController
  # -----------------------------------------------------------
  # --------動画編集ーーーーーーーーー
  def cut_video
-  input_path = 'input_video.mp4'
-  output_path = 'output_video.mp4'
-  start_time = params[:start_time]
-  duration = params[:duration]
+ end
 
-  # ffmpegコマンドを生成
-  command = "ffmpeg -i #{input_path} -ss #{start_time} -t #{duration} -c copy #{output_path}"
+  def cut_video_edit
+    input_path = 'input_video.mp4'
+    output_path = 'output_video.mp4'
+    start_time = params[:start_time]
+    duration = params[:duration]
+  
+    # ffmpegコマンドを生成
+    command = "ffmpeg -i #{input_path} -ss #{start_time} -t #{duration} -c copy #{output_path}"
+  
+    # コマンドを実行
+    system(command)
+  
+    # ここで保存などの後処理を行う
 
-  # コマンドを実行
-  system(command)
-
-  # ここで保存などの後処理を行う
-end
+  end
 
 # -----------------------------------------------------------
   private
