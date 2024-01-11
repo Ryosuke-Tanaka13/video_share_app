@@ -1,4 +1,6 @@
-<%= form_with(url: { action: 'cut_video_edit' }, method: :patch, local: false, multipart: true) do |form| %>
+
+
+<%= form_with(url: { action: 'cut_video_edit' }, method: :post, local: false, multipart: true) do |form| %>
   
   <%= form.label :new_title, '新しいタイトル:' %>
   <%= form.text_field :new_title, placeholder: '例: タイトルを記入してください' %><br>

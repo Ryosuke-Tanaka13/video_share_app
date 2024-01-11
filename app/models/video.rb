@@ -1,4 +1,5 @@
 class Video < ApplicationRecord
+  mount_uploader :file, VideoUploader
   belongs_to :organization
   belongs_to :user
 

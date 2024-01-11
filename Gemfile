@@ -39,6 +39,7 @@ gem 'rails-html-sanitizer', '~> 1.4.3'
 gem 'rails-i18n', '~> 6.0'
 
 gem 'streamio-ffmpeg'
+gem 'carrierwave'
 
 gem 'dotenv-rails'
 gem 'font-awesome-rails'
