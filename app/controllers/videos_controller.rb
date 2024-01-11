@@ -119,21 +119,39 @@ class VideosController < ApplicationController
  def cut_video
  end
 
-  def cut_video_edit
-    input_path = 'input_video.mp4'
-    output_path = 'output_video.mp4'
-    start_time = params[:start_time]
-    duration = params[:duration]
-  
-    # ffmpegコマンドを生成
-    command = "ffmpeg -i #{input_path} -ss #{start_time} -t #{duration} -c copy #{output_path}"
-  
-    # コマンドを実行
-    system(command)
-  
+ def cut_video_edit
+  # フォームから送信されたデータを取得
+  start_time = params[:start_time]
+  duration = params[:duration]
+  new_title = params[:new_title]
+  video_file = params[:video_file]
+  desktop_path = File.join(Dir.home, 'Desktop')
+  # ファイルが選択されているか確認
+  if video_file.present? && video_file.respond_to?(:tempfile)
+    ffmpeg_path = '/usr/local/bin/ffmpeg'
+   
+    # ファイルの一時保存先を取得
+    input_path = video_file.tempfile.path
+    puts "Input Path: #{input_path}"
+    
+    output_path = File.join(Rails.root, "#{desktop_path}", "#{new_title}_#{Time.now.to_i}.mp4")
+    ffmpeg_command = "#{ffmpeg_path} -i #{input_path} -ss #{start_time} -t #{duration} -c copy #{output_path} 2>&1"
+    system("ls")
+    puts "Command returned: #{success}"
+    # コマンドの実行結果を確認
+    unless success
+      puts "Error executing command: #{ffmpeg_command}"
+      flash[:error] = "動画の切り抜きに失敗しました。"
+      head :internal_server_error and return
+    end
     # ここで保存などの後処理を行う
-
+     # 切り抜かれた動画の保存先などをビューに渡す
+    render plain: "動画を切り抜きました。保存先: #{desktop_path}"
+  else
+    # ファイルが選択されていない場合の処理
+    render plain: '動画ファイルを選択してください。'
   end
+end
 
 # -----------------------------------------------------------
   private
@@ -204,4 +222,6 @@ class VideosController < ApplicationController
   def set_vimeo_api_token
     @vimeo_api_token = ENV['VIMEO_API_TOKEN']
   end
+
+
 end
