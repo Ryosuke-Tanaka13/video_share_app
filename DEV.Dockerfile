@@ -1,15 +1,22 @@
 FROM ruby:3.0.3
 
-RUN sh -c 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -' && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
-    apt-get update -y && \
-    apt-get install default-mysql-client google-chrome-stable nodejs npm vim graphviz -y && \
-    npm uninstall yarn -g && \
-    npm install yarn -g -y && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
+# 必要なパッケージをインストール
+RUN apt-get update -y && \
+    apt-get install -y wget gnupg2 && \
+    # Google Chromeの直接ダウンロードとインストール
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get install -y ./google-chrome-stable_current_amd64.deb || apt-get install -f
 
-# ルート直下にwebappという名前で作業ディレクトリを作成（コンテナ内のアプリケーションディレクトリ）
+# Node.jsとYarnのインストール
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs && \
+    npm uninstall yarn -g && \
+    npm install yarn -g -y
+
+# 足りない依存関係を解決するために実行する。
+RUN yarn add moment-timezone tempusdominus-core
+
+# ルート直下にwebappという名前で作業ディレクトリを作成
 RUN mkdir /webapp
 WORKDIR /webapp
 
@@ -23,7 +30,8 @@ RUN bundle install -j4
 # ホストのアプリケーションディレクトリ内をすべてコンテナにコピー
 ADD . /webapp
 
+# 3000ポートを公開
 EXPOSE 3000
 
+# コンテナ起動時のコマンドを指定
 CMD bash -c "rm -f tmp/pids/server.pid && bundle exec puma -C config/puma.rb"
-

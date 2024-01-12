@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# シェルスクリプトが失敗した場合には、直ちに終了する
+set -e;
+
+# イメージのビルド
+echo "Building Docker images...";
+docker-compose build;
+
+# bundle install
+echo "Running bundle install...";
+docker-compose run --rm app bundle install;
+
+# yarn install
+echo "Running yarn install...";
+docker-compose run --rm app yarn install;
+
+# スキーマファイルの並べ替え
+echo "Reordering schema file...";
+node bin/reorder_schema_for_setup.js;
+
+# db:setup
+echo "Setting up the database...";
+docker-compose run --rm app rails db:setup;
+
+# スキーマファイルを元の状態に戻す
+echo "Restoring origin schema file...";
+node bin/restore_origin_schema.js;
+
+# railsサーバー起動
+echo "Starting Rails server...";
+bin/dev;
