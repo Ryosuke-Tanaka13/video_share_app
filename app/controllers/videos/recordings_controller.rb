@@ -3,6 +3,7 @@ class Videos::RecordingsController < ApplicationController
   layout 'recordings'
 
   private
+
   # ログイン中のuserのみ許可
   def ensure_current_user
     unless current_user?
