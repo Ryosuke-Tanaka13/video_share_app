@@ -1,22 +1,24 @@
 # spec/features/video_comments_spec.rb
 require 'rails_helper'
 
-RSpec.feature "VideoComments", type: :feature, js: true do
-  let!(:video_it) { create(:video_it) } # 事前にVideoを作成しておく
+RSpec.describe "ビデオコメント", type: :feature, js: true do
+  let!(:video_it) { create(:video_it) } 
 
-  scenario "User can toggle comments" do
+  it "コメントの表示・非表示を切り替えられる" do
     visit video_path(video_it)
 
-    expect(page).not_to have_css("#comments_area") # 初めてページを訪れたときはコメントエリアが表示されていないことを確認
+    # 初期状態の確認
+    expect(page).not_to have_css("#comments_area")
+    expect(page).to have_button("コメントを表示する")
 
-    click_button "コメントを表示する" # ボタンをクリック
+    # コメント表示
+    click_button "コメントを表示する"
+    expect(page).to have_css("#comments_area")
+    expect(page).to have_button("コメントを非表示にする")
 
-    expect(page).to have_css("#comments_area") # コメントエリアが表示されていることを確認
-    expect(page).to have_button("コメントを非表示にする") # ボタンのテキストが変わっていることを確認
-
-    click_button "コメントを非表示にする" # ボタンを再度クリック
-
-    expect(page).not_to have_css("#comments_area") # コメントエリアが再び非表示になっていることを確認
-    expect(page).to have_button("コメントを表示する") # ボタンのテキストが元に戻っていることを確認
+    # コメント非表示
+    click_button "コメントを非表示にする"
+    expect(page).not_to have_css("#comments_area")
+    expect(page).to have_button("コメントを表示する")
   end
 end
