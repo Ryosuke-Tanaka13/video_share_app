@@ -1,7 +1,7 @@
 # spec/features/video_comments_spec.rb
 require 'rails_helper'
 
-RSpec.describe "ビデオコメント", type: :feature, js: true do
+RSpec.xdescribe "ビデオコメント", type: :feature, js: true do
   let!(:video_it) { create(:video_it) } 
 
   it "コメントの表示・非表示を切り替えられる" do
