@@ -14,7 +14,7 @@ import 'bootstrap';
 import '../stylesheets/videos';
 import "@fortawesome/fontawesome-free/js/all";
 
-// 追記
 import "./video";
 import "./video-comment";
 import "./videos/show"
+import "./video_search_reset";
