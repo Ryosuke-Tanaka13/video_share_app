@@ -33,8 +33,17 @@ docker-compose run --rm app bundle install
 # yarn install
 docker-compose run --rm app yarn install
 
-# db:setup
+# db:setup　← エラーになります！!
 docker-compose run --rm app rails db:setup
+　　　　↓　下記で対応して下さい！
+　　　# rails db:create
+　　　docker-compose run --rm app rails db:create
+
+　　　# rails db:migrate
+　　　docker-compose run --rm app rails db:migrate
+
+　　　# rails db:seed_fu
+　　　docker-compose run --rm app rails db:seed_fu
 
 # railsサーバー起動(ローカルPC用)
 bin/dev
