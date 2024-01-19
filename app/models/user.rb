@@ -25,3 +25,4 @@ class User < ApplicationRecord
   # 退会者は省く絞り込み
   scope :subscribed, -> { where(is_valid: true) }
 end
+
