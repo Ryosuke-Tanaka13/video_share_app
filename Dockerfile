@@ -1,12 +1,14 @@
 FROM ruby:3.0.3
 
 RUN apt-get update -y && \
-    apt-get install default-mysql-client nodejs npm vim graphviz -y && \
+    apt-get install default-mysql-client nodejs npm vim graphviz ffmpeg -y && \
     npm uninstall yarn -g && \
-    npm install yarn -g -y && \
+    npm install yarn -g && \
     curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
     apt-get install -y nodejs
 
+
+ENV PATH=“/usr/bin/ffmpeg${PATH}” 
 # ルート直下にwebappという名前で作業ディレクトリを作成（コンテナ内のアプリケーションディレクトリ）
 RUN mkdir /webapp
 WORKDIR /webapp
