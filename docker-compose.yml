@@ -14,6 +14,7 @@ services:
       - bundle:/usr/local/bundle:cached
       - node_modules:/webapp/node_modules:cached
       - packs:/webapp/public/packs
+      - /Users/shimatanitakahiro/Desktop:/app/output
     # ports = ホストPCのポート：コンテナポート（コンテナの3000ポートをホストPCの3000ポートにバインディング（繋げるみたいな意味）する。）
     ports:
       - "3000:3000"

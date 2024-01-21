@@ -55,7 +55,9 @@ bower.json
 node_modules/
 
 # Ignore precompiled javascript packs
+/config/webpacker.yml
 /public/packs
+/public/packs-stats.json
 /public/packs-test
 /public/assets
 
@@ -70,3 +72,10 @@ yarn-debug.log*
 /public/uploads
 
 /.env
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

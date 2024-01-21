@@ -37,7 +37,6 @@ gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
 gem 'rails-html-sanitizer', '~> 1.4.3'
 gem 'rails-i18n', '~> 6.0'
-
 gem 'streamio-ffmpeg'
 gem 'carrierwave'
 

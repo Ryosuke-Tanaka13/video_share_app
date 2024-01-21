@@ -125,19 +125,23 @@ class VideosController < ApplicationController
   duration = params[:duration]
   new_title = params[:new_title]
   video_file = params[:video_file]
-  desktop_path = File.join(Dir.home, 'Desktop')
+  desktop_path = '/app/output'
+  puts "desktop_path"
+  output_filename = "#{new_title}_#{Time.now.to_i}.mp4"
   # ファイルが選択されているか確認
   if video_file.present? && video_file.respond_to?(:tempfile)
-    ffmpeg_path = '/usr/local/bin/ffmpeg'
+    ffmpeg_path = '/usr/bin/ffmpeg'
    
     # ファイルの一時保存先を取得
     input_path = video_file.tempfile.path
     puts "Input Path: #{input_path}"
     
-    output_path = File.join(Rails.root, "#{desktop_path}", "#{new_title}_#{Time.now.to_i}.mp4")
-    ffmpeg_command = "#{ffmpeg_path} -i #{input_path} -ss #{start_time} -t #{duration} -c copy #{output_path} 2>&1"
-    system("ls")
-    puts "Command returned: #{success}"
+    output_path = File.join(desktop_path, output_filename)
+    puts "Output Path: #{output_path}"
+    
+    ffmpeg_command = "#{ffmpeg_path} -i #{input_path} -ss #{start_time} -t #{duration} -c copy #{output_path}"
+    puts "Executing command: #{ffmpeg_command}"
+    success = system(ffmpeg_command)
     # コマンドの実行結果を確認
     unless success
       puts "Error executing command: #{ffmpeg_command}"
