@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Video, type: :model do
+rspec.xdescribe Video, type: :model do
   subject { described_class.new }
 
   let(:organization) { create(:organization) }

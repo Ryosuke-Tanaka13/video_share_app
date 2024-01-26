@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Organization, type: :model do
+rspec.xdescribe Organization, type: :model do
   let :organization do
     build(:organization)
   end

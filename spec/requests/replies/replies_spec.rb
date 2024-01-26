@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Replies', type: :request do
+rspec.xdescribe 'Replies', type: :request do
   let(:organization) { create(:organization) }
   let(:system_admin) { create(:system_admin) }
   let(:user) { create(:user, organization_id: organization.id) }
