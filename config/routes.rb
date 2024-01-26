@@ -88,6 +88,11 @@ Rails.application.routes.draw do
         get 'videos/search' => 'searches#search'
       end
     end
+    collection do
+      scope module: :videos do
+        resource :recording, only: :new
+      end
+    end
   end
 
   # 動画の論理削除(データは残すが表示しないという意味でhiddensコントローラと命名)
