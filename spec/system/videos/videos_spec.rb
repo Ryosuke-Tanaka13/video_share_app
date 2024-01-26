@@ -98,7 +98,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_field 'title_edit', with: video_test.title
         expect(page).to have_field 'open_period_edit', with: '2022-08-14T18:06'
         expect(page).to have_select('range_edit', selected: '一般公開')
-        expect(page).to have_select('comment_public_edit', selected: '公開')
         expect(page).to have_select('login_set_edit', selected: 'ログイン不要')
         expect(page).to have_select('popup_before_video_edit', selected: '動画視聴開始時ポップアップ表示')
         expect(page).to have_select('popup_after_video_edit', selected: '動画視聴終了時ポップアップ表示')
@@ -110,7 +109,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         fill_in 'title_edit', with: 'テストビデオ２'
         # fill_in 'open_period_edit', with: 'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00'
         select '限定公開', from: 'range_edit'
-        select '非公開', from: 'comment_public_edit'
         select 'ログイン必要', from: 'login_set_edit'
         select '動画視聴開始時ポップアップ非表示', from: 'popup_before_video_edit'
         select '動画視聴終了時ポップアップ非表示', from: 'popup_after_video_edit'
@@ -132,7 +130,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_field 'post'
         expect(page).to have_field 'open_period'
         expect(page).to have_selector '#range'
-        expect(page).to have_selector '#comment_public'
         expect(page).to have_selector '#login_set'
         expect(page).to have_selector '#popup_before_video'
         expect(page).to have_selector '#popup_after_video'
@@ -147,7 +144,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
       #   attach_file 'video[video]', File.join(Rails.root, 'spec/fixtures/files/rec.webm')
       #   fill_in 'open_period', with: 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00'
       #   select '限定公開', from: 'range'
-      #   select '非公開', from: 'comment_public'
       #   select 'ログイン必要', from: 'login_set'
       #   select '動画視聴開始時ポップアップ非表示', from: 'popup_before_video'
       #   select '動画視聴終了時ポップアップ非表示', from: 'popup_after_video'
@@ -260,7 +256,6 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_field 'title_edit'
         expect(page).to have_field 'open_period_edit'
         expect(page).to have_selector '#range_edit'
-        expect(page).to have_selector '#comment_public_edit'
         expect(page).to have_selector '#login_set_edit'
         expect(page).to have_selector '#popup_before_video_edit'
         expect(page).to have_selector '#popup_after_video_edit'

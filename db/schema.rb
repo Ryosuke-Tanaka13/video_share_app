@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_27_114800) do
+ActiveRecord::Schema.define(version: 2024_01_26_013146) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -180,7 +180,6 @@ ActiveRecord::Schema.define(version: 2022_11_27_114800) do
     t.integer "audience_rate"
     t.datetime "open_period"
     t.boolean "range", default: false
-    t.boolean "comment_public", default: false
     t.boolean "login_set", default: false
     t.boolean "popup_before_video", default: false
     t.boolean "popup_after_video", default: false
@@ -237,14 +236,14 @@ ActiveRecord::Schema.define(version: 2022_11_27_114800) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
-  add_foreign_key "video_folders", "folders"
-  add_foreign_key "video_folders", "videos"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"
   add_foreign_key "replies", "system_admins"
   add_foreign_key "replies", "users"
   add_foreign_key "replies", "viewers"
   add_foreign_key "users", "organizations"
+  add_foreign_key "video_folders", "folders"
+  add_foreign_key "video_folders", "videos"
   add_foreign_key "videos", "organizations"
   add_foreign_key "videos", "users"
 end
