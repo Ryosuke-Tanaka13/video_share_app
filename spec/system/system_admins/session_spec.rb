@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-rspec.xdescribe 'SystemAdminSessions', type: :system do
+Rspec.xdescribe 'SystemAdminSessions', type: :system do
   context 'ログインできることを確認' do
     let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 

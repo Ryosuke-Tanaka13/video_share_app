@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-rspec.xdescribe 'Viewer', type: :request do
+Rspec.xdescribe 'Viewer', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }

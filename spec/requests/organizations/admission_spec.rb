@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-rspec.xdescribe 'Organizations::Admission', type: :request do
+Rspec.xdescribe 'Organizations::Admission', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
