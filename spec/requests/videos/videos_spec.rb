@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-Rspec.xdescribe 'Videos', type: :request do
+RSpec.xdescribe 'Videos', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }

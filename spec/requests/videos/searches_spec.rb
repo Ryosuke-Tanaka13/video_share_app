@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-Rspec.xdescribe 'Videos::Searches', type: :request do
+RSpec.xdescribe 'Videos::Searches', type: :request do
   # 組織内
   let(:organization) { create(:organization) }
   # confirmed_at: 認証しないとログインできないため付与

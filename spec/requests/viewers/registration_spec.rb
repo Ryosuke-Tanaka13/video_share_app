@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-Rspec.xdescribe 'ViewerRegistration', type: :request do
+RSpec.xdescribe 'ViewerRegistration', type: :request do
   describe '視聴者新規作成' do
     describe '正常' do
       it '新規作成' do

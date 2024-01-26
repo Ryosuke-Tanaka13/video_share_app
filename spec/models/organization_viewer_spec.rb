@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-Rspec.xdescribe OrganizationViewer, type: :model do
+RSpec.xdescribe OrganizationViewer, type: :model do
   let(:organization) { create(:organization) }
   let(:viewer) { create(:viewer) }
   let(:organization_viewer) { build(:organization_viewer) }

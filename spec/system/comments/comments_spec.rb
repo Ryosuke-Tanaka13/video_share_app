@@ -1,6 +1,6 @@
 # require 'rails_helper'
 
-# Rspec.xdescribe 'Commnets', type: :system, js: true do
+# RSpec.xdescribe 'Commnets', type: :system, js: true do
 #   let(:organization) { create(:organization) }
 #   let(:system_admin) { create(:system_admin) }
 #   let(:user) { create(:user, organization_id: organization.id) }

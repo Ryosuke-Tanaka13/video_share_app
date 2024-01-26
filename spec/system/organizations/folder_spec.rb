@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-Rspec.xdescribe 'FolderSystem', type: :system, js: true do
+RSpec.xdescribe 'FolderSystem', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:system_admin) { create(:system_admin) }
