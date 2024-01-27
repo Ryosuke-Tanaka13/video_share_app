@@ -1,5 +1,7 @@
 
 
+<h3>動画編集ページ</h3>
+
 <%= form_with(url: { action: 'cut_video_edit' }, method: :post, local: false, multipart: true) do |form| %>
   
   <%= form.label :new_title, '新しいタイトル:' %>
@@ -13,6 +15,9 @@
 
   <%= form.label :video_file, '動画ファイルを選択:' %>
   <%= form.file_field :video_file %><br>
+
+  <%= form.label :subtitle_file, "字幕ファイルを選択："%>
+  <%= form.file_field :subtitle%><br>
 
   <%= form.submit '動画を切り抜く' %>
 <% end %>

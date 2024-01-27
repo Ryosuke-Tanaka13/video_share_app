@@ -148,9 +148,9 @@ class VideosController < ApplicationController
       flash[:error] = "動画の切り抜きに失敗しました。"
       head :internal_server_error and return
     end
-    # ここで保存などの後処理を行う
      # 切り抜かれた動画の保存先などをビューに渡す
-    render plain: "動画を切り抜きました。保存先: #{desktop_path}"
+     flash[:success] = "動画を切り抜きました。作成動画：#{output_filename}"
+     redirect_to cut_video_path
   else
     # ファイルが選択されていない場合の処理
     render plain: '動画ファイルを選択してください。'
