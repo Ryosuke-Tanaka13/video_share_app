@@ -76,6 +76,7 @@ Rails.application.routes.draw do
   end
       get '/cut_video', to: "videos#cut_video"
       post '/cut_video_edit', to: "videos#cut_video_edit"
+      post '/audio_output', to: "videos#audio_output"
 
   # =================================================================
 

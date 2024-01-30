@@ -157,6 +157,18 @@ class VideosController < ApplicationController
   end
 end
 
+# ------------------音声出力-----------------------------------------
+def audio_output
+
+  audio_data = params[:subtitle].tempfile.read
+  save_wav_file(audio_data)
+  flash[:success] = "音声データを作成しました"
+  redirect_to cut_video_path
+end
+# -----------------------------------------------------------
+
+
+
 # -----------------------------------------------------------
   private
 
@@ -225,6 +237,11 @@ end
 
   def set_vimeo_api_token
     @vimeo_api_token = ENV['VIMEO_API_TOKEN']
+  end
+
+  def save_wav_file(data)
+    file_path = Rails.root.join("public", "audio", "output.wav")
+    File.open(file_path, "wb") { |file| file.write(data) }
   end
 
 
