@@ -27,7 +27,7 @@ class Organizations::AdmissionsController < ApplicationController
   private
 
   def set_organization
-    @organization = Organization.find(params[:id])
+    @organization = Organization.find(params[:organization_id])
   end
 
   # ログイン済視聴者　のみ許可

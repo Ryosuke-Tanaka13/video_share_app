@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :group do
     name { 'MyString' }
-    organization_id { 1 }
+    association :organization
   end
 end
