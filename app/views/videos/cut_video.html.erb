@@ -25,9 +25,9 @@
 <h5>音声データ作成</h5>
 <%= form_with(url: { action: 'audio_output' }, method: :post, local: false, multipart: true) do |form| %>
 
-  <%= form.label :subtitle_file, "字幕ファイルを選択："%>
+  <%= form.label :subtitle_file, "字幕を付与するファイルを選択："%>
   <%= form.file_field :subtitle%><br>
 
-  <%= form.submit '音声データ作成', class:"btn btn-success" %>
+  <%= form.submit '字幕付きデータ作成', class:"btn btn-success" %>
 <% end %>
 </div>

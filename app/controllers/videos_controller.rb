@@ -1,5 +1,6 @@
 class VideosController < ApplicationController
   require 'open3'
+  require "google/cloud/speech"
   include CommentReply
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
@@ -157,16 +158,27 @@ class VideosController < ApplicationController
   end
 end
 
-# ------------------音声出力-----------------------------------------
+# ------------------音声出力と音声データ文字起こし、データ統合-----------------------------------------
 def audio_output
-
   audio_data = params[:subtitle].tempfile.read
-  save_wav_file(audio_data)
-  flash[:success] = "音声データを作成しました"
-  redirect_to cut_video_path
-end
-# -----------------------------------------------------------
-
+  file_path = Rails.root.join("public", "audio", "output#{Time.now.to_i}.wav")
+    File.open(file_path, "wb") { |file| file.write(audio_data) }
+  credentials_path = Rails.root.join('learned-fusion-389707-670008995bae.json').to_s
+  transcript = transcribe_audio(credentials_path)
+  video_file = params[:subtitle]
+  if  video_file.present?
+    video_temp_path = video_file.tempfile.path
+    desctop_path = '/app/output'
+    video_file_path = File.join(desctop_path,"#{video_file.original_filename}")
+    output_video_path = Rails.root.join("public","audio", "subtitle_videos","sub_#{video_file.original_filename}_#{Time.now.to_i}.mp4")
+    ffmpeg_path = '/usr/bin/ffmpeg'
+    add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)
+  else
+     flash[:error] = "動画ファイルがアップロードされていません。"
+  end
+    flash[:success] = "音声データを作成、字幕を追加しました"
+    redirect_to cut_video_path 
+ end
 
 
 # -----------------------------------------------------------
@@ -239,10 +251,22 @@ end
     @vimeo_api_token = ENV['VIMEO_API_TOKEN']
   end
 
-  def save_wav_file(data)
-    file_path = Rails.root.join("public", "audio", "output.wav")
-    File.open(file_path, "wb") { |file| file.write(data) }
+  def transcribe_audio(credentials_path)
+    Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
+
+    speech_client = Google::Cloud::Speech.speech
+    audio_data = File.binread(credentials_path)
+    config = { encoding: :LINEAR16,sample_rate_hertz: 44100, language_code: "ja-JP" }
+    audio = { content: audio_data }
+    response = speech_client.recognize(config: config, audio: audio)
+
+    results = response.results
+    results.map(&:alternatives).map(&:transcript).join(" ") 
   end
 
-
+  def add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)
+    File.write(video_file_path, transcript)
+    ffmpeg_command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -max_muxing_queue_size 1024 #{output_video_path}"
+    system(ffmpeg_command)
+  end
 end

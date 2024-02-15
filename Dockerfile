@@ -8,7 +8,7 @@ RUN apt-get update -y && \
     apt-get install -y nodejs
 
 
-ENV PATH=“/usr/bin/ffmpeg${PATH}” 
+ENV PATH="/usr/bin/ffmpeg:${PATH}" 
 # ルート直下にwebappという名前で作業ディレクトリを作成（コンテナ内のアプリケーションディレクトリ）
 RUN mkdir /webapp
 WORKDIR /webapp
