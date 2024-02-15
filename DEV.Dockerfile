@@ -3,7 +3,7 @@ FROM ruby:3.0.3
 RUN sh -c 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -' && \
     sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
     apt-get update -y && \
-    apt-get install default-mysql-client nodejs npm vim graphviz -y && \
+    apt-get install default-mysql-clien google-chrome-stable nodejs npm vim graphviz -y && \
     npm uninstall yarn -g && \
     npm install yarn -g -y && \
     curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
