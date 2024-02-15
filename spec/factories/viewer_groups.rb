@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :viewer_group do
-    viewer { nil }
-    group { nil }
+    association :viewer
+    association :group
   end
 end

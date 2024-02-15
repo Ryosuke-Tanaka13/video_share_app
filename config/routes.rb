@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :organizations do
     scope module: :organizations do
       resources :folders
+      resources :videos, only: [:index]
     end
     member do
       scope module: :organizations do
@@ -15,6 +16,7 @@ Rails.application.routes.draw do
       end
     end
   end
+  
 
   # =================================================================
 
