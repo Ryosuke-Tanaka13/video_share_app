@@ -45,4 +45,11 @@ FactoryBot.define do
     organization_id  { 2 }
     role             { 'staff' }
   end
+
+  factory :test_user, class: 'User' do
+    name             { 'スタッフ' }
+    email          { Faker::Internet.email }
+    password         { 'password' }
+    role             { 'staff' }
+  end
 end
