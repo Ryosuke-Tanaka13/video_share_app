@@ -52,11 +52,11 @@ group :development, :test do
   # コンソールツール
   gem 'database_cleaner'
   gem 'factory_bot_rails'
+  gem 'faker'
   gem 'letter_opener_web', '~> 1.0'
   gem 'pry-rails'
   gem 'pry-remote'
   gem 'rspec-rails'
-  gem 'faker'
 end
 
 group :development do

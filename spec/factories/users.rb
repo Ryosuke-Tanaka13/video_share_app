@@ -48,7 +48,7 @@ FactoryBot.define do
 
   factory :test_user, class: 'User' do
     name             { 'スタッフ' }
-    email          { Faker::Internet.email }
+    email            { Faker::Internet.email }
     password         { 'password' }
     role             { 'staff' }
   end

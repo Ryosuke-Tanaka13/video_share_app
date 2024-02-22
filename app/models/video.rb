@@ -1,7 +1,6 @@
 class Video < ApplicationRecord
   belongs_to :organization
   belongs_to :user
-  
   has_many :group_videos
   has_many :groups, through: :group_videos
 

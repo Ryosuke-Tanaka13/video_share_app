@@ -12,13 +12,15 @@ class VideosController < ApplicationController
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
 
-  def index 
+  def index
     if current_system_admin.present?
       @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
     elsif current_user.present?
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
     elsif current_viewer.present?
-      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available.select { |video| video.accessible_by?(current_viewer) }
+      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available.select do |video|
+        video.accessible_by?(current_viewer)
+      end
     end
   end
 
