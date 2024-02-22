@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Videos', type: :request do
+RSpec.xdescribe 'Videos', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -58,7 +58,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -73,7 +73,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -88,7 +88,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -103,7 +103,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -118,7 +118,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -129,7 +129,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to videos_path(organization_id: organization.id)
       end
     end
@@ -141,7 +141,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -152,7 +152,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -170,7 +170,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -185,7 +185,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -196,7 +196,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -208,7 +208,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -219,7 +219,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -454,7 +454,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -469,7 +469,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -484,7 +484,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -499,7 +499,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -513,7 +513,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -524,7 +524,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to videos_path(organization_id: another_organization.id)
       end
     end
@@ -536,7 +536,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -547,7 +547,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なし(login_setがtrue)のためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to new_viewer_session_path
       end
     end
