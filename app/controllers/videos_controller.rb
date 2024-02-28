@@ -128,6 +128,11 @@ class VideosController < ApplicationController
   video_file = params[:video_file]
   desktop_path = '/app/output'
   puts "desktop_path"
+  if File.writable?(desktop_path)
+    puts "書き込み権限があります"
+  else
+    puts "書き込み権限がありません"
+  end
   output_filename = "#{new_title}_#{Time.now.to_i}.mp4"
   # ファイルが選択されているか確認
   if video_file.present? && video_file.respond_to?(:tempfile)
@@ -139,8 +144,8 @@ class VideosController < ApplicationController
     
     output_path = File.join(desktop_path, output_filename)
     puts "Output Path: #{output_path}"
-    
-    ffmpeg_command = "#{ffmpeg_path} -i #{input_path} -ss #{start_time} -t #{duration} -c copy #{output_path}"
+    ffmpeg_command = "#{ffmpeg_path} -i '#{input_path}' -ss #{start_time} -t #{duration} -c copy -movflags faststart '#{output_path}'"
+
     puts "Executing command: #{ffmpeg_command}"
     success = system(ffmpeg_command)
     # コマンドの実行結果を確認
@@ -160,24 +165,33 @@ end
 
 # ------------------音声出力と音声データ文字起こし、データ統合-----------------------------------------
 def audio_output
+  puts "subtitle: #{params[:subtitle]}"
   audio_data = params[:subtitle].tempfile.read
-  file_path = Rails.root.join("public", "audio", "output#{Time.now.to_i}.wav")
-    File.open(file_path, "wb") { |file| file.write(audio_data) }
-  credentials_path = Rails.root.join('learned-fusion-389707-670008995bae.json').to_s
-  transcript = transcribe_audio(credentials_path)
-  video_file = params[:subtitle]
-  if  video_file.present?
-    video_temp_path = video_file.tempfile.path
-    desctop_path = '/app/output'
-    video_file_path = File.join(desctop_path,"#{video_file.original_filename}")
-    output_video_path = Rails.root.join("public","audio", "subtitle_videos","sub_#{video_file.original_filename}_#{Time.now.to_i}.mp4")
-    ffmpeg_path = '/usr/bin/ffmpeg'
-    add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)
-  else
-     flash[:error] = "動画ファイルがアップロードされていません。"
-  end
-    flash[:success] = "音声データを作成、字幕を追加しました"
-    redirect_to cut_video_path 
+  puts "subtitle: #{params[:subtitle]}"
+  if audio_data.present? && audio_data.size > 0
+      voice_path = Rails.root.join("public", "audio", "output#{Time.now.to_i}.wav")
+      cmd = "ffmpeg -i #{params[:subtitle]} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{voice_path}"
+      stdout_str, stderr_str, status = Open3.capture3(cmd)
+      self_filename = params[:subtitle].original_filename.gsub(/\x00/, "")
+      desktop_path = '/app/output'
+      file_path = File.join(desktop_path,self_filename)
+      File.write(file_path, audio_data, encoding: 'ascii-8bit')
+      credentials_path = Rails.root.join('learned-fusion-389707-670008995bae.json').to_s
+      transcript = transcribe_audio(credentials_path, voice_path)
+      puts "transcribe: #{transcript}"
+    end
+
+      video_file = params[:subtitle]
+      if  video_file.present?
+        video_temp_path = video_file.tempfile.path
+        desktop_path = '/app/output'
+        video_file_path = File.join(desktop_path,"#{video_file.original_filename}")
+        output_video_path = Rails.root.join("public","subtitle_videos")
+        ffmpeg_path = '/usr/bin/ffmpeg'
+        add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)
+        puts "add_subtitles_to_video: #{add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)}"
+        redirect_to cut_video_path
+      end
  end
 
 
@@ -251,22 +265,45 @@ def audio_output
     @vimeo_api_token = ENV['VIMEO_API_TOKEN']
   end
 
-  def transcribe_audio(credentials_path)
-    Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
 
+  def transcribe_audio(credentials_path, voice_path)
+    Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
     speech_client = Google::Cloud::Speech.speech
-    audio_data = File.binread(credentials_path)
+    audio_data = File.binread(voice_path)
     config = { encoding: :LINEAR16,sample_rate_hertz: 44100, language_code: "ja-JP" }
     audio = { content: audio_data }
     response = speech_client.recognize(config: config, audio: audio)
-
-    results = response.results
-    results.map(&:alternatives).map(&:transcript).join(" ") 
+    
+    begin
+      response = speech_client.recognize(config: config, audio: audio)
+      if response.results.any?
+        results = response.results
+        transcript = results.map(&:alternatives).map(&:transcript).join(" ")
+        puts "転機に成功しました：#{transcript}"
+      else
+        puts "転機に失敗しました#{response}"
+      end
+    rescue Google::Gax::GaxError => each
+      puts "エラーが発生しました： #{e.message}"
+    end
   end
 
   def add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)
-    File.write(video_file_path, transcript)
-    ffmpeg_command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -max_muxing_queue_size 1024 #{output_video_path}"
-    system(ffmpeg_command)
+    begin
+      File.write(video_file_path, transcript)
+  
+      # Use Open3.capture3 to capture stderr (standard error output)
+      # command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -movflags faststart -max_muxing_queue_size 1024 #{output_video_path}"
+      command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -movflags faststart #{output_video_path}"
+      stdout, stderr, status = Open3.capture3(command)
+  
+      if status.success?
+        puts "add_subtitles_to_video: Successfully added subtitles to the video."
+      else
+        puts "add_subtitles_to_video: Failed to add subtitles. Error message: #{stderr}"
+      end
+    rescue => e
+      puts "add_subtitles_to_video でエラーが発生しました: #{e.message}"
+    end
   end
 end
