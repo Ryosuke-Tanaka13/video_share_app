@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# スクリプトが失敗した場合に直ちに終了する
+set -e
+
+# 実行中の全てのDockerコンテナを停止
+echo "Stopping all Docker containers..."
+docker stop $(docker ps -aq)
+
+# すべてのDockerコンテナを削除
+echo "Removing all Docker containers..."
+docker rm $(docker ps -aq)
+
+# すべてのDockerイメージを削除
+echo "Removing all Docker images..."
+docker rmi $(docker images -q)
+
+# すべてのDockerボリュームを削除
+echo "Removing all Docker volumes..."
+docker volume rm $(docker volume ls -q)
+
+# Dockerのキャッシュをクリア
+echo "Clearing Docker cache..."
+docker system prune -af
+
+# node_modulesを削除
+echo "Removing node_modules..."
+rm -rf node_modules
+
+# イメージのビルド
+echo "Building Docker images..."
+docker-compose build
+
+# bundle install
+echo "Running bundle install..."
+docker-compose run --rm app bundle install
+
+# yarn cache clean
+echo "Clearing Yarn cache..."
+docker-compose run --rm app yarn cache clean
+
+# yarn install
+echo "Running yarn install..."
+docker-compose run --rm app yarn install --verbose
+
+# rails db:create
+echo "Creating database..."
+docker-compose run --rm app rails db:create
+
+# rails db:migrate
+echo "Running migrations..."
+docker-compose run --rm app rails db:migrate
+
+# rails db:seed
+echo "Seeding database..."
+docker-compose run --rm app rails db:seed
+
+# railsサーバー起動
+echo "Starting Rails server..."
+bin/dev
