@@ -1,60 +1,118 @@
+#bin/clear
+
 #!/bin/sh
 
-# スクリプトが失敗した場合に直ちに終了する
-set -e
+# 開発環境を管理するスクリプト
 
-# 実行中の全てのDockerコンテナを停止
-echo "Stopping all Docker containers..."
-docker stop $(docker ps -aq)
+# スクリプトが失敗した場合には直ちに終了する
+set -e;
 
-# すべてのDockerコンテナを削除
-echo "Removing all Docker containers..."
-docker rm $(docker ps -aq)
+# 実行中のDockerコンテナがあるか確認し、あれば停止
+if [ -n "$(docker ps -q)" ]; then
+  cat <<EOS
+=======================================
+===== 全てのDockerコンテナを停止中 =====
+=======================================
+EOS
+  docker stop $(docker ps -aq)
+fi
 
-# すべてのDockerイメージを削除
-echo "Removing all Docker images..."
-docker rmi $(docker images -q)
+# Dockerコンテナがあるか確認し、あれば削除
+if [ -n "$(docker ps -aq)" ]; then
+  cat <<EOS
+========================================
+===== 全てのDockerコンテナを削除中 =====
+========================================
+EOS
+  docker rm $(docker ps -aq)
+fi
 
-# すべてのDockerボリュームを削除
-echo "Removing all Docker volumes..."
-docker volume rm $(docker volume ls -q)
+# Dockerイメージがあるか確認し、あれば削除
+if [ -n "$(docker images -q)" ]; then
+  cat <<EOS
+==========================================
+===== 全てのDockerイメージを削除中 =====
+==========================================
+EOS
+  docker rmi $(docker images -q)
+fi
 
-# Dockerのキャッシュをクリア
-echo "Clearing Docker cache..."
+# Dockerボリュームがあるか確認し、あれば削除
+if [ -n "$(docker volume ls -q)" ]; then
+  cat <<EOS
+===========================================
+===== 全てのDockerボリュームを削除中 =====
+===========================================
+EOS
+  docker volume rm $(docker volume ls -q)
+fi
+
+cat <<EOS
+==========================================
+===== Dockerキャッシュをクリア中 =====
+==========================================
+EOS
 docker system prune -af
 
-# node_modulesを削除
-echo "Removing node_modules..."
+cat <<EOS
+=======================================
+===== node_modulesを削除中 =====
+=======================================
+EOS
 rm -rf node_modules
 
-# イメージのビルド
-echo "Building Docker images..."
+cat <<EOS
+========================================
+===== Dockerイメージをビルド中 =====
+========================================
+EOS
 docker-compose build
 
-# bundle install
-echo "Running bundle install..."
+cat <<EOS
+======================================
+===== bundle installを実行中 =====
+======================================
+EOS
 docker-compose run --rm app bundle install
 
-# yarn cache clean
-echo "Clearing Yarn cache..."
+cat <<EOS
+=======================================
+===== Yarnキャッシュをクリア中 =====
+=======================================
+EOS
 docker-compose run --rm app yarn cache clean
 
-# yarn install
-echo "Running yarn install..."
-docker-compose run --rm app yarn install --verbose
+cat <<EOS
+=====================================
+===== yarn installを実行中 =====
+=====================================
+EOS
+docker-compose run --rm app yarn install
 
-# rails db:create
-echo "Creating database..."
+cat <<EOS
+========================================
+===== データベースの作成を実行中 =====
+========================================
+EOS
 docker-compose run --rm app rails db:create
 
-# rails db:migrate
-echo "Running migrations..."
+cat <<EOS
+================================================
+===== データベースマイグレーション実行中 =====
+================================================
+EOS
 docker-compose run --rm app rails db:migrate
 
-# rails db:seed
-echo "Seeding database..."
+cat <<EOS
+========================================
+===== データベースシードを実行中 =====
+========================================
+EOS
 docker-compose run --rm app rails db:seed
 
-# railsサーバー起動
-echo "Starting Rails server..."
+cat <<EOS
+====================================
+===== Railsサーバーを起動中... =====
+====================================
+EOS
 bin/dev

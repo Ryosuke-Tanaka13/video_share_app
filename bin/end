@@ -1,13 +1,28 @@
+#bin/end
+
 #!/bin/sh
 
-# スクリプトが失敗した場合に直ちに終了する
-set -e
-# 実行中の全てのドッカーコンテナを停止
-echo "Stopping all Docker containers..."
-docker stop $(docker ps -aq)
+# 開発環境を停止するスクリプト
 
-# すべてのドッカーコンテナを削除
-echo "Removing all Docker containers..."
-docker rm $(docker ps -aq)
+# スクリプトが失敗した場合には直ちに終了する
+set -e;
+
+# ===== Dockerコンテナの停止 =====
+# 実行中の全てのDockerコンテナを停止する
+cat <<EOS
+=======================================
+===== Dockerコンテナを停止中 =====
+=======================================
+EOS
+docker ps -q | xargs -r docker stop
+
+# ===== Dockerコンテナの削除 =====
+# すべてのDockerコンテナを削除する
+cat <<EOS
+=======================================
+===== Dockerコンテナを削除中 =====
+=======================================
+EOS
+docker ps -aq | xargs -r docker rm
 
 echo "All Docker containers have been stopped and removed."
