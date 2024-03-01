@@ -45,6 +45,8 @@ gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
 
 group :development, :test do
+  # Use mysql as the database for Active Record in development and test
+  gem 'mysql2', '~> 0.5'
   # ERD生成
   gem 'rails-erd'
   # コードフォーマッター
@@ -93,6 +95,11 @@ group :test do
   gem 'vcr'
   gem 'webmock'
 end
+
+group :production do
+  gem 'pg'
+end
+
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
