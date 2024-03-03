@@ -22,7 +22,9 @@ services:
       - db
       - webpacker
     environment:
-      WEBPACKER_DEV_SERVER_HOST: webpacker
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - WEBPACKER_DEV_SERVER_HOST=webpacker
+      
     # (stdin_open,tty) = コンテナ内でデバックできるようにする
     stdin_open: true
     tty: true
