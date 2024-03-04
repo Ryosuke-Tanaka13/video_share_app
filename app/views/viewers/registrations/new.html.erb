@@ -42,11 +42,12 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-8">
+          <div class="col-12">
             <div class="icheck-primary" onclick="controlSubmit()">
               <input type="checkbox" id="agreeTerms" name="terms" required>
               <label for="agreeTerms">
-                <%= link_to "利用規約", use_path %>と<%= link_to "プライバシーポリシー", use_privacy_policy_path %>に同意する
+                <%= link_to "利用規約", use_terms_path %>と
+                <%= link_to "プライバシーポリシー", use_privacy_policy_path %>に同意
               </label>
             </div>
           </div>
