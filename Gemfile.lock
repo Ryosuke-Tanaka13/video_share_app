@@ -72,7 +72,6 @@ GEM
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
-    base64 (0.2.0)
     bcrypt (3.1.16)
     bindex (0.8.1)
     bootsnap (1.9.3)
@@ -123,19 +122,11 @@ GEM
       dotenv (= 2.7.6)
       railties (>= 3.2)
     erubi (1.10.0)
-    event_stream_parser (1.0.0)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faraday (2.7.12)
-      base64
-      faraday-net_http (>= 2.0, < 3.1)
-      ruby2_keywords (>= 0.0.4)
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
-    faraday-net_http (3.0.2)
     ffi (1.15.0)
     font-awesome-rails (4.7.0.8)
       railties (>= 3.2, < 8.0)
@@ -169,22 +160,13 @@ GEM
     method_source (1.0.0)
     middleware (0.1.0)
     mini_mime (1.0.3)
-<<<<<<< HEAD
-    mini_portile2 (2.8.5)
-=======
     mini_portile2 (2.8.4)
->>>>>>> origin/main
     minitest (5.14.4)
     msgpack (1.4.2)
     multi_xml (0.6.0)
-    multipart-post (2.3.0)
     mysql2 (0.5.3)
     nio4r (2.5.7)
-<<<<<<< HEAD
-    nokogiri (1.15.5)
-=======
     nokogiri (1.15.4)
->>>>>>> origin/main
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     orm_adapter (0.5.0)
@@ -201,17 +183,10 @@ GEM
       method_source (~> 1.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-<<<<<<< HEAD
-    public_suffix (5.0.4)
-    puma (5.3.0)
-      nio4r (~> 2.0)
-    racc (1.7.3)
-=======
     public_suffix (5.0.3)
     puma (5.3.0)
       nio4r (~> 2.0)
     racc (1.7.1)
->>>>>>> origin/main
     rack (2.2.8)
     rack-mini-profiler (2.3.2)
       rack (>= 1.2.0)
@@ -262,11 +237,7 @@ GEM
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-<<<<<<< HEAD
-    regexp_parser (2.8.2)
-=======
     regexp_parser (2.8.1)
->>>>>>> origin/main
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
@@ -307,10 +278,6 @@ GEM
       rubocop (~> 1.19)
     ruby-graphviz (1.2.5)
       rexml
-    ruby-openai (6.3.0)
-      event_stream_parser (>= 0.3.0, < 2.0.0)
-      faraday (>= 1)
-      faraday-multipart (>= 1)
     ruby-progressbar (1.11.0)
     rubyzip (2.3.2)
     sass-rails (6.0.0)
@@ -323,7 +290,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    selenium-webdriver (4.15.0)
+    selenium-webdriver (4.12.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -415,7 +382,6 @@ DEPENDENCIES
   rspec-rails
   rubocop
   rubocop-rspec
-  ruby-openai
   sass-rails (>= 6)
   selenium-webdriver
   simplecov
