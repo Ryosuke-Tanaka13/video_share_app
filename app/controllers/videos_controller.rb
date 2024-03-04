@@ -165,31 +165,55 @@ end
 
 # ------------------音声出力と音声データ文字起こし、データ統合-----------------------------------------
 def audio_output
-  puts "subtitle: #{params[:subtitle]}"
-  audio_data = params[:subtitle].tempfile.read
-  puts "subtitle: #{params[:subtitle]}"
-  if audio_data.present? && audio_data.size > 0
+  uploaded_file = params[:subtitle]
+      tempfile = Tempfile.new(['video', '.mp4'])
+      tempfile.binmode
+      tempfile.write(uploaded_file.read)
+      tempfile.rewind
+
+      # デバッグ用にログに出力
+      puts "Tempfile path: #{tempfile.path}"
+
+      # ここで UTF-8 にエンコードしてはいけない
+      self_filename = uploaded_file.original_filename
+
+      audio_data = tempfile.read
+
       voice_path = Rails.root.join("public", "audio", "output#{Time.now.to_i}.wav")
-      cmd = "ffmpeg -i #{params[:subtitle]} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{voice_path}"
+      cmd = "ffmpeg -i '#{tempfile.path}' -vn -acodec pcm_s16le -ar 44100 -ac 2 '#{voice_path}'"
+
+      # デバッグ用にログに出力
+      puts "FFmpeg command: #{cmd}"
+
       stdout_str, stderr_str, status = Open3.capture3(cmd)
-      self_filename = params[:subtitle].original_filename.gsub(/\x00/, "")
+
+      # デバッグ用にログに出力
+      puts "FFmpeg stdout: #{stdout_str}"
+      puts "FFmpeg stderr: #{stderr_str}"
+
+      Rails.logger.error("ffmpegエラー: #{stderr_str}") unless status.success?
+
       desktop_path = '/app/output'
-      file_path = File.join(desktop_path,self_filename)
+      file_path = File.join(desktop_path, self_filename)
+
+      # デバッグ用にログに出力
+      puts "Output file path: #{file_path}"
+
       File.write(file_path, audio_data, encoding: 'ascii-8bit')
+
       credentials_path = Rails.root.join('learned-fusion-389707-670008995bae.json').to_s
       transcript = transcribe_audio(credentials_path, voice_path)
-      puts "transcribe: #{transcript}"
-    end
 
-      video_file = params[:subtitle]
-      if  video_file.present?
-        video_temp_path = video_file.tempfile.path
+      puts "transcribe: #{transcript}"
+      if  audio_data.present?
+        video_temp_path = audio_data.tempfile.path
         desktop_path = '/app/output'
-        video_file_path = File.join(desktop_path,"#{video_file.original_filename}")
+        puts "audio_data: #{audio_data}"
+        video_file_path = File.join(desktop_path,"#{audio_data.original_filename}")
         output_video_path = Rails.root.join("public","subtitle_videos")
         ffmpeg_path = '/usr/bin/ffmpeg'
-        add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)
-        puts "add_subtitles_to_video: #{add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)}"
+        add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)
+        puts "add_subtitles_to_video: #{add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)}"
         redirect_to cut_video_path
       end
  end
@@ -288,7 +312,7 @@ def audio_output
     end
   end
 
-  def add_subtitles_to_video(video_file, video_file_path, transcript, output_video_path)
+  def add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)
     begin
       File.write(video_file_path, transcript)
   
