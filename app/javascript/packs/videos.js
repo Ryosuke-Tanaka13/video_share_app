@@ -18,4 +18,4 @@ import "@fortawesome/fontawesome-free/js/all";
 import "./video";
 import "./video_comment";
 import "./video_search_reset";
-import "./video-popup"
+import "./video_popup"
