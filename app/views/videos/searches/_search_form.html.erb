@@ -1,17 +1,16 @@
 <%= render layout: 'shared/search_box' do %>
 
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-12">
     <%= form_with(scope: :search, url: videos_search_videos_path, method: :get, local: true) do |f| %>
       <div class="form-group form-inline">
         <%= f.label :title, "タイトル", class: 'm-2' %>
-        <%= f.text_field :title_like, value: @search_params[:title_like], placeholder: 'キーワードを入力', id: 'search-title', class: 'form-control col-sm-6' %>
-      </div>
-      <div class="form-group form-inline">
+        <%= f.text_field :title_like, value: @search_params[:title_like], placeholder: 'キーワードを入力', id: 'search-title', class: 'form-control col-sm-2' %>
         <%= f.label :open_period, "公開期間", class: 'm-3' %>
         <%= f.datetime_field :open_period_from, value: @search_params[:open_period_from], id: 'search-open_period_from', class: 'form-control' %> 〜
         <%= f.datetime_field :open_period_to, value: @search_params[:open_period_to], id: 'search-open_period_to', class: 'form-control' %>
       </div>
+    
       <div class="form-group form-inline">
         <%= f.radio_button :range, "all", value: @search_params[:range] == "all", id: 'search-range-all' %>
         <%= f.label :range_all, "すべての動画", class: 'm-1' %>
