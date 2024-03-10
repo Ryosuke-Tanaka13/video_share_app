@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-rspec.xdescribe 'OrganizationUnsubscribeSystem', type: :system do
+RSpec.xdescribe 'OrganizationUnsubscribeSystem', type: :system do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }

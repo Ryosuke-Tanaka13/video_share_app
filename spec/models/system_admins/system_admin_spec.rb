@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-rspec.xdescribe SystemAdmin, type: :model do
+RSpec.xdescribe SystemAdmin, type: :model do
   let :system_admin do
     build(:system_admin)
   end

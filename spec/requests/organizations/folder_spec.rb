@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-rspec.xdescribe 'Organizations::Folders', type: :request do
+RSpec.xdescribe 'Organizations::Folders', type: :request do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:system_admin) { create(:system_admin) }

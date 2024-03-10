@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-rspec.xdescribe 'UserSessions', type: :system do
+RSpec.xdescribe 'UserSessions', type: :system do
   context 'ログインできることを確認' do
     let(:organization) { create(:organization) }
     let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
