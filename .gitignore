@@ -70,3 +70,11 @@ yarn-debug.log*
 /public/uploads
 
 /.env
+Gemfile
+Gemfile.lock
+top.html
+new.html
+credentials.yml
+database.yml
+production.rb
+docker-compose.yml
