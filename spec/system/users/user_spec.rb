@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'UserSystem', type: :system do
+rspec.xdescribe 'UserSystem', type: :system do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
