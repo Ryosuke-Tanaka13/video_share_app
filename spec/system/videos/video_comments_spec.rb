@@ -5,7 +5,7 @@ RSpec.xdescribe 'ビデオコメントの表示・非表示', type: :feature, js
   let!(:viewer) { create(:viewer, confirmed_at: Time.now, organizations: [organization]) }
   let!(:video_it) { create(:video_it, organization: organization) }
 
-  before do
+  before do  
     # ログインページにアクセスしてログインする
     visit new_viewer_session_path
     fill_in 'メールアドレス', with: viewer.email
