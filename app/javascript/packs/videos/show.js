@@ -11,6 +11,6 @@ document.addEventListener('turbolinks:load', function() {
         commentsArea.hide();
         button.text("コメントを表示する");
       }
-    });
+    });  
   }
 });
