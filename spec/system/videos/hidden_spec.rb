@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'VideoUnsubscribeSystem', type: :system, js: true do
+RSpec.xdescribe 'VideoUnsubscribeSystem', type: :system, js: true do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }

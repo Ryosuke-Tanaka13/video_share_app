@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'ビデオコメントの表示・非表示', type: :feature, js: true do
+RSpec.describe 'ビデオコメントの表示・非表示', type: :feature, js: true do
   let!(:organization) { create(:organization) }
   let!(:viewer) { create(:viewer, confirmed_at: Time.now, organizations: [organization]) }
   let!(:video_it) { create(:video_it, organization: organization) }
