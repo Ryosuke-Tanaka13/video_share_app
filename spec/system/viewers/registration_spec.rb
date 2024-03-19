@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'ViewerRegistrationSystem', type: :system do
+RSpec.describe 'ViewerRegistrationSystem', type: :system do
   describe '正常' do
     it '視聴者新規作成' do
       visit new_viewer_registration_path
