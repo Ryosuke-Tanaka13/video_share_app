@@ -3,6 +3,8 @@ class GroupsController < ApplicationController
   before_action :ensure_logged_in
   before_action :not_exist, only: %i[show edit update]
   before_action :set_group, only: %i[show edit update destroy remove_viewer]
+  before_action :check_viewer, only: [:edit]
+  before_action :check_permission, only: [:destroy]
 
   def index
     @groups = Group.all
@@ -26,12 +28,7 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    if OrganizationViewer.where(organization_id: current_user.organization_id).present? && current_user.present?
-      @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
-    else
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_url)
-    end
+    @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
   end
 
   def update
@@ -43,13 +40,8 @@ class GroupsController < ApplicationController
   end
 
   def destroy
-    if current_user&.role == 'owner' || current_system_admin?
-      @group.destroy
-      redirect_to groups_path, notice: 'グループを削除しました。'
-    else
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_url)
-    end
+    @group.destroy
+    redirect_to groups_path, notice: 'グループを削除しました。'
   end
 
   def remove_viewer
@@ -75,5 +67,18 @@ class GroupsController < ApplicationController
       flash[:danger] = '存在しないアカウントです。'
       redirect_back(fallback_location: root_url)
     end
+  end
+
+  def check_viewer
+    unless OrganizationViewer.where(organization_id: current_user.organization_id).present? && current_user.present?
+      flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_url)
+    end
+  end
+
+  def check_permission
+  unless current_user&.role == 'owner' || current_system_admin?
+    flash[:danger] = '権限がありません。'
+    redirect_back(fallback_location: root_url)
   end
 end
