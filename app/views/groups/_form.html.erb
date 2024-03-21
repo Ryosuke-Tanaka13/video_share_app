@@ -14,7 +14,7 @@
 
 <script>
   $(document).ready(function(){
-    var isInitialized = false;
+    let isInitialized = false;
     function initializeSelect2() { // 要素が表示されるまで待つ
       $('#viewer-select').select2({
         width: 'resolve',
@@ -25,7 +25,7 @@
       isInitialized = true;
     }
 
-    var checkExist = setInterval(function() {
+    let checkExist = setInterval(function() {
       if ($('#viewer-select').length && !isInitialized) {
         clearInterval(checkExist);
         initializeSelect2();

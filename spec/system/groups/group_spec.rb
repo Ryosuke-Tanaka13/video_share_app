@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'グループ新規登録', type: :system do
+RSpec.describe 'グループ新規登録', type: :system do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -77,6 +77,68 @@ RSpec.xdescribe 'グループ新規登録', type: :system do
       }.to change(Group, :count).by(0)
       # 新規登録ページへ戻されることを確認する
       expect(page).to have_current_path('/groups')
+    end
+  end
+
+  describe 'グループの編集' do
+    before(:each) do
+      @group = Group.create(name: 'Old Group Name') # 既存のグループを作成
+      login(user_owner)
+      current_user(user_owner)
+      visit edit_group_path(@group) # 編集ページに移動
+    end
+  
+    it '正しい情報を入力すればグループ情報が更新されて一覧画面に移動する' do
+      fill_in 'group[name]', with: 'New Group Name' # グループ情報を更新
+      expect {
+        find('input[name="commit"]').click
+      }.to change { @group.reload.name }.from('Old Group Name').to('New Group Name') # データベースのグループが更新されていることを確認
+      expect(page).to have_current_path groups_path, ignore_query: true # 一覧ページにリダイレクトされることを確認
+    end
+  
+    it '誤った情報ではグループ情報が更新されずに編集ページへ戻ってくる' do
+      fill_in 'group[name]', with: '' # グループ情報を更新
+      expect {
+        find('input[name="commit"]').click
+      }.not_to change { @group.reload.name } # データベースのグループが更新されていないことを確認
+      expect(page).to have_current_path edit_group_path(@group) # 編集ページにリダイレクトされることを確認
+    end
+  end
+
+  describe 'グループの削除' do
+    before(:each) do
+      @group = Group.create(name: 'Test Group') # テスト用のグループを作成
+    end
+
+    context 'システム管理者またはオーナーとして' do
+      before(:each) do
+        login(user_owner) # オーナーとしてログイン
+        current_user(user_owner)
+        visit groups_path # グループ一覧ページに移動
+      end
+
+      it '削除リンクをクリックするとグループが削除される' do
+        expect {
+          find_link('削除', href: group_path(@group)).click
+        }.to change(Group, :count).by(-1) # グループが1つ減ることを確認
+        expect(page).to have_current_path groups_path, ignore_query: true # 一覧ページにリダイレクトされることを確認
+        expect(page).not_to have_content @group.name # 削除したグループ名が表示されていないことを確認
+      end
+    end
+
+    context '投稿者として' do
+      before(:each) do
+        login(user_staff) # 投稿者としてログイン
+        current_user(user_staff)
+        visit groups_path # グループ一覧ページに移動
+      end
+
+      it '削除リンクをクリックしてもグループが削除されない' do
+        expect {
+          find_link('削除', href: group_path(@group)).click
+        }.not_to change(Group, :count) # グループが減らないことを確認
+        expect(page).to have_content '権限がありません。' # 適切なエラーメッセージが表示されることを確認
+      end
     end
   end
 end
