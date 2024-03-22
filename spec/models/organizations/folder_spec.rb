@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe Folder, type: :model do
+RSpec.describe Folder, type: :model do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
   let(:folder_celeb) { build(:folder_celeb, organization_id: user_owner.organization_id) }

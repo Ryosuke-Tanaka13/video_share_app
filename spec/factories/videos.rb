@@ -71,28 +71,4 @@ FactoryBot.define do
     # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
     data_url { '/videos/444444444' }
   end
-
-  factory :test_video1, class: 'Video' do
-    title { '限定動画' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
-    range { true }
-    comment_public { false }
-    login_set { true }
-    popup_before_video { false }
-    popup_after_video { false }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/555555555' }
-  end
-
-  factory :test_video2, class: 'Video' do
-    title { '公開動画' }
-    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
-    range { true }
-    comment_public { false }
-    login_set { true }
-    popup_before_video { false }
-    popup_after_video { false }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/666666666' }
-  end
 end
