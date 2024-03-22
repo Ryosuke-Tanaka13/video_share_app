@@ -1,12 +1,3 @@
-// document.addEventListener("turbolinks:load", function(e) {
-//   e.preventDefault(); // リンクのデフォルト動作を防止
-//   document.getElementById('popup').style.display = 'block'; // ポップアップを表示
-// });
-
-// document.getElementById('closePopup').addEventListener('click', function() {
-//   document.getElementById('popup').style.display = 'none'; // ポップアップを非表示
-// });
-
 document.addEventListener("turbolinks:load", function() {
   const hiddenLink = document.getElementById('hiddenPopupBeforeLink');
   // ページを開いてすぐ発火
