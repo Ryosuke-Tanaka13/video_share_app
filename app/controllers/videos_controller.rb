@@ -85,7 +85,7 @@ class VideosController < ApplicationController
   private
 
   def video_params
-    params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
+    params.require(:video).permit(:title, :video, :open_period, :range, :login_set, :popup_before_video,
       :popup_after_video, { folder_ids: [] }, :data_url)
   end
 
