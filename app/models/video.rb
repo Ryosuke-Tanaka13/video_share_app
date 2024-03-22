@@ -44,14 +44,6 @@ class Video < ApplicationRecord
     false
   end
 
-  def accessible_by?(viewer)
-    if range # rangeがtrueの場合、ビデオは限定公開です
-      viewer_group_ids = viewer.viewer_groups.pluck(:group_id)
-      self.groups.where(id: viewer_group_ids).exists?
-    else
-      true # rangeがfalseの場合、ビデオは一般公開です
-    end
-  end
 
   # 下記vimeoへのアップロード機能
   attr_accessor :video
