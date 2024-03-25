@@ -31,9 +31,9 @@ class VideosController < ApplicationController
   def new
     @video = Video.new
     @video.video_folders.build
-    @groups = current_user.organization.groups if current_user.present?
+    @groups = current_user_with_org_and_groups.organization.groups  
   end
-
+  
   def create
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
@@ -95,7 +95,7 @@ class VideosController < ApplicationController
 
   # 共通メソッド(organization::foldersコントローラにも記載)
   def set_organization
-    @organization = Organization.find(params[:organization_id])
+    @organization = Organization.includes(:groups).find(params[:organization_id])
   end
 
   def ensure_user
