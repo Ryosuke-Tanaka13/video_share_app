@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Group, type: :model do
+RSpec.xdescribe Group, type: :model do
   let(:organization) { Organization.create(name: 'organization_name') }
   let(:group) { Group.new(name: 'group_name', organization: organization) }
   

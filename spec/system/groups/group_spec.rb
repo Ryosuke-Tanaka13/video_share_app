@@ -56,6 +56,6 @@ RSpec.describe 'グループ新規登録', type: :system do
       find('input[name="commit"]').click
       # ボタンを押した後、一覧ページへ遷移したことを確認する
       expect(page).to have_current_path groups_path, ignore_query: true
-    end
+    end  
   end
 end
