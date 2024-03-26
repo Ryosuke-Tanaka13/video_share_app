@@ -79,7 +79,7 @@ RSpec.describe 'グループ新規登録', type: :system do
 
   describe 'グループの編集' do
     before(:each) do
-      @group = Group.create(name: 'Old Group Name') # 既存のグループを作成
+      @group = FactoryBot.create(:group)
       login(user_owner)
       current_user(user_owner)
       visit edit_group_path(@group) # 編集ページに移動
