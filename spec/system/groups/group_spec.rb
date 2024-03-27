@@ -53,3 +53,4 @@ RSpec.describe 'グループ新規登録', type: :system do
       expect(@group.organization_id).to eq(user_owner.organization_id)
     end
   end
+end
