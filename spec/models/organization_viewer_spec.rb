@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe OrganizationViewer, type: :model do
   let(:organization) { create(:organization) }
   let(:viewer) { create(:viewer) }
-  let(:organization_viewer) { build(:organization_viewer) }
+  let(:organization_viewer) { build(:organization_viewer, organization: organization, viewer: viewer) }
 
   before(:each) do
     organization
