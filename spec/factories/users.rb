@@ -6,7 +6,7 @@ FactoryBot.define do
     name             { 'オーナー' }
     email            { 'owner_spec@example.com' }
     password         { 'password' }
-    organization_id  { 1 }
+    organization     { association :organization }
     role             { 'owner' }
   end
 
