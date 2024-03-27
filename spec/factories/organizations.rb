@@ -10,4 +10,4 @@ FactoryBot.define do
     name           { 'テックリーダーズ' }
     email          { 'org_spec1@example.com' }
   end
-end
+end   
