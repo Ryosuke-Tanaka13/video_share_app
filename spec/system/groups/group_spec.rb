@@ -50,7 +50,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       expect(page).to have_content('視聴グループ　新規作成画面へ')
       # 新規登録ページへ移動する
       visit new_group_path
-
+  
       # グループ情報を入力する
       fill_in 'group[name]', with: 'New Group Name'
       # 登録ボタンを押すとグループモデルのカウントが1つ上がることを確認する
