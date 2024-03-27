@@ -62,3 +62,4 @@ RSpec.describe 'グループ新規登録', type: :system do
     end
   end
 end
+  
