@@ -41,7 +41,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       login(user_owner)
       current_user(user_owner)
       visit groups_path
-    end    
+    end
 
     it '正しい情報を入力すればグループ新規登録ができて一覧画面に移動する' do
       # 一覧ページに移動する
@@ -50,7 +50,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       expect(page).to have_content('視聴グループ　新規作成画面へ')
       # 新規登録ページへ移動する
       visit new_group_path
-  
+
       # グループ情報を入力する
       fill_in 'group[name]', with: 'New Group Name'
       # 登録ボタンを押すとグループモデルのカウントが1つ上がることを確認する
@@ -60,6 +60,41 @@ RSpec.describe 'グループ新規登録', type: :system do
       # 一覧ページへ遷移したことを確認する
       expect(page).to have_current_path groups_path, ignore_query: true
     end
+
+    it '誤った情報ではグループ新規登録ができずに新規登録ページへ戻ってくる' do
+      # 一覧ページに移動する
+      # visit groups_path
+      # 一覧ページに新規登録ページへ遷移するボタンがあることを確認する
+      expect(page).to have_content('視聴グループ　新規作成画面へ')
+      # 新規登録ページへ移動する
+      visit new_group_path
+
+      # グループ情報を入力する
+      fill_in 'group[name]', with: ''
+      # 登録ボタンを押してもグループモデルのカウントは上がらないことを確認する
+      expect {
+        find('input[name="commit"]').click
+      }.to change(Group, :count).by(0)
+      # 新規登録ページへ戻されることを確認する
+      expect(page).to have_current_path('/groups')
+    end
+  end
+
+  describe 'グループの編集' do
+    before(:each) do
+      @organization = Organization.create(name: 'Test Organization') # 既存のOrganizationを作成
+      @group = Group.new(name: 'Old Group Name', organization: @organization) # 既存のグループを作成
+      login(user_owner)
+      current_user(user_owner)
+      visit edit_group_path(@group) # 編集ページに移動
+    end
+  
+    it '正しい情報を入力すればグループ情報が更新されて一覧画面に移動する' do
+      fill_in 'group[name]', with: 'New Group Name' # グループ情報を更新
+      expect {
+        find('input[name="commit"]').click
+      }.to change { @group.reload.name }.from('Old Group Name').to('New Group Name') # データベースのグループが更新されていることを確認
+      expect(page).to have_current_path groups_path, ignore_query: true # 一覧ページにリダイレクトされることを確認
+    end
   end
 end
-  
