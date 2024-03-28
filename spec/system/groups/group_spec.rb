@@ -90,10 +90,12 @@ RSpec.describe 'グループ新規登録', type: :system do
       it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
         # ここで再度「New Group Name」という名前のグループを作成
         visit new_group_path
-        fill_in 'group[name]', with: 'New Group Name'
+        fill_in 'group[name]', with: 'Group Name'
         find('input[name="commit"]').click
         visit groups_path
-    
+
+        # 編集ページへの遷移
+        find_link('編集', href: edit_group_path(Group.find_by(name: 'Group Name').uuid)).click
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
     
