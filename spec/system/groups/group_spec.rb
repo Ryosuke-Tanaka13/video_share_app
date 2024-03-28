@@ -88,6 +88,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
     
       it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
+        sign_in(user_owner)
         # ここで再度「New Group Name」という名前のグループを作成
         visit new_group_path
         fill_in 'group[name]', with: 'Group Name'
