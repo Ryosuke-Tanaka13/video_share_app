@@ -40,9 +40,9 @@ RSpec.describe 'グループ新規登録', type: :system do
 
   describe 'グループの編集' do
     before(:each) do
-      organization = Organization.create(name: 'Test Organization') # 既存のOrganizationを作成
-      @group = Group.create(name: 'Old Group Name', organization: organization) # 既存のグループを作成
       @test_user_owner = create(:test_user_owner, confirmed_at: Time.now) # test_user_ownerを作成
+      organization = Organization.create(name: 'Test Organization', owner: @test_user_owner) # 既存のOrganizationを作成
+      @group = Group.create(name: 'Old Group Name', organization: organization) # 既存のグループを作成
       login(@test_user_owner)
       current_user(@test_user_owner)
       visit edit_group_path(@group) # 編集ページに移動
