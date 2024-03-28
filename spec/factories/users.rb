@@ -19,6 +19,15 @@ FactoryBot.define do
     role             { 'owner' }
   end
 
+  factory :test_user_owner, class: 'User' do
+    sequence(:id)
+    name             { 'テストオーナー' }
+    sequence(:email) { |n| "test_owner_spec#{n}@example.com" }
+    password         { 'password' }
+    sequence(:organization_id)
+    role             { 'owner' }
+  end
+  
   factory :user, aliases: [:user_staff] do
     id               { 3 }
     name             { 'スタッフ' }
