@@ -38,10 +38,10 @@ RSpec.describe 'グループ新規登録', type: :system do
 
   describe 'グループの新規登録' do
     before(:each) do
-      login(user_owner)
-      current_user(user_owner)
+      sign_in(user_owner)
       visit groups_path
     end
+
 
     it '正しい情報を入力すればグループ新規登録ができて一覧画面に移動する' do
       # 一覧ページに移動する
@@ -83,11 +83,11 @@ RSpec.describe 'グループ新規登録', type: :system do
       let(:group) { create(:group, name: 'New Group Name') }
     
       before(:each) do
-        login(user_owner)
-        current_user(user_owner) # これを追加
         group
+        sign_in(user_owner)
         visit groups_path
       end
+      
   
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
         expect(page).to have_content('New Group Name')
