@@ -88,20 +88,13 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
     
       it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-        sign_in(user_owner)
-        # ここで再度「New Group Name」という名前のグループを作成
-        visit new_group_path
-        fill_in 'group[name]', with: 'Group Name'
-        find('input[name="commit"]').click
-        visit groups_path
-
-        # 編集ページへの遷移
-        find_link('編集', href: edit_group_path(Group.find_by(name: 'Group Name').uuid)).click
+        group = Group.find_by(name: 'New Group Name')
+        visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
-    
+        expect(page).to have_current_path(edit_group_path(group.uuid)),
+                      "期待されるページに遷移していません。現在のページ: #{page.current_path}"
         expect(page).to have_content('視聴グループ名を入力してください')
-        expect(page).to have_current_path(edit_group_path(Group.find_by(name: 'New Group Name').uuid))
       end
     end
   end
