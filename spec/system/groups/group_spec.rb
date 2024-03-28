@@ -70,8 +70,21 @@ RSpec.describe 'グループ新規登録', type: :system do
         visit groups_path
       end
     
-      it '一覧画面に新しく作成したグループ名が表示される' do
+      it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
         expect(page).to have_content('New Group Name')
+    
+        # 編集ページへの遷移
+        find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
+    
+        # 編集内容を入力
+        fill_in 'group[name]', with: 'Edited Group Name'
+    
+        # 編集を保存
+        find('input[name="commit"]').click
+    
+        # 一覧ページに戻り、編集結果を確認
+        expect(page).to have_current_path groups_path, ignore_query: true
+        expect(page).to have_content('Edited Group Name')
       end
     end
   end
