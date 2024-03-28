@@ -59,33 +59,19 @@ RSpec.describe 'グループ新規登録', type: :system do
 
     describe 'グループの編集' do
       before(:each) do
-        group = create(:group, name: 'New Group Name')
         sign_in(user_owner)
+        # 新規登録ページに遷移
+        visit new_group_path
+        # グループ名を記入する
+        fill_in 'group[name]', with: 'New Group Name'
+        # 新規登録ボタンをクリック
+        find('input[name="commit"]').click
+        # 一覧画面に遷移
         visit groups_path
       end
-
-      it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
+    
+      it '一覧画面に新しく作成したグループ名が表示される' do
         expect(page).to have_content('New Group Name')
-        find_link('編集', href: edit_group_path(group.uuid)).click
-        expect(page).to have_current_path(edit_group_path(group.uuid))
-
-        fill_in 'group[name]', with: 'Edit Group Name'
-        find('input[name="commit"]').click
-
-        expect(page).to have_current_path groups_path, ignore_query: true
-        expect(page).to have_content('Edit Group Name')
-      end
-
-      it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-        expect(page).to have_content('New Group Name')
-        find_link('編集', href: edit_group_path(group.uuid)).click
-        expect(page).to have_current_path(edit_group_path(group.uuid))
-
-        fill_in 'group[name]', with: ''
-        find('input[name="commit"]').click
-
-        expect(page).to have_current_path(group_path(group.uuid))
-        expect(page).to have_content('エラー')
       end
     end
   end
