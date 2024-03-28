@@ -43,7 +43,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       expect(page).to have_content('視聴グループ　新規作成画面へ')
       visit new_group_path
 
-      fill_in 'group[name]', with: 'New Group Name'
+      fill_in 'group[name]', with: 'Group Name'
       expect { find('input[name="commit"]').click }.to change(Group, :count).by(1)
       expect(page).to have_current_path groups_path, ignore_query: true
     end
