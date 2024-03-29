@@ -92,8 +92,7 @@ RSpec.describe 'グループ新規登録', type: :system do
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
-        expect(page).to have_current_path(group_path(group.uuid)),
-                      "期待されるページに遷移していません。現在のページ: #{page.current_path}"
+        expect(page).to have_current_path(group_path(group.uuid))
         expect(page).to have_content('視聴グループ名を入力してください')
       end
     end
