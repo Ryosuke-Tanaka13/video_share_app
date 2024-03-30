@@ -47,6 +47,7 @@ gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
 gem 'rack-cors'
 gem 'google-cloud-speech'
+gem 'google-cloud-storage'
 
 group :development, :test do
   # ERD生成
@@ -102,3 +103,4 @@ end
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 gem 'ffi', '~> 1.15'
+

@@ -15,7 +15,8 @@ services:
       - node_modules:/webapp/node_modules:cached
       - packs:/webapp/public/packs
       - /Users/shimatanitakahiro/Desktop:/app/output
-      - /Users/shimatanitakahiro/learned-fusion-389707-670008995bae.json:/webapp/learned-fusion-389707-670008995bae.json:ro
+      - /Users/shimatanitakahiro:/webapp:ro
+
     # ports = ホストPCのポート：コンテナポート（コンテナの3000ポートをホストPCの3000ポートにバインディング（繋げるみたいな意味）する。）
     ports:
       - "3000:3000"
