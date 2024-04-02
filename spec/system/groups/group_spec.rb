@@ -96,5 +96,21 @@ RSpec.describe 'グループ新規登録', type: :system do
         expect(page).to have_content('視聴グループ名を入力してください')
       end
     end
+
+    describe 'グループの削除' do
+      it 'グループを削除すると一覧画面に移動する' do
+        sign_in(system_admin)
+        # 新規登録ページに遷移
+        visit videos_path
+        # グループ名を記入する
+        fill_in 'group[name]', with: 'destroy Group Name'
+        # 新規登録ボタンをクリック
+        find('input[name="commit"]').click
+        # 一覧画面に遷移
+        visit groups_path
+        # 一覧画面に遷移することを確認
+        expect(page).to have_content('検索条件')
+      end
+    end
   end
 end
