@@ -15,7 +15,7 @@ RSpec.describe 'グループ新規登録', type: :system do
   let(:organization_viewer1) { create(:organization_viewer1) }
   let(:organization_viewer2) { create(:organization_viewer2) }
   let(:organization_viewer3) { create(:organization_viewer3) }
-　　
+
   before(:each) do
     system_admin
     organization
