@@ -97,10 +97,6 @@ ActiveRecord::Schema.define(version: 2023_12_14_215905) do
     t.boolean "is_valid", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "plan"
-    t.boolean "payment_success", default: false
-    t.string "customer_id"
-    t.string "subscription_id"
   end
 
   create_table "replies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
