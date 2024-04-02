@@ -7,6 +7,7 @@ RSpec.describe 'グループ新規登録', type: :system do
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
+  let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
   let(:another_user_staff) { create(:another_user_staff, confirmed_at: Time.now) }
@@ -15,6 +16,7 @@ RSpec.describe 'グループ新規登録', type: :system do
   let(:organization_viewer1) { create(:organization_viewer1) }
   let(:organization_viewer2) { create(:organization_viewer2) }
   let(:organization_viewer3) { create(:organization_viewer3) }
+  let(:group) { create(:group, organization: organization) }
 
   before(:each) do
     system_admin
@@ -100,6 +102,14 @@ RSpec.describe 'グループ新規登録', type: :system do
     describe 'グループの削除' do
       it 'グループを削除すると一覧画面に移動する' do
         sign_in(system_admin)
+        # 組織一覧ページに移動
+        visit organizations_path
+        click_link organization.name
+        # 現在のパスが organizations/show ページであることを確認
+        expect(page).to have_current_path(organization_path(organization))
+
+        # 組織の詳細ページに組織名が含まれていることを確認
+        expect(page).to have_content(organization.name)
         # 新規登録ページに遷移
         visit videos_path
         # グループ名を記入する
