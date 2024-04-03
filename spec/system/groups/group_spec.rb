@@ -106,6 +106,12 @@ RSpec.describe 'グループ新規登録', type: :system do
         click_link organization.name
         # 現在のパスが organizations/show ページであることを確認
         expect(page).to have_current_path(organization_path(organization))
+
+        # 組織の詳細ページに組織名が含まれていることを確認
+        expect(page).to have_content(organization.name)
+        puts "Group Name: #{group.name}"
+        # 選択した組織の動画一覧ページに遷移
+        visit videos_path(organization_id: organization.id)
       end
     end
   end
