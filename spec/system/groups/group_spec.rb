@@ -56,60 +56,63 @@ RSpec.describe 'グループ新規登録', type: :system do
       expect { find('input[name="commit"]').click }.to change(Group, :count).by(0)
       expect(page).to have_current_path('/groups')
     end
+  end
 
-    describe 'グループの編集' do
-      before(:each) do
-        sign_in(user_owner)
-        # 新規登録ページに遷移
-        visit new_group_path
-        # グループ名を記入する
-        fill_in 'group[name]', with: 'New Group Name'
-        # 新規登録ボタンをクリック
-        find('input[name="commit"]').click
-        # 一覧画面に遷移
+  describe 'グループの編集' do
+    before(:each) do
+      sign_in(user_owner)
+      # 新規登録ページに遷移
+      visit new_group_path
+      # グループ名を記入する
+      fill_in 'group[name]', with: 'New Group Name'
+      # 新規登録ボタンをクリック
+      find('input[name="commit"]').click
+      # 一覧画面に遷移
+      visit groups_path
+    end
+  
+    it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
+      expect(page).to have_content('New Group Name')
+  
+      # 編集ページへの遷移
+      find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
+  
+      # 編集内容を入力
+      fill_in 'group[name]', with: 'Edited Group Name'
+  
+      # 編集を保存
+      find('input[name="commit"]').click
+  
+      # 一覧ページに戻り、編集結果を確認
+      expect(page).to have_current_path groups_path, ignore_query: true
+      expect(page).to have_content('Edited Group Name')
+    end
+  
+    it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
+      group = Group.find_by(name: 'New Group Name')
+      visit edit_group_path(group.uuid)
+      fill_in 'group[name]', with: ''
+      find('input[name="commit"]').click
+      expect(page).to have_current_path(group_path(group.uuid))
+      expect(page).to have_content('視聴グループ名を入力してください')
+    end
+  end
+
+  describe 'グループの削除' do
+    describe '投稿者でログイン' do
+      let(:group) { create(:group, organization_id: user_staff.organization_id) }
+      
+      before do
+        sign_in(user_staff)
         visit groups_path
       end
-    
-      it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-        expect(page).to have_content('New Group Name')
-    
-        # 編集ページへの遷移
-        find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
-    
-        # 編集内容を入力
-        fill_in 'group[name]', with: 'Edited Group Name'
-    
-        # 編集を保存
-        find('input[name="commit"]').click
-    
-        # 一覧ページに戻り、編集結果を確認
-        expect(page).to have_current_path groups_path, ignore_query: true
-        expect(page).to have_content('Edited Group Name')
-      end
-    
-      it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-        group = Group.find_by(name: 'New Group Name')
-        visit edit_group_path(group.uuid)
-        fill_in 'group[name]', with: ''
-        find('input[name="commit"]').click
-        expect(page).to have_current_path(group_path(group.uuid))
-        expect(page).to have_content('視聴グループ名を入力してください')
+  
+      it '視聴グループ名が存在することを確認' do
+        expect(page).to have_content('視聴グループ一覧')
+  
+        # ページのHTMLをコンソールに出力
+        puts page.html
       end
     end
-
-    describe 'グループの削除' do
-      describe '投稿者でログイン' do
-        let(:group) { create(:group, organization_id: user_staff.organization_id) }
-        
-        before do
-          sign_in(user_staff)
-          visit groups_path
-        end
-
-        it '視聴グループ名が存在することを確認' do
-          expect(page).to have_content('視聴グループ一覧')
-        end
-      end
-    end      
-  end   
+  end
 end
