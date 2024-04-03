@@ -98,21 +98,18 @@ RSpec.describe 'グループ新規登録', type: :system do
     end
 
     describe 'グループの削除' do
-      let(:group) { create(:group, organization: organization) }
-      it 'グループを削除すると一覧画面に移動する' do
-        sign_in(system_admin)
-        # 組織一覧ページに移動
-        visit organizations_path  
-        click_link organization.name
-        # 現在のパスが organizations/show ページであることを確認
-        expect(page).to have_current_path(organization_path(organization))
+      describe '投稿者でログイン' do
+        let(:group) { create(:group, organization_id: user_staff.organization_id) }
+        
+        before do
+          sign_in(user_staff)
+          visit groups_path
+        end
 
-        # 組織の詳細ページに組織名が含まれていることを確認
-        expect(page).to have_content(organization.name)
-        puts "Group Name: #{group.name}"
-        # 選択した組織の動画一覧ページに遷移
-        visit videos_path(organization_id: organization.id)
+        it '視聴グループ名が存在することを確認' do
+          expect(page).to have_content(group.name)
+        end
       end
-    end
+    end    
   end
 end
