@@ -102,7 +102,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       it 'グループを削除すると一覧画面に移動する' do
         sign_in(system_admin)
         # 組織一覧ページに移動
-        visit organizations_path
+        visit organizations_path  
         click_link organization.name
         # 現在のパスが organizations/show ページであることを確認
         expect(page).to have_current_path(organization_path(organization))
