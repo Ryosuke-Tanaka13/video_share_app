@@ -110,6 +110,6 @@ RSpec.describe 'グループ新規登録', type: :system do
           expect(page).to have_content('視聴グループ一覧')
         end
       end
-    end    
-  end
+    end      
+  end   
 end
