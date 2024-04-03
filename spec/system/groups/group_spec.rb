@@ -111,7 +111,7 @@ RSpec.describe 'グループ新規登録', type: :system do
         expect(page).to have_content('視聴グループ一覧')
   
         # ページのHTMLをコンソールに出力
-        puts page.html
+        puts page.text
       end
     end
   end
