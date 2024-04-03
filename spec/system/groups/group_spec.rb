@@ -106,7 +106,7 @@ RSpec.describe 'グループ新規登録', type: :system do
         sign_in(user_staff)
         visit groups_path
       end
-  
+    
       it '視聴グループ名が存在することを確認' do
         expect(page).to have_content('視聴グループ一覧')
   
