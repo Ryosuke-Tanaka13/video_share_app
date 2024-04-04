@@ -108,12 +108,19 @@ RSpec.describe 'グループ新規登録', type: :system do
         visit groups_path
       end
     
-      it '視聴グループ名が存在することを確認' do
-        expect(page).to have_content('視聴グループ一覧')
-      
-        # ページのHTMLをコンソールに出力
-        puts page.text
+      it '視聴グループの削除に失敗する' do
+        expect(page).to have_content(group.name)
+        find_link('削除', href: group_path(group.uuid)).click
+  
+        # 削除操作後のメッセージを確認
+        expect(page).to have_content('権限がありません')
+  
+        # 削除後に一覧ページに戻ることを確認
+        expect(page).to have_current_path(groups_path, ignore_query: true)
+  
+        # 削除後もグループの数が変わらないことを確認
+        expect(Group.count).to eq 1
       end
     end
-  end
+  end  
 end
