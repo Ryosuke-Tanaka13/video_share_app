@@ -9,7 +9,7 @@ FactoryBot.define do
     id             { 2 }
     name           { 'テックリーダーズ' }
     email          { 'org_spec1@example.com' }
-  end  
+  end
 
   factory :test_organization, class: 'Organization' do
     name           { 'セレブエンジニア' }

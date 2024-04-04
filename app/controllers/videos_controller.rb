@@ -31,9 +31,9 @@ class VideosController < ApplicationController
   def new
     @video = Video.new
     @video.video_folders.build
-    @groups = current_user_with_org_and_groups.organization.groups  
+    @groups = current_user_with_org_and_groups.organization.groups
   end
-  
+
   def create
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
