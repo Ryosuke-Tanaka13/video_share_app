@@ -87,7 +87,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       expect(page).to have_current_path groups_path, ignore_query: true
       expect(page).to have_content('Edited Group Name')
     end
-  　　
+    
     it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
       group = Group.find_by(name: 'New Group Name')
       visit edit_group_path(group.uuid)
