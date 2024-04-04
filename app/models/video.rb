@@ -44,7 +44,6 @@ class Video < ApplicationRecord
     false
   end
 
-
   # 下記vimeoへのアップロード機能
   attr_accessor :video
 
@@ -100,7 +99,7 @@ class Video < ApplicationRecord
   scope :range, lambda { |range|
     if range.present?
       if range == 'all'
-        return
+        nil
       else
         where(range: range)
       end
