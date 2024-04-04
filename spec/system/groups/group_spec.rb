@@ -100,7 +100,8 @@ RSpec.describe 'グループ新規登録', type: :system do
 
   describe 'グループの削除' do
     describe '投稿者でログイン' do
-      let(:group) { create(:group, organization_id: user_staff.organization_id) }
+      let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
+      let!(:group) { create(:group, organization_id: user_staff.organization_id) }
       
       before do
         sign_in(user_staff)
