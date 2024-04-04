@@ -107,10 +107,14 @@ RSpec.describe 'グループ新規登録', type: :system do
         sign_in(user_staff)
         visit groups_path
       end
-    
+  
       it '視聴グループの削除に失敗する' do
         expect(page).to have_content(group.name)
+        # 削除リンクをクリック
         find_link('削除', href: group_path(group.uuid)).click
+  
+        # 確認ダイアログを処理
+        page.driver.browser.switch_to.alert.accept
   
         # 削除操作後のメッセージを確認
         expect(page).to have_content('権限がありません')
