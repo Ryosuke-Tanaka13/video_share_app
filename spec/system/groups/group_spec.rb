@@ -126,5 +126,33 @@ RSpec.describe 'グループ新規登録', type: :system do
         expect(Group.count).to eq 1
       end
     end
+    
+    describe 'オーナーでログイン' do
+      let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
+      let!(:group) { create(:group, organization_id: user_owner.organization_id) }
+      
+      before do
+        sign_in(user_owner)
+        visit groups_path
+      end
+
+      it '視聴グループの削除に成功する' do
+        expect(page).to have_content(group.name)
+        # 削除リンクをクリック
+        find_link('削除', href: group_path(group.uuid)).click
+  
+        # 確認ダイアログを処理
+        page.driver.browser.switch_to.alert.accept
+
+         # 削除操作後のメッセージを確認
+         expect(page).to have_content('グループを削除しました')
+
+          # 削除後に一覧ページに戻ることを確認
+        expect(page).to have_current_path(groups_path, ignore_query: true)
+
+        # 削除後もグループの数が変わることを確認
+        expect(Group.count).to eq 0
+      end
+    end
   end  
 end
