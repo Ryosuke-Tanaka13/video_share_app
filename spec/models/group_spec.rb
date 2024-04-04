@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Group, type: :model do
   let(:organization) { Organization.create(name: 'organization_name') }
-  let(:group) { Group.new(name: 'group_name', organization: organization) }
-  
+  let(:group) { described_class.new(name: 'group_name', organization: organization) }
+
   describe 'バリデーション' do
     context '名前が設定されている場合' do
       it 'バリデーションが通る' do
