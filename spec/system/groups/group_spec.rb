@@ -10,7 +10,7 @@ RSpec.describe 'グループ新規登録', type: :system do
     user_owner
     user_staff
   end
-  
+
   describe 'グループの新規登録' do
     before(:each) do
       sign_in(user_owner)
