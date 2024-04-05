@@ -19,14 +19,6 @@ FactoryBot.define do
     role             { 'owner' }
   end
 
-  factory :test_user_owner, class: 'User' do
-    name             { 'テストオーナー' }
-    sequence(:email) { |n| "test_owner_spec#{n}@example.com" }
-    password         { 'password' }
-    sequence(:organization_id)
-    role             { 'owner' }
-  end
-
   factory :user, aliases: [:user_staff] do
     id               { 3 }
     name             { 'スタッフ' }
@@ -51,13 +43,6 @@ FactoryBot.define do
     email            { 'staff_spec2@example.com' }
     password         { 'password' }
     organization_id  { 2 }
-    role             { 'staff' }
-  end
-
-  factory :test_user, class: 'User' do
-    name             { 'スタッフ' }
-    email            { Faker::Internet.email }
-    password         { 'password' }
     role             { 'staff' }
   end
 end
