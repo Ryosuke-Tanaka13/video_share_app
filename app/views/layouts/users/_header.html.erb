@@ -11,9 +11,9 @@
   </ul>
   <% if current_user.role == 'owner' %>
     <% if current_organization.plan.nil? %>
-      <span class="nav-link navbar-danger">プランを選択してください。</span>
+      <%= link_to 'プランを選択してください。', new_organizations_payment_path(current_organization), class: 'nav-link navbar-danger' %>
     <% elsif current_organization.payment_success == false %>
-      <span class="nav-link navbar-danger">支払いが失敗しています。再度プランを選択してください。</span>
+      <%= link_to '支払いが失敗しています。再度プランを選択してください。', new_organizations_payment_path(current_organization), class: 'nav-link navbar-danger' %>
     <% end %>
   <% end %>
 </nav>

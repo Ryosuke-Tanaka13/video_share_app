@@ -14,7 +14,7 @@
             <% if @organization.plan == 0 %>
               <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
             <% else %>
-              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3", data: { confirm: "0円プランに変更してもよろしいですか？" } %>
             <% end %>
           <% end %>
         </div>
@@ -33,7 +33,7 @@
             <% if @organization.plan == 1000 %>
               <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
             <% else %>
-              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3", data: { confirm: "1000円プランに変更してもよろしいですか？" } %>
             <% end %>
           <% end %>
         </div>
@@ -52,7 +52,7 @@
             <% if @organization.plan == 2000 %>
               <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
             <% else %>
-              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3" %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3", data: { confirm: "2000円プランに変更してもよろしいですか？" } %>
             <% end %>
           <% end %>
         </div>

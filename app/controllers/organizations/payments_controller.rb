@@ -24,7 +24,7 @@ class Organizations::PaymentsController < ApplicationController
   def create_session(price_id, organization)
     Stripe::Checkout::Session.create({
       # テスト用URL
-      success_url: "#{request.protocol}#{request.host_with_port}/organizations/#{organization.id}/folders",
+      success_url: "#{request.protocol}#{request.host_with_port}/organizations/#{organization.id}/folders?payment=success",
       cancel_url: "#{request.protocol}#{request.host_with_port}/organizations/#{organization.id}/payment/new",
       customer: organization.customer_id,
       client_reference_id: organization.id,
