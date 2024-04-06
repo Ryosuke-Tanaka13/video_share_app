@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.xdescribe Viewer, type: :model do
+RSpec.describe Viewer, type: :model do
   let :viewer do
     build(:viewer)
   end

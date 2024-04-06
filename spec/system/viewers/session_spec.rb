@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'ViewerSessions', type: :system do
+RSpec.describe 'ViewerSessions', type: :system do
   context 'ログインできることを確認' do
     let!(:viewer) { FactoryBot.create(:viewer, password: 'password', confirmed_at: Time.now) }
 

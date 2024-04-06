@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'ViewerUnsubscribeSystem', type: :system do
+RSpec.describe 'ViewerUnsubscribeSystem', type: :system do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
