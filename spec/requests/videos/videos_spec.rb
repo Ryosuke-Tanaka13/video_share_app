@@ -795,7 +795,7 @@ RSpec.describe 'Videos', type: :request do
     describe 'オーナーが現在のログインユーザー' do
       before(:each) do
         sign_in user_owner
-        video_test
+        video_sample
       end
 
       describe '正常' do
@@ -816,7 +816,7 @@ RSpec.describe 'Videos', type: :request do
     describe '動画投稿者が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
-        video_test
+        video_sample
       end
 
       describe '正常' do
