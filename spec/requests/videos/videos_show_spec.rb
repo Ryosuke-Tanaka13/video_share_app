@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'Videos', type: :request do
+RSpec.describe 'Videos', type: :request do
   let(:organization) { create(:test_organization) }
   let(:user) { create(:test_user, confirmed_at: Time.now) }
   let(:group) { create(:group) }
