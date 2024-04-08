@@ -166,71 +166,25 @@ end
 
 # ------------------音声出力と音声データ文字起こし、データ統合-----------------------------------------
 def create_bucket
-  storage = Google::Cloud::Storage.new(
+  @storage = Google::Cloud::Storage.new(
     project_id: 'learned-fusion-389707',
     credentials: Rails.root.join('gcstoragelearned-fusion-389707-d403d797d105.json'),
-    timeout: 999
+    timeout: 1800
   )
 
-  bucket_name = 'movie_app_bucket'
-  bucket = storage.bucket(bucket_name)
-  if bucket.nil?
-    bucket = storage.create_bucket(bucket_name)
-    puts "Bucket '#{bucket.name}' created."
+  @bucket_name = 'movie_app_bucket'
+  @bucket = @storage.bucket(@bucket_name)
+  if @bucket.nil?
+    @bucket = @storage.create_bucket(@bucket_name)
+    puts "Bucket '#{@bucket.name}' created."
   else
-    puts "Bucket '#{bucket.name}' already exists."
+    puts "Bucket '#{@bucket.name}' already exists."
   end
-  bucket
+  @bucket
 rescue StandardError => e
   puts "Error creating bucket: #{e.message}"
 end
 
-def upload_to_google_cloud_storage(chunks, bucket, voice_path, tempfile )
-  storage = Google::Cloud::Storage.new(project_id: "learned-fusion-389707")
-  temp_file_path = tempfile.path
-  file = storage.bucket(bucket).create_file(temp_file_path, File.basename(voice_path))
-  file.public_url
-  puts "public_url: #{public_url}"
-end
-
-def transcribe_audio(credentials_path, voice_path, bucket, tempfile)
-  Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
-  Google::Cloud::Storage.configure { |config| config.credentials = credentials_path.to_s }
-  speech_client = Google::Cloud::Speech.speech
-  chank_size =  5 * 1024 * 1024 
-  audio_data = File.binread(voice_path)
-
-  # 音声データをバイトデータ（配列）に変換している。
-  chunks = audio_data.bytes.each_slice(chank_size).to_a
-  audio_uri = nil
-  chunks.each_with_index do |data, index|
-    file_name = "#{voice_path}_part_#{index}"
-    byte_stream = StringIO.new(data.pack('C*'))
-    file = bucket.create_file(byte_stream, file_name)
-    audio_uri = file.public_url if index.zero?
-  end
-  #この行が出てきたら修正スタート地点
-  # １分間を超えるデータはgoogle_cloud_speech APIからURIを取得する非同期通信を採用する。
-  config = {
-  encoding: :LINEAR16,
-  sample_rate_hertz: 44100,
-  language_code: "ja-JP"
-  }
-  operation = speech_client.long_running_recognize(config: config, audio: { uri: audio_uri })
-    # audio = { content: audio_data }
-  operation.wait_until_done!
-  response = operation.response
-
-  if response.results.any?
-    results = response.results
-    transcript = results.map(&:alternatives).map(&:transcript).join(" ")
-    puts "音声認識に成功しました：#{transcript}"
-    return transcript # 認識されたテキストを返す
-  else
-    puts "音声認識に失敗しました"
-    return nil
-  end
-end
 
 
 def audio_output
@@ -263,28 +217,52 @@ def audio_output
       audio_data = File.binread(voice_path)
       desktop_path = '/app/output'
       file_path = File.join(desktop_path, self_filename)
-
       # デバッグ用にログに出力
       puts "Output file path: #{file_path}"
-
       File.write(file_path, audio_data, encoding: 'ascii-8bit')
-
-     
       bucket = create_bucket
        if bucket
          audio_file_name = "output#{Time.now.to_i}.wav"
-         credentials_path = Rails.root.join('/webapp/gcstoragelearned-fusion-389707-d403d797d105.json').to_s
-         audio_uri = upload_to_google_cloud_storage([audio_data], bucket.name, audio_file_name, tempfile)
        else
          puts "Bucket creation failed."
+         return
        end
-      
-      
-      transcript = transcribe_audio(credentials_path, voice_path, bucket, tempfile)
-
-      puts "transcribe: #{transcript}"
+      chank_size =  5 * 1024 * 1024 
+      # 音声データをバイトデータ（配列）に変換している。
+      chunks = audio_data.bytes.each_slice(chank_size).to_a
+      audio_uri = upload_to_google_cloud_storage(chunks, voice_path, tempfile )
+        chunks.each_with_index do |data, index|
+          file_name = "#{voice_path}_part_#{index}"
+          byte_stream = StringIO.new(data.pack('C*'))
+          file = @bucket.create_file(byte_stream, file_name)
+          # google_cloud_speechに渡すパスの形式をGCS形式にする
+          audio_uri = "gs://#{@bucket_name}#{file_name}"
+        config = {
+            encoding: :LINEAR16,
+            sample_rate_hertz: 44100,
+            language_code: "ja-JP"
+          }
+        end
+      credentials_path = Rails.root.join('/webapp/gcstoragelearned-fusion-389707-d403d797d105.json').to_s
+      Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
+      speech_client = Google::Cloud::Speech.speech
+      # 1分間を超える音声データをlong_running_recognizeメソッドで長時間の音声認識（文字起こし）を行なっている
+      operation = speech_client.long_running_recognize(config: config, audio: { uri: audio_uri })
+      # audio = { content: audio_data }
+      operation.wait_until_done!
+      response = operation.response
+        if response.results.any?
+          results = response.results
+          transcript = results.map(&:alternatives).map(&:transcript).join(" ")
+          puts "音声認識に成功しました：#{transcript}"
+          return transcript # 認識されたテキストを返す
+        else
+          puts "音声認識に失敗しました"
+          return nil
+        end
+      transcript = transcribe_audio(credentials_path, audio_uri, bucket, tempfile, chunks)
       if  audio_data.present?
-        # video_temp_path = audio_data.tempfile.path
+        video_temp_path = audio_data.tempfile.path
         video_temp_path = tempfile.path
         desktop_path = '/app/output'
         puts "audio_data: #{audio_data}"
@@ -368,7 +346,12 @@ def audio_output
     @vimeo_api_token = ENV['VIMEO_API_TOKEN']
   end
 
-
+  def transcribe_audio
+    Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
+    # Google::Cloud::Storage.configure { |config| config.credentials = credentials_path.to_s }
+   
+    
+  end
 
 
   
