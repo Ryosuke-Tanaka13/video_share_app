@@ -100,7 +100,7 @@ class Video < ApplicationRecord
   scope :range, lambda { |range|
     if range.present?
       if range == 'all'
-        return
+        nil
       else
         where(range: range)
       end

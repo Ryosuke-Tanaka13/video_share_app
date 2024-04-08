@@ -12,7 +12,6 @@ module VideosHelper
   end
 
   def selected_before_popup_before_video
-
     ['動画視聴開始時ポップアップ非表示', 0] if @video.popup_before_video
   end
 
