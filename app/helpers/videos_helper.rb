@@ -12,10 +12,11 @@ module VideosHelper
   end
 
   def selected_before_popup_before_video
-    ['動画視聴開始時ポップアップ非表示', 1] if @video.popup_before_video
+
+    ['動画視聴開始時ポップアップ非表示', 0] if @video.popup_before_video
   end
 
   def selected_before_popup_after_video
-    ['動画視聴終了時ポップアップ非表示', 1] if @video.popup_after_video
+    ['動画視聴終了時ポップアップ非表示', 0] if @video.popup_after_video
   end
 end
