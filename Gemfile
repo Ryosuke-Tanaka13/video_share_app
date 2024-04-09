@@ -74,7 +74,7 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   # 結合テスト用ツール
-  gem 'capybara'
+  gem 'capybara', '3.39.2'
   gem 'launchy', '~> 2.4.3' # 追記
   gem 'selenium-webdriver'
   gem 'turnip'
