@@ -26,7 +26,7 @@ RSpec.describe 'グループ新規登録', type: :system do
 
     describe '確認' do
       it 'organization_viewer.viewer.name を出力する' do
-        puts organization_viewer.viewer.name
+        puts organization_viewer.name
       end
     end
   end
