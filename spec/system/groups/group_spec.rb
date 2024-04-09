@@ -19,13 +19,15 @@ RSpec.describe 'グループ新規登録', type: :system do
   end
 
   describe 'グループの新規登録' do
+    let(:current_user) { user_owner }
+  
     before(:each) do
-      sign_in(user_owner)
+      sign_in(current_user)
       visit groups_path
     end
-
+  
     describe '確認' do
-      it 'user_owner.organization.organization_viewers.viewer.name を出力する' do
+      it 'current_user.organization.organization_viewers.viewer.name を出力する' do
         current_user.organization.organization_viewers.each do |organization_viewer|
           puts organization_viewer.viewer.name
         end
