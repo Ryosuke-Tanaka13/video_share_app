@@ -4,7 +4,7 @@ RSpec.describe 'グループ新規登録', type: :system do
   let(:organization) { create(:organization) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
-  let(:viewer) { create(:viewer, organization: organization) }
+  let(:viewer) { create(:viewer) }
   let(:organization_viewer) { create(:organization_viewer) }
   let(:organization_viewer2) { create(:organization_viewer2) }
   before(:each) do
