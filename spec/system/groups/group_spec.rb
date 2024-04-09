@@ -9,9 +9,11 @@ RSpec.describe 'グループ新規登録', type: :system do
   let(:organization_viewer2) { create(:organization_viewer2) }
   before(:each) do
     organization
-    organization_viewer
-    user_owner
     user_staff
+    user_owner
+    viewer
+    organization_viewer
+    organization_viewer2  
   end
 
   describe 'グループの新規登録' do
