@@ -8,6 +8,7 @@ RSpec.describe 'グループ新規登録', type: :system do
   let(:viewer1) { create(:viewer1) }
   let(:organization_viewer) { create(:organization_viewer) }
   let(:organization_viewer2) { create(:organization_viewer2) }
+
   before(:each) do
     organization
     user_staff
@@ -15,17 +16,17 @@ RSpec.describe 'グループ新規登録', type: :system do
     viewer
     viewer1
     organization_viewer
-    organization_viewer2  
+    organization_viewer2
   end
 
   describe 'ユーザーがグループを新規登録する' do
     let(:current_user) { user_owner }
-  
+
     before(:each) do
       sign_in(current_user)
       visit groups_path
     end
-  
+
     describe '視聴グループの新規登録' do
       it '視聴グループが正常に作成される' do
         expect(page).to have_content('視聴グループ　新規作成画面へ')
