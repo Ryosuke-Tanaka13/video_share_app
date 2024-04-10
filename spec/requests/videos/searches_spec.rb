@@ -2174,7 +2174,7 @@ RSpec.describe 'Videos::Searches', type: :request do
         end
 
         it '正常値レスポンス' do
-          expect(response).to have_http_status '302'
+          expect(response).to have_http_status :found
         end
 
         it 'root_pathにリダイレクトされる' do
