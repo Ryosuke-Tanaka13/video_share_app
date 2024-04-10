@@ -54,7 +54,6 @@ RSpec.describe 'グループ新規登録', type: :system do
       # 新規登録ページに遷移
       visit new_group_path
       fill_in 'group[name]', with: 'New Group Name'
-      select organization_viewer.viewer.name, from: 'viewer-select'
       find('input[name="commit"]').click
       visit groups_path
     end
