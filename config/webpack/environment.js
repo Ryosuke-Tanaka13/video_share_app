@@ -1,4 +1,5 @@
 const { environment } = require('@rails/webpacker')
+
 const webpack = require('webpack')
 // css, bootstrapなどが適用されなくなったので、4行目を追加したところ復活した
 environment.loaders.get('sass').use.push('import-glob-loader')

@@ -8,11 +8,14 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   # orgにのみ属す
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
 
+  let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
+  let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
+
   let(:video_sample) do
-    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id)
+    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
   end
-  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
-  let(:video_deleted) { create(:video_deleted, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
+  let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
   # orgとviewerの紐付け
   let(:organization_viewer) { create(:organization_viewer) }
@@ -23,6 +26,10 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
     user_owner
     user_staff
     viewer
+    video_sample
+    video_test
+    folder_celeb
+    folder_tech
     organization_viewer
     video_sample
     video_test
@@ -122,6 +129,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_select('login_set_edit', selected: 'ログイン不要')
         expect(page).to have_select('popup_before_video_edit', selected: '動画視聴開始時ポップアップ表示')
         expect(page).to have_select('popup_after_video_edit', selected: '動画視聴終了時ポップアップ表示')
+        expect(page).to have_field 'セレブエンジニア'
+        expect(page).to have_field 'テックリーダーズ'
       end
 
       it '設定を変更で動画情報が更新される' do
@@ -132,6 +141,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         select 'ログイン必要', from: 'login_set_edit'
         select '動画視聴開始時ポップアップ非表示', from: 'popup_before_video_edit'
         select '動画視聴終了時ポップアップ非表示', from: 'popup_after_video_edit'
+        check 'video_folder_ids_2'
         click_button '設定を変更'
         expect(page).to have_text '動画情報を更新しました。'
       end
@@ -153,6 +163,9 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#login_set'
         expect(page).to have_selector '#popup_before_video'
         expect(page).to have_selector '#popup_after_video'
+        expect(page).to have_field 'セレブエンジニア'
+        expect(page).to have_field 'テックリーダーズ'
+        expect(page).to have_link 'フォルダ新規作成はこちら'
       end
 
       it '新規作成で動画が作成される' do
@@ -280,6 +293,8 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
         expect(page).to have_selector '#login_set_edit'
         expect(page).to have_selector '#popup_before_video_edit'
         expect(page).to have_selector '#popup_after_video_edit'
+        expect(page).to have_field 'セレブエンジニア'
+        expect(page).to have_field 'テックリーダーズ'
       end
     end
 

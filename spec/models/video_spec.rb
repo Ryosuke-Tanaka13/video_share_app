@@ -1,12 +1,17 @@
 require 'rails_helper'
-
 RSpec.describe Video, type: :model do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id) }
   let(:user_staff) { create(:user_staff, organization_id: organization.id) }
-  let(:video_sample) { build(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
-  let(:video_deleted) { create(:video_deleted, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+
+  let(:video_sample) do
+    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
+  end
+  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
+  let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
+
+  let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
+  let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
 
   before(:each) do
     organization

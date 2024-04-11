@@ -41,6 +41,23 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
+    if Video.exists?(organization_id: @organization.id)
+      videos = Video.where(organization_id: @organization.id)
+      videos.each do |video|
+        vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], video.data_url)
+        vimeo_video.destroy
+      end
+    end
+    # コメントを先に削除しなければ外部キーエラーとなる
+    comments = Comment.where(organization_id: @organization.id)
+    comments.destroy_all
+    @organization.destroy!
+    flash[:danger] = "#{@organization.name}を削除しました"
+    redirect_to organizations_url
+  rescue VimeoMe2::RequestFailed
+    # コメントを先に削除しなければ外部キーエラーとなる
+    comments = Comment.where(organization_id: @organization.id)
+    comments.destroy_all
     @organization.destroy!
     flash[:danger] = "#{@organization.name}を削除しました"
     redirect_to organizations_url

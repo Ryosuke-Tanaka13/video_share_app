@@ -1,4 +1,6 @@
 class VideosController < ApplicationController
+  include CommentReply
+  helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
@@ -14,18 +16,25 @@ class VideosController < ApplicationController
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
 
   def index
-    if current_system_admin
-      @organization_videos = Video.user_has(params[:organization_id])
-    elsif current_user
-      @organization_videos = Video.current_user_has(current_user).available
-    elsif current_viewer
-      @organization_videos = Video.current_viewer_has(params[:organization_id]).available
+    # 動画検索機能用に記載
+    @search_params = video_search_params
+    if current_system_admin.present?
+      # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
+      session[:organization_id] = params[:organization_id]
+      @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
+    elsif current_user.present?
+      @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
+    elsif current_viewer.present?
+      # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
+      session[:organization_id] = params[:organization_id]
+      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available
       # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
     end
   end
 
   def new
     @video = Video.new
+    @video.video_folders.build
   end
 
   def create
@@ -39,9 +48,7 @@ class VideosController < ApplicationController
     end
   end
 
-  def show
-    set_video
-  end
+  def show; end
 
   def edit
     set_video
@@ -72,7 +79,7 @@ class VideosController < ApplicationController
 
   def video_params
     params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
-      :popup_after_video)
+      :popup_after_video, :data_url)
   end
 
   # before_actionとして記載(organization::foldersコントローラでも定義)
