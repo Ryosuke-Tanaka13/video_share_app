@@ -16,7 +16,7 @@ RSpec.xdescribe 'VideosSystem', type: :system, js: true do
   end
   let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-
+ 
   # orgとviewerの紐付け
   let(:organization_viewer) { create(:organization_viewer) }
 
