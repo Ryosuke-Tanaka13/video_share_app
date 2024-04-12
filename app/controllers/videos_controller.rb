@@ -82,6 +82,10 @@ class VideosController < ApplicationController
       :popup_after_video, :data_url)
   end
 
+  def video_search_params
+    params.fetch(:search, {}).permit(:title_like, :open_period_from, :open_period_to, :range, :user_name)
+  end
+  
   # before_actionとして記載(organization::foldersコントローラでも定義)
   def set_organization
     @organization = Organization.find(params[:organization_id])
