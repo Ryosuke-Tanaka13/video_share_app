@@ -48,6 +48,7 @@ class OrganizationsController < ApplicationController
         vimeo_video.destroy
       end
     end
+
     # コメントを先に削除しなければ外部キーエラーとなる
     comments = Comment.where(organization_id: @organization.id)
     comments.destroy_all
