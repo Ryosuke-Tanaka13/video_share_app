@@ -1,10 +1,9 @@
 <% provide(:title,  "ビデオ詳細") %>
-<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 <div class="content">
   <div class="video-display-show">
-    <!-- vimeoの動画詳細ページのパスから、id部分のみを取得し、数字型に変換したものをsrcの中に記載 -->
-    <iframe id="vimeoPlayer" src="htatps://player.vimeo.com/video/<%= @video.data_url[8..17].to_i %>" width="1000px" height="500px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-    </iframe>
+    <video width="1000" height="500" id="mv" controls>
+      <source src="<%= url_for(@video.video) %>">
+    </video><br> 
   </div>
   <div class="video-title-and-action-show">
     <%= @video.title %>
@@ -22,8 +21,7 @@
       <% end %>
     </div>
   </div>
-</div>
-
+</div> 
 <!-- 動画コメント ------------------------------------------------------------------------>
 <div class="container">
   <div class="row">

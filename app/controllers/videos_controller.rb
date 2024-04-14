@@ -48,7 +48,13 @@ class VideosController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    set_video
+    @comment = Comment.new
+    @reply = Reply.new
+    # 新着順で表示
+    @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
+  end
 
   def edit
     set_video
