@@ -32,7 +32,7 @@ class VideosController < ApplicationController
     end
   end
 
-  def new
+  def new 
     @video = Video.new
     @video.video_folders.build
   end
