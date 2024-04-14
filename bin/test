@@ -11,6 +11,9 @@ cat <<EOS
 =============================
 EOS
 
+# データベースの作成
+docker-compose run --rm app bin/rails db:create RAILS_ENV=test
+
 # マイグレーションの実行
 MIGRATION_STATUS=$(docker-compose run --rm app bin/rails db:migrate:status RAILS_ENV=test | grep 'down')
 if [ -n "$MIGRATION_STATUS" ]; then
