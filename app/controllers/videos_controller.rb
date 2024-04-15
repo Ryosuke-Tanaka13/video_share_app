@@ -35,7 +35,7 @@ class VideosController < ApplicationController
   def new 
     @video = Video.new
     @video.video_folders.build
-  end
+  end  
 
   def create
     @video = Video.new(video_params)
