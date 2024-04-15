@@ -227,28 +227,31 @@ def audio_output
          puts "Bucket creation failed."
          return
        end
-      chank_size =  5 * 1024 * 1024 
+      chunk_size =  5 * 1024 * 1024 
       # 音声データをバイトデータ（配列）に変換している。
-      chunks = audio_data.bytes.each_slice(chank_size).to_a
-      audio_uri = upload_to_google_cloud_storage(chunks, voice_path, tempfile )
+      chunks = audio_data.bytes.each_slice(chunk_size).to_a
+      temp_file_path = tempfile.path
+      # storageのbucketモジュールにはbucketのオブジェクトではなく、バケットの名前を引数に入れないといけない
+      file = @storage.bucket(@bucket_name).create_file(temp_file_path, File.basename(voice_path))
+      audio_uri = file.public_url
         chunks.each_with_index do |data, index|
           file_name = "#{voice_path}_part_#{index}"
           byte_stream = StringIO.new(data.pack('C*'))
           file = @bucket.create_file(byte_stream, file_name)
           # google_cloud_speechに渡すパスの形式をGCS形式にする
-          audio_uri = "gs://#{@bucket_name}#{file_name}"
+        end
         config = {
             encoding: :LINEAR16,
             sample_rate_hertz: 44100,
             language_code: "ja-JP"
           }
-        end
-      credentials_path = Rails.root.join('/webapp/gcstoragelearned-fusion-389707-d403d797d105.json').to_s
+      credentials_path = Rails.root.join('gcstoragelearned-fusion-389707-d403d797d105.json').to_s
       Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
       speech_client = Google::Cloud::Speech.speech
+      # storageに保存されているchunksデータのパスをGCSパスにて指定
+      audio_uri = "gs://#{@bucket_name}/#{File.basename(voice_path)}"
       # 1分間を超える音声データをlong_running_recognizeメソッドで長時間の音声認識（文字起こし）を行なっている
       operation = speech_client.long_running_recognize(config: config, audio: { uri: audio_uri })
-      # audio = { content: audio_data }
       operation.wait_until_done!
       response = operation.response
         if response.results.any?
@@ -259,7 +262,7 @@ def audio_output
         else
           puts "音声認識に失敗しました"
           return nil
-        end
+      end
       transcript = transcribe_audio(credentials_path, audio_uri, bucket, tempfile, chunks)
       if  audio_data.present?
         video_temp_path = audio_data.tempfile.path
