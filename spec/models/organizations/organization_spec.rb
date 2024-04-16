@@ -167,7 +167,7 @@ RSpec.describe Organization, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include("Planは一覧にありません")
+          expect(subject.errors.full_messages).to include('Planは一覧にありません')
         end
       end
     end
@@ -205,7 +205,7 @@ RSpec.describe Organization, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include("Customerはすでに存在します")
+          expect(subject.errors.full_messages).to include('Customerはすでに存在します')
         end
       end
     end
@@ -243,7 +243,7 @@ RSpec.describe Organization, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include("Subscriptionはすでに存在します")
+          expect(subject.errors.full_messages).to include('Subscriptionはすでに存在します')
         end
       end
     end

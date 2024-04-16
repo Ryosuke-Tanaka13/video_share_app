@@ -1,4 +1,4 @@
-FROM ruby:3.0.3
+FROM ruby:3.1.4
 
 RUN apt-get update -y && \
     apt-get install default-mysql-client nodejs npm vim graphviz -y && \

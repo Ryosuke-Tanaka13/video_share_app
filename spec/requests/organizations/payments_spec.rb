@@ -37,7 +37,7 @@ RSpec.describe 'Organizations::Payments', type: :request do
         end
 
         it '正常値レスポンス' do
-          expect(response).to have_http_status '200'
+          expect(response).to have_http_status :ok
         end
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe 'Organizations::Payments', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status :found
           expect(response).to redirect_to root_url
         end
       end
@@ -64,7 +64,7 @@ RSpec.describe 'Organizations::Payments', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status :found
           expect(response).to redirect_to root_url
         end
       end
@@ -77,7 +77,7 @@ RSpec.describe 'Organizations::Payments', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status :found
           expect(response).to redirect_to root_url
         end
       end
@@ -90,11 +90,10 @@ RSpec.describe 'Organizations::Payments', type: :request do
         end
 
         it 'アクセス権限なしのためリダイレクト' do
-          expect(response).to have_http_status ' 302'
+          expect(response).to have_http_status :found
           expect(response).to redirect_to root_url
         end
       end
     end
   end
-
 end

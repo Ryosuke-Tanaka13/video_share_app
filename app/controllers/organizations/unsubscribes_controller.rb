@@ -13,7 +13,7 @@ class Organizations::UnsubscribesController < OrganizationsController
         Stripe::Subscription.cancel(@organization.subscription_id)
         # Stripe上の顧客情報を削除
         Stripe::Customer.delete(@organization.customer_id)
-      rescue => e
+      rescue StandardError
         # Stripeとの通信でエラーが発生した場合のエラーハンドリング
         flash[:error] = 'Stripeのサブスクリプション解約でエラーが発生しました'
       end

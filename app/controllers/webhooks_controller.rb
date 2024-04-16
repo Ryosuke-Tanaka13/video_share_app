@@ -7,16 +7,16 @@ class WebhooksController < ApplicationController
     if !webhook_secret.empty?
       sig_header = request.env['HTTP_STRIPE_SIGNATURE']
       event = nil
-  
+
       begin
         event = Stripe::Webhook.construct_event(
           payload, sig_header, webhook_secret
         )
-      rescue JSON::ParserError => e
+      rescue JSON::ParserError
         # Invalid payload
         status 400
         return
-      rescue Stripe::SignatureVerificationError => e
+      rescue Stripe::SignatureVerificationError
         # Invalid signature
         puts '⚠️  Webhook signature verification failed.'
         status 400
@@ -27,16 +27,16 @@ class WebhooksController < ApplicationController
       event = Stripe::Event.construct_from(data)
     end
     # Get the type of webhook event sent
-    event_type = event['type']
+    event['type']
     data = event['data']
-    data_object = data['object']
-  
+    data['object']
+
     case event.type
     # 初回支払い成功時のイベント
     when 'checkout.session.completed'
       session = event.data.object # sessionの取得
       organization = Organization.find(session.client_reference_id)
-      
+
       ApplicationRecord.transaction do
         organization.customer_id = session.customer
         organization.plan = session.amount_total
@@ -59,13 +59,13 @@ class WebhooksController < ApplicationController
     when 'customer.subscription.updated'
       session = event.data.object
       organization = Organization.find_by(customer_id: session.customer)
-      
+
       ApplicationRecord.transaction do
         organization.plan = session.plan.amount
         organization.payment_success = true
         organization.save!
       end
-    
+
     # 決済失敗時、退会時のイベント
     when 'customer.subscription.deleted'
       session = event.data.object
@@ -89,7 +89,7 @@ class WebhooksController < ApplicationController
     else
       puts "Unhandled event type: \#{event.type}"
     end
-  
+
     status 200
   end
 end
