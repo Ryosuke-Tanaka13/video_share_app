@@ -2,94 +2,87 @@ class WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
+    event = construct_event_from_webhook
+    return unless event
+
+    handle_event(event)
+    status 200
+  end
+
+  private
+
+  def construct_event_from_webhook
     webhook_secret = 'whsec_fbe2782c23506ffe71631ea6df862a52fac7f8518564a10d94fe2a864284cbb8'
     payload = request.body.read
-    if !webhook_secret.empty?
-      sig_header = request.env['HTTP_STRIPE_SIGNATURE']
-      event = nil
 
-      begin
-        event = Stripe::Webhook.construct_event(
-          payload, sig_header, webhook_secret
-        )
-      rescue JSON::ParserError
-        # Invalid payload
-        status 400
-        return
-      rescue Stripe::SignatureVerificationError
-        # Invalid signature
-        puts '⚠️  Webhook signature verification failed.'
-        status 400
-        return
-      end
-    else
-      data = JSON.parse(payload, symbolize_names: true)
-      event = Stripe::Event.construct_from(data)
-    end
-    # Get the type of webhook event sent
-    event['type']
-    data = event['data']
-    data['object']
+    return Stripe::Event.construct_from(JSON.parse(payload, symbolize_names: true)) if webhook_secret.empty?
 
+    sig_header = request.env['HTTP_STRIPE_SIGNATURE']
+    Stripe::Webhook.construct_event(payload, sig_header, webhook_secret)
+  rescue JSON::ParserError, Stripe::SignatureVerificationError => e
+    puts "⚠️  Webhook handling error: #{e.message}"
+    status 400
+    nil
+  end
+
+  def handle_event(event)
     case event.type
-    # 初回支払い成功時のイベント
     when 'checkout.session.completed'
-      session = event.data.object # sessionの取得
-      organization = Organization.find(session.client_reference_id)
-
-      ApplicationRecord.transaction do
-        organization.customer_id = session.customer
-        organization.plan = session.amount_total
-        organization.payment_success = true
-        organization.subscription_id = session.subscription
-        organization.save!
-      end
-      redirect_to session.success_url
-
-    # 継続課金成功時のイベント
+      handle_checkout_session_completed(event)
     when 'invoice.paid'
-      session = event.data.object
-      organization = Organization.find_by(customer_id: session.customer)
-      ApplicationRecord.transaction do
-        organization.payment_success = true
-        organization.save!
-      end
-
-    # サブスクリプション情報更新成功時のイベント
+      handle_invoice_paid(event)
     when 'customer.subscription.updated'
-      session = event.data.object
-      organization = Organization.find_by(customer_id: session.customer)
-
-      ApplicationRecord.transaction do
-        organization.plan = session.plan.amount
-        organization.payment_success = true
-        organization.save!
-      end
-
-    # 決済失敗時、退会時のイベント
+      handle_subscription_updated(event)
     when 'customer.subscription.deleted'
-      session = event.data.object
-      organization = Organization.find_by(customer_id: session.customer)
-      ApplicationRecord.transaction do
-        organization.plan = -1
-        organization.payment_success = false
-        organization.subscription_id = nil
-        organization.save!
-      end
-
-    # 顧客情報削除時のイベント
+      handle_subscription_deleted(event)
     when 'customer.deleted'
-      session = event.data.object
-      organization = Organization.find_by(customer_id: session.id)
-      ApplicationRecord.transaction do
-        organization.customer_id = nil
-        organization.save!
-      end
-
+      handle_customer_deleted(event)
     else
-      puts "Unhandled event type: \#{event.type}"
+      puts "Unhandled event type: #{event.type}"
     end
+  end
 
-    status 200
+  # 初回支払い成功時のイベント
+  def handle_checkout_session_completed(event)
+    session = event.data.object
+    organization = Organization.find(session.client_reference_id)
+    update_organization(organization, customer_id: session.customer, plan: session.amount_total, payment_success: true,
+      subscription_id: session.subscription)
+    redirect_to session.success_url
+  end
+
+  # 継続課金成功時のイベント
+  def handle_invoice_paid(event)
+    session = event.data.object
+    organization = Organization.find_by(customer_id: session.customer)
+    update_organization(organization, payment_success: true)
+  end
+
+  # サブスクリプション情報更新成功時のイベント
+  def handle_subscription_updated(event)
+    session = event.data.object
+    organization = Organization.find_by(customer_id: session.customer)
+    update_organization(organization, plan: session.plan.amount, payment_success: true)
+  end
+
+  # 決済失敗時、退会時のイベント
+  def handle_subscription_deleted(event)
+    session = event.data.object
+    organization = Organization.find_by(customer_id: session.customer)
+    update_organization(organization, plan: -1, payment_success: false, subscription_id: nil)
+  end
+
+  # 顧客情報削除時のイベント
+  def handle_customer_deleted(event)
+    session = event.data.object
+    organization = Organization.find_by(customer_id: session.id)
+    update_organization(organization, customer_id: nil)
+  end
+
+  # 組織情報アップデートメソッド
+  def update_organization(organization, attributes)
+    ApplicationRecord.transaction do
+      organization.update!(attributes)
+    end
   end
 end
