@@ -2,10 +2,12 @@ class Videos::VideoFoldersController < VideosController
   before_action :ensure_admin_or_owner_or_correct_user
   before_action :ensure_my_organization
   skip_before_action :ensure_admin
-
+  before_action :set_video
+  
   def destroy
     folder = Folder.find(params[:folder_id])
-    video_folder = folder.video_folders.find_by(video_id: params[:video_id])
+    video = Video.find_by(id_digest: params[:video_id])
+    video_folder = folder.video_folders.find_by(video_id: video.id)
     video_folder.destroy
     redirect_to organization_folder_url(folder, organization_id: params[:organization_id]), flash: { danger: '動画をフォルダ内から削除しました' }
   end
@@ -13,7 +15,7 @@ class Videos::VideoFoldersController < VideosController
   private
 
   def set_video
-    Video.find(params[:video_id])
+    Video.find_by(id_digest: params[:video_id])
   end
 
   def ensure_admin_or_owner_or_correct_user
