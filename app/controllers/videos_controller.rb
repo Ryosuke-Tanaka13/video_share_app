@@ -209,16 +209,11 @@ def audio_output
       puts "FFmpeg command: #{cmd}"
 
       stdout_str, stderr_str, status = Open3.capture3(cmd)
-
-      # デバッグ用にログに出力
-      puts "FFmpeg stdout: #{stdout_str}"
-      puts "FFmpeg stderr: #{stderr_str}"
       Rails.logger.error("ffmpegエラー: #{stderr_str}") unless status.success?
       audio_data = File.binread(voice_path)
       desktop_path = '/app/output'
       file_path = File.join(desktop_path, self_filename)
       # デバッグ用にログに出力
-      puts "Output file path: #{file_path}"
       File.write(file_path, audio_data, encoding: 'ascii-8bit')
       bucket = create_bucket
        if bucket
@@ -254,12 +249,14 @@ def audio_output
       operation = speech_client.long_running_recognize(config: config, audio: { uri: audio_uri })
       operation.wait_until_done!
       response = operation.response
+      binding.pry
         if response.results.any?
           results = response.results
           transcript = results.map(&:alternatives).map(&:transcript).join(" ")
           puts "音声認識に成功しました：#{transcript}"
           return transcript # 認識されたテキストを返す
         else
+          binding.pry
           puts "音声認識に失敗しました"
           return nil
       end
