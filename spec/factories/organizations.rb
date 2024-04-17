@@ -4,7 +4,7 @@ FactoryBot.define do
     name           { 'セレブエンジニア' }
     email          { 'org_spec@example.com' }
   end
-
+  
   factory :another_organization, class: 'Organization' do
     id             { 2 }
     name           { 'テックリーダーズ' }
