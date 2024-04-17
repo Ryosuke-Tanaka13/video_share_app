@@ -306,7 +306,6 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  data_url:           '/videos/999999999'
                 }
               })
           ).to redirect_to video_path(Video.last)
@@ -421,7 +420,6 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
-                  data_url:           '/videos/999999999'
                 }
               }
           }.not_to change(Video, :count)

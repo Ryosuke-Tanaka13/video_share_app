@@ -51,8 +51,6 @@ FactoryBot.define do
     user_id { 3 }
     organization
     user
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/222222222' }
   end
 
   factory :video_it, class: 'Video' do
