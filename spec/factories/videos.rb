@@ -51,7 +51,7 @@ FactoryBot.define do
     user_id { 3 }
     organization
     user
-  end
+  end   
 
   factory :video_it, class: 'Video' do
     title { 'ITビデオ' }
