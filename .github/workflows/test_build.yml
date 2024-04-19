@@ -27,7 +27,7 @@ jobs:
 
     - name: Install and compile Webpacker
       run: |
-        docker-compose run app bash -c "rm -rf bin/webpack* && rails webpacker:install && bundle exec rails webpacker:compile"
+        docker-compose run -e NODE_OPTIONS=--openssl-legacy-provider app bash -c "rm -rf bin/webpack* && rails webpacker:install && bundle exec rails webpacker:compile"
       env:
         RAILS_ENV: test
 
