@@ -10,3 +10,5 @@ vendor/* linguist-vendored
 *.json filter=lfs diff=lfs merge=lfs -text
 Y/google-cloud-sdk/.install/.backup/data/cli/gcloud.json filter=lfs diff=lfs merge=lfs -text
 Y/google-cloud-sdk/bin/anthoscli filter=lfs diff=lfs merge=lfs -text
+Y/google-cloud-sdk/data/cli/gcloud.json filter=lfs diff=lfs merge=lfs -text
+public/audio/output1712558859.wav filter=lfs diff=lfs merge=lfs -text
