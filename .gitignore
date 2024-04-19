@@ -1,6 +1,4 @@
 *.rbc
-gcloud.json
-anthoscli
 capybara-*.html
 .DS_Store
 .rspec
@@ -82,3 +80,6 @@ yarn-debug.log*
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+Y/google-cloud-sdk/data/cli/gcloud.json
+public/audio/output1712558859.wav
+Y/google-cloud-sdk/bin/anthoscli
