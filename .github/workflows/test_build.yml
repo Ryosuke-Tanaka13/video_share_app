@@ -26,10 +26,11 @@ jobs:
         RAILS_ENV: test
 
     - name: Compile assets
-      run: docker-compose run app rails webpacker:compile
-      env:
-        RAILS_ENV: test
-
+  run: |
+    export NODE_OPTIONS=--openssl-legacy-provider
+    docker-compose run app rails webpacker:compile
+  env:
+    RAILS_ENV: test
 
     - name: Run Test
       shell: bash
