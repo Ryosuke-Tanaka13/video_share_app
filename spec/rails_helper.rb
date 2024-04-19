@@ -91,9 +91,14 @@ RSpec.configure do |config|
 
   # rspecテストを行っていくとどんどんと保存先のストレージ(tmp/storgae)が、生成された動画で圧迫される。
   # 下記の設定をすることでテスト終了後はストレージをクリーンアップすることが可能
-  config.after(:all) do
-    FileUtils.rm_rf(ActiveStorage::Blob.service.root) if Rails.env.test?
+  config.after(:suite) do
+    if Rails.env.test?
+      storage_path = ActiveStorage::Blob.service.root
+      Rails.logger.info "Cleaning up storage directory: #{storage_path}"
+      FileUtils.rm_rf(storage_path)
+    end
   end
+  
   # capybaraのダウンロードヘルパーを追加
   config.include DownloadHelpers
 end
