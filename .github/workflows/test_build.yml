@@ -25,6 +25,12 @@ jobs:
       env:
         RAILS_ENV: test
 
+    - name: Compile assets
+      run: docker-compose run app rails webpacker:compile
+      env:
+        RAILS_ENV: test
+
+
     - name: Run Test
       shell: bash
       run:  |
