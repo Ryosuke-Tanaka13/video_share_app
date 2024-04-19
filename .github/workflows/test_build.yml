@@ -28,9 +28,9 @@ jobs:
     - name: Check Node.js version
       run: node -v
 
-    - name: Compile assets
+    - name: Install and compile Webpacker
       run: |
-        docker-compose run -e NODE_OPTIONS=--openssl-legacy-provider app rails webpacker:compile
+        docker-compose run app bash -c "rm -rf bin/webpack* && rails webpacker:install && bundle exec rails webpacker:compile"
       env:
         RAILS_ENV: test
 
