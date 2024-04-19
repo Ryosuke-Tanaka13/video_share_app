@@ -25,9 +25,6 @@ jobs:
       env:
         RAILS_ENV: test
 
-    - name: Check Node.js version
-      run: node -v
-
     - name: Install and compile Webpacker
       run: |
         docker-compose run app bash -c "rm -rf bin/webpack* && rails webpacker:install && bundle exec rails webpacker:compile"
