@@ -28,11 +28,9 @@ jobs:
     - name: Check Node.js version
       run: node -v
 
-
     - name: Compile assets
       run: |
-        export NODE_OPTIONS=--openssl-legacy-provider
-        docker-compose run app rails webpacker:compile
+        docker-compose run -e NODE_OPTIONS=--openssl-legacy-provider app rails webpacker:compile
       env:
         RAILS_ENV: test
 
