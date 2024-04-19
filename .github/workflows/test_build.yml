@@ -25,6 +25,10 @@ jobs:
       env:
         RAILS_ENV: test
 
+    - name: Check Node.js version
+      run: node -v
+
+
     - name: Compile assets
       run: |
         export NODE_OPTIONS=--openssl-legacy-provider
