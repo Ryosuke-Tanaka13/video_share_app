@@ -51,6 +51,7 @@ RSpec.describe 'Videos::Searches', type: :request do
     organization_viewer1
     another_video_jan_public_another_user_owner
     another_video_feb_private_another_user_staff
+    sleep 0.1
   end
 
   # response.bodyに検索結果の動画リンクが含まれているかをテスト

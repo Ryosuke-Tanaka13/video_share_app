@@ -10,8 +10,8 @@ FactoryBot.define do
     organization_id { 1 }
     user_id { 1 }
     
-    after(:build) do |video|
-      video.video.attach(io: File.open('spec/fixtures/files/video_jan_public_owner.mp4'), filename: 'video_jan_public_owner.mp4', content_type: 'video/mp4')
+    after(:build) do |video_jan_public_owner|
+      video_jan_public_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 
@@ -27,8 +27,8 @@ FactoryBot.define do
     organization_id { 1 }
     user_id { 1 }
 
-    after(:build) do |video|
-      video.video.attach(io: File.open('spec/fixtures/files/invalid_video_jan_public_owner.mp4'), filename: 'invalid_video_jan_public_owner.mp4', content_type: 'video/mp4')
+    after(:build) do |invalid_video_jan_public_owner|
+      invalid_video_jan_public_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 
@@ -43,8 +43,8 @@ FactoryBot.define do
     organization_id { 1 }
     user_id { 1 }
 
-    after(:build) do |video_sample|
-      video_sample.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    after(:build) do |video_feb_private_owner|
+      video_feb_private_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 
@@ -59,8 +59,8 @@ FactoryBot.define do
     organization_id { 1 }
     user_id { 3 }
 
-    after(:build) do |video|
-      video.video.attach(io: File.open('spec/fixtures/files/video_mar_public_staff.mp4'), filename: 'video_mar_public_staff.mp4', content_type: 'video/mp4')
+    after(:build) do |video_mar_public_staff|
+      video_mar_public_staff.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 
@@ -75,8 +75,8 @@ FactoryBot.define do
     organization_id { 1 }
     user_id { 3 }
 
-    after(:build) do |video|
-      video.video.attach(io: File.open('spec/fixtures/files/video_apr_private_staff.mp4'), filename: 'video_apr_private_staff.mp4', content_type: 'video/mp4')
+    after(:build) do |video_apr_private_staff|
+      video_apr_private_staff.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 
@@ -91,8 +91,8 @@ FactoryBot.define do
     organization_id { 1 }
     user_id { 4 }
 
-    after(:build) do |video|
-      video.video.attach(io: File.open('spec/fixtures/files/video_may_public_staff1.mp4'), filename: 'video_may_public_staff1.mp4', content_type: 'video/mp4')
+    after(:build) do |video_may_public_staff1|
+      video_may_public_staff1.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 
@@ -107,8 +107,8 @@ FactoryBot.define do
     organization_id { 2 }
     user_id { 2 }
 
-    after(:build) do |video|
-      video.video.attach(io: File.open('spec/fixtures/files/another_video_jan_public_another_user_owner.mp4'), filename: 'another_video_jan_public_another_user_owner.mp4', content_type: 'video/mp4')
+    after(:build) do |another_video_jan_public_another_user_owner|
+      another_video_jan_public_another_user_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 
@@ -123,8 +123,8 @@ FactoryBot.define do
     organization_id { 2 }
     user_id { 5 }
 
-    after(:build) do |video|
-      video.video.attach(io: File.open('spec/fixtures/files/another_video_feb_private_another_user_staff.mp4'), filename: 'another_video_feb_private_another_user_staff.mp4', content_type: 'video/mp4')
+    after(:build) do |another_video_feb_private_another_user_staff|
+      another_video_feb_private_another_user_staff.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
   end
 end

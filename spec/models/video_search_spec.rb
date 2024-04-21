@@ -25,6 +25,7 @@ RSpec.describe Video, type: :model do
     video_mar_public_staff
     video_apr_private_staff
     video_may_public_staff1
+    sleep 0.1
   end
 
   # テスト動画1月〜5月はそれぞれ2023年各月末最終日23:59までを公開期間としている
