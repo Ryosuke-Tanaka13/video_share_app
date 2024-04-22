@@ -31,12 +31,6 @@ jobs:
       env:
         RAILS_ENV: test
 
-    - name: Install and compile Webpacker
-      run: |
-        docker-compose run -e NODE_OPTIONS=--openssl-legacy-provider app bash -c "rm -rf bin/webpack* && rails webpacker:install && bundle exec rails webpacker:compile"
-      env:
-        RAILS_ENV: test
-
     - name: Run Test
       shell: bash
       run:  |
