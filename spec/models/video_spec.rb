@@ -19,7 +19,7 @@ RSpec.describe Video, type: :model do
     user_staff
     video_sample
     video_test
-    video_deleted
+    video_it
     sleep 0.1
   end
 

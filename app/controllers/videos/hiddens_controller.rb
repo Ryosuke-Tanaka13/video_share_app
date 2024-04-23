@@ -1,7 +1,6 @@
 class Videos::HiddensController < VideosController
   before_action :ensure_exist_set_video
   before_action :ensure_logged_in
-  before_action :ensure_my_organization_set_video
   before_action :ensure_admin_or_user
   before_action :ensure_admin_or_owner
 
