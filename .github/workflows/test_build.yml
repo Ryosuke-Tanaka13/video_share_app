@@ -13,12 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16.x'  # Node.js 16をインストール
-
     - name: Setup docker
       shell: bash
       run: |
@@ -28,12 +22,6 @@ jobs:
         docker-compose run app yarn install
         # データベースの作成
         docker-compose run app rake db:create
-      env:
-        RAILS_ENV: test
-
-    - name: Install and compile Webpacker
-      run: |
-        docker-compose run app bash -c "rm -rf bin/webpack* && rails webpacker:install && bundle exec rails webpacker:compile"
       env:
         RAILS_ENV: test
 
