@@ -126,7 +126,7 @@ RSpec.describe 'Videos', type: :request do
     describe '異常(別組織のuser)' do
       before(:each) do
         sign_in another_user_owner
-        get videos_path(organization_id: another_user_owner.organization.id)
+        get videos_path(organization_id: organization.id) # organizationはテスト対象の組織
       end
 
       it 'アクセス権限なしのためリダイレクト' do
@@ -253,7 +253,7 @@ RSpec.describe 'Videos', type: :request do
           video = Video.last
           puts video.errors.full_messages unless video.valid?
         end
-        
+
         it 'showにリダイレクトされる' do
           expect(
             post(videos_path,
@@ -268,7 +268,7 @@ RSpec.describe 'Videos', type: :request do
                   folder_ids:         [1],
                   video:              fixture_file_upload('/flower.mp4')
                 }
-              })
+              }
           ).to redirect_to video_path(Video.last)
         end
       end
