@@ -3,6 +3,7 @@ class VideosController < ApplicationController
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
+  before_action :set_video, only: %i[show edit update destroy]
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
   before_action :ensure_user, only: %i[new create]
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
