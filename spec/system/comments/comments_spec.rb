@@ -43,6 +43,8 @@ RSpec.describe 'Comments', type: :system, js: true do
       end
 
       it 'レイアウト' do
+        puts "システム管理者のログイン状態: #{system_admin_signed_in?}"
+        puts "動画のID: #{user_comment.video_id}"
         puts "現在のページのパス: #{current_path}"
       end
     end
