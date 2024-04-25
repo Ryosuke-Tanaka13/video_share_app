@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Comments', type: :system, js: true do
   let(:organization) { create(:organization) }
-  let(:system_admin) { create(:system_admin) }
+  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:user) { create(:user, organization_id: organization.id) }
   let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id, login_set: false) }
   let(:user_staff1) { create(:user_staff1, organization_id: organization.id) }
@@ -13,7 +13,7 @@ RSpec.describe 'Comments', type: :system, js: true do
     create(:system_admin_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user.id)
   end
   let(:user_comment) { create(:user_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user_staff1.id) }
-  let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video_it.id, viewer_id: viewer.id) }
+  let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video_it.id, viewerbid: viewer.id) }
   let(:system_admin_reply) do
     create(:system_admin_reply, system_admin_id: system_admin.id, organization_id: user.organization_id,
       comment_id: system_admin_comment.id)
