@@ -42,7 +42,6 @@ RSpec.describe 'Comments', type: :system, js: true do
       end
 
       it 'レイアウト' do
-        save_and_open_page
         expect(page).to have_field 'comment-text'
         expect(page).to have_css 'svg.fa-edit'
         expect(page).to have_css 'svg.fa-trash-alt'
