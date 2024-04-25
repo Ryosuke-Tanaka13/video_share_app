@@ -37,14 +37,11 @@ RSpec.describe 'Comments', type: :system, js: true do
   describe '正常' do
     describe 'システム管理者' do
       before(:each) do
-        login_system_admin(system_admin)
-        current_system_admin(system_admin)
+        sign_in system_admin(system_admin)
         visit video_path(id: user_comment.video_id)
       end
 
       it 'レイアウト' do
-        puts "システム管理者のログイン状態: #{system_admin_signed_in?}"
-        puts "動画のID: #{user_comment.video_id}"
         puts "現在のページのパス: #{current_path}"
       end
     end
