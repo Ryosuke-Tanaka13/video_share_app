@@ -43,7 +43,7 @@ RSpec.describe 'Comments', type: :system, js: true do
       end
 
       it 'レイアウト' do
-        puts "現在のページのURL: #{current_url}"
+        puts "現在のページのパス: #{current_path}"
       end
     end
   end
