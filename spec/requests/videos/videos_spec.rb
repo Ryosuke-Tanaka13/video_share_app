@@ -299,8 +299,8 @@ RSpec.describe 'Videos', type: :request do
         end
 
         it 'showにリダイレクトされる' do
-          expect(
-            post(videos_path,
+          expect {
+            post videos_path,
               params: {
                 video: {
                   title:              'サンプルビデオ2',
@@ -309,9 +309,11 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
+                  video:              fixture_file_upload('/flower.mp4')
                 }
-              })
-          ).to redirect_to video_path(Video.last)
+              }
+            }.to redirect_to video_path(Video.last)
         end
       end
 
@@ -423,6 +425,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
+                  video:              fixture_file_upload('/flower.mp4')
                 }
               }
           }.not_to change(Video, :count)
