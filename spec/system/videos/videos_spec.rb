@@ -54,7 +54,7 @@ RSpec.describe 'VideosSystem', type: :system, js: true do
       end
 
       it '動画削除' do
-        find(:xpath, '//*[@id="videos-index"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+        find('.btn-danger').click
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
           page.driver.browser.switch_to.alert.accept
@@ -63,7 +63,7 @@ RSpec.describe 'VideosSystem', type: :system, js: true do
       end
 
       it '動画削除キャンセル' do
-        find(:xpath, '//*[@id="videos-index"]/div[1]/div[1]/div[2]/div[1]/div[2]/a[2]').click
+        find('.btn-danger').click
         expect {
           expect(page.driver.browser.switch_to.alert.text).to eq '削除しますか？'
           page.driver.browser.switch_to.alert.dismiss
