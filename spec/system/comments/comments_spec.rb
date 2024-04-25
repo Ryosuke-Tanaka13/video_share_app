@@ -13,7 +13,7 @@ RSpec.describe 'Comments', type: :system, js: true do
     create(:system_admin_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user.id)
   end
   let(:user_comment) { create(:user_comment, organization_id: user.organization_id, video_id: video_it.id, user_id: user_staff1.id) }
-  let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video_it.id, viewerbid: viewer.id) }
+  let(:viewer_comment) { create(:viewer_comment, organization_id: user.organization_id, video_id: video_it.id, viewer_id: viewer.id) }
   let(:system_admin_reply) do
     create(:system_admin_reply, system_admin_id: system_admin.id, organization_id: user.organization_id,
       comment_id: system_admin_comment.id)
