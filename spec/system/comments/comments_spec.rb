@@ -31,6 +31,7 @@ RSpec.describe 'Comments', type: :system, js: true do
     system_admin_comment
     user_comment
     viewer_comment
+    sleep 0.1
   end
 
   describe '正常' do
