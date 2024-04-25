@@ -12,7 +12,7 @@
       <%= @organization_videos.count %>件ヒットしました。
     <% elsif @search_params.present? %>
       該当する動画はありませんでした。
-    <% end %>
+    <% end %>   
   </div>
   <% @organization_videos.each do |organization_video| %>
     <div style="float:left;margin:15px;">
@@ -24,7 +24,6 @@
           <video width="300" height="200" id="mv">
           <source src="<%= url_for(organization_video.video) %>">
         <% end %>
-        <!-- vimeoの動画表示の場合は<iframe>で対応-->
       </div>
       <div class="video-title-and-action-index">
         <%= link_to organization_video.title, video_path(organization_video) %>
