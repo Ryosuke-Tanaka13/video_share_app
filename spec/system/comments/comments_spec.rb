@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Comments', type: :system, js: true do
   let(:organization) { create(:organization) }
-  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
+  let(:system_admin) { create(:system_admin) }
   let(:user) { create(:user, organization_id: organization.id) }
   let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id, login_set: false) }
   let(:user_staff1) { create(:user_staff1, organization_id: organization.id) }
@@ -31,18 +31,17 @@ RSpec.describe 'Comments', type: :system, js: true do
     system_admin_comment
     user_comment
     viewer_comment
-    sleep 0.1
   end
 
   describe '正常' do
     describe 'システム管理者' do
       before(:each) do
         sign_in system_admin
+        visit organization_path(id: organization.id)
       end
-
+  
       it 'レイアウト' do
-        puts "現在のページのパス: #{current_path}"
+        puts "現在のページのパス: #{current_path}"  
       end
     end
   end
-end
