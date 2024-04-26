@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Comments', type: :system, js: true do
   let(:organization) { create(:organization) }
-  let(:system_admin) { create(:system_admin) }
+  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:user) { create(:user, organization_id: organization.id) }
   let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id, login_set: false) }
   let(:user_staff1) { create(:user_staff1, organization_id: organization.id) }
