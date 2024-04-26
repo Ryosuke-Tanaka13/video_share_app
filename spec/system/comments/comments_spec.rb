@@ -45,3 +45,4 @@ RSpec.describe 'Comments', type: :system, js: true do
       end
     end
   end
+end
