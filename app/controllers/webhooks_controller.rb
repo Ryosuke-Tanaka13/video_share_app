@@ -12,7 +12,7 @@ class WebhooksController < ApplicationController
   private
 
   def construct_event_from_webhook
-    webhook_secret = 'whsec_fbe2782c23506ffe71631ea6df862a52fac7f8518564a10d94fe2a864284cbb8'
+    webhook_secret = 'whsec_afb7b774cceb0f48ddc5391960d2a16879da2d3c91dacd359a32c70bccc88688'
     payload = request.body.read
 
     return Stripe::Event.construct_from(JSON.parse(payload, symbolize_names: true)) if webhook_secret.empty?
