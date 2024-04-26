@@ -41,7 +41,10 @@ RSpec.describe 'Comments', type: :system, js: true do
       end
   
       it 'レイアウト' do
-        puts "現在のページのパス: #{current_path}"  
+        expect(page).to have_content 'コメント'
+        expect(page).to have_field 'comment-text'
+        expect(page).to have_css 'svg.fa-edit'
+        expect(page).to have_css 'svg.fa-trash-alt'
       end
     end
   end
