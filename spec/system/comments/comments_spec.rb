@@ -32,7 +32,7 @@ RSpec.describe 'Comments', type: :system, js: true do
     user_comment
     viewer_comment
   end
-
+       
   describe '正常' do
     describe 'システム管理者' do
       before(:each) do
