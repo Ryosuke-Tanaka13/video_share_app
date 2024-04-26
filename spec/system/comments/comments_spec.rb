@@ -37,7 +37,7 @@ RSpec.describe 'Comments', type: :system, js: true do
     describe 'システム管理者' do
       before(:each) do
         sign_in system_admin
-        visit organization_path(id: organization.id)
+        visit video_path(video_it)
       end
   
       it 'レイアウト' do
