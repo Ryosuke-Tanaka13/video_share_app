@@ -37,7 +37,7 @@ class VideosController < ApplicationController
     @video = Video.new
     @video.video_folders.build
   end  
-
+  
   def create
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
