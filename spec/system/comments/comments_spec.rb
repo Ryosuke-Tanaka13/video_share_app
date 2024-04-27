@@ -284,7 +284,7 @@ RSpec.describe 'Comments', type: :system, js: true do
 
       it '他人の返信の編集、削除不可' do
         system_admin_reply
-        visit video_path(id: user_comment.video_id)
+        visit video_path(video_it)
         click_button '1 件の返信'
         expect(page).to have_content 'system_adminの返信'
         expect(page).not_to have_css '.js-edit-reply-button'
@@ -421,7 +421,7 @@ RSpec.describe 'Comments', type: :system, js: true do
 
       it '他人の返信の編集、削除不可' do
         system_admin_reply
-        visit video_path(id: user_comment.video_id)
+        visit video_path(video_it)
         click_button '1 件の返信'
         expect(page).to have_content 'system_adminの返信'
         expect(page).not_to have_css '.js-edit-reply-button'
