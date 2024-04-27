@@ -9,7 +9,7 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 1 }
     user_id { 1 }
-    
+
     after(:build) do |video_jan_public_owner|
       video_jan_public_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
     end
@@ -18,7 +18,7 @@ FactoryBot.define do
   factory :invalid_video_jan_public_owner, class: 'Video' do
     title { 'テスト動画1月（論理削除済み）' }
     open_period { 'Tue, 31 Jan 2023 23:59:00.000000000 JST +09:00' }
-    range { true } 
+    range { true }
     comment_public { false }
     login_set { false }
     popup_before_video { false }

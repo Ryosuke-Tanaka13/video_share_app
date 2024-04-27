@@ -9,7 +9,7 @@ FactoryBot.define do
     organization_id  { 1 }
     role             { 'owner' }
   end
-  
+
   factory :another_user_owner, class: 'User' do
     id               { 2 }
     name             { 'オーナー1' }

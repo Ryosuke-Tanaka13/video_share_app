@@ -33,11 +33,11 @@ class VideosController < ApplicationController
     end
   end
 
-  def new 
+  def new
     @video = Video.new
     @video.video_folders.build
-  end  
-  
+  end
+
   def create
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
@@ -92,7 +92,7 @@ class VideosController < ApplicationController
   def video_search_params
     params.fetch(:search, {}).permit(:title_like, :open_period_from, :open_period_to, :range, :user_name)
   end
-  
+
   # before_actionとして記載(organization::foldersコントローラでも定義)
   def set_organization
     @organization = Organization.find(params[:organization_id])

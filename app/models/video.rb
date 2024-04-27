@@ -74,6 +74,7 @@ class Video < ApplicationRecord
   end
 
   private
+
   # after_saveによって呼び出されるメソッド。id_digestカラムの値に、idを暗号化して格納
   def create_id_digest
     if id_digest.nil?

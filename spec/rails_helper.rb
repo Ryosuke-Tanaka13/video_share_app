@@ -98,7 +98,7 @@ RSpec.configure do |config|
       FileUtils.rm_rf(storage_path)
     end
   end
-  
+
   # capybaraのダウンロードヘルパーを追加
   config.include DownloadHelpers
 end

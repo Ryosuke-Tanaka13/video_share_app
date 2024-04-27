@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Video, type: :model do
   subject { described_class.new }
-     
+
   let(:organization) { create(:organization) }
   let(:system_admin) { create(:system_admin) }
   let(:user_owner) { create(:user_owner) }

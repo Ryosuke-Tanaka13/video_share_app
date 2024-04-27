@@ -4,7 +4,7 @@ class Videos::VideoFoldersController < VideosController
   skip_before_action :ensure_admin
   skip_before_action :ensure_my_organization_set_video
   before_action :ensure_my_organization_set_video_folder
-  
+
   def destroy
     folder = Folder.find(params[:folder_id])
     video = Video.find_by(id_digest: params[:video_id])
