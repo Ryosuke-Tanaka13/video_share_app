@@ -6,6 +6,7 @@
     <link rel="canonical" href="https://syncer.jp/Web/API_Interface/Reference/IDL/HTMLMediaElement/played/"> 
     <!-- ここまで -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="https://player.vimeo.com/api/player.js"></script>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_pack_tag 'videos', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -72,7 +73,9 @@
 
       <!-- /Content side_bar(model) -->
       <div class="content-wrapper">
-        <%= render "layouts/flash" %>
+        <div id="flash-message">
+          <%= render "layouts/flash" %>
+        </div>
         <!-- Content Header (Page header) -->
 	      <div class="content-header">
           <div class="container-fluid">

@@ -94,4 +94,6 @@ RSpec.configure do |config|
   config.after(:all) do
     FileUtils.rm_rf(ActiveStorage::Blob.service.root) if Rails.env.test?
   end
+  # capybaraのダウンロードヘルパーを追加
+  config.include DownloadHelpers
 end

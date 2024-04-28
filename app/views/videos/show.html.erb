@@ -1,5 +1,11 @@
 <% provide(:title,  "ビデオ詳細") %>
 <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+<% if @video.popup_before_video == true %>
+  <%= link_to "popb", popup_before_video_path(@video), remote: true, id: "hiddenPopupBeforeLink", class: "btn", style: "display: none;" if user_signed_in? || system_admin_signed_in? %>
+<% end %>
+<% if @video.popup_after_video == true %>
+  <%= link_to "popa", popup_after_video_path(@video), remote: true, id: "hiddenPopupAfterLink", style: "display: none;" if user_signed_in? || system_admin_signed_in? %>
+<% end %>
 
 <div class="content">
   <div class="video-display-show">
@@ -56,3 +62,5 @@
 <!-- 動画コメント ------------------------------------------------------------------------>
 
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="popup_before" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="popup_after" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

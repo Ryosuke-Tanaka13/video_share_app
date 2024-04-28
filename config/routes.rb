@@ -64,6 +64,20 @@ Rails.application.routes.draw do
   end
   # =================================================================
 
+  # video関連=========================================================
+  resources :videos do
+    member do
+      get 'popup_before'
+      get 'popup_after'
+    end
+
+    resources :comments, only: %i[create update destroy] do
+      resources :replies, only: %i[create update destroy]
+    end
+  end
+
+  # =================================================================
+
   # 共通==============================================================
   # 利用規約
   get 'use' => 'use#index'
@@ -80,6 +94,15 @@ Rails.application.routes.draw do
     end
     scope module: :videos do
       resources :video_folders, only: :destroy
+      # 動画検索機能
+      collection do
+        get 'videos/search' => 'searches#search'
+      end
+    end
+    collection do
+      scope module: :videos do
+        resource :recording, only: :new
+      end
     end
     resources :comments, only: %i[create update destroy] do
       resources :replies, only: %i[create update destroy]

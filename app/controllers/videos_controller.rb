@@ -21,6 +21,18 @@ class VideosController < ApplicationController
       @organization_videos = Video.current_user_has(current_user).available
     elsif current_viewer
       @organization_videos = Video.current_viewer_has(params[:organization_id]).available
+    # 動画検索機能用に記載
+    @search_params = video_search_params
+    if current_system_admin.present?
+      # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
+      session[:organization_id] = params[:organization_id]
+      @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
+    elsif current_user.present?
+      @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
+    elsif current_viewer.present?
+      # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
+      session[:organization_id] = params[:organization_id]
+      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available
       # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
     end
   end
@@ -96,6 +108,11 @@ class VideosController < ApplicationController
   end
 
   # before_actionとして記載(organization::foldersコントローラでも定義)
+  def video_search_params
+    params.fetch(:search, {}).permit(:title_like, :open_period_from, :open_period_to, :range, :user_name)
+  end
+
+  # 共通メソッド(organization::foldersコントローラにも記載)
   def set_organization
     @organization = Organization.find(params[:organization_id])
   end

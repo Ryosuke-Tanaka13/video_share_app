@@ -27,14 +27,24 @@
 # イメージのビルド
 docker-compose build
 
-# bundle intall
+# bundle install
 docker-compose run --rm app bundle install
 
 # yarn install
 docker-compose run --rm app yarn install
 
-# db:setup
+# db:setup　← エラーになります！!(大きめのアプリだと外部キー制約エラーが出ます。)
 docker-compose run --rm app rails db:setup
+
+↓　下記で対応して下さい！
+# rails db:create
+docker-compose run --rm app rails db:create
+
+# rails db:migrate
+docker-compose run --rm app rails db:migrate
+
+# rails db:seed
+docker-compose run --rm app rails db:seed
 
 # railsサーバー起動(ローカルPC用)
 bin/dev
