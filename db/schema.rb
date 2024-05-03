@@ -11,7 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 2023_12_19_065611) do
-  
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -81,6 +80,10 @@ ActiveRecord::Schema.define(version: 2023_12_19_065611) do
     t.boolean "is_valid", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "plan"
+    t.boolean "payment_success", default: false
+    t.string "customer_id"
+    t.string "subscription_id"
   end
 
   create_table "replies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -229,7 +232,6 @@ ActiveRecord::Schema.define(version: 2023_12_19_065611) do
     t.index ["unlock_token"], name: "index_viewers_on_unlock_token", unique: true
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "organizations"
   add_foreign_key "comments", "system_admins"
