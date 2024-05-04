@@ -1,14 +1,20 @@
 class GroupsController < ApplicationController
   layout 'groups', only: %i[index show new edit update create destroy remove_viewer]
   before_action :ensure_logged_in
+  before_action :ensure_admin_or_user
   before_action :not_exist, only: %i[show edit update]
   before_action :set_group, only: %i[show edit update destroy remove_viewer]
-  before_action :authenticate_user!
   before_action :check_viewer, only: %i[show edit update destroy remove_viewer]
   before_action :check_permission, only: [:destroy]
 
   def index
-    @groups = Group.where(organization_id: current_user.organization_id)
+    if current_user
+      @groups = Group.where(organization_id: current_user.organization_id)
+      @select_organization = current_user.organization
+    elsif current_system_admin
+      @groups = Group.where(organization_id: params[:organization_id])
+      @select_organization = Organization.find(params[:organization_id]) if params[:organization_id].present?
+    end
   end
 
   def show; end
@@ -29,12 +35,16 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
+    if current_system_admin
+      @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: params[:organization_id] })
+    else
+      @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
+    end
   end
 
   def update
     if @group.update(group_params)
-      redirect_to groups_path
+      redirect_to groups_path(organization_id: @group.organization_id)
     else
       @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
       render 'edit'
@@ -72,9 +82,11 @@ class GroupsController < ApplicationController
   end
 
   def check_viewer
-    unless @group.organization_id == current_user.organization_id
-      flash[:danger] = '権限がありません。'
-      redirect_back(fallback_location: root_url)
+    if !current_system_admin?
+      unless @group.organization_id == current_user.organization_id
+        flash[:danger] = '権限がありません。'
+        redirect_back(fallback_location: root_url)
+      end
     end
   end
 

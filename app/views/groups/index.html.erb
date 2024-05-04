@@ -1,14 +1,22 @@
 <% provide(:title, "視聴グループ一覧") %>
+<% if current_user.present? %>
+<%= link_to "視聴グループ　新規作成画面へ", new_group_path, class: "btn btn-lg btn-block btn-outline-primary" %>
+<% end %><br><br>
 
-<%= link_to "視聴グループ　新規作成画面へ", new_group_path, class: "btn btn-lg btn-block btn-outline-primary" %><br><br>
-<% if Group.all.count != 0 %>
+<% if @groups.count == 0 && current_system_admin %>
+  <div class="center-message">
+    <h2>視聴グループはまだ作成されていません。</h2>
+  </div>
+<% end %>
+
+<% if @groups.count != 0 %>
   <div class="card">
     <div class="card-body table-responsive p-0">
       <table class="table table-hover text-nowrap"> 
         <thead>
           <tr align="center">
             <th>視聴グループ名</th>
-            <th><%= current_user.organization.name %></th>
+            <th><%= @select_organization.name %></th>
             <th></th>
           </tr>
         </thead>
@@ -16,7 +24,7 @@
           <% @groups.each do |group| %>
             <tr align="center">
               <td><%= link_to group.name, group_path(group.uuid) %></td>
-              <td><%= link_to "編集", edit_group_path(group.uuid), class: "btn btn-success" %></td>
+              <td><%= link_to "編集", edit_group_path(group.uuid, organization_id: group.organization_id), class: "btn btn-success" %></td>
               <td><%= link_to "削除", group_path(group.uuid), method: :delete, data: { confirm: "#{group.name}の視聴者グループを削除します。本当によろしいですか？" }, class: "btn btn-md btn-danger" %></td>
             </tr>
           <% end %>
