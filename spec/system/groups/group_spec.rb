@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'グループ新規登録', type: :system do
   let(:organization) { create(:organization) }
+  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:viewer) { create(:viewer) }
@@ -50,35 +51,58 @@ RSpec.describe 'グループ新規登録', type: :system do
   end
 
   describe '視聴グループの編集' do
-    before(:each) do
-      sign_in(user_owner)
-      # 新規登録ページに遷移
-      visit new_group_path
-      fill_in 'group[name]', with: 'New Group Name'
-      find('input[name="commit"]').click
-      visit groups_path
-    end
+    context 'オーナーでログイン' do
+      before(:each) do
+        sign_in(user_owner)
+        # 新規登録ページに遷移
+        visit new_group_path
+        fill_in 'group[name]', with: 'New Group Name'
+        find('input[name="commit"]').click
+        visit groups_path
+      end
 
-    it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-      puts Group.count
-      puts Group.first.name
-      expect(page).to have_content('New Group Name')
-      expect(page).to have_content('編集')
-      group = Group.find_by(name: 'New Group Name')
-      visit edit_group_path(group.uuid)
-      fill_in 'group[name]', with: 'Edited Group Name'
-      find('input[name="commit"]').click
-      expect(page).to have_current_path groups_path, ignore_query: true
-      expect(page).to have_content('Edited Group Name')
-    end
+      it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
+        puts Group.count
+        puts Group.first.name
+        expect(page).to have_content('New Group Name')
+        expect(page).to have_content('編集')
+        group = Group.find_by(name: 'New Group Name')
+        visit edit_group_path(group.uuid)
+        fill_in 'group[name]', with: 'Edited Group Name'
+        find('input[name="commit"]').click
+        expect(page).to have_current_path groups_path, ignore_query: true
+        expect(page).to have_content('Edited Group Name')
+      end
 
-    it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-      group = Group.find_by(name: 'New Group Name')
-      visit edit_group_path(group.uuid)
-      fill_in 'group[name]', with: ''
-      find('input[name="commit"]').click
-      expect(page).to have_current_path(group_path(group.uuid))
-      expect(page).to have_content('視聴グループ名を入力してください')
+      it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
+        group = Group.find_by(name: 'New Group Name')
+        visit edit_group_path(group.uuid)
+        fill_in 'group[name]', with: ''
+        find('input[name="commit"]').click
+        expect(page).to have_current_path(group_path(group.uuid))
+        expect(page).to have_content('視聴グループ名を入力してください')
+      end
+    end
+    
+    context '管理者でログイン'
+      before(:each) do
+        sign_in(system_admin)
+        group = Group.find_by(name: 'New Group Name')
+        visit edit_group_path(group.uuid)
+        fill_in 'group[name]', with: 'Edited Group Name'
+        find('input[name="commit"]').click
+        expect(page).to have_current_path groups_path, ignore_query: true
+        expect(page).to have_content('Edited Group Name')
+      end
+
+      it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
+        group = Group.find_by(name: 'New Group Name')
+        visit edit_group_path(group.uuid)
+        fill_in 'group[name]', with: ''
+        find('input[name="commit"]').click
+        expect(page).to have_current_path(group_path(group.uuid))
+        expect(page).to have_content('視聴グループ名を入力してください')
+      end
     end
   end
 
