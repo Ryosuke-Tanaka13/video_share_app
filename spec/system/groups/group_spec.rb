@@ -61,9 +61,9 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
 
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-        expect(page).to have_content('New Group Name')
-        put group_path(group.uuid), params: { group: { name: 'Edited Group Name' } }
-        find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
+        expect(page).to have_content('MyString')
+        put group_path(group.uuid), params: { group: { name: 'MyString' } }
+        find_link('編集', href: edit_group_path(Group.find_by(name: 'MyString').uuid)).click
         fill_in 'group[name]', with: 'Edited Group Name'
         find('input[name="commit"]').click
         expect(page).to have_current_path groups_path, ignore_query: true
@@ -71,7 +71,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
 
       it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-        group = Group.find_by(name: 'New Group Name')
+        group = Group.find_by(name: 'MyString')
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
@@ -87,8 +87,8 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
 
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-        expect(page).to have_content('New Group Name')
-        find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
+        expect(page).to have_content('MyString')
+        find_link('編集', href: edit_group_path(Group.find_by(name: 'MyString').uuid)).click
         fill_in 'group[name]', with: 'Edited Group Name'
         find('input[name="commit"]').click
         expect(page).to have_current_path groups_path, ignore_query: true
