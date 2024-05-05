@@ -45,8 +45,8 @@ RSpec.describe 'グループ新規登録', type: :system do
         visit new_group_path
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
-        expect(page).to have_content('視聴グループ名を入力してください')
         expect(page).to have_current_path groups_path
+        expect(page).to have_content('視聴グループ名を入力してください')
       end
     end
   end
