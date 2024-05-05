@@ -63,7 +63,9 @@ RSpec.describe 'グループ新規登録', type: :system do
       puts Group.count
       puts Group.first.name
       expect(page).to have_content('New Group Name')
-      find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
+      expect(page).to have_content('編集')
+      group = Group.find_by(name: 'New Group Name')
+      visit edit_group_path(group.uuid)
       fill_in 'group[name]', with: 'Edited Group Name'
       find('input[name="commit"]').click
       expect(page).to have_current_path groups_path, ignore_query: true
