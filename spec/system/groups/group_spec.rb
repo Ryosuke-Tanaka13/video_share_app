@@ -84,7 +84,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
     end
     
-    context '管理者でログイン'
+    context '管理者でログイン' do
       before(:each) do
         sign_in(system_admin)
         group = Group.find_by(name: 'New Group Name')
