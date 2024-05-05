@@ -52,26 +52,28 @@ RSpec.describe 'グループ新規登録', type: :system do
   end
 
   describe '視聴グループの編集' do
-    let!(:group) { create(:group, organization_id: user_owner.organization_id) }
 
-    context '管理者の場合' do
+    context 'ユーザーオーナーの場合' do
       before(:each) do
-        sign_in system_admin
-        visit groups_path(organization_id: user_owner.organization_id)
+        sign_in(user_owner)
+        # 新規登録ページに遷移
+        visit new_group_path
+        fill_in 'group[name]', with: 'New Group Name'
+        find('input[name="commit"]').click
+        visit groups_path
       end
-
+  
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-        expect(page).to have_content('MyString')
-        put group_path(group.uuid), params: { group: { name: 'MyString' } }
-        find_link('編集', href: edit_group_path(Group.find_by(name: 'MyString').uuid)).click
+        expect(page).to have_content('New Group Name')
+        find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
         fill_in 'group[name]', with: 'Edited Group Name'
         find('input[name="commit"]').click
         expect(page).to have_current_path groups_path, ignore_query: true
         expect(page).to have_content('Edited Group Name')
       end
-
+  
       it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-        group = Group.find_by(name: 'MyString')
+        group = Group.find_by(name: 'New Group Name')
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
@@ -80,15 +82,15 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
     end
 
-    context 'ユーザーオーナーの場合' do
+    context '管理者の場合' do
       before(:each) do
-        sign_in user_owner
-        visit groups_path
+        sign_in system_admin
+        visit groups_path(organization_id: user_owner.organization_id)
       end
 
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-        expect(page).to have_content('MyString')
-        find_link('編集', href: edit_group_path(Group.find_by(name: 'MyString').uuid)).click
+        expect(page).to have_content('New Group Name')
+        find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
         fill_in 'group[name]', with: 'Edited Group Name'
         find('input[name="commit"]').click
         expect(page).to have_current_path groups_path, ignore_query: true
