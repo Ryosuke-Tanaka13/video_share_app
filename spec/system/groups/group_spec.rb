@@ -83,9 +83,11 @@ RSpec.describe 'グループ新規登録', type: :system do
     end
     
     context '管理者でログイン' do
-      let(:group) { create(:group, organization_id: 1) }
-      sign_in(system_admin)
-      
+      let!(:group) { create(:group, organization_id: 1) }
+      before(:each) do
+        sign_in(system_admin)
+      end
+    
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
         group = Group.find_by(name: 'MyString')
         puts group.name
