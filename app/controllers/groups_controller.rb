@@ -51,8 +51,9 @@ class GroupsController < ApplicationController
         @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: params[:organization_id] })
       else
         @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
-      end      
-      render 'edit'
+      end
+      redirect_to edit_group_path(@group.uuid, organization_id: @group.organization_id)
+      flash[:danger] = '視聴グループ名を入力してください'
     end
   end
 
@@ -87,11 +88,9 @@ class GroupsController < ApplicationController
   end
 
   def check_viewer
-    if !current_system_admin?
-      unless @group.organization_id == current_user.organization_id
-        flash[:danger] = '権限がありません。'
-        redirect_back(fallback_location: root_url)
-      end
+    if !current_system_admin? && @group.organization_id != current_user.organization_id
+      flash[:danger] = '権限がありません。'
+      redirect_back(fallback_location: root_url)
     end
   end
 

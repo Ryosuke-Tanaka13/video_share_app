@@ -61,7 +61,7 @@ RSpec.describe 'グループ新規登録', type: :system do
         find('input[name="commit"]').click
         visit groups_path
       end
-    
+
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
         expect(page).to have_content('New Group Name')
         expect(page).to have_content('編集')
@@ -82,7 +82,7 @@ RSpec.describe 'グループ新規登録', type: :system do
         expect(page).to have_content('視聴グループ名を入力してください')
       end
     end
-    
+
     context '管理者でログイン' do
       let!(:group) { create(:group) }
 
