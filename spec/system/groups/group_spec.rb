@@ -60,6 +60,8 @@ RSpec.describe 'グループ新規登録', type: :system do
     end
 
     it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
+      puts Group.count
+      puts Group.first.name
       expect(page).to have_content('New Group Name')
       find_link('編集', href: edit_group_path(Group.find_by(name: 'New Group Name').uuid)).click
       fill_in 'group[name]', with: 'Edited Group Name'
