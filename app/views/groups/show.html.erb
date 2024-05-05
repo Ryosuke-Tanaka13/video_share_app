@@ -16,7 +16,7 @@
     </table>
   </div>
   <div class="card-footer">
-    <%= link_to "編集", edit_group_path(@group.uuid), class: "btn btn-md btn-block btn-success" %>
+    <%= link_to "編集", edit_group_path(@group.uuid, organization_id: @group.organization_id), class: "btn btn-md btn-block btn-success" %>
     <%= link_to "削除", group_path(@group.uuid), method: :delete, data: { confirm: "#{@group.name}の視聴グループを削除します。本当によろしいですか？" }, class: "btn btn-md btn-block btn-danger" %></br>
     <%= link_to "一覧画面へ", groups_path, class: "btn btn-md btn-block btn-secondary" %>
   </div>

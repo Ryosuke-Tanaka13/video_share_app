@@ -45,6 +45,7 @@ class GroupsController < ApplicationController
   def update
     if @group.update(group_params)
       redirect_to groups_path(organization_id: @group.organization_id)
+      flash[:success] = '視聴グループを編集しました。'
     else
       @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
       render 'edit'
