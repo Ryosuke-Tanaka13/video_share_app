@@ -60,10 +60,8 @@ RSpec.describe 'グループ新規登録', type: :system do
         find('input[name="commit"]').click
         visit groups_path
       end
-
+    
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-        puts Group.count
-        puts Group.first.name
         expect(page).to have_content('New Group Name')
         expect(page).to have_content('編集')
         group = Group.find_by(name: 'New Group Name')
@@ -85,9 +83,12 @@ RSpec.describe 'グループ新規登録', type: :system do
     end
     
     context '管理者でログイン' do
-      before(:each) do
-        sign_in(system_admin)
-        group = Group.find_by(name: 'New Group Name')
+      let(:group) { create(:group, organization_id: 1) }
+      sign_in(system_admin)
+      
+      it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
+        group = Group.find_by(name: 'MyString')
+        puts group.name
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: 'Edited Group Name'
         find('input[name="commit"]').click
