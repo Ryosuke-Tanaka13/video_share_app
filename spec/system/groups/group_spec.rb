@@ -12,6 +12,7 @@ RSpec.describe 'グループ新規登録', type: :system do
 
   before(:each) do
     organization
+    system_admin
     user_staff
     user_owner
     viewer
@@ -83,14 +84,13 @@ RSpec.describe 'グループ新規登録', type: :system do
     end
     
     context '管理者でログイン' do
-      let!(:group) { create(:group, organization_id: 1) }
+      let!(:group) { create(:group) }
+
       before(:each) do
         sign_in(system_admin)
       end
-    
+
       it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-        group = Group.find_by(name: 'MyString')
-        puts group.name
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: 'Edited Group Name'
         find('input[name="commit"]').click
@@ -99,7 +99,6 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
 
       it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-        group = Group.find_by(name: 'Edited Group Name')
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
