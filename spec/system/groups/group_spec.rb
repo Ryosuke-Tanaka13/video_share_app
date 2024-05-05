@@ -96,7 +96,7 @@ RSpec.describe 'グループ新規登録', type: :system do
       end
 
       it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-        group = Group.find_by(name: 'New Group Name')
+        group = Group.find_by(name: 'Edited Group Name')
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
