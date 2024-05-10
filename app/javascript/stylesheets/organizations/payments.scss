@@ -1,0 +1,27 @@
+@import "bootstrap";
+@import "admin-lte";
+@import '@fortawesome/fontawesome-free';
+
+.plan-card {
+  border: none;
+  transition: transform 0.3s;
+}
+
+.plan-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(146, 121, 121, 0.1);
+}
+
+.plan-title {
+  font-weight: bold;
+}
+
+.plan-price {
+  margin: 15px 0;
+  color: #007BFF;
+}
+
+.btn-primary {
+  background-color: #007BFF;
+  border: none;
+}

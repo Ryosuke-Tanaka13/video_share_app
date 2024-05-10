@@ -1,0 +1,63 @@
+<% provide(:title, "プラン選択") %>
+<div class="container mt-5">
+  <div class="row">
+
+    <!-- 基本プラン -->
+    <div class="col-md-4 mb-4">
+      <div class="card plan-card p-4">
+        <div class="card-body">
+          <h2 class="card-title plan-title">基本プラン</h2>
+          <h4 class="text-muted plan-price">0円</h4>
+          <p class="card-text">基本プランの詳細や特徴をここに記述します。</p>
+          <%= form_with url: organizations_payment_path, method: :post do |form| %>
+            <%= form.hidden_field :priceId, value: "price_1P9qASRvCXlJ1J1tJUoVIu0T" %>
+            <% if @organization.plan == 0 %>
+              <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
+            <% else %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3", data: { confirm: "0円プランに変更してもよろしいですか？" } %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- スタンダードプラン -->
+    <div class="col-md-4 mb-4">
+      <div class="card plan-card p-4">
+        <div class="card-body">
+          <h2 class="card-title plan-title">スタンダードプラン</h2>
+          <h4 class="text-muted plan-price">1000円</h4>
+          <p class="card-text">スタンダードプランの詳細や特徴をここに記述します。</p>
+          <%= form_with url: organizations_payment_path, method: :post do |form| %>
+            <%= form.hidden_field :priceId, value: "price_1P9q9nRvCXlJ1J1tEeUFWjfd" %>
+            <% if @organization.plan == 1000 %>
+              <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
+            <% else %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3", data: { confirm: "1000円プランに変更してもよろしいですか？" } %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- プレミアムプラン -->
+    <div class="col-md-4 mb-4">
+      <div class="card plan-card p-4">
+        <div class="card-body">
+          <h2 class="card-title plan-title">プレミアムプラン</h2>
+          <h4 class="text-muted plan-price">2000円</h4>
+          <p class="card-text">プレミアムプランの詳細や特徴をここに記述します。</p>
+          <%= form_with url: organizations_payment_path, method: :post do |form| %>
+            <%= form.hidden_field :priceId, value: "price_1P9q8vRvCXlJ1J1tfmPBiVY6" %>
+            <% if @organization.plan == 2000 %>
+              <button class="btn btn-secondary btn-block mt-3" disabled>現在のプラン</button>
+            <% else %>
+              <%= form.submit "プランを選択", class: "btn btn-primary btn-block mt-3", data: { confirm: "2000円プランに変更してもよろしいですか？" } %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
