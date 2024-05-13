@@ -6,6 +6,7 @@ class Video < ApplicationRecord
 
   has_many :video_folders, dependent: :destroy
   has_many :folders, through: :video_folders
+  has_one :questionnaire
 
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }, if: :video_exists?

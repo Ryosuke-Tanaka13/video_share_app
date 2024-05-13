@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         resource :payment, only: %i[new create], as: :organizations_payment
       end
     end
+    resources :questionnaires
   end
 
   # =================================================================
@@ -71,7 +72,7 @@ Rails.application.routes.draw do
       get 'popup_before'
       get 'popup_after'
     end
-
+    
     resources :comments, only: %i[create update destroy] do
       resources :replies, only: %i[create update destroy]
     end

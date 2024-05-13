@@ -1,0 +1,32 @@
+<h2>アンケート作成</h2>
+<!-- 質問テンプレート（隠されている） -->
+<div id="question-template" style="display:none;">
+  <div class="question">
+    <input type="text" name="questions[][text]" placeholder="質問を入力">
+    <select name="questions[][type]" class="question-type">
+      <option value="text">テキスト</option>
+      <option value="grid">グリッド</option>
+      <option value="radio">ラジオボタン</option>
+      <option value="dropdown">プルダウン</option>
+    </select>
+    <!-- 質問の削除ボタン -->
+    <button type="button" class="remove-question">削除</button>
+
+    <div class="question-content">
+      <!-- JavaScriptで動的に質問の内容を追加 -->
+      <div class="text-template">テキスト入力：<input type="text" name="questions[][answer]"></div>
+      <div class="grid-template" style="display:none;">グリッド選択：<input type="text" name="questions[][answer]"></div>
+      <div class="radio-template" style="display:none;">ラジオボタン：<input type="radio" name="questions[][answer]">はい<input type="radio" name="questions[][answer]">いいえ</div>
+      <div class="dropdown-template" style="display:none;">プルダウン：<select name="questions[][answer]"><option>選択してください</option></select></div>
+    </div>
+  </div>
+</div>  
+
+<!-- 実際のフォーム -->
+<form id="dynamic-form">
+  <div id="questions-container">
+    <!-- JavaScriptで動的に質問を追加 -->
+  </div>
+  <button type="button" id="add-question">質問を追加</button>
+  <input type="submit" value="保存">
+</form>

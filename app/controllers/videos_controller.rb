@@ -34,6 +34,7 @@ class VideosController < ApplicationController
   end
 
   def new
+    @organization = current_user.organization
     @video = Video.new
     @video.video_folders.build
   end
