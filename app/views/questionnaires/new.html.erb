@@ -1,32 +1,63 @@
-<h2>アンケート作成</h2>
-<!-- 質問テンプレート（隠されている） -->
-<div id="question-template" style="display:none;">
-  <div class="question">
-    <input type="text" name="questions[][text]" placeholder="質問を入力">
-    <select name="questions[][type]" class="question-type">
-      <option value="text">テキスト</option>
-      <option value="grid">グリッド</option>
-      <option value="radio">ラジオボタン</option>
-      <option value="dropdown">プルダウン</option>
-    </select>
-    <!-- 質問の削除ボタン -->
-    <button type="button" class="remove-question">削除</button>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アンケート作成</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta name="csrf-token" content="<%= csrf_meta_tags %>">
+</head>
+<body>
+  <h2>アンケート作成</h2>
 
-    <div class="question-content">
-      <!-- JavaScriptで動的に質問の内容を追加 -->
-      <div class="text-template">テキスト入力：<input type="text" name="questions[][answer]"></div>
-      <div class="grid-template" style="display:none;">グリッド選択：<input type="text" name="questions[][answer]"></div>
-      <div class="radio-template" style="display:none;">ラジオボタン：<input type="radio" name="questions[][answer]">はい<input type="radio" name="questions[][answer]">いいえ</div>
-      <div class="dropdown-template" style="display:none;">プルダウン：<select name="questions[][answer]"><option>選択してください</option></select></div>
+  <form id="dynamic-form" class="centered-form">
+    <!-- 名前とメールアドレスの入力フィールド -->
+    <div class="viewer-info">
+      <label for="viewer-name"><strong>名前</strong></label>
+      <input type="text" id="viewer-name" name="viewer[name]" placeholder="名前を入力">
+      
+      <label for="viewer-email"><strong>メールアドレス</strong></label>
+      <input type="email" id="viewer-email" name="viewer[email]" placeholder="メールアドレスを入力">
+    </div>
+
+    <div id="questions-container"></div>
+    <button type="button" id="add-question">質問を追加</button>
+    <input type="submit" value="保存">
+  </form>
+
+  <div id="question-template" style="display:none;">
+    <div class="question-field">
+      <div class="question">
+        <div class="question-header">
+          <label class="question-label"><strong>質問</strong></label>
+          <select name="questions[][type]" class="question-type">
+            <option value="text">テキスト</option>
+            <option value="radio">ラジオボタン</option>
+            <option value="dropdown">プルダウン</option>
+            <option value="checkbox">チェックボックス</option>
+          </select>
+        </div>
+        <input type="text" name="questions[][text]" placeholder="質問を入力" class="question-input">
+
+        <div class="question-content">
+          <!-- テンプレート群 -->
+          <div class="text-template"><textarea name="questions[][answer]" rows="4" placeholder="回答を入力"></textarea></div>
+          <div class="radio-template" style="display:none;"></div>
+          <div class="dropdown-template" style="display:none;"></div>
+          <div class="checkbox-template" style="display:none;"></div>
+        </div>
+
+        <div class="options-management" style="display:none;">
+          <input type="text" placeholder="新しい選択肢を入力" class="new-option-text">
+          <button type="button" class="add-option">&#10010;</button> <!-- 追加アイコン -->
+          <button type="button" class="reset-options" style="display:none;">リセット</button> <!-- リセットボタン -->
+        </div>
+
+        <button type="button" class="remove-question">削除</button>
+      </div>
     </div>
   </div>
-</div>  
 
-<!-- 実際のフォーム -->
-<form id="dynamic-form">
-  <div id="questions-container">
-    <!-- JavaScriptで動的に質問を追加 -->
-  </div>
-  <button type="button" id="add-question">質問を追加</button>
-  <input type="submit" value="保存">
-</form>
+  <script src="questionnaire.js"></script>
+</body>
+</html>

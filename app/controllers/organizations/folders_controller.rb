@@ -8,6 +8,7 @@ class Organizations::FoldersController < ApplicationController
   before_action :set_folder, only: %i[show update destroy]
 
   def index
+    @user = current_user
     @folders = @organization.folders
     if params[:payment] == 'success'
       flash[:success] = 'プラン選択が完了しました！'

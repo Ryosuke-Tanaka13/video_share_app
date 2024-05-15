@@ -15,7 +15,6 @@ Rails.application.routes.draw do
         resource :payment, only: %i[new create], as: :organizations_payment
       end
     end
-    resources :questionnaires
   end
 
   # =================================================================
@@ -44,6 +43,7 @@ Rails.application.routes.draw do
         resource :unsubscribe, only: %i[show update], as: :users_unsubscribe
       end
     end
+    resources :questionnaires
   end
 
   post 'users_create', to: 'users#create'
