@@ -165,25 +165,25 @@ class VideosController < ApplicationController
   end
 
 # ------------------音声出力と音声データ文字起こし、データ統合-----------------------------------------
-# def create_bucket
-#   @storage = Google::Cloud::Storage.new(
-#     project_id: 'learned-fusion-389707',
-#     credentials: Rails.root.join('gcstoragelearned-fusion-389707-d403d797d105.json'),
-#     timeout: 1800
-#   )
+def create_bucket
+  @storage = Google::Cloud::Storage.new(
+    project_id: 'learned-fusion-389707',
+    credentials: Rails.root.join('gcstoragelearned-fusion-389707-d403d797d105.json'),
+    timeout: 1800
+  )
 
-#   @bucket_name = 'movie_app_bucket'
-#   @bucket = @storage.bucket(@bucket_name)
-#   if @bucket.nil?
-#     @bucket = @storage.create_bucket(@bucket_name)
-#     puts "Bucket '#{@bucket.name}' created."
-#   else
-#     puts "Bucket '#{@bucket.name}' already exists."
-#   end
-#   @bucket
-# rescue StandardError => e
-#   puts "Error creating bucket: #{e.message}"
-# end
+  @bucket_name = 'movie_app_bucket'
+  @bucket = @storage.bucket(@bucket_name)
+  if @bucket.nil?
+    @bucket = @storage.create_bucket(@bucket_name)
+    puts "Bucket '#{@bucket.name}' created."
+  else
+    puts "Bucket '#{@bucket.name}' already exists."
+  end
+  @bucket
+rescue StandardError => e
+  puts "Error creating bucket: #{e.message}"
+end
 
 def audio_output
   # 動画ファイルのパスをparamsから取得
