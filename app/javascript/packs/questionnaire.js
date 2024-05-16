@@ -1,37 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const preVideoQuestionsContainer = document.getElementById('pre-video-questions-container');
-  const postVideoQuestionsContainer = document.getElementById('post-video-questions-container');
+  const container = document.getElementById('questions-container');
   const addQuestionButton = document.getElementById('add-question');
   const form = document.getElementById('dynamic-form');
-  const preVideoToggle = document.getElementById('pre-video-toggle');
-  const postVideoToggle = document.getElementById('post-video-toggle');
-  const viewerInfo = document.querySelector('.viewer-info');
   const formTitle = document.getElementById('form-title');
 
+  const preVideoQuestionsContainer = document.getElementById('pre-video-questions-container');
+  const postVideoQuestionsContainer = document.getElementById('post-video-questions-container');
+  const preVideoToggle = document.getElementById('pre-video-toggle');
+  const postVideoToggle = document.getElementById('post-video-toggle');
+  
   let currentQuestionnaireType = 'pre_video';
-
-  function toggleQuestionnaire(type) {
-    currentQuestionnaireType = type;
-    if (type === 'pre_video') {
-      preVideoToggle.classList.add('active');
-      postVideoToggle.classList.remove('active');
-      preVideoQuestionsContainer.style.display = 'block';
-      postVideoQuestionsContainer.style.display = 'none';
-      viewerInfo.style.display = 'block';
-      formTitle.textContent = 'アンケート作成（動画視聴前）';
-      document.getElementById('viewer-name').required = true;
-      document.getElementById('viewer-email').required = true;
-    } else {
-      preVideoToggle.classList.remove('active');
-      postVideoToggle.classList.add('active');
-      preVideoQuestionsContainer.style.display = 'none';
-      postVideoQuestionsContainer.style.display = 'block';
-      viewerInfo.style.display = 'none';
-      formTitle.textContent = 'アンケート作成（動画視聴後）';
-      document.getElementById('viewer-name').required = false;
-      document.getElementById('viewer-email').required = false;
-    }
-  }
 
   preVideoToggle.addEventListener('click', function() {
     toggleQuestionnaire('pre_video');
@@ -41,11 +19,28 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleQuestionnaire('post_video');
   });
 
+  function toggleQuestionnaire(type) {
+    if (type === 'pre_video') {
+      preVideoQuestionsContainer.style.display = 'block';
+      postVideoQuestionsContainer.style.display = 'none';
+      formTitle.innerText = 'アンケート作成（動画視聴前）';
+      preVideoToggle.classList.add('active');
+      postVideoToggle.classList.remove('active');
+    } else {
+      preVideoQuestionsContainer.style.display = 'none';
+      postVideoQuestionsContainer.style.display = 'block';
+      formTitle.innerText = 'アンケート作成（動画視聴後）';
+      preVideoToggle.classList.remove('active');
+      postVideoToggle.classList.add('active');
+    }
+    currentQuestionnaireType = type;
+  }
+
   addQuestionButton.addEventListener('click', function() {
     const template = document.getElementById('question-template').cloneNode(true);
     template.style.display = 'block';
-    template.removeAttribute('id'); // IDを削除して一意性を確保
-
+    template.removeAttribute('id');
+    
     if (currentQuestionnaireType === 'pre_video') {
       preVideoQuestionsContainer.appendChild(template);
     } else {
@@ -57,11 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
       updateQuestionContent(this);
     });
 
-    // 初期状態の回答形式に応じて内容を設定
     updateQuestionContent(selectElement);
   });
 
-  document.addEventListener('click', function(e) {
+  container.addEventListener('click', function(e) {
     const parentQuestion = e.target.closest('.question');
     if (e.target.classList.contains('add-option')) {
       const input = parentQuestion.querySelector('.new-option-text');
@@ -71,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
         input.value = '';
       }
     } else if (e.target.classList.contains('delete-option')) {
-      e.target.closest('label').remove(); // Ensure we are correctly removing the label element
+      e.target.closest('label').remove();
     } else if (e.target.classList.contains('remove-question')) {
       e.target.closest('.question-field').remove();
     } else if (e.target.classList.contains('reset-options')) {
@@ -133,11 +127,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    const formData = new FormData(this);
-    formData.append('questionnaire_type', currentQuestionnaireType); // アンケートの種類を追加
+    const formData = new FormData(form);
 
-    fetch('/questionnaires', {
-      method: 'POST',
+    let questionsData = [];
+    const questionFields = currentQuestionnaireType === 'pre_video'
+      ? preVideoQuestionsContainer.querySelectorAll('.question-field')
+      : postVideoQuestionsContainer.querySelectorAll('.question-field');
+
+    questionFields.forEach(field => {
+      const questionText = field.querySelector('.question-input').value;
+      const questionType = field.querySelector('.question-type').value;
+      const answerInputs = field.querySelectorAll('input[name="questions[][answer]"], textarea[name="questions[][answer]"]');
+
+      let answers = [];
+      answerInputs.forEach(input => {
+        answers.push(input.value);
+      });
+
+      questionsData.push({
+        text: questionText,
+        type: questionType,
+        answers: answers
+      });
+    });
+
+    const questionnaireKey = currentQuestionnaireType === 'pre_video' ? 'pre_video_questionnaire' : 'post_video_questionnaire';
+    formData.append(`questionnaire[${questionnaireKey}]`, JSON.stringify(questionsData));
+
+    fetch(form.action, {
+      method: form.method,
       headers: {
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
       },
@@ -151,7 +169,4 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error:', error));
   });
-
-  // 初期設定
-  toggleQuestionnaire(currentQuestionnaireType);
 });

@@ -112,3 +112,23 @@ span.delete-option {
   padding: 5px 10px;
   font-size: 14px;
 }
+
+.toggle-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background-color: #007b9e;
+  color: white;
+  border-radius: 5px;
+  margin: 0 10px;
+}
+
+.toggle-button.active {
+  background-color: #005f73;
+}

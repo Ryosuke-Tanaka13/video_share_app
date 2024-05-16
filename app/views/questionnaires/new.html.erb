@@ -16,21 +16,21 @@
     </div>
   </div>
 
-  <form id="dynamic-form" class="centered-form">
+  <%= form_with model: [@user, @questionnaire], local: false, id: 'dynamic-form', class: 'centered-form' do |f| %>
     <!-- 名前とメールアドレスの入力フィールド -->
     <div class="viewer-info">
-      <label for="viewer-name"><strong>名前</strong></label>
-      <input type="text" id="viewer-name" name="viewer[name]" placeholder="名前を入力">
+      <%= f.label :name, "名前", class: "strong" %>
+      <%= f.text_field :name, id: 'viewer-name', placeholder: "名前を入力" %>
       
-      <label for="viewer-email"><strong>メールアドレス</strong></label>
-      <input type="email" id="viewer-email" name="viewer[email]" placeholder="メールアドレスを入力">
+      <%= f.label :email, "メールアドレス", class: "strong" %>
+      <%= f.email_field :email, id: 'viewer-email', placeholder: "メールアドレスを入力" %>
     </div>
 
     <div id="pre-video-questions-container" class="questions-container"></div>
     <div id="post-video-questions-container" class="questions-container" style="display:none;"></div>
     <button type="button" id="add-question">質問を追加</button>
-    <input type="submit" value="保存">
-  </form>
+    <%= f.submit "保存" %>
+  <% end %>
 
   <div id="question-template" style="display:none;">
     <div class="question-field">
