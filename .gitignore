@@ -73,11 +73,4 @@ yarn-debug.log*
 /public/uploads
 
 /.env
-
-/public/packs
-/public/packs-test
-/node_modules
-/yarn-error.log
-yarn-debug.log*
-.yarn-integrity
 Y/google-cloud-sdk/bin/anthoscli

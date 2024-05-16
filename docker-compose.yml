@@ -50,7 +50,7 @@ services:
       MYSQL_ROOT_PASSWORD: password
     ports:
       - '3306:3306'
-    command: --default-authentication-plugin=mysql_native_password
+    # command: --default-authentication-plugin=mysql_native_password
     volumes:
       - mysql-data:/var/lib/mysql
 
@@ -59,3 +59,5 @@ volumes:
   bundle:
   node_modules:
   packs:
+ 
+  

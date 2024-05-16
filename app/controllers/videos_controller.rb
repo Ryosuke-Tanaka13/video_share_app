@@ -118,165 +118,120 @@ class VideosController < ApplicationController
   end
  # -----------------------------------------------------------
  # --------動画編集ーーーーーーーーー
- def cut_video
- end
-
- def cut_video_edit
-  # フォームから送信されたデータを取得
-  start_time = params[:start_time]
-  duration = params[:duration]
-  new_title = params[:new_title]
-  video_file = params[:video_file]
-  desktop_path = '/app/output'
-  puts "desktop_path"
-  if File.writable?(desktop_path)
-    puts "書き込み権限があります"
-  else
-    puts "書き込み権限がありません"
+  def cut_video
   end
-  output_filename = "#{new_title}_#{Time.now.to_i}.mp4"
-  # ファイルが選択されているか確認
-  if video_file.present? && video_file.respond_to?(:tempfile)
-    ffmpeg_path = '/usr/bin/ffmpeg'
-   
-    # ファイルの一時保存先を取得
-    input_path = video_file.tempfile.path
-    puts "Input Path: #{input_path}"
-    
-    output_path = File.join(desktop_path, output_filename)
-    puts "Output Path: #{output_path}"
-    ffmpeg_command = "#{ffmpeg_path} -i '#{input_path}' -ss #{start_time} -t #{duration} -c copy -movflags faststart '#{output_path}'"
 
-    puts "Executing command: #{ffmpeg_command}"
-    success = system(ffmpeg_command)
-    # コマンドの実行結果を確認
-    unless success
-      puts "Error executing command: #{ffmpeg_command}"
-      flash[:error] = "動画の切り抜きに失敗しました。"
-      head :internal_server_error and return
+  def cut_video_edit
+    # フォームから送信されたデータを取得
+    start_time = params[:start_time]
+    duration = params[:duration]
+    new_title = params[:new_title]
+    video_file = params[:video_file]
+    desktop_path = '/app/output'
+    puts "desktop_path"
+    if File.writable?(desktop_path)
+      puts "書き込み権限があります"
+    else
+      puts "書き込み権限がありません"
     end
-     # 切り抜かれた動画の保存先などをビューに渡す
-     flash[:success] = "動画を切り抜きました。作成動画：#{output_filename}"
-     redirect_to cut_video_path
-  else
-    # ファイルが選択されていない場合の処理
-    render plain: '動画ファイルを選択してください。'
+    output_filename = "#{new_title}_#{Time.now.to_i}.mp4"
+    # ファイルが選択されているか確認
+    if video_file.present? && video_file.respond_to?(:tempfile)
+      ffmpeg_path = '/usr/bin/ffmpeg'
+    
+      # ファイルの一時保存先を取得
+      input_path = video_file.tempfile.path
+      puts "Input Path: #{input_path}"
+      
+      output_path = File.join(desktop_path, output_filename)
+      puts "Output Path: #{output_path}"
+      ffmpeg_command = "#{ffmpeg_path} -i '#{input_path}' -ss #{start_time} -t #{duration} -c copy -movflags faststart '#{output_path}'"
+
+      puts "Executing command: #{ffmpeg_command}"
+      success = system(ffmpeg_command)
+      # コマンドの実行結果を確認
+      unless success
+        puts "Error executing command: #{ffmpeg_command}"
+        flash[:error] = "動画の切り抜きに失敗しました。"
+        head :internal_server_error and return
+      end
+      # 切り抜かれた動画の保存先などをビューに渡す
+      flash[:success] = "動画を切り抜きました。作成動画：#{output_filename}"
+      redirect_to cut_video_path
+    else
+      # ファイルが選択されていない場合の処理
+      render plain: '動画ファイルを選択してください。'
+    end
   end
-end
 
 # ------------------音声出力と音声データ文字起こし、データ統合-----------------------------------------
-def create_bucket
-  @storage = Google::Cloud::Storage.new(
-    project_id: 'learned-fusion-389707',
-    credentials: Rails.root.join('gcstoragelearned-fusion-389707-d403d797d105.json'),
-    timeout: 1800
-  )
+# def create_bucket
+#   @storage = Google::Cloud::Storage.new(
+#     project_id: 'learned-fusion-389707',
+#     credentials: Rails.root.join('gcstoragelearned-fusion-389707-d403d797d105.json'),
+#     timeout: 1800
+#   )
 
-  @bucket_name = 'movie_app_bucket'
-  @bucket = @storage.bucket(@bucket_name)
-  if @bucket.nil?
-    @bucket = @storage.create_bucket(@bucket_name)
-    puts "Bucket '#{@bucket.name}' created."
+#   @bucket_name = 'movie_app_bucket'
+#   @bucket = @storage.bucket(@bucket_name)
+#   if @bucket.nil?
+#     @bucket = @storage.create_bucket(@bucket_name)
+#     puts "Bucket '#{@bucket.name}' created."
+#   else
+#     puts "Bucket '#{@bucket.name}' already exists."
+#   end
+#   @bucket
+# rescue StandardError => e
+#   puts "Error creating bucket: #{e.message}"
+# end
+
+def audio_output
+  # 動画ファイルのパスをparamsから取得
+  video_path = params[:subtitle].tempfile.path
+  # 出力する音声ファイルのパス
+  audio_output_path = Rails.root.join('public', 'voice', "extraction#{Time.now.to_i}.wav")
+  # ffmpegを使用して動画から音声を抽出し、WAV形式で保存
+  command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{audio_output_path}"
+  stdout, stderr, status = Open3.capture3(command)
+  if status.success?
+    puts "Audio extracted successfully to #{audio_output_path}"
   else
-    puts "Bucket '#{@bucket.name}' already exists."
+    puts "Failed to extract audio: #{stderr}"
   end
-  @bucket
-rescue StandardError => e
-  puts "Error creating bucket: #{e.message}"
+  # Google Cloud Storageの設定
+  storage = Google::Cloud::Storage.new
+  bucket = storage.bucket 'movie_app_bucket'
+  # 音声ファイル名の取得
+  audio_file_name = audio_output_path.basename.to_s
+  chunk_size = 5 * 1024 * 1024  # 5MB のチャンクサイズ
+  # 音声ファイルをアップロード
+  file = bucket.create_file audio_output_path.to_s, "audio_files/#{audio_file_name}", chunk_size: chunk_size
+  # 音声ファイルのGCSパス
+  audio = { uri: "gs://movie_app_bucket/audio_files/#{audio_file_name}" }
+  # Speech-to-Text API の設定と実行
+  speech = Google::Cloud::Speech.speech
+  config = { encoding: :LINEAR16, sample_rate_hertz: 44100, language_code: "en-US" }
+  operation = speech.long_running_recognize config: config, audio: audio
+  puts "Transcription operation started, waiting for completion..."
+  response = operation.wait_until_done!
+  if response.error?
+    puts "Error: #{response.error.message}"
+  else
+    response.results.each_with_index do |result, i|
+      puts "Result #{i + 1}:"
+      result.alternatives.each do |alternative|
+        puts "Transcript: #{alternative.transcript}"
+      end
+    end
+  end
 end
 
 
 
-def audio_output
-  uploaded_file = params[:subtitle]
-      tempfile = Tempfile.new(['video', '.mp4'])
-      tempfile.binmode
-      tempfile.write(uploaded_file.read)
-      # ファイルポインタを元の位置に戻さないと元ファイルが破損する可能性がある
-      tempfile.rewind
-
-      # デバッグ用にログに出力
-      puts "Tempfile path: #{tempfile.path}"
-
-      # ここで UTF-8 にエンコードしてはいけない
-      self_filename = uploaded_file.original_filename
-
-      voice_path = Rails.root.join("public", "audio", "output#{Time.now.to_i}.wav")
-      voice_path
-      cmd = "ffmpeg -i '#{tempfile.path}' -vn -acodec pcm_s16le -ar 44100 -ac 2 '#{voice_path}'"
-
-      # デバッグ用にログに出力
-      puts "FFmpeg command: #{cmd}"
-
-      stdout_str, stderr_str, status = Open3.capture3(cmd)
-      Rails.logger.error("ffmpegエラー: #{stderr_str}") unless status.success?
-      audio_data = File.binread(voice_path)
-      desktop_path = '/app/output'
-      file_path = File.join(desktop_path, self_filename)
-      # デバッグ用にログに出力
-      File.write(file_path, audio_data, encoding: 'ascii-8bit')
-      bucket = create_bucket
-       if bucket
-         audio_file_name = "output#{Time.now.to_i}.wav"
-       else
-         puts "Bucket creation failed."
-         return
-       end
-      chunk_size =  5 * 1024 * 1024 
-      # 音声データをバイトデータ（配列）に変換している。
-      chunks = audio_data.bytes.each_slice(chunk_size).to_a
-      temp_file_path = tempfile.path
-      # storageのbucketモジュールにはbucketのオブジェクトではなく、バケットの名前を引数に入れないといけない
-      file = @storage.bucket(@bucket_name).create_file(temp_file_path, File.basename(voice_path))
-      audio_uri = file.public_url
-        chunks.each_with_index do |data, index|
-          file_name = "#{voice_path}_part_#{index}"
-          byte_stream = StringIO.new(data.pack('C*'))
-          file = @bucket.create_file(byte_stream, file_name)
-          # google_cloud_speechに渡すパスの形式をGCS形式にする
-        end
-        config = {
-            encoding: :LINEAR16,
-            sample_rate_hertz: 44100,
-            language_code: "ja-JP"
-          }
-      credentials_path = Rails.root.join('gcstoragelearned-fusion-389707-d403d797d105.json').to_s
-      Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
-      speech_client = Google::Cloud::Speech.speech
-      # storageに保存されているchunksデータのパスをGCSパスにて指定
-      audio_uri = "gs://#{@bucket_name}/#{File.basename(voice_path)}"
-      # 1分間を超える音声データをlong_running_recognizeメソッドで長時間の音声認識（文字起こし）を行なっている
-      operation = speech_client.long_running_recognize(config: config, audio: { uri: audio_uri })
-      operation.wait_until_done!
-      response = operation.response
-      binding.pry
-        if response.results.any?
-          results = response.results
-          transcript = results.map(&:alternatives).map(&:transcript).join(" ")
-          puts "音声認識に成功しました：#{transcript}"
-          return transcript # 認識されたテキストを返す
-        else
-          binding.pry
-          puts "音声認識に失敗しました"
-          return nil
-      end
-      transcript = transcribe_audio(credentials_path, audio_uri, bucket, tempfile, chunks)
-      if  audio_data.present?
-        video_temp_path = audio_data.tempfile.path
-        video_temp_path = tempfile.path
-        desktop_path = '/app/output'
-        puts "audio_data: #{audio_data}"
-        video_file_path = File.join(desktop_path,"#{audio_data.original_filename}")
-        output_video_path = Rails.root.join("public","subtitle_videos")
-        ffmpeg_path = '/usr/bin/ffmpeg'
-        add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)
-        puts "add_subtitles_to_video: #{add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)}"
-        redirect_to cut_video_path
-      end
- end
+  
 
 
-# -----------------------------------------------------------
+  # -----------------------------------------------------------
   private
 
   def video_params
