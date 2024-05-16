@@ -1,5 +1,5 @@
 class VideosController < ApplicationController
-  include CommentReply 
+  include CommentReply
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
