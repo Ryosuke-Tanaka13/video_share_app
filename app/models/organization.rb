@@ -11,6 +11,9 @@ class Organization < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validates :name,  presence: true, length: { in: 1..10 }
+  validates :plan, inclusion: { in: [-1, 0, 1000, 2000] }, allow_nil: true
+  validates :customer_id, uniqueness: true, allow_nil: true
+  validates :subscription_id, uniqueness: true, allow_nil: true
 
   # 引数のviewer_idと一致するorganizationの絞り込み
   scope :viewer_has, ->(viewer_id) { includes(:organization_viewers).where(organization_viewers: { viewer_id: viewer_id }) }
@@ -43,5 +46,10 @@ class Organization < ApplicationRecord
       end
     end
     all_valid
+  end
+
+  # 支払い失敗を判定するメソッド
+  def payment_failed?
+    plan.nil? || plan == -1
   end
 end

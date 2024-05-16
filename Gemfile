@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.0.3'
+ruby '3.1.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.3', '>= 6.1.3.1'
@@ -44,6 +44,8 @@ gem 'font-awesome-rails'
 gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
 
+gem 'stripe'
+
 group :development, :test do
   # ERD生成
   gem 'rails-erd'
@@ -74,7 +76,7 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   # 結合テスト用ツール
-  gem 'capybara'
+  gem 'capybara', '3.39.2'
   gem 'launchy', '~> 2.4.3' # 追記
   gem 'selenium-webdriver'
   gem 'turnip'
