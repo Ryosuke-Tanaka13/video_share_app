@@ -9,6 +9,9 @@ class Organizations::FoldersController < ApplicationController
 
   def index
     @folders = @organization.folders
+    if params[:payment] == 'success'
+      flash[:success] = 'プラン選択が完了しました！'
+    end
   end
 
   def show
