@@ -102,7 +102,6 @@ ja:
         login_set: ログイン有無設定
         popup_before_video: 動画視聴開始時ポップアップ表示
         popup_after_video: 動画視聴終了時ポップアップ表示
-        data_url: 動画データURL
         organization_id: 組織ID
         organization: 組織
         user_id: 動画投稿者ID

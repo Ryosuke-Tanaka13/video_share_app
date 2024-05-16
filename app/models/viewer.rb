@@ -25,4 +25,8 @@ class Viewer < ApplicationRecord
                      }
   # 退会者は省く絞り込み
   scope :subscribed, -> { where(is_valid: true) }
+
+  def ensure_member(organization_id)
+    OrganizationViewer.where(viewer_id: self.id, organization_id: organization_id)
+  end
 end

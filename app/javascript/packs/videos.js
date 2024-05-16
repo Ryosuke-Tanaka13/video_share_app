@@ -19,3 +19,4 @@ import "./video";
 import "./video_comment";
 import "./video_search_reset";
 import "./video_popup"
+import "./videos/show"

@@ -381,6 +381,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  active_decorator
   activestorage-validator
   bootsnap (>= 1.9.3)
   brakeman
@@ -420,7 +421,6 @@ DEPENDENCIES
   turnip
   tzinfo-data
   vcr
-  vimeo_me2!
   web-console (>= 4.1.0)
   webmock
   webpacker (~> 5.0)

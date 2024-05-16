@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe 'Comments', type: :system, js: true do
   let(:organization) { create(:organization) }
-  let(:system_admin) { create(:system_admin) }
+  let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:user) { create(:user, organization_id: organization.id) }
   let(:video_it) { create(:video_it, organization_id: organization.id, user_id: user.id, login_set: false) }
-  let(:user_staff1) { create(:user_staff1, organization_id: organization.id) }
-  let(:viewer) { create(:viewer) }
+  let(:user_staff1) { create(:user_staff1, organization_id: organization.id, confirmed_at: Time.now) }
+  let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   let(:organization_viewer) { create(:organization_viewer, organization_id: user.organization_id, viewer_id: viewer.id) }
   let(:another_viewer) { create(:another_viewer) }
   let(:system_admin_comment) do
@@ -36,9 +36,8 @@ RSpec.describe 'Comments', type: :system, js: true do
   describe '正常' do
     describe 'システム管理者' do
       before(:each) do
-        login_system_admin(system_admin)
-        current_system_admin(system_admin)
-        visit video_path(id: user_comment.video_id)
+        sign_in system_admin
+        visit video_path(video_it)
       end
 
       it 'レイアウト' do
@@ -158,9 +157,8 @@ RSpec.describe 'Comments', type: :system, js: true do
 
     describe '動画投稿者' do
       before(:each) do
-        login(user_staff1)
-        current_user(user_staff1)
-        visit video_path(id: user_comment.video_id)
+        sign_in user_staff1
+        visit video_path(video_it)
       end
 
       it 'レイアウト' do
@@ -286,7 +284,7 @@ RSpec.describe 'Comments', type: :system, js: true do
 
       it '他人の返信の編集、削除不可' do
         system_admin_reply
-        visit video_path(id: user_comment.video_id)
+        visit video_path(video_it)
         click_button '1 件の返信'
         expect(page).to have_content 'system_adminの返信'
         expect(page).not_to have_css '.js-edit-reply-button'
@@ -296,9 +294,8 @@ RSpec.describe 'Comments', type: :system, js: true do
 
     describe '動画視聴者' do
       before(:each) do
-        login(viewer)
-        current_viewer(viewer)
-        visit video_path(id: viewer_comment.video_id)
+        sign_in viewer
+        visit video_path(video_it)
       end
 
       it 'レイアウト' do
@@ -424,7 +421,7 @@ RSpec.describe 'Comments', type: :system, js: true do
 
       it '他人の返信の編集、削除不可' do
         system_admin_reply
-        visit video_path(id: user_comment.video_id)
+        visit video_path(video_it)
         click_button '1 件の返信'
         expect(page).to have_content 'system_adminの返信'
         expect(page).not_to have_css '.js-edit-reply-button'
@@ -435,7 +432,7 @@ RSpec.describe 'Comments', type: :system, js: true do
     describe 'ログインなしユーザ' do
       before(:each) do
         system_admin_reply
-        visit video_path(video_it.id)
+        visit video_path(video_it)
       end
 
       it 'レイアウト' do

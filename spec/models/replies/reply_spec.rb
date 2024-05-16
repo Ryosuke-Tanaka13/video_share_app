@@ -23,6 +23,7 @@ RSpec.describe Reply, type: :model do
     system_admin_reply
     user_reply
     viewer_reply
+    sleep 0.1
   end
 
   describe '正常' do

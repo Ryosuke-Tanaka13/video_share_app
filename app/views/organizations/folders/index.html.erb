@@ -2,7 +2,7 @@
 
 <div class="content">
   <%= link_to "フォルダ新規作成", new_organization_folder_path, remote: true, class: "btn btn-success" if current_user.present? %>
-  <%= link_to "動画一覧", videos_path(organization_id: @organization.id), class: "text-white ml-2 btn btn-warning" %>
+  <%= link_to "動画一覧", videos_path(organization_id: @organization.id), class: "text-white ml-2 btn btn-warning" %>   
   <div style="text-align:center">
     <%@folders.each do |folder|%>
       <table style="float:left;margin:15px;">
