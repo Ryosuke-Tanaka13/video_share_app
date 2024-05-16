@@ -1,13 +1,56 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const container = document.getElementById('questions-container');
+  const preVideoQuestionsContainer = document.getElementById('pre-video-questions-container');
+  const postVideoQuestionsContainer = document.getElementById('post-video-questions-container');
   const addQuestionButton = document.getElementById('add-question');
   const form = document.getElementById('dynamic-form');
+  const preVideoToggle = document.getElementById('pre-video-toggle');
+  const postVideoToggle = document.getElementById('post-video-toggle');
+  const viewerInfo = document.querySelector('.viewer-info');
+  const formTitle = document.getElementById('form-title');
+
+  let currentQuestionnaireType = 'pre_video';
+
+  function toggleQuestionnaire(type) {
+    currentQuestionnaireType = type;
+    if (type === 'pre_video') {
+      preVideoToggle.classList.add('active');
+      postVideoToggle.classList.remove('active');
+      preVideoQuestionsContainer.style.display = 'block';
+      postVideoQuestionsContainer.style.display = 'none';
+      viewerInfo.style.display = 'block';
+      formTitle.textContent = 'アンケート作成（動画視聴前）';
+      document.getElementById('viewer-name').required = true;
+      document.getElementById('viewer-email').required = true;
+    } else {
+      preVideoToggle.classList.remove('active');
+      postVideoToggle.classList.add('active');
+      preVideoQuestionsContainer.style.display = 'none';
+      postVideoQuestionsContainer.style.display = 'block';
+      viewerInfo.style.display = 'none';
+      formTitle.textContent = 'アンケート作成（動画視聴後）';
+      document.getElementById('viewer-name').required = false;
+      document.getElementById('viewer-email').required = false;
+    }
+  }
+
+  preVideoToggle.addEventListener('click', function() {
+    toggleQuestionnaire('pre_video');
+  });
+
+  postVideoToggle.addEventListener('click', function() {
+    toggleQuestionnaire('post_video');
+  });
 
   addQuestionButton.addEventListener('click', function() {
     const template = document.getElementById('question-template').cloneNode(true);
     template.style.display = 'block';
     template.removeAttribute('id'); // IDを削除して一意性を確保
-    container.appendChild(template);
+
+    if (currentQuestionnaireType === 'pre_video') {
+      preVideoQuestionsContainer.appendChild(template);
+    } else {
+      postVideoQuestionsContainer.appendChild(template);
+    }
 
     const selectElement = template.querySelector('.question-type');
     selectElement.addEventListener('change', function() {
@@ -18,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateQuestionContent(selectElement);
   });
 
-  container.addEventListener('click', function(e) {
+  document.addEventListener('click', function(e) {
     const parentQuestion = e.target.closest('.question');
     if (e.target.classList.contains('add-option')) {
       const input = parentQuestion.querySelector('.new-option-text');
@@ -91,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(this);
+    formData.append('questionnaire_type', currentQuestionnaireType); // アンケートの種類を追加
+
     fetch('/questionnaires', {
       method: 'POST',
       headers: {
@@ -106,4 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error:', error));
   });
+
+  // 初期設定
+  toggleQuestionnaire(currentQuestionnaireType);
 });

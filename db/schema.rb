@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_12_033325) do
+ActiveRecord::Schema.define(version: 2024_05_16_004800) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -87,13 +87,14 @@ ActiveRecord::Schema.define(version: 2024_05_12_033325) do
   end
 
   create_table "questionnaires", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "title"
-    t.bigint "video_id", null: false
-    t.bigint "organization_id", null: false
+    t.string "name"
+    t.string "email"
+    t.bigint "user_id", null: false
+    t.text "pre_video_questionnaire"
+    t.text "post_video_questionnaire"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["organization_id"], name: "index_questionnaires_on_organization_id"
-    t.index ["video_id"], name: "index_questionnaires_on_video_id"
+    t.index ["user_id"], name: "index_questionnaires_on_user_id"
   end
 
   create_table "replies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -251,8 +252,7 @@ ActiveRecord::Schema.define(version: 2024_05_12_033325) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
-  add_foreign_key "questionnaires", "organizations"
-  add_foreign_key "questionnaires", "videos"
+  add_foreign_key "questionnaires", "users"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"
   add_foreign_key "replies", "system_admins"
