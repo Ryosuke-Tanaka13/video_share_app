@@ -1,4 +1,4 @@
-carrierWave.configure do |config|
+ CarrierWave.configure do |config|
   config.fog_provider = 'fog/google'
   config.fog_credentials = {
     provider: 'Google',

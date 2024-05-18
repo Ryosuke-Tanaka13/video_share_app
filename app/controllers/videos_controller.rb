@@ -186,12 +186,17 @@ rescue StandardError => e
 end
 
 def audio_output
+  require 'shellwords'
   # 動画ファイルのパスをparamsから取得
-  video_path = params[:subtitle].tempfile.path
+  video_path = Shellwords.escape(params[:subtitle].tempfile.path)
   # 出力する音声ファイルのパス
   audio_output_path = Rails.root.join('public', 'voice', "extraction#{Time.now.to_i}.wav")
   # ffmpegを使用して動画から音声を抽出し、WAV形式で保存
-  command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{audio_output_path}"
+  # command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{audio_output_path}"
+
+  # Shellwords.escapeを使用することで、コマンドライン引数の正確性を確保している:video_pathを正確に読み込ませている
+  command = "ffmpeg -i #{Shellwords.escape(video_path)} -vn -acodec pcm_s16le -ar 44100 -ac 1 #{Shellwords.escape(audio_output_path.to_s)}"
+
   stdout, stderr, status = Open3.capture3(command)
   if status.success?
     puts "Audio extracted successfully to #{audio_output_path}"
@@ -205,23 +210,30 @@ def audio_output
   audio_file_name = audio_output_path.basename.to_s
   chunk_size = 5 * 1024 * 1024  # 5MB のチャンクサイズ
   # 音声ファイルをアップロード
-  file = bucket.create_file audio_output_path.to_s, "audio_files/#{audio_file_name}", chunk_size: chunk_size
+  file = bucket.create_file audio_output_path.to_s, "audio_files/#{audio_file_name}"
   # 音声ファイルのGCSパス
   audio = { uri: "gs://movie_app_bucket/audio_files/#{audio_file_name}" }
   # Speech-to-Text API の設定と実行
   speech = Google::Cloud::Speech.speech
-  config = { encoding: :LINEAR16, sample_rate_hertz: 44100, language_code: "en-US" }
+  config = { encoding: :LINEAR16, sample_rate_hertz: 44100, language_code: "ja-JP" }
   operation = speech.long_running_recognize config: config, audio: audio
   puts "Transcription operation started, waiting for completion..."
-  response = operation.wait_until_done!
-  if response.error?
-    puts "Error: #{response.error.message}"
+  operation.wait_until_done!
+  if operation.error
+    puts "Error: #{operation.error.message}"
   else
-    response.results.each_with_index do |result, i|
-      puts "Result #{i + 1}:"
-      result.alternatives.each do |alternative|
+    response = operation.response
+    if response.nil?
+      puts "No response received."
+    else
+        puts "Response: #{response.inspect}"
+        transcripts = response.results.each_with_index do |result, i|
+        puts "Result #{i + 1}:"
+        result.alternatives.each do |alternative|
         puts "Transcript: #{alternative.transcript}"
+        end
       end
+    render json: { transcripts: transcripts}
     end
   end
 end
