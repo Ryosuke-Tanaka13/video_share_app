@@ -16,15 +16,20 @@
     </div>
   </div>
 
-  <%= form_with model: [@user, @questionnaire], local: false, id: 'dynamic-form', class: 'centered-form' do |f| %>
+  <div id="error-messages" style="color: red;"></div>
+
+  <%= form_with model: [@user, @questionnaire], local: true, id: 'dynamic-form', class: 'centered-form' do |f| %>
     <!-- 名前とメールアドレスの入力フィールド -->
-    <div class="viewer-info">
+    <div class="viewer-info" id="viewer-info">
       <%= f.label :name, "名前", class: "strong" %>
       <%= f.text_field :name, id: 'viewer-name', placeholder: "名前を入力" %>
       
       <%= f.label :email, "メールアドレス", class: "strong" %>
       <%= f.email_field :email, id: 'viewer-email', placeholder: "メールアドレスを入力" %>
     </div>
+
+    <input type="hidden" id="pre_video_questionnaire" name="questionnaire[pre_video_questionnaire]">
+    <input type="hidden" id="post_video_questionnaire" name="questionnaire[post_video_questionnaire]">
 
     <div id="pre-video-questions-container" class="questions-container"></div>
     <div id="post-video-questions-container" class="questions-container" style="display:none;"></div>
@@ -48,9 +53,13 @@
 
         <div class="question-content">
           <!-- テンプレート群 -->
-          <div class="text-template"><textarea name="questions[][answer]" rows="4" placeholder="回答を入力"></textarea></div>
+          <div class="text-template" style="display:none;"><textarea name="questions[][answer]" rows="4" placeholder="回答を入力"></textarea></div>
           <div class="radio-template" style="display:none;"></div>
-          <div class="dropdown-template" style="display:none;"></div>
+          <div class="dropdown-template" style="display:none;">
+            <select name="questions[][dropdown_answers][]">
+              <option disabled selected>ここから選択してください</option>
+            </select>
+          </div>
           <div class="checkbox-template" style="display:none;"></div>
         </div>
 

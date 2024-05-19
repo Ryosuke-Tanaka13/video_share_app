@@ -1,11 +1,11 @@
 class QuestionnairesController < ApplicationController
+  before_action :set_user
+
   def new
-    @user = User.find(params[:user_id])
     @questionnaire = @user.questionnaires.new
   end
 
   def create
-    @user = User.find(params[:user_id])
     @questionnaire = @user.questionnaires.new(questionnaire_params)
 
     if @questionnaire.save
@@ -15,7 +15,15 @@ class QuestionnairesController < ApplicationController
     end
   end
 
+  def show
+    @questionnaire = @user.questionnaires.find(params[:id])
+  end
+
   private
+
+  def set_user
+    @user = User.find(params[:user_id])
+  end
 
   def questionnaire_params
     params.require(:questionnaire).permit(:name, :email, :pre_video_questionnaire, :post_video_questionnaire)

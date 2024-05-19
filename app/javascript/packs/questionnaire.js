@@ -1,14 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const container = document.getElementById('questions-container');
   const addQuestionButton = document.getElementById('add-question');
   const form = document.getElementById('dynamic-form');
-  const formTitle = document.getElementById('form-title');
-
+  const errorMessages = document.getElementById('error-messages');
   const preVideoQuestionsContainer = document.getElementById('pre-video-questions-container');
   const postVideoQuestionsContainer = document.getElementById('post-video-questions-container');
   const preVideoToggle = document.getElementById('pre-video-toggle');
   const postVideoToggle = document.getElementById('post-video-toggle');
-  
   let currentQuestionnaireType = 'pre_video';
 
   preVideoToggle.addEventListener('click', function() {
@@ -26,12 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
       formTitle.innerText = 'アンケート作成（動画視聴前）';
       preVideoToggle.classList.add('active');
       postVideoToggle.classList.remove('active');
+      viewerInfo.style.display = 'block';
     } else {
       preVideoQuestionsContainer.style.display = 'none';
       postVideoQuestionsContainer.style.display = 'block';
       formTitle.innerText = 'アンケート作成（動画視聴後）';
       preVideoToggle.classList.remove('active');
       postVideoToggle.classList.add('active');
+      viewerInfo.style.display = 'none';
     }
     currentQuestionnaireType = type;
   }
@@ -52,26 +51,24 @@ document.addEventListener('DOMContentLoaded', function() {
       updateQuestionContent(this);
     });
 
-    updateQuestionContent(selectElement);
-  });
+    template.querySelector('.remove-question').addEventListener('click', function() {
+      template.remove();
+    });
 
-  container.addEventListener('click', function(e) {
-    const parentQuestion = e.target.closest('.question');
-    if (e.target.classList.contains('add-option')) {
-      const input = parentQuestion.querySelector('.new-option-text');
+    template.querySelector('.add-option').addEventListener('click', function() {
+      const input = template.querySelector('.new-option-text');
       if (input.value) {
-        const selectType = parentQuestion.querySelector('.question-type').value;
-        addOptionToQuestion(selectType, input.value, parentQuestion);
+        const selectType = template.querySelector('.question-type').value;
+        addOptionToQuestion(selectType, input.value, template);
         input.value = '';
       }
-    } else if (e.target.classList.contains('delete-option')) {
-      e.target.closest('label').remove();
-    } else if (e.target.classList.contains('remove-question')) {
-      e.target.closest('.question-field').remove();
-    } else if (e.target.classList.contains('reset-options')) {
-      const selectElement = parentQuestion.querySelector('.question-type');
+    });
+
+    template.querySelector('.reset-options').addEventListener('click', function() {
       resetOptions(selectElement);
-    }
+    });
+
+    updateQuestionContent(selectElement);
   });
 
   function updateQuestionContent(select) {
@@ -97,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (type === 'dropdown') {
       let select = optionContainer.querySelector('select');
       if (!select) {
-        optionContainer.innerHTML = `<select name="questions[][answer]">
+        optionContainer.innerHTML = `<select name="questions[][dropdown_answers][]">
           <option disabled selected>ここから選択してください</option>
         </select>`;
         select = optionContainer.querySelector('select');
@@ -107,52 +104,105 @@ document.addEventListener('DOMContentLoaded', function() {
       option.value = optionText;
       option.textContent = optionText;
       select.appendChild(option);
-    } else {
+    } else if (type === 'radio' || type === 'checkbox') {
       const label = document.createElement('label');
       label.className = 'option-item';
-      label.innerHTML = `<input type="${type}" name="questions[][answer]" value="${optionText}"> ${optionText}
+      label.innerHTML = `<input type="${type}" name="questions[][answers][]" value="${optionText}"> ${optionText}
       <span class="delete-option" style="cursor:pointer; margin-left: 8px;">&#10060;</span>`;
       optionContainer.appendChild(label);
+
+      label.querySelector('.delete-option').addEventListener('click', function() {
+        label.remove();
+      });
     }
   }
 
   function resetOptions(selectElement) {
-    const parentQuestion = selectElement.closest('.question');
-    const optionContainer = parentQuestion.querySelector('.dropdown-template');
-    const select = optionContainer.querySelector('select');
-    if (select) {
-      select.innerHTML = `<option disabled selected>ここから選択してください</option>`;
+    const parentQuestion = selectElement.closest('.question-field');
+    const optionContainer = parentQuestion.querySelector('.dropdown-template select');
+    if (optionContainer) {
+      optionContainer.innerHTML = `<option disabled selected>ここから選択してください</option>`;
     }
   }
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    errorMessages.innerHTML = ''; // エラーメッセージをクリア
     const formData = new FormData(form);
 
-    let questionsData = [];
-    const questionFields = currentQuestionnaireType === 'pre_video'
-      ? preVideoQuestionsContainer.querySelectorAll('.question-field')
-      : postVideoQuestionsContainer.querySelectorAll('.question-field');
+    let preVideoQuestionsData = [];
+    let postVideoQuestionsData = [];
 
-    questionFields.forEach(field => {
+    preVideoQuestionsContainer.querySelectorAll('.question-field').forEach(field => {
       const questionText = field.querySelector('.question-input').value;
       const questionType = field.querySelector('.question-type').value;
-      const answerInputs = field.querySelectorAll('input[name="questions[][answer]"], textarea[name="questions[][answer]"]');
-
       let answers = [];
-      answerInputs.forEach(input => {
-        answers.push(input.value);
-      });
 
-      questionsData.push({
+      if (questionType === 'dropdown') {
+        const selectElement = field.querySelector('.dropdown-template select');
+        selectElement.querySelectorAll('option').forEach(option => {
+          if (option.value && option.value.trim() !== '' && option.value !== 'ここから選択してください') {
+            answers.push(option.value);
+          }
+        });
+      } else if (questionType === 'radio' || questionType === 'checkbox') {
+        const answerInputs = field.querySelectorAll(`input[type="${questionType}"]`);
+        answerInputs.forEach(input => {
+          if (input.value && input.value.trim() !== '') {
+            answers.push(input.value);
+          }
+        });
+      } else if (questionType === 'text') {
+        const answer = field.querySelector('.text-template textarea').value;
+        if (answer && answer.trim() !== '') {
+          answers.push(answer);
+        }
+      }
+
+      console.log(`Question: ${questionText}, Type: ${questionType}, Answers: ${answers}`);
+
+      preVideoQuestionsData.push({
+        text: questionText,
+        type: questionType, // 正しいtypeを設定
+        answers: answers
+      });
+    });
+
+    postVideoQuestionsContainer.querySelectorAll('.question-field').forEach(field => {
+      const questionText = field.querySelector('.question-input').value;
+      const questionType = field.querySelector('.question-type').value;
+      let answers = [];
+
+      if (questionType === 'dropdown') {
+        const selectElement = field.querySelector('.dropdown-template select');
+        selectElement.querySelectorAll('option').forEach(option => {
+          if (option.value && option.value.trim() !== '' && option.value !== 'ここから選択してください') {
+            answers.push(option.value);
+          }
+        });
+      } else if (questionType === 'radio' || questionType === 'checkbox') {
+        const answerInputs = field.querySelectorAll(`input[type="${questionType}"]`);
+        answerInputs.forEach(input => {
+          if (input.value && input.value.trim() !== '') {
+            answers.push(input.value);
+          }
+        });
+      } else if (questionType === 'text') {
+        const answer = field.querySelector('.text-template textarea').value;
+        if (answer && answer.trim() !== '') {
+          answers.push(answer);
+        }
+      }
+
+      postVideoQuestionsData.push({
         text: questionText,
         type: questionType,
         answers: answers
       });
     });
 
-    const questionnaireKey = currentQuestionnaireType === 'pre_video' ? 'pre_video_questionnaire' : 'post_video_questionnaire';
-    formData.append(`questionnaire[${questionnaireKey}]`, JSON.stringify(questionsData));
+    formData.append('questionnaire[pre_video_questionnaire]', JSON.stringify(preVideoQuestionsData));
+    formData.append('questionnaire[post_video_questionnaire]', JSON.stringify(postVideoQuestionsData));
 
     fetch(form.action, {
       method: form.method,
@@ -165,6 +215,12 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
       if (data.redirect) {
         window.location.href = data.redirect;
+      } else if (data.errors) {
+        data.errors.forEach(error => {
+          const errorItem = document.createElement('p');
+          errorItem.textContent = error;
+          errorMessages.appendChild(errorItem);
+        });
       }
     })
     .catch(error => console.error('Error:', error));

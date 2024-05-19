@@ -7,6 +7,7 @@ class ViewersController < ApplicationController
   before_action :set_viewer, except: %i[index]
 
   def index
+    @user = current_user
     if params[:organization_id].nil? && current_system_admin
       @viewers = Viewer.all
     elsif current_system_admin
