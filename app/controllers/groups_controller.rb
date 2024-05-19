@@ -6,7 +6,7 @@ class GroupsController < ApplicationController
   before_action :set_group, only: %i[show edit update destroy remove_viewer]
   before_action :check_viewer, only: %i[show edit update destroy remove_viewer]
   before_action :check_permission, only: [:destroy]
- 
+
   def index
     if current_user
       @groups = Group.where(organization_id: current_user.organization_id)
