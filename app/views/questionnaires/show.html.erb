@@ -1,94 +1,20 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>アンケート表示</title>
-</head>
-<body>
-  <div class="header">
-    <h2>アンケート表示</h2>
+<h2>アンケート表示</h2>
+
+<div class="centered-form">
+  <div class="viewer-info">
+    <p><strong>名前:</strong> <%= @questionnaire.name %></p>
+    <p><strong>メールアドレス:</strong> <%= @questionnaire.email %></p>
   </div>
 
-  <div class="centered-form">
-    <div class="viewer-info">
-      <p><strong>名前:</strong> <%= @questionnaire.name %></p>
-      <p><strong>メールアドレス:</strong> <%= @questionnaire.email %></p>
-    </div>
-
-    <h3>動画視聴前のアンケート</h3>
-    <div class="questions-container">
-      <% if @questionnaire.pre_video_questionnaire.present? && @questionnaire.pre_video_questionnaire != "[]" %>
-        <% JSON.parse(@questionnaire.pre_video_questionnaire).each do |question| %>
-          <div class="question-field">
-            <div class="question">
-              <p><strong><%= question['text'] %></strong></p>
-              <% if question['type'] == 'text' %>
-                <textarea rows="4" placeholder="回答を入力"></textarea>
-              <% elsif question['type'] == 'radio' %>
-                <% question['answers'].each do |answer| %>
-                  <label class="option-item">
-                    <input type="radio" name="questions[]"> <%= answer %>
-                  </label>
-                <% end %>
-              <% elsif question['type'] == 'checkbox' %>
-                <% question['answers'].each do |answer| %>
-                  <label class="option-item">
-                    <input type="checkbox" name="questions[]"> <%= answer %>
-                  </label>
-                <% end %>
-              <% elsif question['type'] == 'dropdown' %>
-                <select>
-                  <option disabled selected>ここから選択してください</option>
-                  <% question['answers'].each do |answer| %>
-                    <option value="<%= answer %>"><%= answer %></option>
-                  <% end %>
-                </select>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      <% else %>
-        <p>アンケートはありません</p>
-      <% end %>
-    </div>
-
-    <h3>動画視聴後のアンケート</h3>
-    <div class="questions-container">
-      <% if @questionnaire.post_video_questionnaire.present? %>
-        <% JSON.parse(@questionnaire.post_video_questionnaire).each do |question| %>
-          <div class="question-field">
-            <div class="question">
-              <p><strong><%= question['text'] %></strong></p>
-              <% if question['type'] == 'text' %>
-                <textarea rows="4" placeholder="回答を入力"></textarea>
-              <% elsif question['type'] == 'radio' %>
-                <% question['answers'].each do |answer| %>
-                  <label class="option-item">
-                    <input type="radio" name="questions[]"> <%= answer %>
-                  </label>
-                <% end %>
-              <% elsif question['type'] == 'checkbox' %>
-                <% question['answers'].each do |answer| %>
-                  <label class="option-item">
-                    <input type="checkbox" name="questions[]"> <%= answer %>
-                  </label>
-                <% end %>
-              <% elsif question['type'] == 'dropdown' %>
-                <select>
-                  <option disabled selected>ここから選択してください</option>
-                  <% question['answers'].each do |answer| %>
-                    <option value="<%= answer %>"><%= answer %></option>
-                  <% end %>
-                </select>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      <% else %>
-        <p>アンケートはありません</p>
-      <% end %>
-    </div>
+  <h3>動画視聴前のアンケート</h3>
+  <div id="pre-video-questions-container">
+    <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video' } %>
+    <%= paginate @pre_video_questions, param_name: 'pre_page' %>
   </div>
-</body>
-</html>
+
+  <h3>動画視聴後のアンケート</h3>
+  <div id="post-video-questions-container">
+    <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, type: 'post_video' } %>
+    <%= paginate @post_video_questions, param_name: 'post_page' %>
+  </div>
+</div>

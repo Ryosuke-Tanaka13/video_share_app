@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_16_073609) do
+ActiveRecord::Schema.define(version: 2024_05_19_213759) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -205,6 +205,8 @@ ActiveRecord::Schema.define(version: 2024_05_16_073609) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "id_digest"
+    t.text "pre_video_questionnaire"
+    t.text "post_video_questionnaire"
     t.index ["organization_id"], name: "index_videos_on_organization_id"
     t.index ["user_id"], name: "index_videos_on_user_id"
   end

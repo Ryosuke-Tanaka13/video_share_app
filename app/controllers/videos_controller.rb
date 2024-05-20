@@ -3,7 +3,8 @@ class VideosController < ApplicationController
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
-  before_action :set_video, only: %i[show edit update destroy]
+  before_action :set_video, only: %i[show edit update destroy popup_before popup_after]
+  before_action :set_user, only: %i[new show index]
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
   before_action :ensure_user, only: %i[new create]
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
@@ -34,7 +35,6 @@ class VideosController < ApplicationController
   end
 
   def new
-    @user = current_user
     @organization = current_user.organization
     @video = Video.new
     @video.video_folders.build
@@ -58,6 +58,18 @@ class VideosController < ApplicationController
     # 新着順で表示
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
   end
+
+  def popup_before
+    @questionnaire_before = JSON.parse(@video.pre_video_questionnaire || '[]')
+    logger.debug "Loaded questionnaire_before: #{@questionnaire_before}"
+  end
+
+  def popup_after
+    @questionnaire_after = JSON.parse(@video.post_video_questionnaire || '[]')
+    logger.debug "Loaded questionnaire_after: #{@questionnaire_after}"
+  end
+
+
 
   def edit
     set_video
@@ -88,7 +100,7 @@ class VideosController < ApplicationController
 
   def video_params
     params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
-      :popup_after_video, { folder_ids: [] })
+      :popup_after_video, :pre_video_questionnaire, :post_video_questionnaire, { folder_ids: [] })
   end
 
   def video_search_params
@@ -163,5 +175,9 @@ class VideosController < ApplicationController
       flash[:danger] = 'すでに削除された動画です。'
       redirect_back(fallback_location: root_url)
     end
+  end
+
+  def set_user
+    @user = current_user
   end
 end

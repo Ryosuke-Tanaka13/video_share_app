@@ -1,11 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
   const addQuestionButton = document.getElementById('add-question');
   const form = document.getElementById('dynamic-form');
+  const formTitle = document.getElementById('form-title');
+  const viewerInfo = document.getElementById('viewer-info');
   const errorMessages = document.getElementById('error-messages');
+  
   const preVideoQuestionsContainer = document.getElementById('pre-video-questions-container');
   const postVideoQuestionsContainer = document.getElementById('post-video-questions-container');
   const preVideoToggle = document.getElementById('pre-video-toggle');
   const postVideoToggle = document.getElementById('post-video-toggle');
+  
   let currentQuestionnaireType = 'pre_video';
 
   preVideoToggle.addEventListener('click', function() {
@@ -39,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const template = document.getElementById('question-template').cloneNode(true);
     template.style.display = 'block';
     template.removeAttribute('id');
-    
+
     if (currentQuestionnaireType === 'pre_video') {
       preVideoQuestionsContainer.appendChild(template);
     } else {
@@ -80,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     questionContent.querySelectorAll('div').forEach(div => {
       div.style.display = 'none';
-      if (div.className.includes(type + '-template')) {
+      if (div.classList.contains(`${type}-template`)) {
         div.style.display = 'block';
       }
     });
@@ -92,14 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function addOptionToQuestion(type, optionText, parentQuestion) {
     const optionContainer = parentQuestion.querySelector(`.${type}-template`);
     if (type === 'dropdown') {
-      let select = optionContainer.querySelector('select');
-      if (!select) {
-        optionContainer.innerHTML = `<select name="questions[][dropdown_answers][]">
-          <option disabled selected>ここから選択してください</option>
-        </select>`;
-        select = optionContainer.querySelector('select');
-      }
-
+      const select = optionContainer.querySelector('select');
       const option = document.createElement('option');
       option.value = optionText;
       option.textContent = optionText;
@@ -159,11 +156,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
 
-      console.log(`Question: ${questionText}, Type: ${questionType}, Answers: ${answers}`);
-
       preVideoQuestionsData.push({
         text: questionText,
-        type: questionType, // 正しいtypeを設定
+        type: questionType,
         answers: answers
       });
     });
@@ -211,7 +206,12 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(text => Promise.reject(new Error(text)));
+      }
+      return response.json();
+    })
     .then(data => {
       if (data.redirect) {
         window.location.href = data.redirect;
@@ -223,6 +223,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+      console.error('Error:', error);
+      const errorItem = document.createElement('p');
+      errorItem.textContent = 'An unexpected error occurred.';
+      errorMessages.appendChild(errorItem);
+    });
+  });
+
+  // ここから非同期ページネーションの追加
+  $(document).on('click', '.pagination a', function(event) {
+    event.preventDefault();
+    $.getScript(this.href);
   });
 });

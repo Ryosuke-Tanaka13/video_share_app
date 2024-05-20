@@ -1,10 +1,12 @@
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
-      <h1 class="modal-title">popup_after</h1>
+      <h1 class="modal-title">アンケート（動画視聴後）</h1>
+      <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
       <div class="content">
+        <%= render 'questionnaires/questionnaire', questionnaire: @questionnaire_after %>
       </div>
     </div>
   </div>

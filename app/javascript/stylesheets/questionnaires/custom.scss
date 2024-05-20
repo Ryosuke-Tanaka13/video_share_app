@@ -132,3 +132,22 @@ span.delete-option {
 .toggle-button.active {
   background-color: #005f73;
 }
+
+.pagination {
+  margin-left: 470px;
+  font-size: large;
+}
+
+.pagination>li>a {          
+  border: none;     
+  color: #696969;   
+}
+
+.pagination>.active>a {     
+  background: #93c9ff;     
+  border-radius: 15px;     
+}
+
+.pagination>li>a:hover {        
+  border-radius: 15px;   
+}

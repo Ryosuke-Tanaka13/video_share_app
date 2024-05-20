@@ -1,10 +1,3 @@
-GIT
-  remote: https://github.com/bo-oz/vimeo_me2.git
-  revision: 4a6e0fc8d1bb8b8d793d2ff21809358e59f789f9
-  specs:
-    vimeo_me2 (1.2.1)
-      httparty (>= 0.14.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -46,6 +39,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    active_decorator (1.4.1)
+      activesupport
     activejob (6.1.7.7)
       activesupport (= 6.1.7.7)
       globalid (>= 0.3.6)
@@ -145,6 +140,18 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.7.2)
+    kaminari (1.2.2)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.2)
+      kaminari-activerecord (= 1.2.2)
+      kaminari-core (= 1.2.2)
+    kaminari-actionview (1.2.2)
+      actionview
+      kaminari-core (= 1.2.2)
+    kaminari-activerecord (1.2.2)
+      activerecord
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
     language_server-protocol (3.17.0.3)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -171,8 +178,6 @@ GEM
     mini_mime (1.1.5)
     minitest (5.22.3)
     msgpack (1.7.2)
-    multi_xml (0.7.1)
-      bigdecimal (~> 3.1)
     mysql2 (0.5.6)
     net-imap (0.4.10)
       date
@@ -185,6 +190,8 @@ GEM
       net-protocol
     nio4r (2.7.1)
     nokogiri (1.16.3-aarch64-linux)
+      racc (~> 1.4)
+    nokogiri (1.16.3-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.3-x86_64-linux)
       racc (~> 1.4)
@@ -379,6 +386,7 @@ GEM
 
 PLATFORMS
   aarch64-linux
+  arm64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
@@ -397,6 +405,7 @@ DEPENDENCIES
   ffi (~> 1.15)
   font-awesome-rails
   jbuilder (~> 2.7)
+  kaminari
   launchy (~> 2.4.3)
   letter_opener_web (~> 1.0)
   listen (~> 3.3)

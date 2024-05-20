@@ -47,6 +47,8 @@ gem 'active_decorator'
 
 gem 'stripe'
 
+gem 'kaminari'
+
 group :development, :test do
   # ERD生成
   gem 'rails-erd'

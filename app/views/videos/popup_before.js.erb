@@ -1,2 +1,2 @@
-$("#popup_before").html("<%= escape_javascript(render 'popup_before') %>");
+$("#popup_before").html("<%= j render partial: 'popup_before', locals: { questionnaire: @questionnaire_before } %>");
 $("#popup_before").modal("show");
