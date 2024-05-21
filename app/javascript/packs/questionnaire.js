@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('turbolinks:load', function() {
   const addQuestionButton = document.getElementById('add-question');
   const form = document.getElementById('dynamic-form');
   const formTitle = document.getElementById('form-title');
@@ -236,4 +236,9 @@ document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault();
     $.getScript(this.href);
   });
+});
+
+document.addEventListener("turbolinks:before-cache", function() {
+  // 特定の要素やイベントリスナーをリセットする
+  $(document).off('click', '.pagination a');
 });
