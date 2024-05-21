@@ -10,3 +10,4 @@ import '../stylesheets/questionnaires'; // This file will contain your custom CS
 import "@fortawesome/fontawesome-free/js/all";
 
 import "./questionnaire";
+import "./questionnaire_edit";

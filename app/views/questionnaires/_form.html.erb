@@ -1,5 +1,5 @@
 <div class="header">
-  <h2 id="form-title"><%= action_name == 'new' ? 'アンケート作成（動画視聴前）' : 'アンケート編集' %></h2>
+  <h2 id="form-title">アンケート作成（動画視聴前）</h2>
   <div class="toggle-container">
     <button id="pre-video-toggle" class="toggle-button active">動画視聴前</button>
     <button id="post-video-toggle" class="toggle-button">動画視聴後</button>
@@ -9,7 +9,6 @@
 <div id="error-messages" style="color: red;"></div>
 
 <%= form_with model: [user, questionnaire], local: true, id: 'dynamic-form', class: 'centered-form' do |f| %>
-  <!-- 名前とメールアドレスの入力フィールド -->
   <div class="viewer-info" id="viewer-info">
     <%= f.label :name, "名前", class: "strong" %>
     <%= f.text_field :name, id: 'viewer-name', placeholder: "名前を入力" %>
@@ -18,8 +17,8 @@
     <%= f.email_field :email, id: 'viewer-email', placeholder: "メールアドレスを入力" %>
   </div>
 
-  <input type="hidden" id="pre_video_questionnaire" name="questionnaire[pre_video_questionnaire]">
-  <input type="hidden" id="post_video_questionnaire" name="questionnaire[post_video_questionnaire]">
+  <input type="hidden" id="pre_video_questionnaire" name="questionnaire[pre_video_questionnaire]" value="<%= @questionnaire.pre_video_questionnaire %>">
+  <input type="hidden" id="post_video_questionnaire" name="questionnaire[post_video_questionnaire]" value="<%= @questionnaire.post_video_questionnaire %>">
 
   <div id="pre-video-questions-container" class="questions-container"></div>
   <div id="post-video-questions-container" class="questions-container" style="display:none;"></div>
@@ -42,7 +41,6 @@
       <input type="text" name="questions[][text]" placeholder="質問を入力" class="question-input">
 
       <div class="question-content">
-        <!-- テンプレート群 -->
         <div class="text-template" style="display:none;"><textarea name="questions[][answer]" rows="4" placeholder="回答を入力"></textarea></div>
         <div class="radio-template" style="display:none;"></div>
         <div class="dropdown-template" style="display:none;">
@@ -55,8 +53,8 @@
 
       <div class="options-management" style="display:none;">
         <input type="text" placeholder="新しい選択肢を入力" class="new-option-text">
-        <button type="button" class="add-option">&#10010;</button> <!-- 追加アイコン -->
-        <button type="button" class="reset-options" style="display:none;">リセット</button> <!-- リセットボタン -->
+        <button type="button" class="add-option">&#10010;</button>
+        <button type="button" class="reset-options" style="display:none;">リセット</button>
       </div>
 
       <button type="button" class="remove-question">削除</button>

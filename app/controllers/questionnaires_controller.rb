@@ -27,7 +27,7 @@ class QuestionnairesController < ApplicationController
   
   def edit
     @questionnaire = @user.questionnaires.find(params[:id])
-  end
+  end  
 
   def update
     if @questionnaire.update(questionnaire_params)
