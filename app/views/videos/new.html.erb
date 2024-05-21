@@ -6,7 +6,7 @@
       <div class="col-md-7">
         <div class="field">
           <%= f.label :video %><br>
-          <%= f.file_field :video, accept: "video/*", id: "post" %>
+          <%= f.file_field :video, accept: "video/*", id: "post" %> 
         </div>
         <div class="choice_box">ドラック＆ドロップまたはクリック</div><br>
         <div id="show"></div>
@@ -18,12 +18,12 @@
         </div>
         <div class="field">
           <%= f.label :open_period, class: "video-label" %><br>
-          <%= f.datetime_field :open_period, id: "open_period" %>
+          <%= f.datetime_field :open_period, id: "open_period" %> 
         </div>
         <div class="field">
           <%= f.label :range, class: "video-label" %><br>
           <%= f.select :range, [['一般公開', 0], ['限定公開', 1]], { include_blank: false, selected: 0 }, id: "range" %>
-        </div>
+        </div> 
         <div class="field">
           <%= f.label :comment_public, class: "video-label" %><br>
           <%= f.select :comment_public, [['公開', 0], ['非公開', 1]], { include_blank: false, selected: 0 }, id: "comment_public" %>
@@ -35,15 +35,15 @@
         <div class="field">
           <%= f.label :popup_before_video, class: "video-label" %><br>
           <%= f.select :popup_before_video, [['動画視聴開始時ポップアップ非表示', 0], ['動画視聴開始時ポップアップ表示', 1]], { include_blank: false, selected: 0 }, id: "popup_before_video" %>
-          <div id="select-questionnaire-before" style="display:none;">
-            <%= link_to 'アンケートを選択してください', user_questionnaires_path(current_user), class: 'btn btn-primary', remote: true %>
+          <div id="select-questionnaire-before" style="display: none;">
+            <%= link_to 'アンケートを選択してください', user_questionnaires_path(current_user), class: 'btn btn-primary' %>
           </div>
         </div>
         <div class="field">
           <%= f.label :popup_after_video, class: "video-label" %><br>
           <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ非表示', 0], ['動画視聴終了時ポップアップ表示', 1]], { include_blank: false, selected: 0 }, id: "popup_after_video" %>
-          <div id="select-questionnaire-after" style="display:none;">
-            <%= link_to 'アンケートを選択してください', user_questionnaires_path(current_user), class: 'btn btn-primary', remote: true %>
+          <div id="select-questionnaire-after" style="display: none;">
+            <%= link_to 'アンケートを選択してください', user_questionnaires_path(current_user), class: 'btn btn-primary' %>
           </div>
         </div>
         <div class="field">
@@ -54,7 +54,7 @@
           <%= link_to "フォルダ新規作成はこちら", new_organization_folder_path(organization_id: current_user.organization.id), remote: true %>
         </div>
         <div class="video-post-actions">
-          <%= f.submit "新規投稿", class: "btn btn-success" %>
+          <%= f.submit "新規投稿", class: "btn btn-success"%>
         </div>
       </div>
     </div>

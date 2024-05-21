@@ -1,11 +1,14 @@
 class QuestionnairesController < ApplicationController
   before_action :set_user
+  before_action :set_questionnaire, only: [:show, :edit, :update, :destroy]
 
   def index
     @questionnaires = @user.questionnaires.order(created_at: :desc).page(params[:page]).per(1)
     @current_questionnaire = @questionnaires.first
-    @pre_video_questions = JSON.parse(@current_questionnaire.pre_video_questionnaire || '[]')
-    @post_video_questions = JSON.parse(@current_questionnaire.post_video_questionnaire || '[]')
+    if @current_questionnaire
+      @pre_video_questions = Kaminari.paginate_array(JSON.parse(@current_questionnaire.pre_video_questionnaire || '[]')).page(params[:pre_page]).per(1)
+      @post_video_questions = Kaminari.paginate_array(JSON.parse(@current_questionnaire.post_video_questionnaire || '[]')).page(params[:post_page]).per(1)
+    end
   end
 
   def new
@@ -22,11 +25,31 @@ class QuestionnairesController < ApplicationController
     end
   end
   
+  def edit
+    @questionnaire = @user.questionnaires.find(params[:id])
+  end
+
+  def update
+    if @questionnaire.update(questionnaire_params)
+      redirect_to user_questionnaires_path(@user), notice: 'アンケートが更新されました。'
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @questionnaire.destroy
+    redirect_to user_questionnaires_path(@user), notice: 'アンケートが削除されました。'
+  end
 
   private
 
   def set_user
     @user = User.find(params[:user_id])
+  end
+
+  def set_questionnaire
+    @questionnaire = @user.questionnaires.find(params[:id])
   end
 
   def questionnaire_params

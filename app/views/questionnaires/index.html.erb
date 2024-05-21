@@ -11,17 +11,21 @@
           <p><strong>メールアドレス:</strong> <%= @current_questionnaire.email %></p>
         </div>
 
-        <h3>動画視聴前のアンケート</h3>
+        <h4>動画視聴前のアンケート</h4>
         <div id="pre-video-questions-container">
           <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video' } %>
         </div>
 
-        <h3>動画視聴後のアンケート</h3>
+        <h4>動画視聴後のアンケート</h4>
         <div id="post-video-questions-container">
           <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, type: 'post_video' } %>
         </div>
       <% else %>
         <p>アンケートはありません</p>
       <% end %>
+       <% if @current_questionnaire %>
+        <%= link_to '編集', edit_user_questionnaire_path(@user, @current_questionnaire), class: 'btn btn-success' %>
+      <% end %>
+
     </div>
   </div>
