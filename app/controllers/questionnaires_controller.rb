@@ -33,7 +33,7 @@ class QuestionnairesController < ApplicationController
     @questionnaire = @user.questionnaires.find(params[:id])
   
     if @questionnaire.update(questionnaire_params)
-      render json: { redirect: edit_user_questionnaire_path(@user,@questionnaire) }
+      render json: { redirect: edit_user_questionnaire_path(@user, @questionnaire) }
       flash[:success] = "アンケートが更新されました。"
     else
       render json: { errors: @questionnaire.errors.full_messages }, status: :unprocessable_entity
@@ -44,7 +44,8 @@ class QuestionnairesController < ApplicationController
 
   def destroy
     @questionnaire.destroy
-    redirect_to user_questionnaires_path(@user), notice: 'アンケートが削除されました。'
+    redirect_to user_questionnaires_path(@user)
+    flash[:success] = 'アンケートが削除されました。'
   end
 
   private

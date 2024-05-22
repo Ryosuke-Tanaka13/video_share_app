@@ -24,7 +24,8 @@
         <p>アンケートはありません</p>
       <% end %>
        <% if @current_questionnaire %>
-        <%= link_to '編集', edit_user_questionnaire_path(@user, @current_questionnaire), class: 'btn btn-success' %>
+        <%= link_to '編集', edit_user_questionnaire_path(@user, @current_questionnaire, page: params[:page]), class: 'btn btn-success' %>
+        <%= link_to '削除', user_questionnaire_path(@user, @current_questionnaire, page: params[:page]), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
       <% end %>
 
     </div>
