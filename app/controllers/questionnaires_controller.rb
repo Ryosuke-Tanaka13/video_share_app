@@ -3,11 +3,11 @@ class QuestionnairesController < ApplicationController
   before_action :set_questionnaire, only: [:show, :edit, :update, :destroy]
 
   def index
-    @questionnaires = @user.questionnaires.order(created_at: :desc).page(params[:page]).per(1)
+    @questionnaires = @user.questionnaires.order(created_at: :desc).page(params[:page]).per(1) # アンケート自体のページネーション
     @current_questionnaire = @questionnaires.first
     if @current_questionnaire
-      @pre_video_questions = Kaminari.paginate_array(JSON.parse(@current_questionnaire.pre_video_questionnaire || '[]')).page(params[:pre_page]).per(1)
-      @post_video_questions = Kaminari.paginate_array(JSON.parse(@current_questionnaire.post_video_questionnaire || '[]')).page(params[:post_page]).per(1)
+      @pre_video_questions = JSON.parse(@current_questionnaire.pre_video_questionnaire || '[]')
+      @post_video_questions = JSON.parse(@current_questionnaire.post_video_questionnaire || '[]')
     end
   end
 
@@ -30,12 +30,17 @@ class QuestionnairesController < ApplicationController
   end  
 
   def update
+    @questionnaire = @user.questionnaires.find(params[:id])
+  
     if @questionnaire.update(questionnaire_params)
-      redirect_to user_questionnaires_path(@user), notice: 'アンケートが更新されました。'
+      render json: { redirect: edit_user_questionnaire_path(@user,@questionnaire) }
+      flash[:success] = "アンケートが更新されました。"
     else
-      render :edit
+      render json: { errors: @questionnaire.errors.full_messages }, status: :unprocessable_entity
+      flash[:danger] = "アンケートの更新に失敗しました。"
     end
   end
+  
 
   def destroy
     @questionnaire.destroy
