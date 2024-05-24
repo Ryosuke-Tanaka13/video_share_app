@@ -209,6 +209,8 @@ def audio_output
   # 音声ファイル名の取得
   audio_file_name = audio_output_path.basename.to_s
   chunk_size = 5 * 1024 * 1024  # 5MB のチャンクサイズ
+  # 音声データをアップロードする際のタイムアウトまでの時間を５分に延長する
+  options = { timeout: 300}
   # 音声ファイルをアップロード
   file = bucket.create_file audio_output_path.to_s, "audio_files/#{audio_file_name}"
   # 音声ファイルのGCSパス
@@ -225,17 +227,40 @@ def audio_output
     response = operation.response
     if response.nil?
       puts "No response received."
+      return
     else
-        puts "Response: #{response.inspect}"
-        transcripts = response.results.each_with_index do |result, i|
-        puts "Result #{i + 1}:"
-        result.alternatives.each do |alternative|
-        puts "Transcript: #{alternative.transcript}"
+        # puts "Response: #{response.inspect}"
+        # transcripts = response.results.each_with_index do |result, i|
+        # puts "Result #{i + 1}:"
+        # result.alternatives.each do |alternative|
+        # puts "Transcript: #{alternative.transcript}"
+        # end
+        puts "Response:#{response.inspect}"
+        # google-cloud-speech Text-APIの文字起こし出力結果を呼び出している
+        transcripts=response.results.flat_map do |result|
+        # resultsは文字起こしの結果を文字起こし出力結果の配列をブロック変数として出力しようとしている
+        result.alternatives.map(&:transcript)
+        # resultのalternatives配列のtranscript変数だけを呼び出している
         end
-      end
-    render json: { transcripts: transcripts}
+        create_srt(transcripts)
+        add_subtitles_to_video(video_path, "subtitles#{Time.now.to_i}.srt")
     end
   end
+end
+
+def create_srt(transcripts)
+  srt_path = Rails.root.join('public', 'voice', "subtitles#{Time.now.to_i}.srt")
+  File.open(srt_path, 'w') do |file|
+    transcripts.each_with_index do |transcripts, index|
+      start_time = format_time(index * 5)
+      end_time = format_time((index + 1) * 5)
+      file.puts "#{index + 1}"
+      file.puts "#{start_time} --> #{end_time}"
+      file.puts transcripts
+      file.puts
+    end
+  end
+  srt_path
 end
 
 
@@ -341,4 +366,12 @@ end
       puts "add_subtitles_to_video でエラーが発生しました: #{e.message}"
     end
   end
+
+  def format_time(seconds)
+    hours = seconds / 3600
+    minutes = (seconds % 3600) / 60
+    seconds = seconds % 60
+    format("%02d:%02d:%02d,000", hours, minutes, seconds)
+  end
+
 end
