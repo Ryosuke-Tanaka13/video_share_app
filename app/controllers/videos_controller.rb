@@ -260,7 +260,7 @@ def create_srt(transcripts)
       file.puts
     end
   end
-  srt_path
+  srt_path.to_s
 end
 
 
@@ -348,24 +348,43 @@ end
 
   
   
-  def add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)
-    begin
-      File.write(video_file_path, transcript)
+  # def add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)
+  #   begin
+  #     File.write(video_file_path, transcript)
   
-      # Use Open3.capture3 to capture stderr (standard error output)
-      # command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -movflags faststart -max_muxing_queue_size 1024 #{output_video_path}"
-      command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -movflags faststart #{output_video_path}"
-      stdout, stderr, status = Open3.capture3(command)
+  #     # Use Open3.capture3 to capture stderr (standard error output)
+  #     # command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -movflags faststart -max_muxing_queue_size 1024 #{output_video_path}"
+  #     command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -movflags faststart #{output_video_path}"
+  #     stdout, stderr, status = Open3.capture3(command)
   
-      if status.success?
-        puts "add_subtitles_to_video: Successfully added subtitles to the video."
-      else
-        puts "add_subtitles_to_video: Failed to add subtitles. Error message: #{stderr}"
-      end
-    rescue => e
-      puts "add_subtitles_to_video でエラーが発生しました: #{e.message}"
+  #     if status.success?
+  #       puts "add_subtitles_to_video: Successfully added subtitles to the video."
+  #     else
+  #       puts "add_subtitles_to_video: Failed to add subtitles. Error message: #{stderr}"
+  #     end
+  #   rescue => e
+  #     puts "add_subtitles_to_video でエラーが発生しました: #{e.message}"
+  #   end
+  # end
+
+  def add_subtitles_to_video(video_path, srt_path)
+    escaped_video_path = Shellwords.escape(video_path)
+    escaped_srt_path = Shellwords.escape(srt_path)
+
+    output_video_path = Rails.root.join('public', 'videos', "output_with_subtitles#{Time.now.to_i}.mp4")
+    escaped_output_video_path = Shellwords.escape(output_video_path.to_s)
+    command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path} -c:a copy #{escaped_output_video_path}"
+
+    stdout, stderr, status = Open3.capture3(command)
+
+    if status.success?
+      puts "Video with subtitles created successfully at #{output_video_path}"
+    else
+      puts"Failed to create video with subtitles: #{stderr}"
     end
   end
+
+
 
   def format_time(seconds)
     hours = seconds / 3600
