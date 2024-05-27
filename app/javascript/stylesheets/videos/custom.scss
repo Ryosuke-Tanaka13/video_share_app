@@ -109,3 +109,20 @@
   margin-bottom: 10px;
 }
 // recording の css 以上まで
+.index-back {
+  margin-left: 130px;
+  margin-top: 20px;
+}
+
+/* フラッシュメッセージのスタイル */
+.flash {
+  padding: 1em;
+  margin-bottom: 1em;
+  border-radius: 5px;
+}
+
+.flash-success {
+  background-color: #dff0d8;
+  color: #3c763d;
+  border: 1px solid #d6e9c6;
+}

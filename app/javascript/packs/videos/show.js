@@ -12,7 +12,10 @@ document.addEventListener("turbolinks:load", function() {
       console.error(error);
     }
   }
+
   // clickイベントが発生した時にcopyUrlToClipboard関数を呼び出します
   var copyBtn = document.getElementById('id-copy-button');
-  copyBtn.addEventListener("click", copyUrlToClipboard);  
-})
+  if (copyBtn) { // copyBtnが存在するか確認
+    copyBtn.addEventListener("click", copyUrlToClipboard);
+  }
+});

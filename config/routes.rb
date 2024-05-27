@@ -43,7 +43,11 @@ Rails.application.routes.draw do
         resource :unsubscribe, only: %i[show update], as: :users_unsubscribe
       end
     end
-    resources :questionnaires
+    resources :questionnaires do
+      member do
+        get 'apply'
+      end
+    end
   end
 
   post 'users_create', to: 'users#create'
@@ -68,14 +72,10 @@ Rails.application.routes.draw do
 
   # video関連=========================================================
   resources :videos do
-    member do
-      get 'popup_before'
-      get 'popup_after'
-    end
-    
     resources :comments, only: %i[create update destroy] do
       resources :replies, only: %i[create update destroy]
     end
+    resources :questionnaire_answers, only: [:index, :create] 
   end
 
   # =================================================================
@@ -100,6 +100,9 @@ Rails.application.routes.draw do
         resource :recording, only: :new
       end
     end
+    resources :videos do
+      resources :questionnaire_answers, only: [:index, :create]
+    end    
   end
 
   # 動画の論理削除(データは残すが表示しないという意味でhiddensコントローラと命名)

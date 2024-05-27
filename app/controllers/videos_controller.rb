@@ -44,13 +44,19 @@ class VideosController < ApplicationController
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
     if @video.save
+      if params[:video][:pre_video_questionnaire_id].present?
+        @video.update(pre_video_questionnaire_id: params[:video][:pre_video_questionnaire_id])
+      end
+      if params[:video][:post_video_questionnaire_id].present?
+        @video.update(post_video_questionnaire_id: params[:video][:post_video_questionnaire_id])
+      end
       flash[:success] = '動画を投稿しました。'
       redirect_to @video
     else
       render :new
     end
   end
-
+  
   def show
     set_video
     @comment = Comment.new
@@ -99,8 +105,7 @@ class VideosController < ApplicationController
   end
 
   def video_params
-    params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
-      :popup_after_video, :pre_video_questionnaire, :post_video_questionnaire, { folder_ids: [] })
+    params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video, :popup_after_video, :pre_video_questionnaire_id, :post_video_questionnaire_id, folder_ids: [])
   end
 
   def video_search_params

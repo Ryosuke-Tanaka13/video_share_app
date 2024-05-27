@@ -1,32 +1,38 @@
-    <h2>アンケート一覧</h2>
-  <div class="pagination">
-      <%= paginate @questionnaires %>
-  </div>
-  
-  <div class="centered-form">
-    <div class="questionnaire-details">
-      <% if @current_questionnaire %>
-        <div class="viewer-info">
-          <p><strong>名前:</strong> <%= @current_questionnaire.name %></p>
-          <p><strong>メールアドレス:</strong> <%= @current_questionnaire.email %></p>
-        </div>
+<h2>アンケート一覧</h2>
+<div class="pagination">
+  <%= paginate @questionnaires %>
+</div>
 
-        <h4>動画視聴前のアンケート</h4>
-        <div id="pre-video-questions-container">
-          <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video' } %>
-        </div>
 
-        <h4>動画視聴後のアンケート</h4>
-        <div id="post-video-questions-container">
-          <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, type: 'post_video' } %>
-        </div>
+
+<div class="centered-form">
+  <div class="questionnaire-details">
+    <% if @current_questionnaire %>
+      <div class="viewer-info">
+        <p><strong>名前:</strong> <%= @current_questionnaire.name %></p>
+        <p><strong>メールアドレス:</strong> <%= @current_questionnaire.email %></p>
+      </div>
+
+      <h4>動画視聴前のアンケート</h4>
+      <div id="pre-video-questions-container">
+        <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video' } %>
+      </div>
+
+      <h4>動画視聴後のアンケート</h4>
+      <div id="post-video-questions-container">
+        <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, type: 'post_video' } %>
+      </div>
+    <% else %>
+      <p>アンケートはありません</p>
+    <% end %>
+
+    <% if @current_questionnaire %>
+      <%= link_to '編集', edit_user_questionnaire_path(@user, @current_questionnaire, page: params[:page]), class: 'btn btn-success' %>
+      <% if params[:apply] == 'true' %>
+        <%= link_to 'アンケートを適用する', apply_user_questionnaire_path(@user, @current_questionnaire), class: 'btn btn-primary', data: { remote: true, type: params[:type] } %>
       <% else %>
-        <p>アンケートはありません</p>
-      <% end %>
-       <% if @current_questionnaire %>
-        <%= link_to '編集', edit_user_questionnaire_path(@user, @current_questionnaire, page: params[:page]), class: 'btn btn-success' %>
         <%= link_to '削除', user_questionnaire_path(@user, @current_questionnaire, page: params[:page]), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
       <% end %>
-
-    </div>
+    <% end %>
   </div>
+</div>

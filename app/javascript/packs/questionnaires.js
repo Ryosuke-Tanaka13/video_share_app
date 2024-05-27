@@ -11,3 +11,4 @@ import "@fortawesome/fontawesome-free/js/all";
 
 import "./questionnaire";
 import "./questionnaire_edit";
+import "./select_questionnaire";

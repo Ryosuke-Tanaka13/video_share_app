@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_19_213759) do
+ActiveRecord::Schema.define(version: 2024_05_23_063231) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -84,6 +84,18 @@ ActiveRecord::Schema.define(version: 2024_05_19_213759) do
     t.boolean "payment_success", default: false
     t.string "customer_id"
     t.string "subscription_id"
+  end
+
+  create_table "questionnaire_answers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "questionnaire_id", null: false
+    t.bigint "viewer_id", null: false
+    t.bigint "video_id", null: false
+    t.text "answer"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["questionnaire_id"], name: "index_questionnaire_answers_on_questionnaire_id"
+    t.index ["video_id"], name: "index_questionnaire_answers_on_video_id"
+    t.index ["viewer_id"], name: "index_questionnaire_answers_on_viewer_id"
   end
 
   create_table "questionnaires", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -254,6 +266,9 @@ ActiveRecord::Schema.define(version: 2024_05_19_213759) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
+  add_foreign_key "questionnaire_answers", "questionnaires"
+  add_foreign_key "questionnaire_answers", "videos"
+  add_foreign_key "questionnaire_answers", "viewers"
   add_foreign_key "questionnaires", "users"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"

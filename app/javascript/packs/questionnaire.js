@@ -12,14 +12,18 @@ document.addEventListener('turbolinks:load', function() {
   
   let currentQuestionnaireType = 'pre_video';
 
-  preVideoToggle.addEventListener('click', function() {
-    toggleQuestionnaire('pre_video');
+  if (preVideoToggle) {
+    preVideoToggle.addEventListener('click', function() {
+      toggleQuestionnaire('pre_video');
   });
+  }
 
-  postVideoToggle.addEventListener('click', function() {
-    toggleQuestionnaire('post_video');
-  });
-
+  if(postVideoToggle){
+    postVideoToggle.addEventListener('click', function() {
+      toggleQuestionnaire('post_video');
+    });
+  }
+  
   function toggleQuestionnaire(type) {
     if (type === 'pre_video') {
       preVideoQuestionsContainer.style.display = 'block';

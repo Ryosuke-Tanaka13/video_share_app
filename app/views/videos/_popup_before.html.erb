@@ -1,12 +1,26 @@
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
-      <h1 class="modal-title">popup_before</h1>
+      <h1 class="modal-title">アンケート（動画視聴前）</h1>
       <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
       <div class="content">
-        <%= render 'questionnaires/questionnaire', questionnaire: questionnaire %>
+        <% if @video.pre_video_questionnaire %>
+          <%= form_with(model: [ @viewer, QuestionnaireAnswer.new ], url: questionnaire_answers_path, local: true) do |f| %>
+            <% @video.pre_video_questionnaire.pre_video_questionnaire.each do |question_id, question_text| %>
+              <div class="field">
+                <%= f.label question_text %><br>
+                <%= f.text_area :answers, name: "questionnaire_answer[answers][#{question_id}]" %>
+              </div>
+            <% end %>
+            <%= f.hidden_field :questionnaire_id, value: @video.pre_video_questionnaire.id %>
+            <%= f.hidden_field :video_id, value: @video.id %>
+            <div class="actions">
+              <%= f.submit '回答を送信', class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>

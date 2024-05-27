@@ -6,7 +6,9 @@ class Video < ApplicationRecord
 
   has_many :video_folders, dependent: :destroy
   has_many :folders, through: :video_folders
-  has_one :questionnaire
+  has_many :questionnaire_answers, dependent: :destroy
+  belongs_to :pre_video_questionnaire, class_name: 'Questionnaire', foreign_key: 'pre_video_questionnaire_id', optional: true
+  belongs_to :post_video_questionnaire, class_name: 'Questionnaire', foreign_key: 'post_video_questionnaire_id', optional: true
 
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }, if: :video_exists?

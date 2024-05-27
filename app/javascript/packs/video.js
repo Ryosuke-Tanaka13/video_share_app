@@ -15,22 +15,35 @@ document.addEventListener("turbolinks:load", function() {
       fileReader.readAsDataURL(file);
     });
 
-    
+    // 初期状態をチェックしてボタンを表示/非表示
+    toggleQuestionnaireButtons();
+
     // ポップアップ表示のフィールドを監視
     $(document).on('change', '#popup_before_video', function() {
-      if ($(this).val() == '1') {
-        $('#select-questionnaire-before').show(); // アンケート選択ボタンを表示
-      } else {
-        $('#select-questionnaire-before').hide(); // アンケート選択ボタンを非表示
-      }
+      toggleQuestionnaireButtons();
     });
 
     $(document).on('change', '#popup_after_video', function() {
-      if ($(this).val() == '1') {
-        $('#select-questionnaire-after').show(); // アンケート選択ボタンを表示
-      } else {
-        $('#select-questionnaire-after').hide(); // アンケート選択ボタンを非表示
-      }
+      toggleQuestionnaireButtons();
     });
+
+    function toggleQuestionnaireButtons() {
+      var beforeVideo = $('#popup_before_video').val();
+      var afterVideo = $('#popup_after_video').val();
+
+      if (beforeVideo == '1' && afterVideo == '0') {
+        $('#select-questionnaire-before').show();
+        $('#select-questionnaire-after').hide();
+      } else if (beforeVideo == '1' && afterVideo == '1') {
+        $('#select-questionnaire-before').show();
+        $('#select-questionnaire-after').hide();
+      } else if (beforeVideo == '0' && afterVideo == '1') {
+        $('#select-questionnaire-after').show();
+        $('#select-questionnaire-before').hide();
+      } else {
+        $('#select-questionnaire-before').hide();
+        $('#select-questionnaire-after').hide();
+      }
+    }
   });
 });

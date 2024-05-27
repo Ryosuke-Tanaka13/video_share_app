@@ -6,7 +6,21 @@
     </div>
     <div class="modal-body">
       <div class="content">
-        <%= render 'questionnaires/questionnaire', questionnaire: @questionnaire_after %>
+        <% if @video.post_video_questionnaire %>
+          <%= form_with(model: [ @viewer, QuestionnaireAnswer.new ], url: questionnaire_answers_path, local: true) do |f| %>
+            <% @video.post_video_questionnaire.post_video_questionnaire.each do |question_id, question_text| %>
+              <div class="field">
+                <%= f.label question_text %><br>
+                <%= f.text_area :answers, name: "questionnaire_answer[answers][#{question_id}]" %>
+              </div>
+            <% end %>
+            <%= f.hidden_field :questionnaire_id, value: @video.post_video_questionnaire.id %>
+            <%= f.hidden_field :video_id, value: @video.id %>
+            <div class="actions">
+              <%= f.submit '回答を送信', class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>

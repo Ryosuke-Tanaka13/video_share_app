@@ -1,13 +1,13 @@
 class QuestionnairesController < ApplicationController
   before_action :set_user
-  before_action :set_questionnaire, only: [:show, :edit, :update, :destroy]
+  before_action :set_questionnaire, only: [:show, :edit, :update, :destroy, :apply]
 
   def index
-    @questionnaires = @user.questionnaires.order(created_at: :desc).page(params[:page]).per(1) # アンケート自体のページネーション
+    @questionnaires = @user.questionnaires.order(updated_at: :desc).page(params[:page]).per(1)
     @current_questionnaire = @questionnaires.first
     if @current_questionnaire
-      @pre_video_questions = JSON.parse(@current_questionnaire.pre_video_questionnaire || '[]')
-      @post_video_questions = JSON.parse(@current_questionnaire.post_video_questionnaire || '[]')
+      @pre_video_questions = parse_questions(@current_questionnaire.pre_video_questionnaire)
+      @post_video_questions = parse_questions(@current_questionnaire.post_video_questionnaire)
     end
   end
 
@@ -33,14 +33,13 @@ class QuestionnairesController < ApplicationController
     @questionnaire = @user.questionnaires.find(params[:id])
   
     if @questionnaire.update(questionnaire_params)
-      render json: { redirect: edit_user_questionnaire_path(@user, @questionnaire) }
+      render json: { redirect: user_questionnaires_path(@user) }
       flash[:success] = "アンケートが更新されました。"
     else
       render json: { errors: @questionnaire.errors.full_messages }, status: :unprocessable_entity
       flash[:danger] = "アンケートの更新に失敗しました。"
     end
   end
-  
 
   def destroy
     @questionnaire.destroy
@@ -48,6 +47,13 @@ class QuestionnairesController < ApplicationController
     flash[:success] = 'アンケートが削除されました。'
   end
 
+  def apply
+    @questionnaire = Questionnaire.find(params[:id])
+    respond_to do |format|
+      format.json { render json: { id: @questionnaire.id, name: @questionnaire.name } }
+    end
+  end
+  
   private
 
   def set_user
@@ -60,5 +66,13 @@ class QuestionnairesController < ApplicationController
 
   def questionnaire_params
     params.require(:questionnaire).permit(:name, :email, :pre_video_questionnaire, :post_video_questionnaire)
+  end
+
+  def parse_questions(questionnaire_data)
+    if questionnaire_data.is_a?(String)
+      JSON.parse(questionnaire_data || '[]')
+    else
+      questionnaire_data || []
+    end
   end
 end
