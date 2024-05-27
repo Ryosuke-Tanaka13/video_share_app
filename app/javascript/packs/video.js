@@ -45,5 +45,88 @@ document.addEventListener("turbolinks:load", function() {
         $('#select-questionnaire-after').hide();
       }
     }
+
+    // アンケート選択時の処理
+    document.querySelectorAll('a[id^="select-"][id$="-video-questionnaire"]').forEach(function(link) {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        var popupBeforeVideo = document.getElementById('popup_before_video').value;
+        var popupAfterVideo = document.getElementById('popup_after_video').value;
+
+        var url = new URL(link.href);
+        url.searchParams.set('popup_before_video', popupBeforeVideo);
+        url.searchParams.set('popup_after_video', popupAfterVideo);
+
+        window.location.href = url.toString();
+      });
+    });
+
+    // フラッシュメッセージの表示
+    var flashMessage = JSON.parse(sessionStorage.getItem('flashMessage'));
+    if (flashMessage) {
+      var flashMessageDiv = document.createElement('div');
+      flashMessageDiv.classList.add('flash', 'flash-' + flashMessage.type);
+      flashMessageDiv.innerText = flashMessage.message;
+      document.getElementById('flash-message').appendChild(flashMessageDiv);
+      sessionStorage.removeItem('flashMessage');
+    }
+
+    var preVideoField = document.getElementById('pre_video_questionnaire_id');
+    var postVideoField = document.getElementById('post_video_questionnaire_id');
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var popupBeforeVideo = urlParams.get('popup_before_video');
+    var popupAfterVideo = urlParams.get('popup_after_video');
+
+    console.log('popupBeforeVideo:', popupBeforeVideo); // デバッグ用ログ
+    console.log('popupAfterVideo:', popupAfterVideo); // デバッグ用ログ
+
+    // セレクトボックスの値を更新
+    if (popupBeforeVideo) {
+      document.getElementById('popup_before_video').value = popupBeforeVideo;
+    }
+
+    if (popupAfterVideo) {
+      document.getElementById('popup_after_video').value = popupAfterVideo;
+    }
+
+    // 要素が存在するかどうか確認するためのデバッグ情報を追加
+    var selectQuestionnaireBefore = document.getElementById('select-questionnaire-before');
+    var selectQuestionnaireAfter = document.getElementById('select-questionnaire-after');
+    console.log('selectQuestionnaireBefore element:', selectQuestionnaireBefore);
+    console.log('selectQuestionnaireAfter element:', selectQuestionnaireAfter);
+
+    if (popupBeforeVideo === '1' && selectQuestionnaireBefore) {
+      console.log('Setting select-questionnaire-before to block');
+      selectQuestionnaireBefore.style.display = 'block';
+      document.getElementById('select-pre-video-questionnaire').innerText = 'アンケートを変更';
+    } else {
+      console.log('popupBeforeVideo condition not met or element not found');
+    }
+
+    if (popupAfterVideo === '1' && selectQuestionnaireAfter) {
+      console.log('Setting select-questionnaire-after to block');
+      selectQuestionnaireAfter.style.display = 'block';
+      document.getElementById('select-post-video-questionnaire').innerText = 'アンケートを変更';
+    } else {
+      console.log('popupAfterVideo condition not met or element not found');
+    }
+
+    var selectedQuestionnaireId = sessionStorage.getItem('selectedQuestionnaireId');
+    var questionnaireType = sessionStorage.getItem('questionnaireType');
+
+    if (questionnaireType === 'pre_video' && preVideoField) {
+      preVideoField.value = selectedQuestionnaireId;
+      console.log('Pre-video questionnaire ID set:', preVideoField.value);
+    }
+
+    if (questionnaireType === 'post_video' && postVideoField) {
+      postVideoField.value = selectedQuestionnaireId;
+      console.log('Post-video questionnaire ID set:', postVideoField.value);
+    }
+
+    sessionStorage.removeItem('selectedQuestionnaireId');
+    sessionStorage.removeItem('questionnaireType');
   });
 });
