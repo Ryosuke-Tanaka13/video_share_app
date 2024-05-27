@@ -58,7 +58,6 @@ class VideosController < ApplicationController
   end
   
   def show
-    set_video
     @comment = Comment.new
     @reply = Reply.new
     # 新着順で表示
@@ -66,16 +65,14 @@ class VideosController < ApplicationController
   end
 
   def popup_before
-    @questionnaire_before = JSON.parse(@video.pre_video_questionnaire || '[]')
-    logger.debug "Loaded questionnaire_before: #{@questionnaire_before}"
+    @pre_video_questionnaire = Questionnaire.find_by(id: @video.pre_video_questionnaire_id)
+    @pre_video_questions = JSON.parse(@pre_video_questionnaire.pre_video_questionnaire) if @pre_video_questionnaire
   end
 
   def popup_after
-    @questionnaire_after = JSON.parse(@video.post_video_questionnaire || '[]')
-    logger.debug "Loaded questionnaire_after: #{@questionnaire_after}"
+    @post_video_questionnaire = Questionnaire.find_by(id: @video.post_video_questionnaire_id)
+    @post_video_questions = JSON.parse(@post_video_questionnaire.post_video_questionnaire) if @post_video_questionnaire
   end
-
-
 
   def edit
     set_video
