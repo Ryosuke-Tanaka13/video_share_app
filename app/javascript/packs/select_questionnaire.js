@@ -13,7 +13,6 @@ document.addEventListener('turbolinks:load', function() {
       var urlParams = new URLSearchParams(window.location.search);
       var popupBeforeVideo = urlParams.get('popup_before_video');
       var popupAfterVideo = urlParams.get('popup_after_video');
-      sessionStorage.setItem('flashMessage', 'アンケートを選択しました。');
 
       if (!popupBeforeVideo || !popupAfterVideo) {
         console.error('Popup parameters missing');
@@ -23,6 +22,13 @@ document.addEventListener('turbolinks:load', function() {
       // セッションストレージにデータを保存
       sessionStorage.setItem('selectedQuestionnaireId', selectedQuestionnaireId);
       sessionStorage.setItem('questionnaireType', type);
+
+      // フラッシュメッセージをオブジェクトとして保存
+      var flashMessage = {
+        message: 'アンケートを選択しました。',
+        type: 'success'
+      };
+      sessionStorage.setItem('flashMessage', JSON.stringify(flashMessage));
 
       // クエリパラメータを使用して videos/new へのリダイレクト
       var redirectUrl = '/videos/new?popup_before_video=' + popupBeforeVideo + '&popup_after_video=' + popupAfterVideo;
