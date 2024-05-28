@@ -27,12 +27,13 @@
     <% end %>
 
     <% if @current_questionnaire %>
-      <%= link_to '編集', edit_user_questionnaire_path(@user, @current_questionnaire, page: params[:page]), class: 'btn btn-success' %>
+      <%= link_to '編集', edit_user_questionnaire_path(@user, @current_questionnaire, page: params[:page], apply: params[:apply], type: params[:type], popup_before_video: params[:popup_before_video], popup_after_video: params[:popup_after_video]), class: 'btn btn-success' %>
       <% if params[:apply] == 'true' %>
-        <%= link_to 'アンケートを適用する', apply_user_questionnaire_path(@user, @current_questionnaire), class: 'btn btn-primary', data: { remote: true, type: params[:type] } %>
+        <%= link_to 'アンケートを適用する', apply_user_questionnaire_path(@user, @current_questionnaire, type: params[:type]), class: 'btn btn-primary', data: { remote: true, type: params[:type] } %>
       <% else %>
         <%= link_to '削除', user_questionnaire_path(@user, @current_questionnaire, page: params[:page]), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn btn-danger' %>
       <% end %>
     <% end %>
+
   </div>
 </div>

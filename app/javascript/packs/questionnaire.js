@@ -15,10 +15,10 @@ document.addEventListener('turbolinks:load', function() {
   if (preVideoToggle) {
     preVideoToggle.addEventListener('click', function() {
       toggleQuestionnaire('pre_video');
-  });
+    });
   }
 
-  if(postVideoToggle){
+  if (postVideoToggle) {
     postVideoToggle.addEventListener('click', function() {
       toggleQuestionnaire('post_video');
     });
@@ -203,18 +203,30 @@ document.addEventListener('turbolinks:load', function() {
     formData.append('questionnaire[pre_video_questionnaire]', JSON.stringify(preVideoQuestionsData));
     formData.append('questionnaire[post_video_questionnaire]', JSON.stringify(postVideoQuestionsData));
 
+    // 追加のパラメータをformDataに追加
+    const urlParams = new URLSearchParams(window.location.search);
+    formData.append('apply', urlParams.get('apply'));
+    formData.append('type', urlParams.get('type'));
+    formData.append('popup_before_video', urlParams.get('popup_before_video'));
+    formData.append('popup_after_video', urlParams.get('popup_after_video'));
+
     fetch(form.action, {
       method: form.method,
       headers: {
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json'
       },
       body: formData
     })
     .then(response => {
+      const contentType = response.headers.get('content-type');
       if (!response.ok) {
         return response.text().then(text => Promise.reject(new Error(text)));
+      } else if (contentType && contentType.includes('application/json')) {
+        return response.json();
+      } else {
+        return response.text().then(text => Promise.reject(new Error('Unexpected response format')));
       }
-      return response.json();
     })
     .then(data => {
       if (data.redirect) {
@@ -279,14 +291,14 @@ document.addEventListener('turbolinks:load', function() {
     updateQuestionContent(selectElement);
   }
 
- // ここから非同期ページネーションの追加
-$(document).on('click', '.pagination a', function(event) {
-  event.preventDefault();
-  $.getScript(this.href);
-});
-});
+  // 非同期ページネーションの追加
+  $(document).on('click', '.pagination a', function(event) {
+    event.preventDefault();
+    $.getScript(this.href);
+  });
 
-document.addEventListener("turbolinks:before-cache", function() {
-// 特定の要素やイベントリスナーをリセットする
-$(document).off('click', '.pagination a');
+  document.addEventListener("turbolinks:before-cache", function() {
+    // 特定の要素やイベントリスナーをリセットする
+    $(document).off('click', '.pagination a');
+  });
 });
