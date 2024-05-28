@@ -210,7 +210,7 @@ def audio_output
   audio_file_name = audio_output_path.basename.to_s
   chunk_size = 5 * 1024 * 1024  # 5MB のチャンクサイズ
   # 音声データをアップロードする際のタイムアウトまでの時間を５分に延長する
-  options = { timeout: 300}
+  options = { timeout: 1800}
   # 音声ファイルをアップロード
   file = bucket.create_file audio_output_path.to_s, "audio_files/#{audio_file_name}"
   # 音声ファイルのGCSパス
@@ -242,31 +242,11 @@ def audio_output
         result.alternatives.map(&:transcript)
         # resultのalternatives配列のtranscript変数だけを呼び出している
         end
-        create_srt(transcripts)
-        add_subtitles_to_video(video_path, "subtitles#{Time.now.to_i}.srt")
+        srt_path_return = create_srt(transcripts)
+        add_subtitles_to_video(video_path, srt_path_return)
     end
   end
 end
-
-def create_srt(transcripts)
-  srt_path = Rails.root.join('public', 'voice', "subtitles#{Time.now.to_i}.srt")
-  File.open(srt_path, 'w') do |file|
-    transcripts.each_with_index do |transcripts, index|
-      start_time = format_time(index * 5)
-      end_time = format_time((index + 1) * 5)
-      file.puts "#{index + 1}"
-      file.puts "#{start_time} --> #{end_time}"
-      file.puts transcripts
-      file.puts
-    end
-  end
-  srt_path.to_s
-end
-
-
-
-  
-
 
   # -----------------------------------------------------------
   private
@@ -367,13 +347,28 @@ end
   #   end
   # end
 
-  def add_subtitles_to_video(video_path, srt_path)
+  def create_srt(transcripts)
+    srt_path = Rails.root.join('public', 'voice', "subtitles#{Time.now.to_i}.srt")
+    File.open(srt_path, 'w') do |file|
+      transcripts.each_with_index do |transcript, index|
+        start_time = format_time(index * 5)
+        end_time = format_time((index + 1) * 5)
+        file.puts "#{index + 1}"
+        file.puts "#{start_time} --> #{end_time}"
+        file.puts transcript
+        file.puts
+      end
+    end
+    srt_path.to_s
+  end
+
+  def add_subtitles_to_video(video_path, srt_path_return)
     escaped_video_path = Shellwords.escape(video_path)
-    escaped_srt_path = Shellwords.escape(srt_path)
+    escaped_srt_path_return = Shellwords.escape(srt_path_return)
 
     output_video_path = Rails.root.join('public', 'videos', "output_with_subtitles#{Time.now.to_i}.mp4")
     escaped_output_video_path = Shellwords.escape(output_video_path.to_s)
-    command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path} -c:a copy #{escaped_output_video_path}"
+    command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} -c:a copy #{escaped_output_video_path}"
 
     stdout, stderr, status = Open3.capture3(command)
 
