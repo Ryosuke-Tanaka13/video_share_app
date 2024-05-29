@@ -3,8 +3,8 @@ class VideosController < ApplicationController
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
-  before_action :set_video, only: %i[show edit update destroy popup_before popup_after]
-  before_action :set_user, only: %i[new show index]
+  before_action :set_video, only: %i[show edit update destroy popup_after]
+  before_action :set_user, only: %i[new show index popup_before popup_after]
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
   before_action :ensure_user, only: %i[new create]
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
@@ -16,6 +16,7 @@ class VideosController < ApplicationController
   # before_action :limited_viewer, only: %i[show]
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
+
 
   def index
     # 動画検索機能用に記載
@@ -41,6 +42,7 @@ class VideosController < ApplicationController
   end
 
   def create
+    @user = current_user
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
     if @video.save
@@ -65,10 +67,20 @@ class VideosController < ApplicationController
   end
 
   def popup_before
-    @pre_video_questionnaire = Questionnaire.find_by(id: @video.pre_video_questionnaire_id)
-    @pre_video_questions = JSON.parse(@pre_video_questionnaire.pre_video_questionnaire) if @pre_video_questionnaire
+    
+    @video = Video.find_by(id_digest: params[:id])
+    Rails.logger.debug("Video found: #{@video.inspect}")
+    if @video.nil?
+      redirect_to root_path, alert: "Video not found"
+      return
+    end
+    @questionnaire = @video.pre_video_questionnaire
+    @pre_video_questions = JSON.parse(@questionnaire.pre_video_questionnaire) if @questionnaire&.pre_video_questionnaire.present?
+    respond_to do |format|
+      format.js
+    end
   end
-
+  
   def popup_after
     @post_video_questionnaire = Questionnaire.find_by(id: @video.post_video_questionnaire_id)
     @post_video_questions = JSON.parse(@post_video_questionnaire.post_video_questionnaire) if @post_video_questionnaire
@@ -181,5 +193,11 @@ class VideosController < ApplicationController
 
   def set_user
     @user = current_user
+  end
+
+  def set_viewer
+    if current_viewer.present?
+      @viewer = current_viewer 
+    end
   end
 end

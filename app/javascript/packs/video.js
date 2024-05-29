@@ -1,6 +1,30 @@
 document.addEventListener("turbolinks:load", function() {
   jQuery(function($){
+    // フォームデータの一時保存と復元
+    const formFields = ['title', 'open_period', 'range', 'comment_public', 'login_set', 'popup_before_video', 'popup_after_video'];
+
+    function saveFormData() {
+      formFields.forEach(function(field) {
+        const element = document.getElementById(field);
+        if (element) {
+          sessionStorage.setItem(field, element.value);
+        }
+      });
+    }
+
+    function restoreFormData() {
+      formFields.forEach(function(field) {
+        const element = document.getElementById(field);
+        if (element && sessionStorage.getItem(field)) {
+          element.value = sessionStorage.getItem(field);
+        }
+      });
+    }
+
+    restoreFormData();
+
     $('#post').change(function(){
+      saveFormData();
       // プレビューのvideoタグを削除
       $('video').remove();
       // 投稿されたファイルの1つ目をfileと置く。
@@ -50,6 +74,8 @@ document.addEventListener("turbolinks:load", function() {
     document.querySelectorAll('a[id^="select-"][id$="-video-questionnaire"]').forEach(function(link) {
       link.addEventListener('click', function(event) {
         event.preventDefault();
+
+        saveFormData();
 
         var popupBeforeVideo = document.getElementById('popup_before_video').value;
         var popupAfterVideo = document.getElementById('popup_after_video').value;

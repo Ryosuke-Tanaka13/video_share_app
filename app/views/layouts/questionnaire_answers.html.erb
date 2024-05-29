@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>App</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_pack_tag 'questionnaires', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'questionnaires', 'data-turbolinks-track': 'reload' %>
+  </head>
+  <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
+    <div class="wrapper">
+      <% if current_system_admin.present? %> 
+        <%= render "layouts/system_admins/header" %> 
+      <% elsif current_user.present? %>
+        <%= render "layouts/users/header" %>
+      <% elsif current_viewer.present? %>
+        <%= render "layouts/viewers/header" %>
+      <%end%> 
+
+      <!-- Content side_bar(model) -->
+      
+      <% if current_system_admin.present? %>
+        <%= render "layouts/system_admins/side" %> 
+      <% elsif current_user.present? %>
+        <%= render "layouts/users/side" %>
+      <% elsif current_viewer.present? %>
+        <%= render "layouts/viewers/side" %>
+      <%end%> 
+
+      <!-- /Content side_bar(model) -->
+      <div class="content-wrapper">
+        <div id="flash-message">
+          <%= render "layouts/flash" %>
+        </div>
+        <!-- Content Header (Page header) -->
+	      <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0"><%= yield(:title) %></h1>
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </div>
+        <%= render template: "layouts/application" %>
+      <%= debug(params) if Rails.env.development? %>
+      </div>
+      <%= render "layouts/footer" %>
+    </div>
+  </body>
+</html>
