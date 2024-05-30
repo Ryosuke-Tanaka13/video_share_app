@@ -5,6 +5,7 @@ class VideosController < ApplicationController
   before_action :set_organization, only: %i[index]
   before_action :set_video, only: %i[show edit update destroy popup_after]
   before_action :set_user, only: %i[new show index popup_before popup_after]
+  before_action :set_viewer, only: %i[popup_before popup_after]
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
   before_action :ensure_user, only: %i[new create]
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
@@ -82,8 +83,18 @@ class VideosController < ApplicationController
   end
   
   def popup_after
-    @post_video_questionnaire = Questionnaire.find_by(id: @video.post_video_questionnaire_id)
-    @post_video_questions = JSON.parse(@post_video_questionnaire.post_video_questionnaire) if @post_video_questionnaire
+    @video = Video.find_by(id_digest: params[:id])
+  
+    @questionnaire = @video.post_video_questionnaire
+    Rails.logger.debug("Video found: #{@questionnaire.inspect}")
+    if @questionnaire.nil?
+      redirect_to root_path, alert: "Question not found"
+      return
+    end
+    @post_video_questions = JSON.parse(@questionnaire.post_video_questionnaire) if @questionnaire&.post_video_questionnaire.present?
+    respond_to do |format|
+      format.js
+    end
   end
 
   def edit
@@ -192,8 +203,10 @@ class VideosController < ApplicationController
   end
 
   def set_user
-    @user = current_user
-  end
+    if current_user.present?
+      @user = current_user
+    end
+  end 
 
   def set_viewer
     if current_viewer.present?
