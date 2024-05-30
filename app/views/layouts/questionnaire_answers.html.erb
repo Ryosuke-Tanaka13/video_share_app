@@ -10,6 +10,7 @@
     <%= javascript_pack_tag 'questionnaires', 'data-turbolinks-track': 'reload' %>
   </head>
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
+   <div id="modal-window" class="modal fade" tabindex="-1" role="dialog"></div>
     <div class="wrapper">
       <% if current_system_admin.present? %> 
         <%= render "layouts/system_admins/header" %> 

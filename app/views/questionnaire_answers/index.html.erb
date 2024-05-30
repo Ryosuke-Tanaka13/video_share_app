@@ -1,0 +1,21 @@
+<h1>アンケート回答一覧</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>視聴者</th>
+      <th>メールアドレス</th>
+      <th>回答</th>
+      <th>回答日時</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @questionnaire_answers.each do |answer| %>
+      <tr>
+        <td><%= answer.viewer_name %></td>
+        <td><%= answer.viewer_email %></td>
+        <td><%= link_to "確認する", video_questionnaire_answer_path(@video, answer), remote: true %></td>
+        <td><%= answer.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

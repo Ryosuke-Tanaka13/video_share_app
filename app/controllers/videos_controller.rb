@@ -67,14 +67,8 @@ class VideosController < ApplicationController
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
   end
 
-  def popup_before
-    
+  def popup_before 
     @video = Video.find_by(id_digest: params[:id])
-    Rails.logger.debug("Video found: #{@video.inspect}")
-    if @video.nil?
-      redirect_to root_path, alert: "Video not found"
-      return
-    end
     @questionnaire = @video.pre_video_questionnaire
     @pre_video_questions = JSON.parse(@questionnaire.pre_video_questionnaire) if @questionnaire&.pre_video_questionnaire.present?
     respond_to do |format|
@@ -84,7 +78,6 @@ class VideosController < ApplicationController
   
   def popup_after
     @video = Video.find_by(id_digest: params[:id])
-  
     @questionnaire = @video.post_video_questionnaire
     Rails.logger.debug("Video found: #{@questionnaire.inspect}")
     if @questionnaire.nil?

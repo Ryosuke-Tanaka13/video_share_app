@@ -1,10 +1,9 @@
 class QuestionnaireAnswersController < ApplicationController
-  before_action :set_user_or_viewer, only: %i[create]
+  before_action :set_user_or_viewer, only: %i[create index]
 
   def create
     video_id = params[:questionnaire_answer][:video_id]
 
-    # video_idがnilの場合のエラーハンドリング
     if video_id.nil?
       flash[:error] = "Video not found"
       redirect_to root_path
@@ -30,6 +29,19 @@ class QuestionnaireAnswersController < ApplicationController
         format.html { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: JSON.parse(@questionnaire.pre_video_questionnaire) } }
         format.js { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: JSON.parse(@questionnaire.pre_video_questionnaire) } }
       end
+    end
+  end
+
+  def index
+    @questionnaire_answers = QuestionnaireAnswer.includes(:video, :viewer, :user).all
+    @video = Base64.decode64(params[:video_id].strip)
+  end
+
+  def show
+    @questionnaire_answer = QuestionnaireAnswer.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.js  
     end
   end
 
