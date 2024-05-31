@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_29_093650) do
+ActiveRecord::Schema.define(version: 2024_05_31_093922) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -90,12 +90,12 @@ ActiveRecord::Schema.define(version: 2024_05_29_093650) do
     t.bigint "questionnaire_id", null: false
     t.bigint "viewer_id"
     t.bigint "video_id", null: false
-    t.text "answer"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "viewer_name"
     t.string "viewer_email"
     t.integer "user_id"
+    t.json "answers"
     t.index ["questionnaire_id"], name: "index_questionnaire_answers_on_questionnaire_id"
     t.index ["user_id"], name: "index_questionnaire_answers_on_user_id"
     t.index ["video_id"], name: "index_questionnaire_answers_on_video_id"

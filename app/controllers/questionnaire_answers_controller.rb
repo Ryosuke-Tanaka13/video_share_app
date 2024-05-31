@@ -3,22 +3,26 @@ class QuestionnaireAnswersController < ApplicationController
 
   def create
     video_id = params[:questionnaire_answer][:video_id]
-
+  
     if video_id.nil?
       flash[:error] = "Video not found"
       redirect_to root_path
       return
     end
-
+  
     @video = Video.find(video_id)
     @questionnaire = Questionnaire.find(params[:questionnaire_answer][:questionnaire_id])
-
+  
     @questionnaire_answer = QuestionnaireAnswer.new(questionnaire_answer_params)
     @questionnaire_answer.video = @video
     @questionnaire_answer.questionnaire = @questionnaire
     @questionnaire_answer.viewer_id = params[:questionnaire_answer][:viewer_id].presence
     @questionnaire_answer.user_id = params[:questionnaire_answer][:user_id].presence
-
+  
+    # デバッグコード追加
+    Rails.logger.debug("QuestionnaireAnswer Params: #{questionnaire_answer_params.inspect}")
+    Rails.logger.debug("QuestionnaireAnswer Answers: #{@questionnaire_answer.answers.inspect}")
+  
     if @questionnaire_answer.save
       flash[:success] = "回答が送信されました。"
       redirect_to @video
@@ -31,7 +35,7 @@ class QuestionnaireAnswersController < ApplicationController
       end
     end
   end
-
+  
   def index
     @questionnaire_answers = QuestionnaireAnswer.includes(:video, :viewer, :user).all
     @video = Base64.decode64(params[:video_id].strip)
@@ -39,13 +43,11 @@ class QuestionnaireAnswersController < ApplicationController
 
   def show
     @questionnaire_answer = QuestionnaireAnswer.find(params[:id])
-    @questions =  if @questionnaire_answer.questionnaire.pre_video_questionnaire.present?
-                    JSON.parse(@questionnaire_answer.questionnaire.pre_video_questionnaire)
-                  elsif @questionnaire_answer.questionnaire.post_video_questionnaire.present?
-                    JSON.parse(@questionnaire_answer.questionnaire.post_video_questionnaire)
-                  else
-                    []
-                  end
+    @questionnaire = @questionnaire_answer.questionnaire
+
+    @pre_video_questions = @questionnaire.pre_video_questionnaire.present? ? JSON.parse(@questionnaire.pre_video_questionnaire) : []
+    @post_video_questions = @questionnaire.post_video_questionnaire.present? ? JSON.parse(@questionnaire.post_video_questionnaire) : []
+
     respond_to do |format|
       format.html
       format.js  

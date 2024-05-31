@@ -3,5 +3,4 @@ class QuestionnaireAnswer < ApplicationRecord
   belongs_to :viewer, optional: true
   belongs_to :video
   belongs_to :user, optional: true
-  serialize :answers, JSON
 end

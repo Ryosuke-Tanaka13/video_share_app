@@ -7,7 +7,6 @@ document.addEventListener('turbolinks:load', function() {
       var type = link.dataset.type;
 
       console.log('Selected Questionnaire ID:', selectedQuestionnaireId);
-      console.log('Type:', type);
 
       // クエリパラメータを正しく取得
       var urlParams = new URLSearchParams(window.location.search);
@@ -20,11 +19,11 @@ document.addEventListener('turbolinks:load', function() {
       }
 
       // セッションストレージにデータを保存
-      if (type === 'pre_video') {
+   
         sessionStorage.setItem('preVideoQuestionnaireId', selectedQuestionnaireId);
-      } else if (type === 'post_video') {
+
         sessionStorage.setItem('postVideoQuestionnaireId', selectedQuestionnaireId);
-      }
+      
 
       // フラッシュメッセージをオブジェクトとして保存
       var flashMessage = {
@@ -36,7 +35,7 @@ document.addEventListener('turbolinks:load', function() {
       // クエリパラメータを使用して videos/new へのリダイレクト
       var redirectUrl = '/videos/new?popup_before_video=' + popupBeforeVideo + '&popup_after_video=' + popupAfterVideo;
       console.log('Redirect URL:', redirectUrl);
-      window.location.href = redirectUl;
+      window.location.href = redirectUrl;
     });
 
     link.addEventListener('ajax:error', function(event) {

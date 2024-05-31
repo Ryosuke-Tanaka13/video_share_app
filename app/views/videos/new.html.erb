@@ -39,7 +39,7 @@
           <%= f.label :popup_before_video, class: "video-label" %><br>
           <%= f.select :popup_before_video, [['動画視聴開始時ポップアップ非表示', 0], ['動画視聴開始時ポップアップ表示', 1]], { include_blank: false }, id: "popup_before_video" %>
           <div id="select-questionnaire-before" style="display: none;">
-            <%= link_to 'アンケートを選択', user_questionnaires_path(current_user, apply: true, type: 'pre_video'), class: 'btn btn-primary', id: 'select-pre-video-questionnaire' %>
+            <%= link_to 'アンケートを選択', user_questionnaires_path(current_user, apply: true), class: 'btn btn-primary', id: 'select-pre-video-questionnaire' %>
           </div>
           <%= hidden_field_tag 'video[pre_video_questionnaire_id]', nil, id: 'pre_video_questionnaire_id' %>
         </div>
@@ -47,7 +47,7 @@
           <%= f.label :popup_after_video, class: "video-label" %><br>
           <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ非表示', 0], ['動画視聴終了時ポップアップ表示', 1]], { include_blank: false }, id: "popup_after_video" %>
           <div id="select-questionnaire-after" style="display: none;">
-            <%= link_to 'アンケートを選択', user_questionnaires_path(current_user, apply: true, type: 'post_video'), class: 'btn btn-primary', id: 'select-post-video-questionnaire' %>
+            <%= link_to 'アンケートを選択', user_questionnaires_path(current_user, apply: true), class: 'btn btn-primary', id: 'select-post-video-questionnaire' %>
           </div>
           <%= hidden_field_tag 'video[post_video_questionnaire_id]', nil, id: 'post_video_questionnaire_id' %>
         </div>

@@ -60,7 +60,7 @@ document.addEventListener("turbolinks:load", function() {
         $('#select-questionnaire-after').hide();
       } else if (beforeVideo == '1' && afterVideo == '1') {
         $('#select-questionnaire-before').show();
-        $('#select-questionnaire-after').hide();
+        $('#select-questionnaire-after').show();
       } else if (beforeVideo == '0' && afterVideo == '1') {
         $('#select-questionnaire-after').show();
         $('#select-questionnaire-before').hide();
@@ -142,12 +142,12 @@ document.addEventListener("turbolinks:load", function() {
     var preVideoQuestionnaireId = sessionStorage.getItem('preVideoQuestionnaireId');
     var postVideoQuestionnaireId = sessionStorage.getItem('postVideoQuestionnaireId');
 
-    if (preVideoQuestionnaireId && preVideoField) {
+    if (preVideoQuestionnaireId) {
       preVideoField.value = preVideoQuestionnaireId;
       console.log('Pre-video questionnaire ID set:', preVideoField.value);
     }
 
-    if (postVideoQuestionnaireId && postVideoField) {
+    if (postVideoQuestionnaireId) {
       postVideoField.value = postVideoQuestionnaireId;
       console.log('Post-video questionnaire ID set:', postVideoField.value);
     }

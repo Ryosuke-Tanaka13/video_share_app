@@ -1,25 +1,25 @@
 <div class="questions-container">
   <% if questions.present? %>
-    <% questions.each do |question| %>
+    <% questions.each_with_index do |question, index| %>
       <div class="question-field">
         <div class="question">
           <p><strong><%= question['text'] %></strong></p>
           <% if question['type'] == 'text' %>
-            <textarea rows="4" placeholder="回答を入力"></textarea>
+            <textarea rows="4" placeholder="回答を入力" name="questionnaire_answer[answers][]"></textarea>
           <% elsif question['type'] == 'radio' %>
             <% question['answers'].each do |answer| %>
               <label class="option-item">
-                <input type="radio" name="questions[]"> <%= answer %>
+                <input type="radio" name="questionnaire_answer[answers][]" value="<%= answer %>"> <%= answer %>
               </label>
             <% end %>
           <% elsif question['type'] == 'checkbox' %>
             <% question['answers'].each do |answer| %>
               <label class="option-item">
-                <input type="checkbox" name="questions[]"> <%= answer %>
+                <input type="checkbox" name="questionnaire_answer[answers][]" value="<%= answer %>"> <%= answer %>
               </label>
             <% end %>
           <% elsif question['type'] == 'dropdown' %>
-            <select>
+            <select name="questionnaire_answer[answers][]">
               <option disabled selected>ここから選択してください</option>
               <% question['answers'].each do |answer| %>
                 <option value="<%= answer %>"><%= answer %></option>

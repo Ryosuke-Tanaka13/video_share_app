@@ -7,18 +7,35 @@
     <div class="modal-body">
       <p><strong>視聴者:</strong> <%= @questionnaire_answer.viewer_name %></p>
       <p><strong>メールアドレス:</strong> <%= @questionnaire_answer.viewer_email %></p>
-      <h2>質問と回答</h2>
-      <% @questions.each_with_index do |question, index| %>
-        <div>
-          <p><strong>質問 <%= index + 1 %>:</strong> <%= question["text"] %></p>
-          <p><strong>回答:</strong> 
-            <% if @questionnaire_answer.answers.present? && @questionnaire_answer.answers[index].present? %>
-              <%= @questionnaire_answer.answers[index] %>
-            <% else %>
-              回答なし
-            <% end %>
-          </p>
-        </div>
+
+      <% if @pre_video_questions.present? %>
+        <% @pre_video_questions.each_with_index do |question, index| %>
+          <div>
+            <p><strong>質問:</strong> <%= question["text"] %></p>
+            <p><strong>回答:</strong> 
+              <% if @questionnaire_answer.answers.present? && @questionnaire_answer.answers[index].present? %>
+                <%= @questionnaire_answer.answers[index] %>
+              <% else %>
+                回答なし
+              <% end %>
+            </p>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if @post_video_questions.present? %>
+        <% @post_video_questions.each_with_index do |question, index| %>
+          <div>
+            <p><strong>質問:</strong> <%= question["text"] %></p>
+            <p><strong>回答:</strong> 
+              <% if @questionnaire_answer.answers.present? && @questionnaire_answer.answers[@pre_video_questions.size + index].present? %>
+                <%= @questionnaire_answer.answers[@pre_video_questions.size + index] %>
+              <% else %>
+                回答なし
+              <% end %>
+            </p>
+          </div>
+        <% end %>
       <% end %>
     </div>
     <div class="modal-footer">
