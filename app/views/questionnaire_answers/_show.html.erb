@@ -1,15 +1,28 @@
-<div class="modal-dialog modal-lg modal-dialog-centered" data-controller="edit-targets-info">
+<div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">×</span>
-      </button>
-      <h1 class="modal-title">アンケート結果</h1>
+      <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+      <h1 class="modal-title">アンケート回答</h1>
     </div>
     <div class="modal-body">
-      <button type="button" class="btn btn-default" data-dismiss="modal">
-         キャンセル
-      </button>
+      <p><strong>視聴者:</strong> <%= @questionnaire_answer.viewer_name %></p>
+      <p><strong>メールアドレス:</strong> <%= @questionnaire_answer.viewer_email %></p>
+      <h2>質問と回答</h2>
+      <% @questions.each_with_index do |question, index| %>
+        <div>
+          <p><strong>質問 <%= index + 1 %>:</strong> <%= question["text"] %></p>
+          <p><strong>回答:</strong> 
+            <% if @questionnaire_answer.answers.present? && @questionnaire_answer.answers[index].present? %>
+              <%= @questionnaire_answer.answers[index] %>
+            <% else %>
+              回答なし
+            <% end %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
     </div>
   </div>
 </div>

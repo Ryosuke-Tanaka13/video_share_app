@@ -20,8 +20,11 @@ document.addEventListener('turbolinks:load', function() {
       }
 
       // セッションストレージにデータを保存
-      sessionStorage.setItem('selectedQuestionnaireId', selectedQuestionnaireId);
-      sessionStorage.setItem('questionnaireType', type);
+      if (type === 'pre_video') {
+        sessionStorage.setItem('preVideoQuestionnaireId', selectedQuestionnaireId);
+      } else if (type === 'post_video') {
+        sessionStorage.setItem('postVideoQuestionnaireId', selectedQuestionnaireId);
+      }
 
       // フラッシュメッセージをオブジェクトとして保存
       var flashMessage = {
@@ -33,7 +36,7 @@ document.addEventListener('turbolinks:load', function() {
       // クエリパラメータを使用して videos/new へのリダイレクト
       var redirectUrl = '/videos/new?popup_before_video=' + popupBeforeVideo + '&popup_after_video=' + popupAfterVideo;
       console.log('Redirect URL:', redirectUrl);
-      window.location.href = redirectUrl;
+      window.location.href = redirectUl;
     });
 
     link.addEventListener('ajax:error', function(event) {

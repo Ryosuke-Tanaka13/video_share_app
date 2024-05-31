@@ -39,6 +39,13 @@ class QuestionnaireAnswersController < ApplicationController
 
   def show
     @questionnaire_answer = QuestionnaireAnswer.find(params[:id])
+    @questions =  if @questionnaire_answer.questionnaire.pre_video_questionnaire.present?
+                    JSON.parse(@questionnaire_answer.questionnaire.pre_video_questionnaire)
+                  elsif @questionnaire_answer.questionnaire.post_video_questionnaire.present?
+                    JSON.parse(@questionnaire_answer.questionnaire.post_video_questionnaire)
+                  else
+                    []
+                  end
     respond_to do |format|
       format.html
       format.js  

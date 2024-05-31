@@ -139,20 +139,20 @@ document.addEventListener("turbolinks:load", function() {
       console.log('popupAfterVideo condition not met or element not found');
     }
 
-    var selectedQuestionnaireId = sessionStorage.getItem('selectedQuestionnaireId');
-    var questionnaireType = sessionStorage.getItem('questionnaireType');
+    var preVideoQuestionnaireId = sessionStorage.getItem('preVideoQuestionnaireId');
+    var postVideoQuestionnaireId = sessionStorage.getItem('postVideoQuestionnaireId');
 
-    if (questionnaireType === 'pre_video' && preVideoField) {
-      preVideoField.value = selectedQuestionnaireId;
+    if (preVideoQuestionnaireId && preVideoField) {
+      preVideoField.value = preVideoQuestionnaireId;
       console.log('Pre-video questionnaire ID set:', preVideoField.value);
     }
 
-    if (questionnaireType === 'post_video' && postVideoField) {
-      postVideoField.value = selectedQuestionnaireId;
+    if (postVideoQuestionnaireId && postVideoField) {
+      postVideoField.value = postVideoQuestionnaireId;
       console.log('Post-video questionnaire ID set:', postVideoField.value);
     }
 
-    sessionStorage.removeItem('selectedQuestionnaireId');
-    sessionStorage.removeItem('questionnaireType');
+    sessionStorage.removeItem('preVideoQuestionnaireId');
+    sessionStorage.removeItem('postVideoQuestionnaireId');
   });
 });
