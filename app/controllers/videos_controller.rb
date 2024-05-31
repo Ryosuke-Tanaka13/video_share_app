@@ -194,9 +194,7 @@ def audio_output
   # ffmpegを使用して動画から音声を抽出し、WAV形式で保存
   # command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{audio_output_path}"
 
-  # Shellwords.escapeを使用することで、コマンドライン引数の正確性を確保している:video_pathを正確に読み込ませている
-  command = "ffmpeg -i #{Shellwords.escape(video_path)} -vn -acodec pcm_s16le -ar 44100 -ac 1 #{Shellwords.escape(audio_output_path.to_s)}"
-
+  command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 1 #{audio_output_path}"
   stdout, stderr, status = Open3.capture3(command)
   if status.success?
     puts "Audio extracted successfully to #{audio_output_path}"
@@ -223,10 +221,12 @@ def audio_output
   operation.wait_until_done!
   if operation.error
     puts "Error: #{operation.error.message}"
+    render json: { error: operation.error.message }, status: :unprocessable_entity
   else
     response = operation.response
     if response.nil?
       puts "No response received."
+      render json: { error: "No response received" }, status: :unprocessable_entity
       return
     else
         # puts "Response: #{response.inspect}"
@@ -365,12 +365,15 @@ end
   def add_subtitles_to_video(video_path, srt_path_return)
     escaped_video_path = Shellwords.escape(video_path)
     escaped_srt_path_return = Shellwords.escape(srt_path_return)
-
+    binding.pry
     output_video_path = Rails.root.join('public', 'videos', "output_with_subtitles#{Time.now.to_i}.mp4")
     escaped_output_video_path = Shellwords.escape(output_video_path.to_s)
     command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} -c:a copy #{escaped_output_video_path}"
-
     stdout, stderr, status = Open3.capture3(command)
+
+    puts "FFmpeg command: #{command}"
+    puts "FFmpeg stdout: #{stdout}"
+    puts "FFmpeg stderr: #{stderr}"
 
     if status.success?
       puts "Video with subtitles created successfully at #{output_video_path}"
