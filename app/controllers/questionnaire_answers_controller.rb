@@ -11,7 +11,7 @@ class QuestionnaireAnswersController < ApplicationController
     end
   
     @video = Video.find(video_id)
-    @questionnaire = Questionnaire.find(params[:questionnaire_answer][:questionnaire_id])
+    @questionnaire = Questionnaire.with_deleted.find(params[:questionnaire_answer][:questionnaire_id])
   
     @questionnaire_answer = QuestionnaireAnswer.new(questionnaire_answer_params)
     @questionnaire_answer.video = @video

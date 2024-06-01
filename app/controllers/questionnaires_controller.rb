@@ -14,16 +14,19 @@ class QuestionnairesController < ApplicationController
   def new
     @questionnaire = @user.questionnaires.new
   end
-
+  
   def create
     @questionnaire = @user.questionnaires.new(questionnaire_params)
-  
+    
     if @questionnaire.save
+      Rails.logger.debug "Questionnaire created: #{@questionnaire.inspect}"
       render json: { redirect: user_questionnaires_path(@user) } # 修正: pathをindexに
     else
+      Rails.logger.debug "Failed to create questionnaire: #{@questionnaire.errors.full_messages.join(", ")}"
       render json: { errors: @questionnaire.errors.full_messages }, status: :unprocessable_entity
     end
   end
+  
   
   def edit
     @questionnaire = @user.questionnaires.find(params[:id])
@@ -53,10 +56,10 @@ class QuestionnairesController < ApplicationController
   
 
   def destroy
-    @questionnaire.destroy
-    redirect_to user_questionnaires_path(@user)
-    flash[:success] = 'アンケートが削除されました。'
-  end
+  @questionnaire.destroy
+  redirect_to user_questionnaires_path(@user)
+  flash[:success] = 'アンケートが削除されました。'
+end
 
   def apply
     @questionnaire = Questionnaire.find(params[:id])

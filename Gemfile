@@ -48,6 +48,7 @@ gem 'active_decorator'
 gem 'stripe'
 
 gem 'kaminari'
+gem 'paranoia', '~> 2.4'
 
 group :development, :test do
   # ERD生成

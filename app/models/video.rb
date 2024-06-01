@@ -1,4 +1,6 @@
 class Video < ApplicationRecord
+  acts_as_paranoid
+  
   belongs_to :organization
   belongs_to :user
   has_one_attached :video
@@ -7,8 +9,9 @@ class Video < ApplicationRecord
   has_many :video_folders, dependent: :destroy
   has_many :folders, through: :video_folders
   has_many :questionnaire_answers, dependent: :destroy
-  belongs_to :pre_video_questionnaire, class_name: 'Questionnaire', foreign_key: 'pre_video_questionnaire_id', optional: true
-  belongs_to :post_video_questionnaire, class_name: 'Questionnaire', foreign_key: 'post_video_questionnaire_id', optional: true
+  
+  belongs_to :pre_video_questionnaire, -> { with_deleted }, class_name: 'Questionnaire', foreign_key: 'pre_video_questionnaire_id', optional: true
+  belongs_to :post_video_questionnaire, -> { with_deleted }, class_name: 'Questionnaire', foreign_key: 'post_video_questionnaire_id', optional: true
 
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }, if: :video_exists?

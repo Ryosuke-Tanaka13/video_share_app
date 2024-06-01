@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_01_063842) do
+ActiveRecord::Schema.define(version: 2024_06_01_075328) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -112,6 +112,8 @@ ActiveRecord::Schema.define(version: 2024_06_01_063842) do
     t.text "post_video_questionnaire"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_questionnaires_on_deleted_at"
     t.index ["user_id"], name: "index_questionnaires_on_user_id"
   end
 
@@ -227,6 +229,8 @@ ActiveRecord::Schema.define(version: 2024_06_01_063842) do
     t.text "post_video_questionnaire"
     t.integer "pre_video_questionnaire_id"
     t.integer "post_video_questionnaire_id"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_videos_on_deleted_at"
     t.index ["organization_id"], name: "index_videos_on_organization_id"
     t.index ["user_id"], name: "index_videos_on_user_id"
   end
