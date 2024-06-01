@@ -21,7 +21,20 @@ document.addEventListener("turbolinks:load", function() {
       });
     }
 
+    function clearFormData() {
+      formFields.forEach(function(field) {
+        sessionStorage.removeItem(field);
+      });
+      sessionStorage.removeItem('videoPreview');
+    }
+
     restoreFormData();
+
+    // プレビューを復元
+    const videoPreview = sessionStorage.getItem('videoPreview');
+    if (videoPreview) {
+      $('#show').html('<video src="' + videoPreview + '" controls />');
+    }
 
     $('#post').change(function(){
       saveFormData();
@@ -33,7 +46,9 @@ document.addEventListener("turbolinks:load", function() {
       const fileReader = new FileReader();
       // videoタグを生成しプレビューを表示(データのURLを出力)
       fileReader.onloadend = function() {
-        $('#show').html('<video src="' + fileReader.result + '"/>');
+        const videoURL = fileReader.result;
+        $('#show').html('<video src="' + videoURL + '" controls />');
+        sessionStorage.setItem('videoPreview', videoURL);
       }
       // 読み込みを実行
       fileReader.readAsDataURL(file);
@@ -154,5 +169,10 @@ document.addEventListener("turbolinks:load", function() {
 
     sessionStorage.removeItem('preVideoQuestionnaireId');
     sessionStorage.removeItem('postVideoQuestionnaireId');
+
+    // フォーム送信が成功した後にデータをクリア
+    $('form').on('ajax:success', function() {
+      clearFormData();
+    });
   });
 });

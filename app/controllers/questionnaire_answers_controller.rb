@@ -18,11 +18,9 @@ class QuestionnaireAnswersController < ApplicationController
     @questionnaire_answer.questionnaire = @questionnaire
     @questionnaire_answer.viewer_id = params[:questionnaire_answer][:viewer_id].presence
     @questionnaire_answer.user_id = params[:questionnaire_answer][:user_id].presence
-  
-    # デバッグコード追加
-    Rails.logger.debug("QuestionnaireAnswer Params: #{questionnaire_answer_params.inspect}")
-    Rails.logger.debug("QuestionnaireAnswer Answers: #{@questionnaire_answer.answers.inspect}")
-  
+    @questionnaire_answer.pre_questions = @questionnaire.pre_video_questionnaire.present? ? JSON.parse(@questionnaire.pre_video_questionnaire) : []
+    @questionnaire_answer.post_questions = @questionnaire.post_video_questionnaire.present? ? JSON.parse(@questionnaire.post_video_questionnaire) : []
+
     if @questionnaire_answer.save
       flash[:success] = "回答が送信されました。"
       redirect_to @video
@@ -35,7 +33,7 @@ class QuestionnaireAnswersController < ApplicationController
       end
     end
   end
-  
+
   def index
     @questionnaire_answers = QuestionnaireAnswer.includes(:video, :viewer, :user).all
     @video = Base64.decode64(params[:video_id].strip)
@@ -45,8 +43,8 @@ class QuestionnaireAnswersController < ApplicationController
     @questionnaire_answer = QuestionnaireAnswer.find(params[:id])
     @questionnaire = @questionnaire_answer.questionnaire
 
-    @pre_video_questions = @questionnaire.pre_video_questionnaire.present? ? JSON.parse(@questionnaire.pre_video_questionnaire) : []
-    @post_video_questions = @questionnaire.post_video_questionnaire.present? ? JSON.parse(@questionnaire.post_video_questionnaire) : []
+    @pre_video_questions = @questionnaire_answer.pre_questions || []
+    @post_video_questions = @questionnaire_answer.post_questions || []
 
     respond_to do |format|
       format.html

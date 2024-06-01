@@ -60,6 +60,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'letter_opener_web', '~> 1.0'
   gem 'pry-rails'
+  gem 'pry-nav'
   gem 'rspec-rails'
 end
 
