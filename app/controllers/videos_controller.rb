@@ -78,7 +78,7 @@ class VideosController < ApplicationController
   
   def popup_after
     @video = Video.find_by(id_digest: params[:id])
-    @questionnaire = @video.post_video_questionnaire_id
+    @questionnaire = @video.post_video_questionnaire
     Rails.logger.debug("Video found: #{@questionnaire.inspect}")
     if @questionnaire.nil?
       redirect_to root_path, alert: "Question not found"

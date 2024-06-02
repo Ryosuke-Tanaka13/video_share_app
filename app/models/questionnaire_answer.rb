@@ -6,4 +6,7 @@ class QuestionnaireAnswer < ApplicationRecord
 
   serialize :pre_questions, Array
   serialize :post_questions, Array
+
+  serialize :pre_answers, Array
+  serialize :post_answers, Array
 end

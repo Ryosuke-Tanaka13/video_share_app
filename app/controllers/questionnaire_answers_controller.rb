@@ -1,7 +1,7 @@
 class QuestionnaireAnswersController < ApplicationController
   before_action :set_user_or_viewer, only: %i[create index]
 
-  def create
+   def create
     video_id = params[:questionnaire_answer][:video_id]
   
     if video_id.nil?
@@ -11,7 +11,7 @@ class QuestionnaireAnswersController < ApplicationController
     end
   
     @video = Video.find(video_id)
-    @questionnaire = Questionnaire.with_deleted.find(params[:questionnaire_answer][:questionnaire_id])
+    @questionnaire = Questionnaire.find(params[:questionnaire_answer][:questionnaire_id])
   
     @questionnaire_answer = QuestionnaireAnswer.new(questionnaire_answer_params)
     @questionnaire_answer.video = @video
@@ -20,6 +20,12 @@ class QuestionnaireAnswersController < ApplicationController
     @questionnaire_answer.user_id = params[:questionnaire_answer][:user_id].presence
     @questionnaire_answer.pre_questions = @questionnaire.pre_video_questionnaire.present? ? JSON.parse(@questionnaire.pre_video_questionnaire) : []
     @questionnaire_answer.post_questions = @questionnaire.post_video_questionnaire.present? ? JSON.parse(@questionnaire.post_video_questionnaire) : []
+    
+    if params[:questionnaire_type] == 'pre_video'
+      @questionnaire_answer.pre_answers = params[:questionnaire_answer][:answers]
+    elsif params[:questionnaire_type] == 'post_video'
+      @questionnaire_answer.post_answers = params[:questionnaire_answer][:answers]
+    end
 
     if @questionnaire_answer.save
       flash[:success] = "回答が送信されました。"
