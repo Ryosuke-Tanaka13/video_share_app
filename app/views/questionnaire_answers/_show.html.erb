@@ -13,12 +13,13 @@
       <% @pre_questionnaire_answers.each do |questionnaire_answer| %>
         <% if questionnaire_answer.pre_answers.present? %>
           <h2>動画視聴前の回答</h2>
-          <% questionnaire_answer.pre_questions.each_with_index do |question, index| %>
+          <% questionnaire_answer.pre_questions.each do |question| %>
             <div>
               <p><strong>質問:</strong> <%= question["text"] %></p>
               <p><strong>回答:</strong> 
-                <% if questionnaire_answer.pre_answers[index].present? %>
-                  <%= questionnaire_answer.pre_answers[index] %>
+                <% answer = questionnaire_answer.pre_answers[question['id'].to_s] %>
+                <% if answer.present? %>
+                  <%= answer.is_a?(Array) ? answer.join(", ") : answer %>
                 <% else %>
                   回答なし
                 <% end %>
@@ -29,12 +30,13 @@
 
         <% if questionnaire_answer.post_answers.present? %>
           <h2>動画視聴後の回答</h2>
-          <% questionnaire_answer.post_questions.each_with_index do |question, index| %>
+          <% questionnaire_answer.post_questions.each do |question| %>
             <div>
               <p><strong>質問:</strong> <%= question["text"] %></p>
               <p><strong>回答:</strong> 
-                <% if questionnaire_answer.post_answers[index].present? %>
-                  <%= questionnaire_answer.post_answers[index].is_a?(Array) ? questionnaire_answer.post_answers[index].join(", ") : questionnaire_answer.post_answers[index] %>
+                <% answer = questionnaire_answer.post_answers[question['id'].to_s] %>
+                <% if answer.present? %>
+                  <%= answer.is_a?(Array) ? answer.join(", ") : answer %>
                 <% else %>
                   回答なし
                 <% end %>

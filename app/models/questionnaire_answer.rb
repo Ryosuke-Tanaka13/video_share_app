@@ -4,9 +4,9 @@ class QuestionnaireAnswer < ApplicationRecord
   belongs_to :video
   belongs_to :user, optional: true
 
-  serialize :pre_questions, Array
-  serialize :post_questions, Array
+  serialize :pre_questions, YAML
+  serialize :post_questions, YAML
 
-  serialize :pre_answers, Array
-  serialize :post_answers, Array
+  serialize :pre_answers, JSON
+  serialize :post_answers, JSON
 end
