@@ -29,11 +29,11 @@ class QuestionnaireAnswersController < ApplicationController
       @questionnaire_answer.pre_questions = @questionnaire.pre_video_questionnaire.present? ? JSON.parse(@questionnaire.pre_video_questionnaire) : []
       @questionnaire_answer.post_questions = @questionnaire.post_video_questionnaire.present? ? JSON.parse(@questionnaire.post_video_questionnaire) : []
     end
-    binding.pry
+
     if params[:questionnaire_type] == 'pre_video'
-      @questionnaire_answer.pre_answers = questionnaire_answer_params[:answers].map(&:to_unsafe_h)
+      @questionnaire_answer.pre_answers = questionnaire_answer_params[:answers]
     else params[:questionnaire_type] == 'post_video'
-      @questionnaire_answer.post_answers = questionnaire_answer_params[:answers].map(&:to_unsafe_h)
+      @questionnaire_answer.post_answers = questionnaire_answer_params[:answers]
     end
   
     if @questionnaire_answer.save
@@ -62,13 +62,12 @@ class QuestionnaireAnswersController < ApplicationController
     @questionnaire_answers = @questionnaire_answers.where(viewer_id: @viewer_id) unless params[:viewer_id] == "0"
     @questionnaire_answers = @questionnaire_answers.where(user_id: @user_id) unless params[:user_id] == "0"
     @pre_questionnaire_answers = @questionnaire_answers.select { |qa| qa.pre_questions.present? }
-    
   end
 
   private
 
   def questionnaire_answer_params
-    params.require(:questionnaire_answer).permit(:questionnaire_id, :video_id, :viewer_id, :user_id, :viewer_name, :viewer_email, answers: [:checkbox => []])
+    params.require(:questionnaire_answer).permit(:questionnaire_id, :video_id, :viewer_id, :user_id, :viewer_name, :viewer_email, answers: [])
   end
 
   def set_user_or_viewer

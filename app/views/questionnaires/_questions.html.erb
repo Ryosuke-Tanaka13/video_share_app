@@ -15,7 +15,7 @@
           <% elsif question['type'] == 'checkbox' %>
             <% question['answers'].each do |answer| %>
               <label class="option-item">
-                <input type="checkbox" name="questionnaire_answer[answers][][checkbox][]" value="<%= answer %>"> <%= answer %>
+                <input type="checkbox" name="questionnaire_answer[answers][]" value="<%= answer %>"> <%= answer %>
               </label>
             <% end %>
           <% elsif question['type'] == 'dropdown' %>

@@ -179,18 +179,11 @@ document.addEventListener('turbolinks:load', function() {
             answers.push(option.value);
           }
         });
-      } else if (questionType === 'radio') {
-        const answerInputs = field.querySelectorAll(`input[type="${questionType}"]:checked`);
+      } else if (questionType === 'radio' || questionType === 'checkbox') {
+        const answerInputs = field.querySelectorAll(`input[type="${questionType}"]`);
         answerInputs.forEach(input => {
           if (input.value && input.value.trim() !== '') {
             answers.push(input.value);
-          }
-        });
-      } else if (questionType === 'checkbox') {
-        const answerInputs = field.querySelectorAll(`input[type="${questionType}"]:checked`);
-        answerInputs.forEach(input => {
-          if (input.value && input.value.trim() !== '') {
-            answers.push([input.value]);
           }
         });
       } else if (questionType === 'text') {
