@@ -18,18 +18,40 @@ class QuestionnaireAnswersController < ApplicationController
 
     @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video: @video, questionnaire: @questionnaire, viewer_id: viewer_id, user_id: user_id)
 
-    # JSON形式のデータをパース
-    pre_video_questionnaire = @questionnaire.pre_video_questionnaire.present? ? JSON.parse(@questionnaire.pre_video_questionnaire).to_yaml : [].to_yaml
-    post_video_questionnaire = @questionnaire.post_video_questionnaire.present? ? JSON.parse(@questionnaire.post_video_questionnaire).to_yaml : [].to_yaml
+    pre_video_questionnaire = @questionnaire.pre_video_questionnaire.present? ? JSON.parse(@questionnaire.pre_video_questionnaire) : []
+    post_video_questionnaire = @questionnaire.post_video_questionnaire.present? ? JSON.parse(@questionnaire.post_video_questionnaire) : []
 
     @questionnaire_answer.pre_questions = pre_video_questionnaire
     @questionnaire_answer.post_questions = post_video_questionnaire
 
-    # answersを適切な形式に変換
     answers = params[:questionnaire_answer][:answers]
+    formatted_answers = {}
+    binding.pry  # 初期状態の確認
+    
+    pre_video_questionnaire.each_with_index do |question, index|
+      question_id = index.to_s  # インデックスをIDとして使用
+    
+      if question['type'] == 'checkbox'
+        # チェックボックスの回答をまとめる
+        formatted_answers[question_id] = answers.select { |a| question['answers'].include?(a) }
+      else
+        # テキストやプルダウンの回答を処理
+        formatted_answers[question_id] = [answers[index]]
+      end
+      binding.pry  # 各ループ後に確認
+    end
+    
+    binding.pry  # 最終状態を確認
+    
+    
 
-    # 平坦化処理
-    formatted_answers = answers.flatten.compact
+    
+
+    
+    
+
+
+
 
     if params[:questionnaire_type] == 'pre_video'
       @questionnaire_answer.pre_answers = formatted_answers
@@ -37,11 +59,9 @@ class QuestionnaireAnswersController < ApplicationController
       @questionnaire_answer.post_answers = formatted_answers
     end
 
-    binding.pry  # 保存処理の直前でデバッグポイントを設定
-
     if @questionnaire_answer.save
       flash[:success] = "回答が送信されました。"
-      redirect_to @video
+      redirect_to video_path(@video)
     else
       flash.now[:danger] = "回答の送信に失敗しました。"
       flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
@@ -65,7 +85,8 @@ class QuestionnaireAnswersController < ApplicationController
     @questionnaire_answers = @questionnaire_answers.where(viewer_id: @viewer_id) unless params[:viewer_id] == "0"
     @questionnaire_answers = @questionnaire_answers.where(user_id: @user_id) unless params[:user_id] == "0"
     @pre_questionnaire_answers = @questionnaire_answers.select { |qa| qa.pre_questions.present? }
-  end  
+    @post_questionnaire_answers = @questionnaire_answers.select { |qa| qa.post_questions.present? }
+  end
 
   private
 

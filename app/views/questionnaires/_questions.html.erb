@@ -4,27 +4,39 @@
       <div class="question-field">
         <div class="question">
           <p><strong><%= question['text'] %></strong></p>
-          <% if question['type'] == 'text' %>
-            <textarea rows="4" placeholder="回答を入力" name="questionnaire_answer[answers][<%= question['id'] %>]"></textarea>
-          <% elsif question['type'] == 'radio' %>
-            <% question['answers'].each do |answer| %>
-              <label class="option-item">
-                <input type="radio" name="questionnaire_answer[answers][<%= question['id'] %>]" value="<%= answer %>"> <%= answer %>
-              </label>
-            <% end %>
-          <% elsif question['type'] == 'checkbox' %>
-            <% question['answers'].each do |answer| %>
-              <label class="option-item">
-                <input type="checkbox" name="questionnaire_answer[answers][<%= question['id'] %>][]" value="<%= answer %>"> <%= answer %>
-              </label>
-            <% end %>
-          <% elsif question['type'] == 'dropdown' %>
-            <select name="questionnaire_answer[answers][<%= question['id'] %>]">
-              <option disabled selected>ここから選択してください</option>
-              <% question['answers'].each do |answer| %>
-                <option value="<%= answer %>"><%= answer %></option>
+          <% if answer_mode %>
+            <p>
+              <strong>回答:</strong>
+
+              <% if question['type'] == 'checkbox' %>
+                <%= answers[question['id'].to_s].join(', ') %>
+              <% else %>
+                <%= answers[question['id'].to_s] %>
               <% end %>
-            </select>
+            </p>
+          <% else %>
+            <% if question['type'] == 'text' %>
+              <textarea rows="4" placeholder="回答を入力" name="questionnaire_answer[answers][<%= question['id'] %>]"><%= question['answers'].first %></textarea>
+            <% elsif question['type'] == 'radio' %>
+              <% question['answers'].each do |answer| %>
+                <label class="option-item">
+                  <input type="radio" name="questionnaire_answer[answers][<%= question['id'] %>]" value="<%= answer %>"> <%= answer %>
+                </label>
+              <% end %>
+            <% elsif question['type'] == 'checkbox' %>
+              <% question['answers'].each do |answer| %>
+                <label class="option-item">
+                  <input type="checkbox" name="questionnaire_answer[answers][<%= question['id'] %>]" value="<%= answer %>"> <%= answer %>
+                </label>
+              <% end %>
+            <% elsif question['type'] == 'dropdown' %>
+              <select name="questionnaire_answer[answers][<%= question['id'] %>]">
+                <option disabled selected>ここから選択してください</option>
+                <% question['answers'].each do |answer| %>
+                  <option value="<%= answer %>"><%= answer %></option>
+                <% end %>
+              </select>
+            <% end %>
           <% end %>
         </div>
       </div>

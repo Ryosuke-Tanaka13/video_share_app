@@ -5,7 +5,7 @@
       <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-      <%= form_with(model: [@video, QuestionnaireAnswer.new], url: video_questionnaire_answers_path(@video), method: :post, local: true) do |f| %>
+      <%= form_with(model: [@video, QuestionnaireAnswer.new], url: video_questionnaire_answers_path(@video), method: :post, remote: true) do |f| %>
         <%= f.hidden_field :questionnaire_id, value: @questionnaire.id %>
         <%= f.hidden_field :video_id, value: @video.id %>
         <%= f.hidden_field :viewer_id, value: defined?(@viewer) ? @viewer.id : nil %>
@@ -21,7 +21,7 @@
         </div>
         <% if @pre_video_questions.present? %>
           <div id="pre-video-questions-container">
-            <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video' } %>
+            <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video', answer_mode: false } %>
           </div>
         <% else %>
           <p>アンケートはありません</p>

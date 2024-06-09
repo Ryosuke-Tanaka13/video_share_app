@@ -13,36 +13,14 @@
       <% @pre_questionnaire_answers.each do |questionnaire_answer| %>
         <% if questionnaire_answer.pre_answers.present? %>
           <h2>動画視聴前の回答</h2>
-          <% questionnaire_answer.pre_questions.each do |question| %>
-            <div>
-              <p><strong>質問:</strong> <%= question["text"] %></p>
-              <p><strong>回答:</strong> 
-                <% answer = questionnaire_answer.pre_answers[question['id'].to_s] %>
-                <% if answer.present? %>
-                  <%= answer.is_a?(Array) ? answer.join(", ") : answer %>
-                <% else %>
-                  回答なし
-                <% end %>
-              </p>
-            </div>
-          <% end %>
+          <%= render partial: 'questionnaires/questions', locals: { questions: questionnaire_answer.pre_questions, answers: questionnaire_answer.pre_answers, answer_mode: true } %>
         <% end %>
+      <% end %>
 
+      <% @post_questionnaire_answers.each do |questionnaire_answer| %>
         <% if questionnaire_answer.post_answers.present? %>
           <h2>動画視聴後の回答</h2>
-          <% questionnaire_answer.post_questions.each do |question| %>
-            <div>
-              <p><strong>質問:</strong> <%= question["text"] %></p>
-              <p><strong>回答:</strong> 
-                <% answer = questionnaire_answer.post_answers[question['id'].to_s] %>
-                <% if answer.present? %>
-                  <%= answer.is_a?(Array) ? answer.join(", ") : answer %>
-                <% else %>
-                  回答なし
-                <% end %>
-              </p>
-            </div>
-          <% end %>
+          <%= render partial: 'questionnaires/questions', locals: { questions: questionnaire_answer.post_questions, answers: questionnaire_answer.post_answers, answer_mode: true } %>
         <% end %>
       <% end %>
     </div>

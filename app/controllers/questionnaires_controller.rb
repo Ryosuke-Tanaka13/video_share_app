@@ -17,12 +17,9 @@ class QuestionnairesController < ApplicationController
   
   def create
     @questionnaire = @user.questionnaires.new(questionnaire_params)
-    
     if @questionnaire.save
-      Rails.logger.debug "Questionnaire created: #{@questionnaire.inspect}"
       render json: { redirect: user_questionnaires_path(@user) } # 修正: pathをindexに
     else
-      Rails.logger.debug "Failed to create questionnaire: #{@questionnaire.errors.full_messages.join(", ")}"
       render json: { errors: @questionnaire.errors.full_messages }, status: :unprocessable_entity
     end
   end
@@ -53,7 +50,6 @@ class QuestionnairesController < ApplicationController
     end
   end
   
-  
 
   def destroy
   @questionnaire.destroy
@@ -83,8 +79,10 @@ end
   end
 
   def parse_questions(questionnaire_data)
-    if questionnaire_data.is_a?(String)
-      JSON.parse(questionnaire_data || '[]')
+    if questionnaire_data.is_a?(String) && questionnaire_data.strip.empty?
+      []
+    elsif questionnaire_data.is_a?(String)
+      JSON.parse(questionnaire_data)
     else
       questionnaire_data || []
     end

@@ -3,8 +3,6 @@
   <%= paginate @questionnaires %>
 </div>
 
-
-
 <div class="centered-form">
   <div class="questionnaire-details">
     <% if @current_questionnaire %>
@@ -15,16 +13,18 @@
 
       <h4>動画視聴前のアンケート</h4>
       <div id="pre-video-questions-container">
-        <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video' } %>
+        <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video', answer_mode: false } %>
       </div>
 
       <h4>動画視聴後のアンケート</h4>
       <div id="post-video-questions-container">
-        <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, type: 'post_video' } %>
+        <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, type: 'post_video', answer_mode: false } %>
       </div>
     <% else %>
       <p>アンケートはありません</p>
     <% end %>
+  </div>
+</div>
 
     <% if @current_questionnaire %>
       <%= link_to '編集', edit_user_questionnaire_path(@user, @current_questionnaire, page: params[:page], apply: params[:apply], type: params[:type], popup_before_video: params[:popup_before_video], popup_after_video: params[:popup_after_video]), class: 'btn btn-success' %>

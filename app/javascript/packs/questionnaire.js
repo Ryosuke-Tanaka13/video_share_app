@@ -255,42 +255,6 @@ document.addEventListener('turbolinks:load', function() {
     addQuestionButton.setAttribute('data-event-added', 'true');
   }
 
-  function addQuestion() {
-    const template = document.getElementById('question-template').cloneNode(true);
-    template.style.display = 'block';
-    template.removeAttribute('id');
-
-    if (currentQuestionnaireType === 'pre_video') {
-      preVideoQuestionsContainer.appendChild(template);
-    } else {
-      postVideoQuestionsContainer.appendChild(template);
-    }
-
-    const selectElement = template.querySelector('.question-type');
-    selectElement.addEventListener('change', function() {
-      updateQuestionContent(this);
-    });
-
-    template.querySelector('.remove-question').addEventListener('click', function() {
-      template.remove();
-    });
-
-    template.querySelector('.add-option').addEventListener('click', function() {
-      const input = template.querySelector('.new-option-text');
-      if (input.value) {
-        const selectType = template.querySelector('.question-type').value;
-        addOptionToQuestion(selectType, input.value, template);
-        input.value = '';
-      }
-    });
-
-    template.querySelector('.reset-options').addEventListener('click', function() {
-      resetOptions(selectElement);
-    });
-
-    updateQuestionContent(selectElement);
-  }
-
   // 非同期ページネーションの追加
   $(document).on('click', '.pagination a', function(event) {
     event.preventDefault();
