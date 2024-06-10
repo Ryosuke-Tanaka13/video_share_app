@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_02_175654) do
+ActiveRecord::Schema.define(version: 2024_06_09_084704) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -100,6 +100,8 @@ ActiveRecord::Schema.define(version: 2024_06_02_175654) do
     t.text "post_questions"
     t.text "pre_answers"
     t.text "post_answers"
+    t.json "checkbox_pre_answers"
+    t.json "checkbox_post_answers"
     t.index ["questionnaire_id"], name: "index_questionnaire_answers_on_questionnaire_id"
     t.index ["user_id"], name: "index_questionnaire_answers_on_user_id"
     t.index ["video_id"], name: "index_questionnaire_answers_on_video_id"

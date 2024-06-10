@@ -9,9 +9,9 @@
               <strong>回答:</strong>
 
               <% if question['type'] == 'checkbox' %>
-                <%= answers[question['id'].to_s].join(', ') %>
+                <%= (checkbox_answers[question['id'].to_s] || []).join(', ') %>
               <% else %>
-                <%= answers[question['id'].to_s] %>
+                <%= answers[question['id'].to_s].first %>
               <% end %>
             </p>
           <% else %>
@@ -26,7 +26,7 @@
             <% elsif question['type'] == 'checkbox' %>
               <% question['answers'].each do |answer| %>
                 <label class="option-item">
-                  <input type="checkbox" name="questionnaire_answer[answers][<%= question['id'] %>]" value="<%= answer %>"> <%= answer %>
+                  <input type="checkbox" name="questionnaire_answer[checkbox_answers][<%= question['id'] %>]" value="<%= answer %>"> <%= answer %>
                 </label>
               <% end %>
             <% elsif question['type'] == 'dropdown' %>
