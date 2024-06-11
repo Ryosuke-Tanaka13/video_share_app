@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_09_084704) do
+ActiveRecord::Schema.define(version: 2024_06_11_040226) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -89,23 +89,33 @@ ActiveRecord::Schema.define(version: 2024_06_09_084704) do
   create_table "questionnaire_answers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "questionnaire_id", null: false
     t.bigint "viewer_id"
-    t.bigint "video_id", null: false
+    t.bigint "video_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "viewer_name"
     t.string "viewer_email"
     t.integer "user_id"
-    t.json "answers"
-    t.text "pre_questions"
-    t.text "post_questions"
-    t.text "pre_answers"
-    t.text "post_answers"
-    t.json "checkbox_pre_answers"
-    t.json "checkbox_post_answers"
+    t.json "pre_answers"
+    t.json "post_answers"
+    t.bigint "questionnaire_item_id", null: false
     t.index ["questionnaire_id"], name: "index_questionnaire_answers_on_questionnaire_id"
+    t.index ["questionnaire_item_id"], name: "index_questionnaire_answers_on_questionnaire_item_id"
     t.index ["user_id"], name: "index_questionnaire_answers_on_user_id"
     t.index ["video_id"], name: "index_questionnaire_answers_on_video_id"
     t.index ["viewer_id"], name: "index_questionnaire_answers_on_viewer_id"
+  end
+
+  create_table "questionnaire_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "questionnaire_id", null: false
+    t.string "pre_question_text"
+    t.string "pre_question_type"
+    t.json "pre_options"
+    t.string "post_question_text"
+    t.string "post_question_type"
+    t.json "post_options"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["questionnaire_id"], name: "index_questionnaire_items_on_questionnaire_id"
   end
 
   create_table "questionnaires", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -282,9 +292,11 @@ ActiveRecord::Schema.define(version: 2024_06_09_084704) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
+  add_foreign_key "questionnaire_answers", "questionnaire_items"
   add_foreign_key "questionnaire_answers", "questionnaires"
   add_foreign_key "questionnaire_answers", "videos"
   add_foreign_key "questionnaire_answers", "viewers"
+  add_foreign_key "questionnaire_items", "questionnaires"
   add_foreign_key "questionnaires", "users"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"

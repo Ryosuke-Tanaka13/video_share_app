@@ -14,24 +14,25 @@ class QuestionnairesController < ApplicationController
   def new
     @questionnaire = @user.questionnaires.new
   end
-  
+
   def create
     @questionnaire = @user.questionnaires.new(questionnaire_params)
+
     if @questionnaire.save
-      render json: { redirect: user_questionnaires_path(@user) } # 修正: pathをindexに
+      save_questionnaire_items(@questionnaire)
+      render json: { redirect: user_questionnaires_path(@user) }
     else
       render json: { errors: @questionnaire.errors.full_messages }, status: :unprocessable_entity
     end
   end
-  
-  
+
   def edit
     @questionnaire = @user.questionnaires.find(params[:id])
-  end  
+  end
 
   def update
     @questionnaire = @user.questionnaires.find(params[:id])
-  
+
     if @questionnaire.update(questionnaire_params)
       flash[:success] = "アンケートが更新されました。"
       render json: {
@@ -49,13 +50,12 @@ class QuestionnairesController < ApplicationController
       }, status: :unprocessable_entity
     end
   end
-  
 
   def destroy
-  @questionnaire.destroy
-  redirect_to user_questionnaires_path(@user)
-  flash[:success] = 'アンケートが削除されました。'
-end
+    @questionnaire.destroy
+    redirect_to user_questionnaires_path(@user)
+    flash[:success] = 'アンケートが削除されました。'
+  end
 
   def apply
     @questionnaire = Questionnaire.find(params[:id])
@@ -63,7 +63,7 @@ end
       format.json { render json: { id: @questionnaire.id, name: @questionnaire.name } }
     end
   end
-  
+
   private
 
   def set_user
@@ -87,4 +87,51 @@ end
       questionnaire_data || []
     end
   end
+
+  def save_questionnaire_items(questionnaire)
+    pre_video_questions = parse_questions(questionnaire.pre_video_questionnaire)
+    post_video_questions = parse_questions(questionnaire.post_video_questionnaire)
+  
+    # 前動画質問に対する処理
+    pre_video_questions.each do |question|
+      item = QuestionnaireItem.create(
+        questionnaire: questionnaire,
+        pre_question_text: question['text'],
+        pre_question_type: question['type'],
+        pre_options: question['answers']
+      )
+      answer = QuestionnaireAnswer.new(
+        questionnaire_item: item,
+        questionnaire: questionnaire,
+        user_id: questionnaire.user_id,
+        pre_answers: []
+      )
+      if answer.save
+        puts "QuestionnaireAnswer saved successfully."
+      else
+        puts "Failed to save QuestionnaireAnswer: #{answer.errors.full_messages.join(", ")}"
+      end
+    end
+  
+    # 後動画質問に対する処理
+    post_video_questions.each do |question|
+      item = QuestionnaireItem.create(
+        questionnaire: questionnaire,
+        post_question_text: question['text'],
+        post_question_type: question['type'],
+        post_options: question['answers']
+      )
+      answer = QuestionnaireAnswer.new(
+        questionnaire_item: item,
+        questionnaire: questionnaire,
+        user_id: questionnaire.user_id,
+        post_answers: []
+      )
+      if answer.save
+        puts "QuestionnaireAnswer saved successfully."
+      else
+        puts "Failed to save QuestionnaireAnswer: #{answer.errors.full_messages.join(", ")}"
+      end
+    end
+  end  
 end
