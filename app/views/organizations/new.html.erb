@@ -1,39 +1,41 @@
+<%# app/views/viewres/organizations/new.html.erb %>
+
 <% provide(:title, "組織登録") %>
 <% provide(:btn_text, "登録") %>
-  <div class="register-box">
-    <div class="card card-outline card-primary">
-      <div class="card-body">
-        <p class="login-box-msg">組織とアカウントの登録を行いましょう！</p>
-          <%= form_with model: @organization, url: organizations_path, method: :post, local: true do |f| %>
-            <%= render partial: "/shared/form", locals: { f: f, organization: @organization } %>
+<div class="register-box">
+  <div class="card card-outline card-primary">
+    <div class="card-body">
+      <p class="login-box-msg">組織とアカウントの登録を行いましょう！</p>
+      <%= form_with model: @organization, url: organizations_path, method: :post, local: true do |f| %>
+        <%= render partial: "/shared/form", locals: { f: f, organization: @organization } %>
 
-            <%= f.fields_for :users do |user_fields| %>
-            <%= user_fields.label :投稿者の名前 %>
-            <%= user_fields.text_field :name, value:@user.name, class: "form-control" %>
-            <br>
-            <%= user_fields.label :投稿者のEメール %>
-            <%= user_fields.text_field :email, value:@user.email, class: "form-control" %>
-            <br>
-            <%= user_fields.label :投稿者のパスワード %>
-            <%= user_fields.password_field :password, value:@user.password, class: "form-control" %>
-            <br>
-            <%= user_fields.label :投稿者のパスワード（確認用） %>
-            <%= user_fields.password_field :password_confirmation, class: "form-control" %>
-            <br>
-            <% end %>
-              <div class="row">
-                <div class="col-12">
-                  <div class="icheck-primary" onclick="controlSubmit()">
-                    <input type="checkbox" id="agreeTerms" name="terms" required>
-                    <label for="agreeTerms">
-                    <%= link_to "利用規約", use_terms_path %>と
-                    <%= link_to "プライバシーポリシー", use_privacy_policy_path %>に同意
-                    </label>
-                  </div>
-                </div>
-              <div>
-            <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-primary" %>
-          <% end %>
-      </div>
+        <%= f.fields_for :users do |user_fields| %>
+          <%= user_fields.label :投稿者の名前 %>
+          <%= user_fields.text_field :name, value:@user.name, class: "form-control" %>
+          <br>
+          <%= user_fields.label :投稿者のEメール %>
+          <%= user_fields.text_field :email, value:@user.email, class: "form-control" %>
+          <br>
+          <%= user_fields.label :投稿者のパスワード %>
+          <%= user_fields.password_field :password, value:@user.password, class: "form-control" %>
+          <br>
+          <%= user_fields.label :投稿者のパスワード（確認用） %>
+          <%= user_fields.password_field :password_confirmation, class: "form-control" %>
+          <br>
+        <% end %>
+        <div class="row">
+          <div class="col-12">
+            <div class="icheck-primary" onclick="controlSubmit()">
+              <input type="checkbox" id="agreeTerms" name="terms" required>
+              <label for="agreeTerms">
+                <%= link_to "利用規約", use_terms_path %>と
+                <%= link_to "プライバシーポリシー", use_privacy_policy_path %>に同意
+              </label>
+            </div>
+          </div>
+        </div>
+        <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-primary" %>
+      <% end %>
     </div>
   </div>
+</div>
