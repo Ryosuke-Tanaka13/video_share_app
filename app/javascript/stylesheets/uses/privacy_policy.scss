@@ -19,8 +19,10 @@
   text-align: center; /* 中央寄せにする */
 }
 
-/* h2タグの色を黒に変更し、マージンを設定 */
-.privacy-policy-content h2 {
+/* h2~h4タグの色を黒に変更し、マージンを設定 */
+.privacy-policy-content h2,
+.privacy-policy-content h3,
+.privacy-policy-content h4 {
   color: black; /* 色を黒に変更 */
   margin: 0 0 10px;/* タイトルのマージン設定 */
 }
