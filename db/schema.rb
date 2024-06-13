@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_11_040226) do
+ActiveRecord::Schema.define(version: 2024_06_12_015907) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -97,9 +97,8 @@ ActiveRecord::Schema.define(version: 2024_06_11_040226) do
     t.integer "user_id"
     t.json "pre_answers"
     t.json "post_answers"
-    t.bigint "questionnaire_item_id", null: false
+    t.bigint "questionnaire_item_id"
     t.index ["questionnaire_id"], name: "index_questionnaire_answers_on_questionnaire_id"
-    t.index ["questionnaire_item_id"], name: "index_questionnaire_answers_on_questionnaire_item_id"
     t.index ["user_id"], name: "index_questionnaire_answers_on_user_id"
     t.index ["video_id"], name: "index_questionnaire_answers_on_video_id"
     t.index ["viewer_id"], name: "index_questionnaire_answers_on_viewer_id"
@@ -292,7 +291,6 @@ ActiveRecord::Schema.define(version: 2024_06_11_040226) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
-  add_foreign_key "questionnaire_answers", "questionnaire_items"
   add_foreign_key "questionnaire_answers", "questionnaires"
   add_foreign_key "questionnaire_answers", "videos"
   add_foreign_key "questionnaire_answers", "viewers"

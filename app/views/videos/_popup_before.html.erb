@@ -21,7 +21,7 @@
         </div>
         <% if @pre_video_questions.present? %>
           <div id="pre-video-questions-container">
-            <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video', answer_mode: false } %>
+            <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, answers: @answers, type: 'pre_video', answer_mode: false } %>
           </div>
         <% else %>
           <p>アンケートはありません</p>

@@ -34,6 +34,7 @@ class QuestionnairesController < ApplicationController
     @questionnaire = @user.questionnaires.find(params[:id])
 
     if @questionnaire.update(questionnaire_params)
+      update_questionnaire_items(@questionnaire)
       flash[:success] = "アンケートが更新されました。"
       render json: {
         redirect: user_questionnaires_path(
@@ -134,4 +135,13 @@ class QuestionnairesController < ApplicationController
       end
     end
   end  
+
+  def update_questionnaire_items(questionnaire)
+    # 既存の質問項目を削除する前に関連する回答を削除
+    questionnaire.questionnaire_items.each do |item|
+      item.questionnaire_answers.destroy_all
+    end
+    questionnaire.questionnaire_items.destroy_all
+    save_questionnaire_items(questionnaire)
+  end
 end

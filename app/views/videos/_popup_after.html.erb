@@ -11,10 +11,10 @@
         <%= f.hidden_field :viewer_id, value: defined?(@viewer) ? @viewer.id : nil %>
         <%= f.hidden_field :user_id, value: defined?(@user) ? @user.id : nil %>
         <%= hidden_field_tag :questionnaire_type, 'post_video' %>
-
+       
         <% if @post_video_questions.present? %>
-          <div id="pre-video-questions-container">
-            <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions } %>
+          <div id="post-video-questions-container">
+            <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, answers: @answers, type: 'post_video', answer_mode: false } %>
           </div>
         <% else %>
           <p>アンケートはありません</p>

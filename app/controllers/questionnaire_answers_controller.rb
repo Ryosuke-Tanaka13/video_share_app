@@ -3,61 +3,52 @@ class QuestionnaireAnswersController < ApplicationController
 
   def create
     video_id = params[:questionnaire_answer][:video_id]
-  
+
     if video_id.nil?
       flash[:error] = "Video not found"
       redirect_to root_path
       return
     end
-  
+
     @video = Video.find(video_id)
     @questionnaire = Questionnaire.find(params[:questionnaire_answer][:questionnaire_id])
-  
+
     viewer_id = params[:questionnaire_answer][:viewer_id].presence
     user_id = params[:questionnaire_answer][:user_id].presence
-  
-    @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video: @video, questionnaire: @questionnaire, viewer_id: viewer_id, user_id: user_id)
-  
-    pre_video_questionnaire = @questionnaire.pre_video_questionnaire.present? ? JSON.parse(@questionnaire.pre_video_questionnaire) : []
-    post_video_questionnaire = @questionnaire.post_video_questionnaire.present? ? JSON.parse(@questionnaire.post_video_questionnaire) : []
-  
-    @questionnaire_answer.pre_questions = pre_video_questionnaire
-    @questionnaire_answer.post_questions = post_video_questionnaire
-  
-    answers = params[:questionnaire_answer][:answers]
-    checkbox_answers = params[:questionnaire_answer][:checkbox_answers]
-  
-    formatted_answers = {}
-    formatted_checkbox_answers = {}
-  
-    pre_video_questionnaire.each_with_index do |question, index|
-      question_id = "q#{index}" # インデックスをベースに一意のキーを生成
-  
-      if question['type'] == 'checkbox'
-        formatted_checkbox_answers[question_id] = [checkbox_answers[index]]
-      else
-        formatted_answers[question_id] = [answers[index]]
 
+    questionnaire_items = @questionnaire.questionnaire_items
+
+    all_saved = true
+
+    questionnaire_items.each do |item|
+      @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video_id: @video.id, questionnaire_item_id: item.id, viewer_id: viewer_id, user_id: user_id)
+    
+      @questionnaire_answer.questionnaire_id = @questionnaire.id  
+      answer_value = params[:questionnaire_answer][:answers][item.id.to_s]
+
+      if params[:questionnaire_type] == 'pre_video'
+        @questionnaire_answer.pre_answers ||= {}
+        @questionnaire_answer.pre_answers[item.id.to_s] = answer_value
+      else
+        @questionnaire_answer.post_answers ||= {}
+        @questionnaire_answer.post_answers[item.id.to_s] = answer_value
+      end
+
+      unless @questionnaire_answer.save
+        all_saved = false
+        flash.now[:danger] = "回答の送信に失敗しました。"
+        flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
+        respond_to do |format|
+          format.html { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: questionnaire_items } }
+          format.js { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: questionnaire_items } }
+        end
+        break
       end
     end
-  
-    if params[:questionnaire_type] == 'pre_video'
-      @questionnaire_answer.pre_answers = formatted_answers.merge(formatted_checkbox_answers)
-    else
-      @questionnaire_answer.post_answers = formatted_answers.merge(formatted_checkbox_answers)
-    end
-  
-    binding.pry
-    if @questionnaire_answer.save
+binding.pry
+    if all_saved
       flash[:success] = "回答が送信されました。"
       redirect_to video_path(@video)
-    else
-      flash.now[:danger] = "回答の送信に失敗しました。"
-      flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
-      respond_to do |format|
-        format.html { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: JSON.parse(@questionnaire.pre_video_questionnaire) } }
-        format.js { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: JSON.parse(@questionnaire.pre_video_questionnaire) } }
-      end
     end
   end
 
