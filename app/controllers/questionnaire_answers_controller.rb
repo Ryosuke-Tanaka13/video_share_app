@@ -16,45 +16,43 @@ class QuestionnaireAnswersController < ApplicationController
     viewer_id = params[:questionnaire_answer][:viewer_id].presence
     user_id = params[:questionnaire_answer][:user_id].presence
 
-    questionnaire_items = @questionnaire.questionnaire_items
-
-    all_saved = true
-
-    questionnaire_items.each do |item|
-      @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video_id: @video.id, questionnaire_item_id: item.id, viewer_id: viewer_id, user_id: user_id)
+    # 既存のQuestionnaireAnswerを検索する
+    @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video_id: @video.id, questionnaire_id: @questionnaire.id, viewer_id: viewer_id, user_id: user_id)
     
-      @questionnaire_answer.questionnaire_id = @questionnaire.id  
-      answer_value = params[:questionnaire_answer][:answers][item.id.to_s]
+    # 回答者情報を設定
+    @questionnaire_answer.viewer_name = params[:questionnaire_answer][:viewer_name]
+    @questionnaire_answer.viewer_email = params[:questionnaire_answer][:viewer_email]
 
+    # 回答を追加
+    params[:questionnaire_answer][:answers]&.each do |item_id, answer|
       if params[:questionnaire_type] == 'pre_video'
         @questionnaire_answer.pre_answers ||= {}
-        @questionnaire_answer.pre_answers[item.id.to_s] = answer_value
+        @questionnaire_answer.pre_answers[item_id] = answer
       else
         @questionnaire_answer.post_answers ||= {}
-        @questionnaire_answer.post_answers[item.id.to_s] = answer_value
+        @questionnaire_answer.post_answers[item_id] = answer
       end
 
-      unless @questionnaire_answer.save
-        all_saved = false
-        flash.now[:danger] = "回答の送信に失敗しました。"
-        flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
-        respond_to do |format|
-          format.html { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: questionnaire_items } }
-          format.js { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: questionnaire_items } }
-        end
-        break
-      end
+      # questionnaire_item_id を設定
+      @questionnaire_answer.questionnaire_item_id = item_id
     end
-binding.pry
-    if all_saved
+
+    if @questionnaire_answer.save
       flash[:success] = "回答が送信されました。"
       redirect_to video_path(@video)
+    else
+      flash.now[:danger] = "回答の送信に失敗しました。"
+      flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
+      respond_to do |format|
+        format.html { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @questionnaire.questionnaire_items } }
+        format.js { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @questionnaire.questionnaire_items } }
+      end
     end
   end
 
   def index
     @video = Base64.decode64(params[:video_id].strip)
-    @questionnaire_answers_grouped = QuestionnaireAnswer.where(video: @video).group_by { |answer| [answer.viewer_id || "", answer.user_id || ""] }
+    @questionnaire_answers_grouped = QuestionnaireAnswer.where(video_id: @video).group_by { |answer| [answer.viewer_id || "", answer.user_id || ""] }
   end
 
   def show
@@ -64,8 +62,8 @@ binding.pry
     @questionnaire_answers = QuestionnaireAnswer.where(video_id: @video.id)
     @questionnaire_answers = @questionnaire_answers.where(viewer_id: @viewer_id) unless params[:viewer_id] == "0"
     @questionnaire_answers = @questionnaire_answers.where(user_id: @user_id) unless params[:user_id] == "0"
-    @pre_questionnaire_answers = @questionnaire_answers.select { |qa| qa.pre_questions.present? }
-    @post_questionnaire_answers = @questionnaire_answers.select { |qa| qa.post_questions.present? }
+    @pre_questionnaire_answers = @questionnaire_answers.select { |qa| qa.pre_answers.present? }
+    @post_questionnaire_answers = @questionnaire_answers.select { |qa| qa.post_answers.present? }
   end  
 
   private
