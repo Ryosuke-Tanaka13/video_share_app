@@ -4,14 +4,15 @@
       <div class="question-field">
         <div class="question">
           <% question_text = question.is_a?(Hash) ? question["text"] : (local_assigns[:type] == 'pre_video' ? question.pre_question_text : question.post_question_text) %>
-          <p><strong><%= question_text %></strong></p>
+          <p><strong>質問：<%= question_text %></strong></p>
           <% if answer_mode %>
             <p>
-              <strong>回答:</strong>
-              <% if (local_assigns[:type] == 'pre_video' ? (question.is_a?(Hash) ? question["type"] : question.pre_question_type) : (question.is_a?(Hash) ? question["type"] : question.post_question_type)) == "checkbox" %>
+              <strong>回答：</strong>
+              <% question_type = question.is_a?(Hash) ? question["type"] : (local_assigns[:type] == 'pre_video' ? question.pre_question_type : question.post_question_type) %>
+              <% if question_type == "checkbox" %>
                 <%= (answers[question.id.to_s] || []).join(", ") %>
               <% else %>
-                <%= answers[question.id.to_s]&.first %>
+                <%= answers[question.id.to_s] %>
               <% end %>
             </p>
           <% else %>

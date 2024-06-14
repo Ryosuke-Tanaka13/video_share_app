@@ -69,7 +69,7 @@ class QuestionnaireAnswersController < ApplicationController
   private
 
   def questionnaire_answer_params
-    params.require(:questionnaire_answer).permit(:questionnaire_id, :video_id, :viewer_id, :user_id, :viewer_name, :viewer_email, answers: {}, checkbox_answers: [])
+    params.require(:questionnaire_answer).permit(:questionnaire_id, :video_id, :viewer_id, :user_id, :viewer_name, :viewer_email, answers: {})
   end
 
   def set_user_or_viewer
