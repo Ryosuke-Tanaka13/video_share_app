@@ -1,5 +1,3 @@
-// bin/generate_er_diagram.js
-
 const fs = require('fs');
 const path = require('path');
 
@@ -8,6 +6,11 @@ const schemaPath = path.join(__dirname, '../db/schema.rb');
 // モデルファイルのディレクトリ
 const modelsPath = path.join(__dirname, '../app/models');
 const modelFiles = fs.readdirSync(modelsPath).filter(file => file.endsWith('.rb'));
+
+// データ型をMermaid用に大文字に変換する関数
+function convertDataType(dataType) {
+  return dataType.toUpperCase(); // そのまま大文字に変換
+}
 
 // スキーマをパースしてテーブル情報を抽出する関数
 function parseSchema(schema) {
@@ -18,22 +21,24 @@ function parseSchema(schema) {
   lines.forEach(line => {
     const tableMatch = line.match(/create_table "(\w+)"/);
     if (tableMatch) {
-      currentTable = tableMatch[1];
+      currentTable = tableMatch[1].toUpperCase();
       tables[currentTable] = { columns: [], primaryKeys: [], foreignKeys: [] };
     } else if (currentTable) {
-      const columnMatch = line.match(/t\.\w+ "(\w+)"(?:, (.+?))?$/);
+      const columnMatch = line.match(/t\.(\w+) "(\w+)"(?:, (.+?))?/);
       if (columnMatch) {
-        const columnName = columnMatch[1];
-        tables[currentTable].columns.push(columnName);
+        const dataType = columnMatch[1];
+        const columnName = columnMatch[2].toUpperCase();
+        tables[currentTable].columns.push({ name: columnName, type: convertDataType(dataType) });
       }
       const primaryKeyMatch = line.match(/t\.primary_key "(\w+)"/);
       if (primaryKeyMatch) {
-        tables[currentTable].primaryKeys.push(primaryKeyMatch[1]);
+        const pkName = primaryKeyMatch[1].toUpperCase();
+        tables[currentTable].primaryKeys.push(pkName);
       }
       const fkMatch = line.match(/add_foreign_key "(\w+)", "(\w+)"/);
       if (fkMatch) {
-        const fromTable = fkMatch[1];
-        const toTable = fkMatch[2];
+        const fromTable = fkMatch[1].toUpperCase();
+        const toTable = fkMatch[2].toUpperCase();
         tables[currentTable].foreignKeys.push({ fromTable, toTable });
       }
     }
@@ -51,7 +56,7 @@ function parseModel(fileContent) {
   lines.forEach(line => {
     const classMatch = line.match(/class (\w+) < ApplicationRecord/);
     if (classMatch) {
-      currentModel = classMatch[1];
+      currentModel = classMatch[1].toUpperCase();
       models[currentModel] = { associations: [] };
     } else if (currentModel) {
       const belongsToMatch = line.match(/belongs_to :(\w+)(?:, polymorphic: true)?/);
@@ -62,15 +67,15 @@ function parseModel(fileContent) {
       if (belongsToMatch) {
         models[currentModel].associations.push({
           type: 'belongs_to',
-          relatedModel: belongsToMatch[1],
+          relatedModel: belongsToMatch[1].toUpperCase(),
           polymorphic: Boolean(belongsToMatch[2])
         });
       } else if (hasManyMatch) {
-        models[currentModel].associations.push({ type: 'has_many', relatedModel: hasManyMatch[1] });
+        models[currentModel].associations.push({ type: 'has_many', relatedModel: hasManyMatch[1].toUpperCase() });
       } else if (hasOneMatch) {
-        models[currentModel].associations.push({ type: 'has_one', relatedModel: hasOneMatch[1] });
+        models[currentModel].associations.push({ type: 'has_one', relatedModel: hasOneMatch[1].toUpperCase() });
       } else if (habtmMatch) {
-        models[currentModel].associations.push({ type: 'has_and_belongs_to_many', relatedModel: habtmMatch[1] });
+        models[currentModel].associations.push({ type: 'has_and_belongs_to_many', relatedModel: habtmMatch[1].toUpperCase() });
       }
     }
   });
@@ -94,8 +99,8 @@ function parseForeignKeys(schema) {
   lines.forEach(line => {
     const foreignKeyMatch = line.match(/add_foreign_key "(\w+)", "(\w+)"/);
     if (foreignKeyMatch) {
-      const fromTable = foreignKeyMatch[1];
-      const toTable = foreignKeyMatch[2];
+      const fromTable = foreignKeyMatch[1].toUpperCase();
+      const toTable = foreignKeyMatch[2].toUpperCase();
       if (!foreignKeys[fromTable]) {
         foreignKeys[fromTable] = [];
       }
@@ -120,7 +125,7 @@ function findRelationships(tables, foreignKeys) {
       relationships.push({
         fromTable,
         toTable,
-        column: `${toTable.slice(0, -1)}_id`  // 外部キー名を推測
+        column: `${toTable.slice(0, -1)}_ID`  // 外部キー名を推測
       });
     });
   });
@@ -139,9 +144,9 @@ function extractRelationshipsFromModels(models) {
     models[model].associations.forEach(assoc => {
       if (assoc.type === 'belongs_to') {
         relationships.push({
-          fromTable: model.toLowerCase() + 's',
-          toTable: assoc.polymorphic ? `${assoc.relatedModel}able` : assoc.relatedModel + 's',
-          column: assoc.polymorphic ? `${assoc.relatedModel}_id` : `${assoc.relatedModel}_id`
+          fromTable: model.toUpperCase(),
+          toTable: assoc.polymorphic ? `${assoc.relatedModel}ABLE` : assoc.relatedModel.toUpperCase(),
+          column: `${assoc.relatedModel}_ID`
         });
       }
     });
@@ -159,22 +164,28 @@ const combinedRelationships = [...relationships, ...modelRelationships];
 function generateMermaidERD(tables, relationships) {
   let mermaidERD = '```mermaid\nerDiagram\n';
 
+  // 親エンティティから順にエンティティとリレーションシップを出力
   Object.keys(tables).forEach(table => {
-    mermaidERD += `  ${table} {\n`;
-    tables[table].columns.forEach(column => {
-      mermaidERD += `    ${column} string\n`;
-    });
-    tables[table].primaryKeys.forEach(pk => {
-      mermaidERD += `    ${pk} PK\n`;
-    });
-    tables[table].foreignKeys.forEach(fk => {
-      mermaidERD += `    ${fk.fromTable}_id FK\n`; // 外部キーとして扱う
-    });
-    mermaidERD += '  }\n';
+    if (tables[table]) {
+      mermaidERD += `  ${table} {\n`;
+      tables[table].columns.forEach(column => {
+        mermaidERD += `    ${column.name} ${column.type}`;
+        if (tables[table].primaryKeys.includes(column.name)) {
+          mermaidERD += ' PK';
+        }
+        if (tables[table].foreignKeys.some(fk => fk.fromTable === column.name.toLowerCase())) {
+          mermaidERD += ' FK';
+        }
+        mermaidERD += '\n';
+      });
+      mermaidERD += '  }\n';
+    }
   });
 
   relationships.forEach(rel => {
-    mermaidERD += `  ${rel.fromTable} }|--o{ ${rel.toTable} : "${rel.column}"\n`;
+    if (tables[rel.fromTable] && tables[rel.toTable]) {
+      mermaidERD += `  ${rel.fromTable} }|--o{ ${rel.toTable} : "${rel.column}"\n`;
+    }
   });
 
   mermaidERD += '```\n';
