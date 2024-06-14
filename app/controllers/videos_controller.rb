@@ -244,6 +244,7 @@ def audio_output
         end
         srt_path_return = create_srt(transcripts)
         add_subtitles_to_video(video_path, srt_path_return)
+        flash[:success] = "字幕付き動画作成完了"
     end
   end
 end
@@ -365,10 +366,12 @@ end
   def add_subtitles_to_video(video_path, srt_path_return)
     escaped_video_path = Shellwords.escape(video_path)
     escaped_srt_path_return = Shellwords.escape(srt_path_return)
-    binding.pry
     output_video_path = Rails.root.join('public', 'videos', "output_with_subtitles#{Time.now.to_i}.mp4")
     escaped_output_video_path = Shellwords.escape(output_video_path.to_s)
-    command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} -c:a copy #{escaped_output_video_path}"
+    font_path = Rails.root.join("public/fonts/NotoSansCJK.ttc")
+    escape_font_path = Shellwords.escape(font_path.to_s)
+    # command = "ffmpeg -i \"#{escaped_video_path}\" -vf \"drawtext=text='#{escaped_srt_path_return}':fontfile=#{font_path}:fontsize=50:fontcolor=black\" -c:a copy \"#{escaped_output_video_path}\""
+    command = "ffmpeg -i \"#{escaped_video_path}\" -vf \"subtitles=#{escaped_srt_path_return}:fontfile=#{escape_font_path}:fontsize=50:fontcolor=black\" -c:a copy \"#{escaped_output_video_path}\""
     stdout, stderr, status = Open3.capture3(command)
 
     puts "FFmpeg command: #{command}"
