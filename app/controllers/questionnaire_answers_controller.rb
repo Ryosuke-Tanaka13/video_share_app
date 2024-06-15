@@ -63,6 +63,7 @@ class QuestionnaireAnswersController < ApplicationController
     @questionnaire_answers = @questionnaire_answers.where(viewer_id: @viewer_id) unless params[:viewer_id] == "0"
     @questionnaire_answers = @questionnaire_answers.where(user_id: @user_id) unless params[:user_id] == "0"
     @pre_questionnaire_answers = @questionnaire_answers.select { |qa| qa.pre_answers.present? }
+    binding.pry
     @post_questionnaire_answers = @questionnaire_answers.select { |qa| qa.post_answers.present? }
   end  
 

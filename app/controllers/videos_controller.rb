@@ -83,7 +83,6 @@ class VideosController < ApplicationController
   def popup_after
     @video = Video.find_by(id_digest: params[:id])
     @questionnaire = Questionnaire.find_by(id: @video.post_video_questionnaire_id)
-
     if @questionnaire&.questionnaire_items.present?
       @post_video_questions = @questionnaire.questionnaire_items
       @answers = {}

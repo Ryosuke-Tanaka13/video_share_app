@@ -12,7 +12,7 @@
         <%= f.hidden_field :user_id, value: defined?(@user) ? @user.id : nil %>
         <%= hidden_field_tag :questionnaire_type, 'post_video' %>
        
-        <% if @post_video_questions.present? %>
+        <% if @post_video_questions.map(&:post_question_text).any? %>
           <div id="post-video-questions-container">
             <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, answers: @answers, type: 'post_video', answer_mode: false } %>
           </div>
