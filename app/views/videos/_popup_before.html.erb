@@ -6,7 +6,6 @@
     </div>
     <div class="modal-body">
       <%= form_with(model: [@video, QuestionnaireAnswer.new], url: video_questionnaire_answers_path(@video), method: :post, remote: true) do |f| %>
-        <%= f.hidden_field :questionnaire_id, value: @questionnaire.id %>
         <%= f.hidden_field :video_id, value: @video.id %>
         <%= f.hidden_field :viewer_id, value: defined?(@viewer) ? @viewer.id : nil %>
         <%= f.hidden_field :user_id, value: defined?(@user) ? @user.id : nil %>

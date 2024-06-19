@@ -11,59 +11,54 @@ class QuestionnaireAnswersController < ApplicationController
     end
 
     @video = Video.find(video_id)
-    @questionnaire = Questionnaire.find(params[:questionnaire_answer][:questionnaire_id])
-
     viewer_id = params[:questionnaire_answer][:viewer_id].presence
     user_id = params[:questionnaire_answer][:user_id].presence
 
     # 既存のQuestionnaireAnswerを検索する
-    @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video_id: @video.id, questionnaire_id: @questionnaire.id, viewer_id: viewer_id, user_id: user_id)
-    
-    # 回答者情報を設定
-    @questionnaire_answer.viewer_name = params[:questionnaire_answer][:viewer_name]
-    @questionnaire_answer.viewer_email = params[:questionnaire_answer][:viewer_email]
+    @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video_id: @video.id, viewer_id: viewer_id, user_id: user_id)
 
+    # pre_answers および post_answers をハッシュとして初期化
+    @questionnaire_answer.pre_answers = (@questionnaire_answer.pre_answers.is_a?(Hash) ? @questionnaire_answer.pre_answers : {}).with_indifferent_access
+    @questionnaire_answer.post_answers = (@questionnaire_answer.post_answers.is_a?(Hash) ? @questionnaire_answer.post_answers : {}).with_indifferent_access
+    @questionnaire_answer.viewer_name = params[:questionnaire_answer][:viewer_name] unless params[:questionnaire_answer][:viewer_name].nil?
+    @questionnaire_answer.viewer_email = params[:questionnaire_answer][:viewer_email] unless params[:questionnaire_answer][:viewer_email].nil?
+    
     # 回答を追加
     params[:questionnaire_answer][:answers]&.each do |item_id, answer|
+      item_id = item_id.to_i # item_id を整数に変換
       if params[:questionnaire_type] == 'pre_video'
-        @questionnaire_answer.pre_answers ||= {}
-        @questionnaire_answer.pre_answers[item_id] = answer
+        @questionnaire_answer.pre_answers[item_id.to_s] = answer
       else
-        @questionnaire_answer.post_answers ||= {}
-        @questionnaire_answer.post_answers[item_id] = answer
+        @questionnaire_answer.post_answers[item_id.to_s] = answer
       end
-
-      # questionnaire_item_id を設定
-      @questionnaire_answer.questionnaire_item_id = item_id
     end
 
     if @questionnaire_answer.save
       flash[:success] = "回答が送信されました。"
       redirect_to video_path(@video)
     else
-      flash.now[:danger] = "回答の送信に失敗しました。"
-      flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
-      respond_to do |format|
-        format.html { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @questionnaire.questionnaire_items } }
-        format.js { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @questionnaire.questionnaire_items } }
-      end
+      flash[:danger] = "回答の送信に失敗しました。"
+      puts @questionnaire_answer.errors.full_messages
+      redirect_to video_path(@video)
     end
   end
 
   def index
-    @video = Base64.decode64(params[:video_id].strip)
-    @questionnaire_answers_grouped = QuestionnaireAnswer.where(video_id: @video).group_by { |answer| [answer.viewer_id || "", answer.user_id || ""] }
+    @video_id = Base64.decode64(params[:video_id].strip)
+    @video = Video.find(@video_id)
+    @questionnaire_answers_grouped = QuestionnaireAnswer.where(video_id: @video_id)
+      .group_by { |answer| [answer.viewer_id || "", answer.user_id || ""] }
   end
 
   def show
-    @video = Video.find(params[:video_id])
+    @video_id = Base64.decode64(params[:video_id].strip)
+    @video = Video.find(@video_id)
     @viewer_id = params[:viewer_id]
     @user_id = params[:user_id]
     @questionnaire_answers = QuestionnaireAnswer.where(video_id: @video.id)
     @questionnaire_answers = @questionnaire_answers.where(viewer_id: @viewer_id) unless params[:viewer_id] == "0"
     @questionnaire_answers = @questionnaire_answers.where(user_id: @user_id) unless params[:user_id] == "0"
     @pre_questionnaire_answers = @questionnaire_answers.select { |qa| qa.pre_answers.present? }
-    binding.pry
     @post_questionnaire_answers = @questionnaire_answers.select { |qa| qa.post_answers.present? }
   end  
 

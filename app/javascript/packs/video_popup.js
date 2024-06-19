@@ -1,4 +1,11 @@
 document.addEventListener("turbolinks:load", function() {
+  const currentPath = window.location.pathname;
+
+  // videos/new ページでは popup.js のコードを実行しない
+  if (currentPath === '/videos/new') {
+    return;
+  }
+
   const localVideoPlayer = document.getElementById('mv');
   let firstPlay = true;
 

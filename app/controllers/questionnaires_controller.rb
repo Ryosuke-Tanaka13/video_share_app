@@ -19,7 +19,6 @@ class QuestionnairesController < ApplicationController
     @questionnaire = @user.questionnaires.new(questionnaire_params)
 
     if @questionnaire.save
-      save_questionnaire_items(@questionnaire)
       render json: { redirect: user_questionnaires_path(@user) }
     else
       render json: { errors: @questionnaire.errors.full_messages }, status: :unprocessable_entity
@@ -34,7 +33,6 @@ class QuestionnairesController < ApplicationController
     @questionnaire = @user.questionnaires.find(params[:id])
 
     if @questionnaire.update(questionnaire_params)
-      update_questionnaire_items(@questionnaire)
       flash[:success] = "アンケートが更新されました。"
       render json: {
         redirect: user_questionnaires_path(
@@ -87,61 +85,5 @@ class QuestionnairesController < ApplicationController
     else
       questionnaire_data || []
     end
-  end
-
-  def save_questionnaire_items(questionnaire)
-    pre_video_questions = parse_questions(questionnaire.pre_video_questionnaire)
-    post_video_questions = parse_questions(questionnaire.post_video_questionnaire)
-  
-    # 前動画質問に対する処理
-    pre_video_questions.each do |question|
-      item = QuestionnaireItem.create(
-        questionnaire: questionnaire,
-        pre_question_text: question['text'],
-        pre_question_type: question['type'],
-        pre_options: question['answers']
-      )
-      answer = QuestionnaireAnswer.new(
-        questionnaire_item: item,
-        questionnaire: questionnaire,
-        user_id: questionnaire.user_id,
-        pre_answers: []
-      )
-      if answer.save
-        puts "QuestionnaireAnswer saved successfully."
-      else
-        puts "Failed to save QuestionnaireAnswer: #{answer.errors.full_messages.join(", ")}"
-      end
-    end
-  
-    # 後動画質問に対する処理
-    post_video_questions.each do |question|
-      item = QuestionnaireItem.create(
-        questionnaire: questionnaire,
-        post_question_text: question['text'],
-        post_question_type: question['type'],
-        post_options: question['answers']
-      )
-      answer = QuestionnaireAnswer.new(
-        questionnaire_item: item,
-        questionnaire: questionnaire,
-        user_id: questionnaire.user_id,
-        post_answers: []
-      )
-      if answer.save
-        puts "QuestionnaireAnswer saved successfully."
-      else
-        puts "Failed to save QuestionnaireAnswer: #{answer.errors.full_messages.join(", ")}"
-      end
-    end
-  end  
-
-  def update_questionnaire_items(questionnaire)
-    # 既存の質問項目を削除する前に関連する回答を削除
-    questionnaire.questionnaire_items.each do |item|
-      item.questionnaire_answers.destroy_all
-    end
-    questionnaire.questionnaire_items.destroy_all
-    save_questionnaire_items(questionnaire)
   end
 end

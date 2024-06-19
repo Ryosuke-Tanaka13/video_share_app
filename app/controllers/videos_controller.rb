@@ -3,7 +3,7 @@ class VideosController < ApplicationController
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
-  before_action :set_video, only: %i[show edit update destroy popup_after]
+  before_action :set_video, only: %i[show edit update destroy popup_before popup_after]
   before_action :set_user, only: %i[new show index popup_before popup_after]
   before_action :set_viewer, only: %i[popup_before popup_after]
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
@@ -13,26 +13,19 @@ class VideosController < ApplicationController
   before_action :ensure_my_organization_videos, only: %i[index]
   before_action :ensure_exist_set_video, only: %i[show edit update]
   before_action :ensure_my_organization_set_video, only: %i[show edit update destroy]
-  # 視聴者がログインしている場合、表示されているビデオの視聴グループ＝現在の視聴者の視聴グループでなければ、締め出す下記のメソッド追加予定
-  # before_action :limited_viewer, only: %i[show]
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
 
-
   def index
-    # 動画検索機能用に記載
     @search_params = video_search_params
     if current_system_admin.present?
-      # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
       session[:organization_id] = params[:organization_id]
       @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
     elsif current_user.present?
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
     elsif current_viewer.present?
-      # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
       session[:organization_id] = params[:organization_id]
       @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available
-      # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
     end
   end
 
@@ -53,28 +46,25 @@ class VideosController < ApplicationController
       if params[:video][:post_video_questionnaire_id].present?
         @video.update(post_video_questionnaire_id: params[:video][:post_video_questionnaire_id])
       end
+      save_questionnaire_items(@video, 'pre') if @video.pre_video_questionnaire_id
+      save_questionnaire_items(@video, 'post') if @video.post_video_questionnaire_id
       flash[:success] = '動画を投稿しました。'
       redirect_to @video
     else
       render :new
     end
   end
-  
+
   def show
     @comment = Comment.new
     @reply = Reply.new
-    # 新着順で表示
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
   end
 
   def popup_before 
     @video = Video.find_by(id_digest: params[:id])
-    @questionnaire = Questionnaire.find_by(id: @video.pre_video_questionnaire_id)
-
-    if @questionnaire&.questionnaire_items.present?
-      @pre_video_questions = @questionnaire.questionnaire_items
-      @answers = {}
-    end
+    @pre_video_questions = @video.questionnaire_items.where.not(pre_question_text: nil)
+    @answers = {}
     respond_to do |format|
       format.js
     end
@@ -82,11 +72,8 @@ class VideosController < ApplicationController
   
   def popup_after
     @video = Video.find_by(id_digest: params[:id])
-    @questionnaire = Questionnaire.find_by(id: @video.post_video_questionnaire_id)
-    if @questionnaire&.questionnaire_items.present?
-      @post_video_questions = @questionnaire.questionnaire_items
-      @answers = {}
-    end
+    @post_video_questions = @video.questionnaire_items.where.not(post_question_text: nil)
+    @answers = {}
     respond_to do |format|
       format.js
     end
@@ -127,26 +114,18 @@ class VideosController < ApplicationController
     params.fetch(:search, {}).permit(:title_like, :open_period_from, :open_period_to, :range, :user_name)
   end
 
-  # before_actionとして記載(organization::foldersコントローラでも定義)
   def set_organization
     @organization = Organization.find(params[:organization_id])
   end
 
   def ensure_user
-    if current_user.nil?
-      # 修正 遷移先はorganization::foldersコントローラのものとは異なる
-      redirect_to root_url, flash: { danger: '権限がありません。' }
-    end
+    redirect_to root_url, flash: { danger: '権限がありません。' } if current_user.nil?
   end
 
-  # before_actionとして記載(下記はいずれも、videosコントローラでの独自定義)
   def ensure_admin_or_owner_or_correct_user
-    unless current_system_admin || Video.find_by(id_digest: params[:id]).my_upload?(current_user) || current_user.owner?
-      redirect_to video_url, flash: { danger: '権限がありません。' }
-    end
+    redirect_to video_url, flash: { danger: '権限がありません。' } unless current_system_admin || Video.find_by(id_digest: params[:id]).my_upload?(current_user) || current_user.owner?
   end
 
-  # 自組織の動画一覧ページのみアクセス可能
   def ensure_my_organization_videos
     if current_user
       if current_user.organization_id != @organization.id
@@ -169,13 +148,11 @@ class VideosController < ApplicationController
   end
 
   def ensure_my_organization_set_video
-    # userは、自組織のvideoに対してのみshow,edit,update,destroy可能
     if current_user
       if Video.find_by(id_digest: params[:id]).user_no_available?(current_user)
         flash[:danger] = '権限がありません。'
         redirect_to videos_url(organization_id: current_user.organization_id)
       end
-    # viewerは、自組織のvideoに対してのみshow可能
     elsif current_viewer
       if current_viewer.ensure_member(Video.find_by(id_digest: params[:id]).organization_id).empty?
         flash[:danger] = '権限がありません。'
@@ -198,14 +175,37 @@ class VideosController < ApplicationController
   end
 
   def set_user
-    if current_user.present?
-      @user = current_user
-    end
+    @user = current_user if current_user.present?
   end 
 
   def set_viewer
-    if current_viewer.present?
-      @viewer = current_viewer 
+    @viewer = current_viewer if current_viewer.present?
+  end
+
+  def save_questionnaire_items(video, type)
+    questionnaire_id = type == 'pre' ? video.pre_video_questionnaire_id : video.post_video_questionnaire_id
+    questionnaire = Questionnaire.find(questionnaire_id)
+    questions = JSON.parse(type == 'pre' ? questionnaire.pre_video_questionnaire : questionnaire.post_video_questionnaire)
+
+    questions.each do |question|
+      item = QuestionnaireItem.create!(
+        video_id: video.id,
+        pre_question_text: type == 'pre' ? question['text'] : nil,
+        pre_question_type: type == 'pre' ? question['type'] : nil,
+        pre_options: type == 'pre' ? question['answers'] : nil,
+        post_question_text: type == 'post' ? question['text'] : nil,
+        post_question_type: type == 'post' ? question['type'] : nil,
+        post_options: type == 'post' ? question['answers'] : nil
+      )
+
+      QuestionnaireAnswer.create!(
+        questionnaire_item: item,
+        questionnaire: questionnaire,
+        user_id: video.user_id,
+        video_id: video.id,
+        pre_answers: type == 'pre' ? [] : nil,
+        post_answers: type == 'post' ? [] : nil
+      )
     end
   end
 end

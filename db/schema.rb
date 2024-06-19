@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_12_015907) do
+ActiveRecord::Schema.define(version: 2024_06_19_043418) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -87,7 +87,6 @@ ActiveRecord::Schema.define(version: 2024_06_12_015907) do
   end
 
   create_table "questionnaire_answers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "questionnaire_id", null: false
     t.bigint "viewer_id"
     t.bigint "video_id"
     t.datetime "created_at", precision: 6, null: false
@@ -98,14 +97,13 @@ ActiveRecord::Schema.define(version: 2024_06_12_015907) do
     t.json "pre_answers"
     t.json "post_answers"
     t.bigint "questionnaire_item_id"
-    t.index ["questionnaire_id"], name: "index_questionnaire_answers_on_questionnaire_id"
     t.index ["user_id"], name: "index_questionnaire_answers_on_user_id"
     t.index ["video_id"], name: "index_questionnaire_answers_on_video_id"
     t.index ["viewer_id"], name: "index_questionnaire_answers_on_viewer_id"
   end
 
   create_table "questionnaire_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "questionnaire_id", null: false
+    t.bigint "questionnaire_id"
     t.string "pre_question_text"
     t.string "pre_question_type"
     t.json "pre_options"
@@ -114,7 +112,9 @@ ActiveRecord::Schema.define(version: 2024_06_12_015907) do
     t.json "post_options"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "video_id"
     t.index ["questionnaire_id"], name: "index_questionnaire_items_on_questionnaire_id"
+    t.index ["video_id"], name: "index_questionnaire_items_on_video_id"
   end
 
   create_table "questionnaires", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -243,6 +243,8 @@ ActiveRecord::Schema.define(version: 2024_06_12_015907) do
     t.integer "pre_video_questionnaire_id"
     t.integer "post_video_questionnaire_id"
     t.datetime "deleted_at"
+    t.json "pre_question_items"
+    t.json "post_question_items"
     t.index ["deleted_at"], name: "index_videos_on_deleted_at"
     t.index ["organization_id"], name: "index_videos_on_organization_id"
     t.index ["user_id"], name: "index_videos_on_user_id"
@@ -291,7 +293,6 @@ ActiveRecord::Schema.define(version: 2024_06_12_015907) do
   add_foreign_key "folders", "organizations"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
-  add_foreign_key "questionnaire_answers", "questionnaires"
   add_foreign_key "questionnaire_answers", "videos"
   add_foreign_key "questionnaire_answers", "viewers"
   add_foreign_key "questionnaire_items", "questionnaires"
