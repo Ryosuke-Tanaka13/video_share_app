@@ -189,6 +189,10 @@ def audio_output
   require 'shellwords'
   # 動画ファイルのパスをparamsから取得
   video_path = Shellwords.escape(params[:subtitle].tempfile.path)
+  # 選択した動画の時間
+  command_time = "ffmpeg -i #{video_path} 2>&1"
+  stdout, stderr, status = Open3.capture3(command_time)
+  binding.pry
   # 出力する音声ファイルのパス
   audio_output_path = Rails.root.join('public', 'voice', "extraction#{Time.now.to_i}.wav")
   # ffmpegを使用して動画から音声を抽出し、WAV形式で保存
@@ -243,7 +247,9 @@ def audio_output
         # resultのalternatives配列のtranscript変数だけを呼び出している
         end
         srt_path_return = create_srt(transcripts)
+        # convert_srt_to_ass(srt_path_return)
         add_subtitles_to_video(video_path, srt_path_return)
+        redirect_to cut_video_url
         flash[:success] = "字幕付き動画作成完了"
     end
   end
@@ -325,11 +331,7 @@ end
    
     
   end
-
-
-  
-  
-  # def add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)
+# def add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)
   #   begin
   #     File.write(video_file_path, transcript)
   
@@ -352,8 +354,8 @@ end
     srt_path = Rails.root.join('public', 'voice', "subtitles#{Time.now.to_i}.srt")
     File.open(srt_path, 'w') do |file|
       transcripts.each_with_index do |transcript, index|
-        start_time = format_time(index * 5)
-        end_time = format_time((index + 1) * 5)
+        start_time = format_time(index * 60)
+        end_time = format_time((index + 1) * 60)
         file.puts "#{index + 1}"
         file.puts "#{start_time} --> #{end_time}"
         file.puts transcript
@@ -363,15 +365,18 @@ end
     srt_path.to_s
   end
 
+
   def add_subtitles_to_video(video_path, srt_path_return)
     escaped_video_path = Shellwords.escape(video_path)
     escaped_srt_path_return = Shellwords.escape(srt_path_return)
     output_video_path = Rails.root.join('public', 'videos', "output_with_subtitles#{Time.now.to_i}.mp4")
     escaped_output_video_path = Shellwords.escape(output_video_path.to_s)
-    font_path = Rails.root.join("public/fonts/NotoSansCJK.ttc")
-    escape_font_path = Shellwords.escape(font_path.to_s)
+
+    command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} -c:a copy #{escaped_output_video_path}"
+    # font_path = Rails.root.join("public/fonts/NotoSansCJK.ttc")
+    # escape_font_path = Shellwords.escape(font_path.to_s)
     # command = "ffmpeg -i \"#{escaped_video_path}\" -vf \"drawtext=text='#{escaped_srt_path_return}':fontfile=#{font_path}:fontsize=50:fontcolor=black\" -c:a copy \"#{escaped_output_video_path}\""
-    command = "ffmpeg -i \"#{escaped_video_path}\" -vf \"subtitles=#{escaped_srt_path_return}:fontfile=#{escape_font_path}:fontsize=50:fontcolor=black\" -c:a copy \"#{escaped_output_video_path}\""
+    # command = "ffmpeg -i \"#{escaped_video_path}\" -vf \"subtitles=#{escaped_srt_path_return}:fontfile=#{escape_font_path}:fontsize=50:fontcolor=black\" -c:a copy \"#{escaped_output_video_path}\""
     stdout, stderr, status = Open3.capture3(command)
 
     puts "FFmpeg command: #{command}"
