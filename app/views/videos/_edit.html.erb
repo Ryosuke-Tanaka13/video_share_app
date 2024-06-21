@@ -30,12 +30,14 @@
           </div>
           <div class="field">
             <%= f.label :popup_before_video, class: "video-label" %><br>
-            <%= f.select :popup_before_video, [['動画視聴開始時ポップアップ非表示',0],['動画視聴開始時ポップアップ表示',1]], { include_blank: false, selected: selected_before_popup_before_video }, id:"popup_before_video_edit" %>
-          </div> 
+            <%= f.select :popup_before_video, [['動画視聴開始時ポップアップ表示', true], ['動画視聴開始時ポップアップ非表示', false]], { include_blank: false, selected: @video.popup_before_video }, id: "popup_before_video_edit" %>
+          </div>
+
           <div class="field">
             <%= f.label :popup_after_video, class: "video-label" %><br>
-            <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ非表示',0],['動画視聴終了時ポップアップ表示',1]], { include_blank: false, selected: selected_before_popup_after_video }, id:"popup_after_video_edit" %>
+            <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ表示', true], ['動画視聴終了時ポップアップ非表示', false]], { include_blank: false, selected: @video.popup_after_video }, id: "popup_after_video_edit" %>
           </div>
+
 
           <%= f.label :folders, class: "video-label" %><br>
           <% if current_system_admin.present? %>

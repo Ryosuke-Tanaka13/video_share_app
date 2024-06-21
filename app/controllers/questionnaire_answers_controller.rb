@@ -17,18 +17,26 @@ class QuestionnaireAnswersController < ApplicationController
     # 既存のQuestionnaireAnswerを検索する
     @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video_id: @video.id, viewer_id: viewer_id, user_id: user_id)
 
-    # pre_answers および post_answers をハッシュとして初期化
-    @questionnaire_answer.pre_answers = (@questionnaire_answer.pre_answers.is_a?(Hash) ? @questionnaire_answer.pre_answers : {}).with_indifferent_access
-    @questionnaire_answer.post_answers = (@questionnaire_answer.post_answers.is_a?(Hash) ? @questionnaire_answer.post_answers : {}).with_indifferent_access
-    @questionnaire_answer.viewer_name = params[:questionnaire_answer][:viewer_name] unless params[:questionnaire_answer][:viewer_name].nil?
-    @questionnaire_answer.viewer_email = params[:questionnaire_answer][:viewer_email] unless params[:questionnaire_answer][:viewer_email].nil?
-    
+    # 回答者情報を設定
+    @questionnaire_answer.viewer_name = params[:questionnaire_answer][:viewer_name]
+    @questionnaire_answer.viewer_email = params[:questionnaire_answer][:viewer_email]
+
     # 回答を追加
     params[:questionnaire_answer][:answers]&.each do |item_id, answer|
       item_id = item_id.to_i # item_id を整数に変換
+      item = QuestionnaireItem.find_by(id: item_id, video_id: video_id)
+      if item.nil?
+        flash[:error] = "Questionnaire item not found"
+        redirect_to video_path(@video)
+        return
+      end
+      @questionnaire_answer.questionnaire_item_id = item.id
+      binding.pry
       if params[:questionnaire_type] == 'pre_video'
+        @questionnaire_answer.pre_answers ||= {}
         @questionnaire_answer.pre_answers[item_id.to_s] = answer
       else
+        @questionnaire_answer.post_answers ||= {}
         @questionnaire_answer.post_answers[item_id.to_s] = answer
       end
     end
@@ -37,9 +45,12 @@ class QuestionnaireAnswersController < ApplicationController
       flash[:success] = "回答が送信されました。"
       redirect_to video_path(@video)
     else
-      flash[:danger] = "回答の送信に失敗しました。"
-      puts @questionnaire_answer.errors.full_messages
-      redirect_to video_path(@video)
+      flash.now[:danger] = "回答の送信に失敗しました。"
+      flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
+      respond_to do |format|
+        format.html { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @questionnaire.questionnaire_items } }
+        format.js { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @questionnaire.questionnaire_items } }
+      end
     end
   end
 

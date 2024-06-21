@@ -21,7 +21,7 @@
         <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
         <%= @video.hidden_button %>
       </div>
-      <%= link_to 'アンケート確認', video_questionnaire_answers_path(@video), class: 'btn btn-primary' %>
+      <%= link_to 'アンケート確認', video_questionnaire_answers_path(@video), class: 'btn btn-primary' if user_signed_in? || system_admin_signed_in? %>
       <% if user_signed_in? || system_admin_signed_in? %>
         <div class="col-md-3">
           <button class="copy-button" id="id-copy-button">URLをコピー

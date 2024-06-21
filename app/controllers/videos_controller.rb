@@ -85,6 +85,7 @@ class VideosController < ApplicationController
 
   def update
     set_video
+    binding.pry
     if @video.update(video_params)
       flash[:success] = '動画情報を更新しました。'
       redirect_to video_url
