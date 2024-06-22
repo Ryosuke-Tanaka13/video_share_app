@@ -192,7 +192,6 @@ def audio_output
   # 選択した動画の時間
   command_time = "ffmpeg -i #{video_path} 2>&1"
   stdout, stderr, status = Open3.capture3(command_time)
-  binding.pry
   # 出力する音声ファイルのパス
   audio_output_path = Rails.root.join('public', 'voice', "extraction#{Time.now.to_i}.wav")
   # ffmpegを使用して動画から音声を抽出し、WAV形式で保存
@@ -233,12 +232,6 @@ def audio_output
       render json: { error: "No response received" }, status: :unprocessable_entity
       return
     else
-        # puts "Response: #{response.inspect}"
-        # transcripts = response.results.each_with_index do |result, i|
-        # puts "Result #{i + 1}:"
-        # result.alternatives.each do |alternative|
-        # puts "Transcript: #{alternative.transcript}"
-        # end
         puts "Response:#{response.inspect}"
         # google-cloud-speech Text-APIの文字起こし出力結果を呼び出している
         transcripts=response.results.flat_map do |result|
@@ -331,35 +324,19 @@ end
    
     
   end
-# def add_subtitles_to_video(audio_data, video_file_path, transcript, output_video_path)
-  #   begin
-  #     File.write(video_file_path, transcript)
-  
-  #     # Use Open3.capture3 to capture stderr (standard error output)
-  #     # command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -movflags faststart -max_muxing_queue_size 1024 #{output_video_path}"
-  #     command = "ffmpeg -i #{video_file_path} -vf subtitles=#{transcript} -c:a copy -movflags faststart #{output_video_path}"
-  #     stdout, stderr, status = Open3.capture3(command)
-  
-  #     if status.success?
-  #       puts "add_subtitles_to_video: Successfully added subtitles to the video."
-  #     else
-  #       puts "add_subtitles_to_video: Failed to add subtitles. Error message: #{stderr}"
-  #     end
-  #   rescue => e
-  #     puts "add_subtitles_to_video でエラーが発生しました: #{e.message}"
-  #   end
-  # end
 
   def create_srt(transcripts)
     srt_path = Rails.root.join('public', 'voice', "subtitles#{Time.now.to_i}.srt")
     File.open(srt_path, 'w') do |file|
-      transcripts.each_with_index do |transcript, index|
-        start_time = format_time(index * 60)
-        end_time = format_time((index + 1) * 60)
+    index = 0
+      transcripts.first.scan(/.{1,15}/).each do |chunk|
+        start_time = format_time(index * 5)
+        end_time = format_time((index + 1) * 5)
         file.puts "#{index + 1}"
         file.puts "#{start_time} --> #{end_time}"
-        file.puts transcript
+        file.puts chunk
         file.puts
+        index += 1
       end
     end
     srt_path.to_s
