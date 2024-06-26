@@ -11,8 +11,8 @@
   <tbody>
     <% @questionnaire_answers_grouped.each do |(viewer_id, user_id), answers| %>
       <tr>
-        <td><%= answers.first.viewer_name if answers.first.viewer_name %></td>
-        <td><%= answers.first.viewer_email if answers.first.viewer_email %></td>
+        <td><%= @questionnaire_answers_name %></td>
+        <td><%= @questionnaire_answers_email %></td>
         <td>
           <%= link_to "確認する", video_video_questionnaire_answer_path(@video, viewer_id: viewer_id.presence || '0', user_id: user_id.presence || '0'), remote: true %>
         </td>

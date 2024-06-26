@@ -31,7 +31,6 @@ class QuestionnaireAnswersController < ApplicationController
         return
       end
       @questionnaire_answer.questionnaire_item_id = item.id
-      binding.pry
       if params[:questionnaire_type] == 'pre_video'
         @questionnaire_answer.pre_answers ||= {}
         @questionnaire_answer.pre_answers[item_id.to_s] = answer
@@ -59,8 +58,15 @@ class QuestionnaireAnswersController < ApplicationController
     @video = Video.find(@video_id)
     @questionnaire_answers_grouped = QuestionnaireAnswer.where(video_id: @video_id)
       .group_by { |answer| [answer.viewer_id || "", answer.user_id || ""] }
+    if current_user.present?
+      @questionnaire_answers_name = current_user.name
+      @questionnaire_answers_email = current_user.email
+    else current_viewer.present?
+      @questionnaire_answers_name = current_viewer.name
+      @questionnaire_answers_email = current_viewer.email
+    end
   end
-
+  
   def show
     @video_id = Base64.decode64(params[:video_id].strip)
     @video = Video.find(@video_id)
