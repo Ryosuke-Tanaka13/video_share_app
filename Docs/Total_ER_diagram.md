@@ -1,191 +1,209 @@
 ```mermaid
-erDiagram
-  ACTIVE_STORAGE_ATTACHMENTS {
-    NAME STRING
-    RECORD_TYPE STRING
-    RECORD_ID BIGINT
-    BLOB_ID BIGINT
-    CREATED_AT DATETIME
+ erDiagram
+  active_storage_attachments {
+    name string
+    record_type string
+    record_id bigint
+    blob_id bigint
+    created_at datetime
   }
-  ACTIVE_STORAGE_BLOBS {
-    KEY STRING
-    FILENAME STRING
-    CONTENT_TYPE STRING
-    METADATA TEXT
-    SERVICE_NAME STRING
-    BYTE_SIZE BIGINT
-    CHECKSUM STRING
-    CREATED_AT DATETIME
+  active_storage_blobs {
+    key string
+    filename string
+    content_type string
+    metadata text
+    service_name string
+    byte_size bigint
+    checksum string
+    created_at datetime
   }
-  ACTIVE_STORAGE_VARIANT_RECORDS {
-    BLOB_ID BIGINT
-    VARIATION_DIGEST STRING
+  active_storage_variant_records {
+    blob_id bigint
+    variation_digest string
   }
-  COMMENTS {
-    COMMENT TEXT
-    ORGANIZATION_ID BIGINT
-    VIDEO_ID BIGINT
-    SYSTEM_ADMIN_ID BIGINT
-    USER_ID BIGINT
-    VIEWER_ID BIGINT
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
+  comments {
+    comment text
+    organization_id bigint
+    video_id bigint
+    system_admin_id bigint
+    user_id bigint
+    viewer_id bigint
+    created_at datetime
+    updated_at datetime
   }
-  FOLDERS {
-    NAME STRING
-    ORGANIZATION_ID BIGINT
-    VIDEO_FOLDER_ID INTEGER
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
+  folders {
+    name string
+    organization_id bigint
+    video_folder_id integer
+    created_at datetime
+    updated_at datetime
   }
-  ORGANIZATION_VIEWERS {
-    ORGANIZATION_ID BIGINT
-    VIEWER_ID BIGINT
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
+  organization_viewers {
+    organization_id bigint
+    viewer_id bigint
+    created_at datetime
+    updated_at datetime
   }
-  ORGANIZATIONS {
-    NAME STRING
-    EMAIL STRING
-    IS_VALID BOOLEAN
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
+  organizations {
+    name string
+    email string
+    is_valid boolean
+    created_at datetime
+    updated_at datetime
   }
-  REPLIES {
-    REPLY TEXT
-    ORGANIZATION_ID BIGINT
-    SYSTEM_ADMIN_ID BIGINT
-    USER_ID BIGINT
-    VIEWER_ID BIGINT
-    COMMENT_ID BIGINT
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
+  replies {
+    reply text
+    organization_id bigint
+    system_admin_id bigint
+    user_id bigint
+    viewer_id bigint
+    comment_id bigint
+    created_at datetime
+    updated_at datetime
   }
-  SYSTEM_ADMINS {
-    EMAIL STRING
-    ENCRYPTED_PASSWORD STRING
-    RESET_PASSWORD_TOKEN STRING
-    RESET_PASSWORD_SENT_AT DATETIME
-    REMEMBER_CREATED_AT DATETIME
-    SIGN_IN_COUNT INTEGER
-    CURRENT_SIGN_IN_AT DATETIME
-    LAST_SIGN_IN_AT DATETIME
-    CURRENT_SIGN_IN_IP STRING
-    LAST_SIGN_IN_IP STRING
-    CONFIRMATION_TOKEN STRING
-    CONFIRMED_AT DATETIME
-    CONFIRMATION_SENT_AT DATETIME
-    UNCONFIRMED_EMAIL STRING
-    FAILED_ATTEMPTS INTEGER
-    UNLOCK_TOKEN STRING
-    LOCKED_AT DATETIME
-    IMAGE STRING
-    PROVIDER STRING
-    UID STRING
-    OAUTH_TOKEN STRING
-    OAUTH_EXPIRES_AT DATETIME
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
-    NAME STRING
+  system_admins {
+    email string
+    encrypted_password string
+    reset_password_token string
+    reset_password_sent_at datetime
+    remember_created_at datetime
+    sign_in_count integer
+    current_sign_in_at datetime
+    last_sign_in_at datetime
+    current_sign_in_ip string
+    last_sign_in_ip string
+    confirmation_token string
+    confirmed_at datetime
+    confirmation_sent_at datetime
+    unconfirmed_email string
+    failed_attempts integer
+    unlock_token string
+    locked_at datetime
+    image string
+    provider string
+    uid string
+    oauth_token string
+    oauth_expires_at datetime
+    created_at datetime
+    updated_at datetime
+    name string
   }
-  USERS {
-    EMAIL STRING
-    ENCRYPTED_PASSWORD STRING
-    RESET_PASSWORD_TOKEN STRING
-    RESET_PASSWORD_SENT_AT DATETIME
-    REMEMBER_CREATED_AT DATETIME
-    SIGN_IN_COUNT INTEGER
-    CURRENT_SIGN_IN_AT DATETIME
-    LAST_SIGN_IN_AT DATETIME
-    CURRENT_SIGN_IN_IP STRING
-    LAST_SIGN_IN_IP STRING
-    CONFIRMATION_TOKEN STRING
-    CONFIRMED_AT DATETIME
-    CONFIRMATION_SENT_AT DATETIME
-    UNCONFIRMED_EMAIL STRING
-    FAILED_ATTEMPTS INTEGER
-    UNLOCK_TOKEN STRING
-    LOCKED_AT DATETIME
-    IMAGE STRING
-    PROVIDER STRING
-    UID STRING
-    OAUTH_TOKEN STRING
-    OAUTH_EXPIRES_AT DATETIME
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
-    NAME STRING
-    ROLE INTEGER
-    ORGANIZATION_ID BIGINT
-    IS_VALID BOOLEAN
+  users {
+    email string
+    encrypted_password string
+    reset_password_token string
+    reset_password_sent_at datetime
+    remember_created_at datetime
+    sign_in_count integer
+    current_sign_in_at datetime
+    last_sign_in_at datetime
+    current_sign_in_ip string
+    last_sign_in_ip string
+    confirmation_token string
+    confirmed_at datetime
+    confirmation_sent_at datetime
+    unconfirmed_email string
+    failed_attempts integer
+    unlock_token string
+    locked_at datetime
+    image string
+    provider string
+    uid string
+    oauth_token string
+    oauth_expires_at datetime
+    created_at datetime
+    updated_at datetime
+    name string
+    role integer
+    organization_id bigint
+    is_valid boolean
   }
-  VIDEO_FOLDERS {
-    VIDEO_ID BIGINT
-    FOLDER_ID BIGINT
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
+  video_folders {
+    video_id bigint
+    folder_id bigint
+    created_at datetime
+    updated_at datetime
   }
-  VIDEOS {
-    TITLE STRING
-    AUDIENCE_RATE INTEGER
-    OPEN_PERIOD DATETIME
-    RANGE BOOLEAN
-    COMMENT_PUBLIC BOOLEAN
-    LOGIN_SET BOOLEAN
-    POPUP_BEFORE_VIDEO BOOLEAN
-    POPUP_AFTER_VIDEO BOOLEAN
-    DATA_URL STRING
-    IS_VALID BOOLEAN
-    ORGANIZATION_ID BIGINT
-    USER_ID BIGINT
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
+  videos {
+    title string
+    audience_rate integer
+    open_period datetime
+    range boolean
+    comment_public boolean
+    login_set boolean
+    popup_before_video boolean
+    popup_after_video boolean
+    data_url string
+    is_valid boolean
+    organization_id bigint
+    user_id bigint
+    created_at datetime
+    updated_at datetime
   }
-  VIEWERS {
-    EMAIL STRING
-    ENCRYPTED_PASSWORD STRING
-    RESET_PASSWORD_TOKEN STRING
-    RESET_PASSWORD_SENT_AT DATETIME
-    REMEMBER_CREATED_AT DATETIME
-    SIGN_IN_COUNT INTEGER
-    CURRENT_SIGN_IN_AT DATETIME
-    LAST_SIGN_IN_AT DATETIME
-    CURRENT_SIGN_IN_IP STRING
-    LAST_SIGN_IN_IP STRING
-    CONFIRMATION_TOKEN STRING
-    CONFIRMED_AT DATETIME
-    CONFIRMATION_SENT_AT DATETIME
-    UNCONFIRMED_EMAIL STRING
-    FAILED_ATTEMPTS INTEGER
-    UNLOCK_TOKEN STRING
-    LOCKED_AT DATETIME
-    IMAGE STRING
-    PROVIDER STRING
-    UID STRING
-    OAUTH_TOKEN STRING
-    OAUTH_EXPIRES_AT DATETIME
-    CREATED_AT DATETIME
-    UPDATED_AT DATETIME
-    NAME STRING
-    IS_VALID BOOLEAN
+  viewers {
+    email string
+    encrypted_password string
+    reset_password_token string
+    reset_password_sent_at datetime
+    remember_created_at datetime
+    sign_in_count integer
+    current_sign_in_at datetime
+    last_sign_in_at datetime
+    current_sign_in_ip string
+    last_sign_in_ip string
+    confirmation_token string
+    confirmed_at datetime
+    confirmation_sent_at datetime
+    unconfirmed_email string
+    failed_attempts integer
+    unlock_token string
+    locked_at datetime
+    image string
+    provider string
+    uid string
+    oauth_token string
+    oauth_expires_at datetime
+    created_at datetime
+    updated_at datetime
+    name string
+    is_valid boolean
   }
-  ACTIVE_STORAGE_ATTACHMENTS }|--o{ ACTIVE_STORAGE_BLOBS : "ACTIVE_STORAGE_BLOB_ID"
-  ACTIVE_STORAGE_VARIANT_RECORDS }|--o{ ACTIVE_STORAGE_BLOBS : "ACTIVE_STORAGE_BLOB_ID"
-  COMMENTS }|--o{ ORGANIZATIONS : "ORGANIZATION_ID"
-  COMMENTS }|--o{ SYSTEM_ADMINS : "SYSTEM_ADMIN_ID"
-  COMMENTS }|--o{ USERS : "USER_ID"
-  COMMENTS }|--o{ VIDEOS : "VIDEO_ID"
-  COMMENTS }|--o{ VIEWERS : "VIEWER_ID"
-  FOLDERS }|--o{ ORGANIZATIONS : "ORGANIZATION_ID"
-  ORGANIZATION_VIEWERS }|--o{ ORGANIZATIONS : "ORGANIZATION_ID"
-  ORGANIZATION_VIEWERS }|--o{ VIEWERS : "VIEWER_ID"
-  REPLIES }|--o{ COMMENTS : "COMMENT_ID"
-  REPLIES }|--o{ ORGANIZATIONS : "ORGANIZATION_ID"
-  REPLIES }|--o{ SYSTEM_ADMINS : "SYSTEM_ADMIN_ID"
-  REPLIES }|--o{ USERS : "USER_ID"
-  REPLIES }|--o{ VIEWERS : "VIEWER_ID"
-  USERS }|--o{ ORGANIZATIONS : "ORGANIZATION_ID"
-  VIDEO_FOLDERS }|--o{ FOLDERS : "FOLDER_ID"
-  VIDEO_FOLDERS }|--o{ VIDEOS : "VIDEO_ID"
-  VIDEOS }|--o{ ORGANIZATIONS : "ORGANIZATION_ID"
-  VIDEOS }|--o{ USERS : "USER_ID"
+  active_storage_blobs ||--o{ active_storage_attachments : "active_storage_attachment_id"
+  active_storage_blobs ||--o{ active_storage_variant_records : "active_storage_variant_record_id"
+  organizations ||--o{ comments : "comment_id"
+  system_admins ||--o{ comments : "comment_id"
+  users ||--o{ comments : "comment_id"
+  videos ||--o{ comments : "comment_id"
+  viewers ||--o{ comments : "comment_id"
+  organizations ||--o{ folders : "folder_id"
+  organizations ||--o{ organization_viewers : "organization_viewer_id"
+  viewers ||--o{ organization_viewers : "organization_viewer_id"
+  comments ||--o{ replies : "replie_id"
+  organizations ||--o{ replies : "replie_id"
+  system_admins ||--o{ replies : "replie_id"
+  users ||--o{ replies : "replie_id"
+  viewers ||--o{ replies : "replie_id"
+  organizations ||--o{ users : "user_id"
+  folders ||--o{ video_folders : "video_folder_id"
+  videos ||--o{ video_folders : "video_folder_id"
+  organizations ||--o{ videos : "video_id"
+  users ||--o{ videos : "video_id"
 ```
+
+
+## 検出された各種要素
+| テーブル名 | カラム数 | 主キー数 | 外部キー数 | belongs_to | has_many | has_one | has_and_belongs_to_many |
+| ---------- | -------- | -------- | ---------- | ---------- | -------- | ------- | ---------------------- |
+| active_storage_attachments | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
+| active_storage_blobs | 8 | 0 | 0 | 0 | 0 | 0 | 0 |
+| active_storage_variant_records | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| comments | 8 | 0 | 0 | 0 | 0 | 0 | 0 |
+| folders | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
+| organization_viewers | 4 | 0 | 0 | 0 | 0 | 0 | 0 |
+| organizations | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
+| replies | 8 | 0 | 0 | 0 | 0 | 0 | 0 |
+| system_admins | 25 | 0 | 0 | 0 | 0 | 0 | 0 |
+| users | 28 | 0 | 0 | 0 | 0 | 0 | 0 |
+| video_folders | 4 | 0 | 0 | 0 | 0 | 0 | 0 |
+| videos | 14 | 0 | 0 | 0 | 0 | 0 | 0 |
+| viewers | 26 | 0 | 0 | 0 | 0 | 0 | 0 |

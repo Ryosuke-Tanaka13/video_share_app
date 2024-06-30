@@ -1,4 +1,4 @@
-<!-- app/views/viewres/registrations/new.html.erb -->
+<!-- app/views/viewers/registrations/new.html.erb -->
 
 <div class="register-box">
   <div class="card card-outline card-primary">
@@ -44,8 +44,11 @@
         <div class="row">
           <div class="col-12 text-center">
             <div class="icheck-primary">
-              <%= f.check_box :terms, class: 'form-check-input' %>
-              <%= f.label :terms, "#{link_to('利用規約', use_terms_path)}と#{link_to('プライバシーポリシー', use_privacy_policy_path)}に同意".html_safe, class: 'form-check-label' %>
+              <input type="checkbox" id="agreeTerms" name="terms" required>
+              <label for="agreeTerms">
+                <%= link_to "利用規約", use_terms_path %>と
+                <%= link_to "プライバシーポリシー", use_privacy_policy_path %>に同意
+              </label>
             </div>
           </div>
           <!-- /.col -->
