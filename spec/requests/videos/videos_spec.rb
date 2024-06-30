@@ -795,14 +795,20 @@ RSpec.describe 'Videos', type: :request do
     describe 'オーナーが現在のログインユーザー' do
       before(:each) do
         sign_in user_owner
-        video_test
+        video_sample
       end
 
-      describe '異常' do
-        it 'オーナーは削除できない' do
+      describe '正常' do
+        it '動画を削除する' do
           expect {
-            delete video_path(video_test), params: { id: video_test.id }
-          }.not_to change(Video, :count)
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          }.to change(Video, :count).by(-1)
+        end
+
+        it 'indexにリダイレクトされる' do
+          expect(
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          ).to redirect_to videos_path(organization_id: organization.id)
         end
       end
     end
@@ -810,14 +816,20 @@ RSpec.describe 'Videos', type: :request do
     describe '動画投稿者が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
-        video_test
+        video_sample
       end
 
-      describe '異常' do
-        it '動画投稿者は削除できない' do
+      describe '正常' do
+        it '動画を削除する' do
           expect {
-            delete video_path(video_test), params: { id: video_test.id }
-          }.not_to change(Video, :count)
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          }.to change(Video, :count).by(-1)
+        end
+
+        it 'indexにリダイレクトされる' do
+          expect(
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          ).to redirect_to videos_path(organization_id: organization.id)
         end
       end
     end

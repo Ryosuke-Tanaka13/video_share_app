@@ -29,6 +29,7 @@
         <% elsif comment.viewer.present? %>
           <%= comment.viewer.name %>さん
         <% end %>
+      </div>
       <!-- コメントを表示 -->
       <div id="js-comment-label-<%= comment.id %>">
         <%= simple_format(comment.comment) %>
