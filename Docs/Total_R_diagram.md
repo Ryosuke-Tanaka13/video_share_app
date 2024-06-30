@@ -52,7 +52,7 @@
 | comments | 8 | 0 | 0 | 0 | 0 | 0 | 0 |
 | folders | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
 | organization_viewers | 4 | 0 | 0 | 0 | 0 | 0 | 0 |
-| organizations | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
+| organizations | 9 | 0 | 0 | 0 | 0 | 0 | 0 |
 | replies | 8 | 0 | 0 | 0 | 0 | 0 | 0 |
 | system_admins | 25 | 0 | 0 | 0 | 0 | 0 | 0 |
 | users | 28 | 0 | 0 | 0 | 0 | 0 | 0 |
