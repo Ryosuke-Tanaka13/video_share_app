@@ -1,5 +1,3 @@
-let firstPlay = true; // グローバル変数として宣言
-
 document.addEventListener("turbolinks:load", function() {
   const currentPath = window.location.pathname;
 
@@ -38,6 +36,11 @@ document.addEventListener("turbolinks:load", function() {
   }
 
   document.querySelectorAll('form[data-remote="true"]').forEach((form) => {
+    // コメントフォームを無視
+    if (form.id.startsWith('comment-form')) {
+      return;
+    }
+
     form.addEventListener('ajax:success', (event) => {
       const [data, status, xhr] = event.detail;
       const message = data.message || '回答が送信されました';
