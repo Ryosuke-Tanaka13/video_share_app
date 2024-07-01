@@ -31,14 +31,12 @@ document.addEventListener('turbolinks:load', function() {
       formTitle.innerText = 'アンケート作成（動画視聴前）';
       preVideoToggle.classList.add('active');
       postVideoToggle.classList.remove('active');
-      viewerInfo.style.display = 'block';
     } else {
       preVideoQuestionsContainer.style.display = 'none';
       postVideoQuestionsContainer.style.display = 'block';
       formTitle.innerText = 'アンケート作成（動画視聴後）';
       preVideoToggle.classList.remove('active');
       postVideoToggle.classList.add('active');
-      viewerInfo.style.display = 'none';
     }
     currentQuestionnaireType = type;
   }

@@ -1,6 +1,8 @@
 class QuestionnairesController < ApplicationController
   before_action :set_user
   before_action :set_questionnaire, only: [:show, :edit, :update, :destroy, :apply]
+  before_action :ensure_logged_in
+  before_action :correct_user_id?
 
   def index
     @questionnaires = @user.questionnaires.order(updated_at: :desc).page(params[:page]).per(1)
@@ -31,7 +33,6 @@ class QuestionnairesController < ApplicationController
 
   def update
     @questionnaire = @user.questionnaires.find(params[:id])
-
     if @questionnaire.update(questionnaire_params)
       flash[:success] = "アンケートが更新されました。"
       render json: {
@@ -84,6 +85,13 @@ class QuestionnairesController < ApplicationController
       JSON.parse(questionnaire_data)
     else
       questionnaire_data || []
+    end
+  end
+
+  def correct_user_id?
+    unless current_user == User.find(params[:user_id])
+      flash[:danger] = '権限がありません。'
+      redirect_to root_url
     end
   end
 end

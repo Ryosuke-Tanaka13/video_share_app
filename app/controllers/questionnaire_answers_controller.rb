@@ -1,5 +1,7 @@
 class QuestionnaireAnswersController < ApplicationController
   before_action :set_user_or_viewer, only: %i[create index]
+  before_action :ensure_logged_in
+  
 
   def create
     video_id = params[:questionnaire_answer][:video_id]
@@ -14,13 +16,14 @@ class QuestionnaireAnswersController < ApplicationController
     viewer_id = params[:questionnaire_answer][:viewer_id].presence
     user_id = params[:questionnaire_answer][:user_id].presence
 
-    # 既存のQuestionnaireAnswerを検索する
     @questionnaire_answer = QuestionnaireAnswer.find_or_initialize_by(video_id: @video.id, viewer_id: viewer_id, user_id: user_id)
-
-    # 回答者情報を設定
-    @questionnaire_answer.viewer_name = params[:questionnaire_answer][:viewer_name]
-    @questionnaire_answer.viewer_email = params[:questionnaire_answer][:viewer_email]
-
+    if current_user.present?
+      @questionnaire_answer.viewer_name = current_user.name
+      @questionnaire_answer.viewer_email = current_user.email
+    elsif current_viewer.present?
+      @questionnaire_answer.viewer_name = current_viewer.name
+      @questionnaire_answer.viewer_email = current_viewer.email
+    end
     # 回答を追加
     params[:questionnaire_answer][:answers]&.each do |item_id, answer|
       item_id = item_id.to_i # item_id を整数に変換
@@ -30,19 +33,23 @@ class QuestionnaireAnswersController < ApplicationController
         redirect_to video_path(@video)
         return
       end
+
       @questionnaire_answer.questionnaire_item_id = item.id
+
+      # ハッシュとして初期化されていることを確認する
+      @questionnaire_answer.pre_answers = {} unless @questionnaire_answer.pre_answers.is_a?(Hash)
+      @questionnaire_answer.post_answers = {} unless @questionnaire_answer.post_answers.is_a?(Hash)
+
       if params[:questionnaire_type] == 'pre_video'
-        @questionnaire_answer.pre_answers ||= {}
         @questionnaire_answer.pre_answers[item_id.to_s] = answer
       else
-        @questionnaire_answer.post_answers ||= {}
         @questionnaire_answer.post_answers[item_id.to_s] = answer
       end
     end
-
+    
     if @questionnaire_answer.save
       flash[:success] = "回答が送信されました。"
-      redirect_to video_path(@video)
+      redirect_to video_path(@video, answered: true)
     else
       flash.now[:danger] = "回答の送信に失敗しました。"
       flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
@@ -58,13 +65,6 @@ class QuestionnaireAnswersController < ApplicationController
     @video = Video.find(@video_id)
     @questionnaire_answers_grouped = QuestionnaireAnswer.where(video_id: @video_id)
       .group_by { |answer| [answer.viewer_id || "", answer.user_id || ""] }
-    if current_user.present?
-      @questionnaire_answers_name = current_user.name
-      @questionnaire_answers_email = current_user.email
-    else current_viewer.present?
-      @questionnaire_answers_name = current_viewer.name
-      @questionnaire_answers_email = current_viewer.email
-    end
   end
   
   def show
@@ -89,4 +89,8 @@ class QuestionnaireAnswersController < ApplicationController
     @user = current_user if user_signed_in?
     @viewer = current_viewer if viewer_signed_in?
   end
+
+  def set_user
+    @user = current_user if current_user.present?
+  end 
 end

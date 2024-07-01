@@ -2,7 +2,6 @@
   <div class="modal-content">
     <div class="modal-header">
       <h1 class="modal-title">アンケート（動画視聴前）</h1>
-      <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
       <%= form_with(model: [@video, QuestionnaireAnswer.new], url: video_questionnaire_answers_path(@video), method: :post, remote: true) do |f| %>
@@ -10,14 +9,7 @@
         <%= f.hidden_field :viewer_id, value: defined?(@viewer) ? @viewer.id : nil %>
         <%= f.hidden_field :user_id, value: defined?(@user) ? @user.id : nil %>
         <%= hidden_field_tag :questionnaire_type, 'pre_video' %>
-        <div class="field">
-          <%= f.label :viewer_name, "名前" %>
-          <%= f.text_field :viewer_name, required: true %>
-        </div>
-        <div class="field">
-          <%= f.label :viewer_email, "メールアドレス" %>
-          <%= f.email_field :viewer_email, required: true %>
-        </div>
+  
         <% if @pre_video_questions.present? %>
           <div id="pre-video-questions-container">
             <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, answers: @answers, type: 'pre_video', answer_mode: false } %>
@@ -26,7 +18,6 @@
           <p>アンケートはありません</p>
         <% end %>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
           <%= f.submit "回答を送信", class: "btn btn-primary" %>
         </div>
       <% end %>

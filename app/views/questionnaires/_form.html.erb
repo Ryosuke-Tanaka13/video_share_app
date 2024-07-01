@@ -9,14 +9,6 @@
 <div id="error-messages" style="color: red;"></div>
 
 <%= form_with model: [user, questionnaire], local: true, id: 'dynamic-form', class: 'centered-form' do |f| %>
-  <div class="viewer-info" id="viewer-info">
-    <%= f.label :name, "名前", class: "strong" %>
-    <%= f.text_field :name, id: 'viewer-name', placeholder: "名前を入力" %>
-    
-    <%= f.label :email, "メールアドレス", class: "strong" %>
-    <%= f.email_field :email, id: 'viewer-email', placeholder: "メールアドレスを入力" %>
-  </div>
-
   <input type="hidden" id="pre_video_questionnaire" name="questionnaire[pre_video_questionnaire]" value="<%= @questionnaire.pre_video_questionnaire %>">
   <input type="hidden" id="post_video_questionnaire" name="questionnaire[post_video_questionnaire]" value="<%= @questionnaire.post_video_questionnaire %>">
 

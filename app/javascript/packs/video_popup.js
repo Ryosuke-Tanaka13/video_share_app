@@ -1,3 +1,5 @@
+let firstPlay = true; // グローバル変数として宣言
+
 document.addEventListener("turbolinks:load", function() {
   const currentPath = window.location.pathname;
 
@@ -7,28 +9,32 @@ document.addEventListener("turbolinks:load", function() {
   }
 
   const localVideoPlayer = document.getElementById('mv');
-  let firstPlay = true;
+
+  // URLパラメータをチェック
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('answered') && urlParams.get('answered') === 'true') {
+    firstPlay = false; // answeredパラメータが存在する場合に firstPlay を false に設定
+  }
 
   // 動画が再生される直前に発火
   if (localVideoPlayer) {
-    localVideoPlayer.onplay = function() {
+    localVideoPlayer.addEventListener('play', function() {
       if (firstPlay) {
         const hiddenLink = document.getElementById('hiddenPopupBeforeLink');
         if (hiddenLink) {
           hiddenLink.click();
         }
         localVideoPlayer.pause(); // 動画を停止
-        firstPlay = false;
       }
-    };
+    });
 
     // 動画を見終わると発火
-    localVideoPlayer.onended = function() {
+    localVideoPlayer.addEventListener('ended', function() {
       const hiddenLink = document.getElementById('hiddenPopupAfterLink');
       if (hiddenLink) {
         hiddenLink.click();
       }
-    };
+    });
   }
 
   document.querySelectorAll('form[data-remote="true"]').forEach((form) => {
@@ -36,7 +42,16 @@ document.addEventListener("turbolinks:load", function() {
       const [data, status, xhr] = event.detail;
       const message = data.message || '回答が送信されました';
       alert(message);
-      // モーダルを閉じるなどの処理
+
+      // 動画の再生ボタンを有効化し、動画を再生
+      const localVideoPlayer = document.getElementById('mv');
+      if (localVideoPlayer) {
+        firstPlay = false; // 回答が送信された後に firstPlay を false に設定
+        localVideoPlayer.removeAttribute('disabled');
+        localVideoPlayer.play();
+      }
+
+      // モーダルを閉じる
       form.closest('.modal').querySelector('.btn-close').click();
     });
 

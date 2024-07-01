@@ -200,7 +200,6 @@ class VideosController < ApplicationController
 
       QuestionnaireAnswer.create!(
         questionnaire_item: item,
-        questionnaire: questionnaire,
         user_id: video.user_id,
         video_id: video.id,
         pre_answers: type == 'pre' ? [] : nil,
