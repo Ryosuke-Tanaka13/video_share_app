@@ -1,4 +1,4 @@
-// [bin/generate_er_diagram.js]
+// [bin/generate_er_and_summary.js]
 
 const fs = require('fs');
 const path = require('path');
@@ -37,11 +37,6 @@ const schemaContent = readFileSyncSafe(schemaPath);
 // モデルファイルの一覧を取得
 const modelFiles = fs.readdirSync(modelsDir).filter(file => file.endsWith('.rb'));
 
-// データ型をMermaid用に小文字に変換する関数
-function convertDataType(dataType) {
-  return dataType.toLowerCase();
-}
-
 // スキーマをパースしてテーブル情報を抽出する関数
 function parseSchema(schema) {
   const lines = schema.split('\n');
@@ -58,7 +53,7 @@ function parseSchema(schema) {
       if (columnMatch) {
         const dataType = columnMatch[1];
         const columnName = columnMatch[2].toLowerCase();
-        tables[currentTable].columns.push({ name: columnName, type: convertDataType(dataType) });
+        tables[currentTable].columns.push({ name: columnName, type: dataType.toLowerCase() });
       }
       // 主キーの取得
       const primaryKeyMatch = line.match(/t\.primary_key ['"](\w+)['"]/);
@@ -94,7 +89,7 @@ function extractModelInfo(filePath) {
   const columnMatches = [...content.matchAll(/t\.(\w+)\s*:\s*["']?(\w+)["']?/g)];
   columnMatches.forEach(match => {
     const columnName = match[2];
-    const columnType = match[1] ? convertDataType(match[1]) : 'string';
+    const columnType = match[1] ? match[1].toLowerCase() : 'string';
     columns.push({ name: columnName, type: columnType });
   });
 
@@ -304,16 +299,43 @@ function generateSummaryTable(tables, relationships) {
   return tableContent;
 }
 
+// 外部キーのカウントを含めたサマリーテーブルを生成する関数
+function generatePKFKSummaryTable(tables) {
+  const tableHeaders = ['テーブル名', 'PK数', 'FK数'];
+  let tableContent = `| ${tableHeaders.join(' | ')} |\n| ${tableHeaders.map(() => '---').join(' | ')} |\n`;
+
+  Object.keys(tables).forEach(table => {
+    if (tables[table]) {
+      const pkCount = tables[table].primaryKeys ? tables[table].primaryKeys.length : 0;
+      const fkCount = tables[table].foreignKeys ? tables[table].foreignKeys.length : 0;
+
+      tableContent += `| ${table} | ${pkCount} | ${fkCount} |\n`;
+    }
+  });
+
+  return tableContent;
+}
+
 const mermaidERDContentFromSchema = generateMermaidERD(parsedSchema, schemaRelationships);
 const mermaidERDContentFromModels = generateMermaidERDFromModels(modelsInfo);
 
 const schemaSummaryTable = generateSummaryTable(parsedSchema, schemaRelationships);
+const modelSummaryTable = generateSummaryTable(modelsInfo, modelRelationships);
+const pkfkSummaryTable = generatePKFKSummaryTable(parsedSchema);
 
 const finalSummaryContent = `
 # ERD Summary
 
 ## スキーマからのサマリー
 ${schemaSummaryTable}
+
+## モデルからのサマリー
+${modelSummaryTable}
+
+## PK and FK Count Summary
+
+### スキーマからのサマリー
+${pkfkSummaryTable}
 `;
 
 const finalERDContent = `
