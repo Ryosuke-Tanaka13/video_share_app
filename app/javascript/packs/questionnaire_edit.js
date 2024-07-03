@@ -42,6 +42,9 @@ document.addEventListener("turbolinks:load", function() {
       selectElement.value = question.type;
       updateQuestionContent(selectElement);
 
+      // トグルスイッチの状態を設定
+      const requiredCheckbox = template.querySelector('.required-checkbox');
+      requiredCheckbox.checked = question.required;
       if (question.type === 'dropdown') {
         const selectContainer = template.querySelector('.dropdown-template select');
         question.answers.forEach(answer => {

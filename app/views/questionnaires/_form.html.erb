@@ -30,8 +30,13 @@
           <option value="checkbox">チェックボックス</option>
         </select>
       </div>
-      <input type="text" name="questions[][text]" placeholder="質問を入力" class="question-input">
-
+      <div class="question-and-required">
+        <input type="text" name="questions[][text]" placeholder="質問を入力" class="question-input">
+        <label class="toggle_label">必須
+          <input class="toggle_input required-checkbox" type="checkbox" value="required" />
+          <span class="slider"></span>
+        </label>
+      </div>
       <div class="question-content">
         <div class="text-template" style="display:none;"><textarea name="questions[][answer]" rows="3" placeholder="回答を入力"></textarea></div>
         <div class="radio-template" style="display:none;"></div>

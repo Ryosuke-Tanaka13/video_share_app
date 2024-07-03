@@ -14,7 +14,7 @@
         <% if questionnaire_answer.pre_answers.present? %>
           <h2>動画視聴前の回答</h2>
           <% questions = QuestionnaireItem.where(id: questionnaire_answer.pre_answers.keys.map(&:to_i)) %>
-          <%= render partial: 'questionnaires/questions', locals: { questions: questions, answers: questionnaire_answer.pre_answers, answer_mode: true, type: 'pre_video' } %>
+          <%= render partial: 'questionnaires/questions', locals: { questions: questions, answers: questionnaire_answer.pre_answers, answer_mode: true, type: 'pre_video', hide_required_label: true } %>
         <% end %>
       <% end %>
 
@@ -22,7 +22,7 @@
         <% if questionnaire_answer.post_answers.present? %>
           <h2>動画視聴後の回答</h2>
           <% questions = QuestionnaireItem.where(id: questionnaire_answer.post_answers.keys.map(&:to_i)) %>
-          <%= render partial: 'questionnaires/questions', locals: { questions: questions, answers: questionnaire_answer.post_answers, answer_mode: true, type: 'post_video' } %>
+          <%= render partial: 'questionnaires/questions', locals: { questions: questions, answers: questionnaire_answer.post_answers, answer_mode: true, type: 'post_video', hide_required_label: true } %>
         <% end %>
       <% end %>
     </div>

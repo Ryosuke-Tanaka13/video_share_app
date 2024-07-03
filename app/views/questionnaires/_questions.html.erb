@@ -4,7 +4,14 @@
       <div class="question-field">
         <div class="question">
           <% question_text = question.is_a?(Hash) ? question["text"] : (local_assigns[:type] == 'pre_video' ? question.pre_question_text : question.post_question_text) %>
-          <p><strong>質問：<%= question_text %></strong></p>
+          <p>
+            <strong>質問：<%= question_text %></strong>
+            <% unless local_assigns[:hide_required_label] %>
+              <% if question["required"] %>
+                <span class="required">※必須</span>
+              <% end %>
+            <% end %>
+          </p>
           <% if answer_mode %>
             <p>
               <strong>回答：</strong>
@@ -19,7 +26,7 @@
             <% question_type = question.is_a?(Hash) ? question["type"] : (local_assigns[:type] == 'pre_video' ? question.pre_question_type : question.post_question_type) %>
             <% question_options = question.is_a?(Hash) ? question["answers"] : (local_assigns[:type] == 'pre_video' ? question.pre_options : question.post_options) %>
             <% if question_type == "text" %>
-              <textarea rows="4" placeholder="回答を入力" name="questionnaire_answer[answers][<%= question.is_a?(Hash) ? index : question.id %>]"><%= question_options&.first %></textarea>
+              <textarea class="long-textarea" rows="4" placeholder="回答を入力" name="questionnaire_answer[answers][<%= question.is_a?(Hash) ? index : question.id %>]"><%= question_options&.first %></textarea>
             <% elsif question_type == "radio" %>
               <% question_options.each do |answer| %>
                 <label class="option-item">
@@ -32,6 +39,8 @@
                   <input type="checkbox" name="questionnaire_answer[answers][<%= question.is_a?(Hash) ? index : question.id %>][]" value="<%= answer %>"> <%= answer %>
                 </label>
               <% end %>
+              <%# 隠しフィールドを追加してチェックされていないチェックボックスの値を無視 %>
+              <input type="hidden" name="questionnaire_answer[answers][<%= question.is_a?(Hash) ? index : question.id %>][]" value="">
             <% elsif question_type == "dropdown" %>
               <select name="questionnaire_answer[answers][<%= question.is_a?(Hash) ? index : question.id %>]">
                 <option disabled selected>ここから選択してください</option>

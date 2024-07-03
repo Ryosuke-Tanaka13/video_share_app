@@ -2,7 +2,6 @@ document.addEventListener('turbolinks:load', function() {
   const addQuestionButton = document.getElementById('add-question');
   const form = document.getElementById('dynamic-form');
   const formTitle = document.getElementById('form-title');
-  const viewerInfo = document.getElementById('viewer-info');
   const errorMessages = document.getElementById('error-messages');
   
   const preVideoQuestionsContainer = document.getElementById('pre-video-questions-container');
@@ -135,6 +134,7 @@ document.addEventListener('turbolinks:load', function() {
     preVideoQuestionsContainer.querySelectorAll('.question-field').forEach(field => {
       const questionText = field.querySelector('.question-input').value;
       const questionType = field.querySelector('.question-type').value;
+      const isRequired = field.querySelector('.required-checkbox').checked;
       let answers = [];
 
       if (questionType === 'dropdown') {
@@ -147,7 +147,7 @@ document.addEventListener('turbolinks:load', function() {
       } else if (questionType === 'radio' || questionType === 'checkbox') {
         const answerInputs = field.querySelectorAll(`input[type="${questionType}"]`);
         answerInputs.forEach(input => {
-          if (input.value && input.value.trim() !== '') {
+          if (input.value && input.value.trim() !== '' && input.value !== 'required') {  // 修正点
             answers.push(input.value);
           }
         });
@@ -161,13 +161,15 @@ document.addEventListener('turbolinks:load', function() {
       preVideoQuestionsData.push({
         text: questionText,
         type: questionType,
-        answers: answers
+        answers: answers,
+        required: isRequired
       });
     });
 
     postVideoQuestionsContainer.querySelectorAll('.question-field').forEach(field => {
       const questionText = field.querySelector('.question-input').value;
       const questionType = field.querySelector('.question-type').value;
+      const isRequired = field.querySelector('.required-checkbox').checked;
       let answers = [];
 
       if (questionType === 'dropdown') {
@@ -180,7 +182,7 @@ document.addEventListener('turbolinks:load', function() {
       } else if (questionType === 'radio' || questionType === 'checkbox') {
         const answerInputs = field.querySelectorAll(`input[type="${questionType}"]`);
         answerInputs.forEach(input => {
-          if (input.value && input.value.trim() !== '') {
+          if (input.value && input.value.trim() !== '' && input.value !== 'required') {  // 修正点
             answers.push(input.value);
           }
         });
@@ -194,7 +196,8 @@ document.addEventListener('turbolinks:load', function() {
       postVideoQuestionsData.push({
         text: questionText,
         type: questionType,
-        answers: answers
+        answers: answers,
+        required: isRequired
       });
     });
 

@@ -195,7 +195,8 @@ class VideosController < ApplicationController
         pre_options: type == 'pre' ? question['answers'] : nil,
         post_question_text: type == 'post' ? question['text'] : nil,
         post_question_type: type == 'post' ? question['type'] : nil,
-        post_options: type == 'post' ? question['answers'] : nil
+        post_options: type == 'post' ? question['answers'] : nil,
+        required: question['required'] 
       )
 
       QuestionnaireAnswer.create!(

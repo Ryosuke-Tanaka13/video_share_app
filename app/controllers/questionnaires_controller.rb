@@ -19,7 +19,6 @@ class QuestionnairesController < ApplicationController
 
   def create
     @questionnaire = @user.questionnaires.new(questionnaire_params)
-
     if @questionnaire.save
       render json: { redirect: user_questionnaires_path(@user) }
     else

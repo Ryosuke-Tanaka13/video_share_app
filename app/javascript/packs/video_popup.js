@@ -1,4 +1,5 @@
 document.addEventListener("turbolinks:load", function() {
+  let firstPlay = true; 
   const currentPath = window.location.pathname;
 
   // videos/new ページでは popup.js のコードを実行しない

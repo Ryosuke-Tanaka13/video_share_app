@@ -1,16 +1,9 @@
 class QuestionnaireAnswersController < ApplicationController
   before_action :set_user_or_viewer, only: %i[create index]
   before_action :ensure_logged_in
-  
 
   def create
     video_id = params[:questionnaire_answer][:video_id]
-
-    if video_id.nil?
-      flash[:error] = "Video not found"
-      redirect_to root_path
-      return
-    end
 
     @video = Video.find(video_id)
     viewer_id = params[:questionnaire_answer][:viewer_id].presence
@@ -24,7 +17,7 @@ class QuestionnaireAnswersController < ApplicationController
       @questionnaire_answer.viewer_name = current_viewer.name
       @questionnaire_answer.viewer_email = current_viewer.email
     end
-    # 回答を追加
+
     params[:questionnaire_answer][:answers]&.each do |item_id, answer|
       item_id = item_id.to_i # item_id を整数に変換
       item = QuestionnaireItem.find_by(id: item_id, video_id: video_id)
@@ -39,6 +32,19 @@ class QuestionnaireAnswersController < ApplicationController
       # ハッシュとして初期化されていることを確認する
       @questionnaire_answer.pre_answers = {} unless @questionnaire_answer.pre_answers.is_a?(Hash)
       @questionnaire_answer.post_answers = {} unless @questionnaire_answer.post_answers.is_a?(Hash)
+      
+      # 必須質問の回答が空でないかチェック
+      if item.required && (answer.blank? || (answer.is_a?(Array) && answer.all?(&:blank?)))
+        flash.now[:danger] = "回答に不備があります。※は必須項目です。"
+        # 必須質問が空の場合、元の質問情報を再取得してレンダー
+        if params[:questionnaire_type] == 'pre_video'
+          @pre_video_questions = @video.questionnaire_items.where.not(pre_question_text: nil)
+          render 'videos/_popup_before', locals: { video: @video, pre_video_questions: @pre_video_questions } and return
+        else
+          @post_video_questions = @video.questionnaire_items.where.not(post_question_text: nil)
+          render 'videos/_popup_after', locals: { video: @video, post_video_questions: @post_video_questions } and return
+        end
+      end
 
       if params[:questionnaire_type] == 'pre_video'
         @questionnaire_answer.pre_answers[item_id.to_s] = answer
@@ -53,9 +59,12 @@ class QuestionnaireAnswersController < ApplicationController
     else
       flash.now[:danger] = "回答の送信に失敗しました。"
       flash.now[:error_messages] = @questionnaire_answer.errors.full_messages.join(", ")
-      respond_to do |format|
-        format.html { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @questionnaire.questionnaire_items } }
-        format.js { render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @questionnaire.questionnaire_items } }
+      if params[:questionnaire_type] == 'pre_video'
+        @pre_video_questions = @video.questionnaire_items.where.not(pre_question_text: nil)
+        render 'videos/_popup_before', locals: { video: @video, questionnaire: @questionnaire, pre_video_questions: @pre_video_questions }
+      else
+        @post_video_questions = @video.questionnaire_items.where.not(post_question_text: nil)
+        render 'videos/_popup_after', locals: { video: @video, questionnaire: @questionnaire, post_video_questions: @post_video_questions }
       end
     end
   end
