@@ -18,11 +18,18 @@ class QuestionnairesController < ApplicationController
   end
 
   def create
+    if params[:questionnaire][:pre_video_questionnaire] == "[]"
+      render json: { redirect: new_user_questionnaire_path(@user) }
+      flash[:danger] = "エラーが発生しました。質問を入力してください"
+      return
+    end
+
     @questionnaire = @user.questionnaires.new(questionnaire_params)
     if @questionnaire.save
       render json: { redirect: user_questionnaires_path(@user) }
     else
-      render json: { errors: @questionnaire.errors.full_messages }, status: :unprocessable_entity
+      render json: { redirect: new_user_questionnaire_path(@user) }
+      flash[:danger] = "エラーが発生しました。質問を入力してください"
     end
   end
 
@@ -44,9 +51,8 @@ class QuestionnairesController < ApplicationController
         )
       }
     else
-      render json: {
-        errors: @questionnaire.errors.full_messages
-      }, status: :unprocessable_entity
+      render json: { redirect: edit_user_questionnaire_path(@user, @questionnaire) }
+      flash[:danger] = "編集内容が無効です。質問を入力してください"
     end
   end
 

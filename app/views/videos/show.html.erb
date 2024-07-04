@@ -18,10 +18,12 @@
     <%= @video.title %>
     <div class="btn-area row">
       <div class="col-md-9">
-        <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
+      <% if user_signed_in? || system_admin_signed_in? %>
+        <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" %>
+        <%= link_to 'アンケート確認', video_questionnaire_answers_path(@video), class: 'text-white btn btn-warning' %>
         <%= @video.hidden_button %>
+      <% end %>
       </div>
-      <%= link_to 'アンケート確認', video_questionnaire_answers_path(@video), class: 'btn btn-primary' if user_signed_in? || system_admin_signed_in? %>
       <% if user_signed_in? || system_admin_signed_in? %>
         <div class="col-md-3">
           <button class="copy-button" id="id-copy-button">URLをコピー
