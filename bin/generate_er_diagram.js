@@ -1,33 +1,44 @@
 // [bin/generate_er_diagram.js]
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs'); // ファイルシステムモジュールを読み込む
+const path = require('path'); // パス操作モジュールを読み込む
 
 // スキーマファイルのパス
-const schemaPath = path.join(__dirname, '../db/schema.rb');
+const schemaPath = path.join(__dirname, '../db/schema.rb'); // スキーマファイルのパスを設定
 // モデルファイルのディレクトリパス
-const modelsDir = path.join(__dirname, '../app/models');
+const modelsDir = path.join(__dirname, '../app/models'); // モデルファイルが格納されているディレクトリのパスを設定
+
 // 日本時間での現在の日付を取得
-const currentDate = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }).split(' ')[0].replace(/\//g, '-');
+const currentDate = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }).split(' ')[0].replace(/\//g, '-'); // 現在の日付を日本時間で取得し、フォーマットを修正
+
 // 出力ファイルのパス
 const outputFilePaths = {
-  er: path.join(__dirname, `../Docs/ERD_${currentDate}.md`),
-  summary: path.join(__dirname, `../Docs/Summary_${currentDate}.md`)
+  er: path.join(__dirname, `../Docs/ERD_${currentDate}.md`), // ER図の出力ファイルパス
+  summary: path.join(__dirname, `../Docs/Summary_${currentDate}.md`) // サマリーの出力ファイルパス
 };
 
 // Docsディレクトリが存在しない場合は作成する
-const outputDir = path.join(__dirname, '../Docs');
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir, { recursive: true });
+const outputDir = path.join(__dirname, '../Docs'); // 出力ディレクトリのパスを設定
+if (!fs.existsSync(outputDir)) { // 出力ディレクトリが存在しない場合
+  fs.mkdirSync(outputDir, { recursive: true }); // ディレクトリを再帰的に作成する
 }
+
+// 既存のファイルをチェックして削除
+const existingFiles = fs.readdirSync(outputDir);
+existingFiles.forEach(file => {
+  if (file.match(/^ERD_\d{4}-\d{1,2}-\d{1,2}\.(md|pdf)$/) || file.match(/^Summary_\d{4}-\d{1,2}-\d{1,2}\.(md|pdf)$/)) {
+    fs.unlinkSync(path.join(outputDir, file)); // 既存のファイルを削除
+    console.log(`既存のファイルを削除しました: ${file}`);
+  }
+});
 
 // ファイルの読み込み
 function readFileSyncSafe(filePath, encoding = 'utf8') {
   try {
-    return fs.readFileSync(filePath, encoding);
+    return fs.readFileSync(filePath, encoding); // ファイルの内容を読み込む
   } catch (error) {
-    console.error(`Error reading file ${filePath}:`, error);
-    process.exit(1);
+    console.error(`Error reading file ${filePath}:`, error); // エラーをコンソールに出力
+    process.exit(1); // プロセスを終了
   }
 }
 
