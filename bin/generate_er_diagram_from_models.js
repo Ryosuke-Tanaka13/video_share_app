@@ -1,6 +1,5 @@
 // [bin/generate_er_diagram_from_models.js]
 
-// 必要なモジュールの読み込み
 const fs = require('fs'); // ファイルシステムモジュールを読み込む
 const path = require('path'); // パス操作モジュールを読み込む
 
@@ -21,6 +20,15 @@ const outputDir = path.join(__dirname, '../Docs'); // 出力ディレクトリ�
 if (!fs.existsSync(outputDir)) { // 出力ディレクトリが存在しない場合
   fs.mkdirSync(outputDir, { recursive: true }); // ディレクトリを再帰的に作成する
 }
+
+// 既存のファイルをチェックして削除
+const existingFiles = fs.readdirSync(outputDir);
+existingFiles.forEach(file => {
+  if (file.match(/^ERD_from_models_\d{4}-\d{1,2}-\d{1,2}\.(md|pdf)$/) || file.match(/^Summary_from_models_\d{4}-\d{1,2}-\d{1,2}\.(md|pdf)$/)) {
+    fs.unlinkSync(path.join(outputDir, file)); // 既存のファイルを削除
+    console.log(`既存のファイルを削除しました: ${file}`);
+  }
+});
 
 // モデルファイルからER図情報を抽出する関数
 function extractModelInfo(filePath) {
