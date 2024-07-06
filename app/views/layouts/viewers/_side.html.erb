@@ -22,7 +22,7 @@
         <% current_viewer.organization_viewers.includes([:organization]).each do |organization_viewer| %>
         <li class="nav-item">
           <%= link_to videos_path(organization_id: organization_viewer.organization_id), class:"nav-link" do %>  
-            <i class="nav-icon fas fa-th"></i> 
+            <i class="nav-icon fas fa-file-video"></i> 
             <p>
               <%= organization_viewer.organization.name %><br><span class="ml-5">動画一覧</span>
             </p>
@@ -31,7 +31,7 @@
         <% end %>
         <li class="nav-item">
           <%= link_to edit_viewer_path(current_viewer), class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
+            <i class="nav-icon fas fa-user-edit"></i>
             <p>
               アカウント編集
             </p>
