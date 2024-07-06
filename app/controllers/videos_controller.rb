@@ -348,12 +348,19 @@ end
     escaped_srt_path_return = Shellwords.escape(srt_path_return)
     output_video_path = Rails.root.join('public', 'videos', "output_with_subtitles#{Time.now.to_i}.mp4")
     escaped_output_video_path = Shellwords.escape(output_video_path.to_s)
+    
+    # 構文エラー command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} force_style=fontfile="public/fonts/NotoSansJP-VariableFont_wght.ttf" -c:a copy #{escaped_output_video_path}"
+    # 構文エラー command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return}:force_style="fontfile=public/fonts/NotoSansJP-VariableFont_wght.ttf" -c:a copy #{escaped_output_video_path}"
+    #  グリフエラー: command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} -c:a copy #{escaped_output_video_path}"
+    # 構文エラー command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} force_style="fontfile=/Users/shimatanitakahiro/video_share_app/public/fonts/NotoSansJP-VariableFont_wght.ttf" -c:a copy #{escaped_output_video_path}"
+    # Griphエラー command = "ffmpeg -i #{escaped_video_path} -vf \"subtitles=#{escaped_srt_path_return}:force_style=fontfile='/Users/shimatanitakahiro/video_share_app/public/fonts/NotoSansJP-VariableFont_wght.ttf'\" -c:a copy #{escaped_output_video_path}"
+    # Griphエラー command = "ffmpeg -i #{escaped_video_path} -vf \"subtitles=#{escaped_srt_path_return}:force_style=fontfile='/app/fonts/NotoSansCJK.ttc'\" -c:a copy #{escaped_output_video_path}"
+    command = "ffmpeg -i #{escaped_video_path} -vf \"subtitles=#{escaped_srt_path_return}:force_style=fontfile='/app/fonts/NotoSansMonoCJKjp-VF.otf'\" -c:a copy #{escaped_output_video_path}"
+    # command = "ffmpeg -i #{escaped_video_path} -vf \"subtitles=#{escaped_srt_path_return}:force_style=fontfile='/Users/shimatanitakahiro/video_share_app/public/fonts/NotoSansCJK-Regular.ttc'\" -c:a copy #{escaped_output_video_path}"
 
-    command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} -c:a copy #{escaped_output_video_path}"
+    # Unable to find a suitable output format for command = "ffmpeg -i #{escaped_video_path} -vf subtitles=#{escaped_srt_path_return} force_style=fontfile='/Users/shimatanitakahiro/西野さん/video_share_app/public/fonts/NotoSansCJK.ttc' -c:a copy #{escaped_output_video_path}"
+
     # font_path = Rails.root.join("public/fonts/NotoSansCJK.ttc")
-    # escape_font_path = Shellwords.escape(font_path.to_s)
-    # command = "ffmpeg -i \"#{escaped_video_path}\" -vf \"drawtext=text='#{escaped_srt_path_return}':fontfile=#{font_path}:fontsize=50:fontcolor=black\" -c:a copy \"#{escaped_output_video_path}\""
-    # command = "ffmpeg -i \"#{escaped_video_path}\" -vf \"subtitles=#{escaped_srt_path_return}:fontfile=#{escape_font_path}:fontsize=50:fontcolor=black\" -c:a copy \"#{escaped_output_video_path}\""
     stdout, stderr, status = Open3.capture3(command)
 
     puts "FFmpeg command: #{command}"
