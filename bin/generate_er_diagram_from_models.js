@@ -3,25 +3,19 @@
 const fs = require('fs'); // ファイルシステムモジュールを読み込む
 const path = require('path'); // パス操作モジュールを読み込む
 
-// モデルファイルのディレクトリパス
 const modelsDir = path.join(__dirname, '../app/models'); // モデルファイルが格納されているディレクトリのパスを設定
-
-// 日本時間での現在の日付を取得
 const currentDate = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }).split(' ')[0].replace(/\//g, '-'); // 現在の日付を日本時間で取得し、フォーマットを修正
 
-// 出力ファイルのパス
 const outputFilePaths = {
   er: path.join(__dirname, `../Docs/ERD_from_models_${currentDate}.md`), // ER図の出力ファイルパス
   summary: path.join(__dirname, `../Docs/Summary_from_models_${currentDate}.md`) // サマリーの出力ファイルパス
 };
 
-// Docsディレクトリが存在しない場合は作成する
 const outputDir = path.join(__dirname, '../Docs'); // 出力ディレクトリのパスを設定
 if (!fs.existsSync(outputDir)) { // 出力ディレクトリが存在しない場合
   fs.mkdirSync(outputDir, { recursive: true }); // ディレクトリを再帰的に作成する
 }
 
-// 既存のファイルをチェックして削除
 const existingFiles = fs.readdirSync(outputDir);
 existingFiles.forEach(file => {
   if (file.match(/^ERD_from_models_\d{4}-\d{1,2}-\d{1,2}\.(md|pdf)$/) || file.match(/^Summary_from_models_\d{4}-\d{1,2}-\d{1,2}\.(md|pdf)$/)) {
@@ -30,7 +24,6 @@ existingFiles.forEach(file => {
   }
 });
 
-// モデルファイルからER図情報を抽出する関数
 function extractModelInfo(filePath) {
   const content = fs.readFileSync(filePath, 'utf8'); // ファイルの内容を読み込む
   const tableNameMatch = content.match(/class\s+(\w+)/); // クラス名を正規表現で取得
@@ -61,7 +54,6 @@ function extractModelInfo(filePath) {
   return { tableName, columns, relationships }; // テーブル情報を返す
 }
 
-// モデルディレクトリからすべてのモデル情報を取得する関数
 function getAllModelsInfo(modelsDir) {
   const files = fs.readdirSync(modelsDir); // ディレクトリ内のファイル一覧を取得
   const modelsInfo = [];
@@ -79,7 +71,6 @@ function getAllModelsInfo(modelsDir) {
   return modelsInfo; // すべてのモデル情報を返す
 }
 
-// ER図をMermaid形式で生成する関数
 function generateMermaidERD(modelsInfo) {
   let mermaidERD = '```mermaid\nerDiagram\n';
 
@@ -94,11 +85,11 @@ function generateMermaidERD(modelsInfo) {
   modelsInfo.forEach(model => {
     model.relationships.forEach(rel => {
       if (rel.type === 'belongs_to') {
-        mermaidERD += `  ${model.tableName} ||--o{ ${rel.target} : "${rel.target}_id"\n`; // belongs_to のリレーションを追加
+        mermaidERD += `  ${rel.target} ||--o{ ${model.tableName} : "${rel.target}_id"\n`; // belongs_to のリレーションを追加
       } else if (rel.type === 'has_many') {
-        mermaidERD += `  ${rel.target} ||--o{ ${model.tableName} : "${model.tableName}_id"\n`; // has_many のリレーションを追加
+        mermaidERD += `  ${model.tableName} ||--o{ ${rel.target} : "${model.tableName}_id"\n`; // has_many のリレーションを追加
       } else if (rel.type === 'has_one') {
-        mermaidERD += `  ${rel.target} ||--|| ${model.tableName} : "${model.tableName}_id"\n`; // has_one のリレーションを追加
+        mermaidERD += `  ${model.tableName} ||--|| ${rel.target} : "${model.tableName}_id"\n`; // has_one のリレーションを追加
       } else if (rel.type === 'has_and_belongs_to_many') {
         mermaidERD += `  ${model.tableName} }|--|{ ${rel.target} : "many_to_many"\n`; // has_and_belongs_to_many のリレーションを追加
       }
@@ -109,7 +100,6 @@ function generateMermaidERD(modelsInfo) {
   return mermaidERD; // Mermaid形式のER図を返す
 }
 
-// スキーマ情報を表形式で生成する関数
 function generateSchemaTable(modelsInfo) {
   const tableHeaders = ['テーブル名', 'カラム数', 'キー数', 'belongs_to', 'has_many', 'has_one', 'has_and_belongs_to_many'];
   let tableContent = `| ${tableHeaders.join(' | ')} |\n| ${tableHeaders.map(() => '---').join(' | ')} |\n`;
@@ -137,7 +127,6 @@ function generateSchemaTable(modelsInfo) {
   return tableContent; // 表形式のスキーマ情報を返す
 }
 
-// メイン処理
 const modelsInfo = getAllModelsInfo(modelsDir); // すべてのモデル情報を取得
 const mermaidERDContent = generateMermaidERD(modelsInfo); // Mermaid形式のER図を生成
 const schemaTableContent = generateSchemaTable(modelsInfo); // スキーマ情報の表を生成
@@ -156,7 +145,6 @@ const finalSummaryContent = `
 ${schemaTableContent}
 `;
 
-// 出力ファイルに書き出し
 fs.writeFileSync(outputFilePaths.er, finalERDContent, 'utf8');
 fs.writeFileSync(outputFilePaths.summary, finalSummaryContent, 'utf8');
 

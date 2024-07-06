@@ -5,8 +5,6 @@ const path = require('path'); // パス操作モジュールを読み込む
 
 // スキーマファイルのパス
 const schemaPath = path.join(__dirname, '../db/schema.rb'); // スキーマファイルのパスを設定
-// モデルファイルのディレクトリパス
-const modelsDir = path.join(__dirname, '../app/models'); // モデルファイルが格納されているディレクトリのパスを設定
 
 // 日本時間での現在の日付を取得
 const currentDate = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }).split(' ')[0].replace(/\//g, '-'); // 現在の日付を日本時間で取得し、フォーマットを修正
@@ -44,9 +42,6 @@ function readFileSyncSafe(filePath, encoding = 'utf8') {
 
 // スキーマを読み込む
 const schemaContent = readFileSyncSafe(schemaPath);
-
-// モデルファイルの一覧を取得
-const modelFiles = fs.readdirSync(modelsDir).filter(file => file.endsWith('.rb'));
 
 // データ型をMermaid用に小文字に変換する関数
 function convertDataType(dataType) {
@@ -93,55 +88,6 @@ function parseSchema(schema) {
   return tables;
 }
 
-// モデルファイルを解析してリレーションを抽出する関数
-function extractModelInfo(filePath) {
-  const content = readFileSyncSafe(filePath);
-  const tableNameMatch = content.match(/class\s+(\w+)/);
-  const tableName = tableNameMatch ? tableNameMatch[1].toLowerCase() : null;
-
-  if (!tableName) return null;
-
-  const columns = [];
-  const columnMatches = [...content.matchAll(/t\.(\w+)\s*:\s*["']?(\w+)["']?/g)];
-  columnMatches.forEach(match => {
-    const columnName = match[2];
-    const columnType = match[1] ? convertDataType(match[1]) : 'string';
-    columns.push({ name: columnName, type: columnType });
-  });
-
-  const relationships = [];
-  const relationshipPatterns = [
-    { pattern: /belongs_to\s*:\s*["']?(\w+)["']?/g, type: 'belongs_to' },
-    { pattern: /has_many\s*:\s*["']?(\w+)["']?/g, type: 'has_many' },
-    { pattern: /has_one\s*:\s*["']?(\w+)["']?/g, type: 'has_one' },
-    { pattern: /has_and_belongs_to_many\s*:\s*["']?(\w+)["']?/g, type: 'has_and_belongs_to_many' }
-  ];
-  relationshipPatterns.forEach(({ pattern, type }) => {
-    const matches = [...content.matchAll(pattern)];
-    matches.forEach(match => relationships.push({ type, target: match[1].toLowerCase() }));
-  });
-
-  return { tableName, columns, relationships };
-}
-
-// モデルディレクトリからすべてのモデル情報を取得する関数
-function getAllModelsInfo(modelsDir) {
-  const files = fs.readdirSync(modelsDir);
-  const modelsInfo = [];
-
-  files.forEach(file => {
-    const filePath = path.join(modelsDir, file);
-    if (path.extname(filePath) === '.rb') {
-      const modelInfo = extractModelInfo(filePath);
-      if (modelInfo) {
-        modelsInfo.push(modelInfo);
-      }
-    }
-  });
-
-  return modelsInfo;
-}
-
 // 外部キーを解析する関数
 function parseForeignKeys(schema) {
   const lines = schema.split('\n');
@@ -185,42 +131,6 @@ function findSchemaRelationships(tables, foreignKeys) {
 
 const schemaRelationships = findSchemaRelationships(parsedSchema, foreignKeys);
 
-// モデルのリレーションをER図に反映するためにリレーションシップを抽出
-function findModelRelationships(models) {
-  const relationships = [];
-
-  models.forEach(model => {
-    if (model.relationships) {
-      model.relationships.forEach(assoc => {
-        if (assoc.type === 'belongs_to') {
-          relationships.push({
-            fromTable: model.tableName,
-            toTable: assoc.target,
-            column: `${assoc.target}_id`
-          });
-        } else if (assoc.type === 'has_many') {
-          relationships.push({
-            fromTable: assoc.target,
-            toTable: model.tableName,
-            column: `${model.tableName}_id`
-          });
-        } else if (assoc.type === 'has_one') {
-          relationships.push({
-            fromTable: assoc.target,
-            toTable: model.tableName,
-            column: `${model.tableName}_id`
-          });
-        }
-      });
-    }
-  });
-
-  return relationships;
-}
-
-const modelsInfo = getAllModelsInfo(modelsDir);
-const modelRelationships = findModelRelationships(modelsInfo);
-
 // Mermaid形式のER図を生成する関数
 function generateMermaidERD(tables, relationships) {
   let mermaidERD = '```mermaid\n erDiagram\n';
@@ -241,36 +151,6 @@ function generateMermaidERD(tables, relationships) {
     if (tables[rel.fromTable] && tables[rel.toTable]) {
       mermaidERD += `  ${rel.toTable} ||--o{ ${rel.fromTable} : "${rel.column}"\n`;
     }
-  });
-
-  mermaidERD += '```\n';
-  return mermaidERD;
-}
-
-// モデル情報からリレーションシップを生成する関数
-function generateMermaidERDFromModels(modelsInfo) {
-  let mermaidERD = '```mermaid\n erDiagram\n';
-
-  modelsInfo.forEach(model => {
-    mermaidERD += `  ${model.tableName} {\n`;
-    model.columns.forEach(column => {
-      mermaidERD += `    ${column.name} ${column.type}\n`;
-    });
-    mermaidERD += '  }\n';
-  });
-
-  modelsInfo.forEach(model => {
-    model.relationships.forEach(rel => {
-      if (rel.type === 'belongs_to') {
-        mermaidERD += `  ${model.tableName} ||--o{ ${rel.target} : "${rel.target}_id"\n`;
-      } else if (rel.type === 'has_many') {
-        mermaidERD += `  ${rel.target} ||--o{ ${model.tableName} : "${model.tableName}_id"\n`;
-      } else if (rel.type === 'has_one') {
-        mermaidERD += `  ${rel.target} ||--|| ${model.tableName} : "${model.tableName}_id"\n`;
-      } else if (rel.type === 'has_and_belongs_to_many') {
-        mermaidERD += `  ${model.tableName} }|--|{ ${rel.target} : "many_to_many"\n`;
-      }
-    });
   });
 
   mermaidERD += '```\n';
@@ -316,7 +196,6 @@ function generateSummaryTable(tables, relationships) {
 }
 
 const mermaidERDContentFromSchema = generateMermaidERD(parsedSchema, schemaRelationships);
-const mermaidERDContentFromModels = generateMermaidERDFromModels(modelsInfo);
 
 const schemaSummaryTable = generateSummaryTable(parsedSchema, schemaRelationships);
 
@@ -332,9 +211,6 @@ const finalERDContent = `
 
 ## ER図（スキーマから抽出）
 ${mermaidERDContentFromSchema}
-
-## ER図（モデルから抽出）
-${mermaidERDContentFromModels}
 `;
 
 // 出力ファイルに書き出し
