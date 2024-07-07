@@ -57,6 +57,7 @@ class QuestionnairesController < ApplicationController
   end
 
   def destroy
+    puts "Found questionnaire: #{@questionnaire.inspect}"
     @questionnaire.destroy
     redirect_to user_questionnaires_path(@user)
     flash[:success] = 'アンケートが削除されました。'
