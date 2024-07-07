@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>App</title>
+    <title><%= yield(:title) || 'レコブル' %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="https://player.vimeo.com/api/player.js"></script>
     <%= csrf_meta_tags %>
@@ -35,14 +35,10 @@
           <%= render "layouts/flash" %>
         </div>
         <!-- Content Header (Page header) -->
-	      <div class="content-header">
+        <div class="content-header">
           <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1 class="m-0"><%= yield(:title) %></h1>
-              </div><!-- /.col -->
-            </div><!-- /.row -->
-          </div><!-- /.container-fluid -->
+            <h1><%= yield(:title) %></h1>
+          </div>
         </div>
         <%= render template: "layouts/application" %>
       </div>
