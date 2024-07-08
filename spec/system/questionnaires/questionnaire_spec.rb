@@ -7,7 +7,6 @@ RSpec.describe "アンケート管理機能", type: :system do
   let(:valid_post_video_questionnaire) { '[{"text":"有効な質問", "type":"text", "answers":[], "required":false}]' }
 
   before do
-    driven_by(:selenium_chrome_headless)
     sign_in user
   end
 

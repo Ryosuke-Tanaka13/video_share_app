@@ -20,7 +20,9 @@
       <div class="col-md-9">
       <% if user_signed_in? || system_admin_signed_in? %>
         <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" %>
-        <%= link_to 'アンケート確認', video_questionnaire_answers_path(@video), class: 'text-white btn btn-warning' %>
+        <% if @pre_answers.present? || @post_answers.present? %>
+          <%= link_to 'アンケート確認', video_questionnaire_answers_path(@video), class: 'text-white btn btn-warning' %>
+        <% end %>
         <%= @video.hidden_button %>
       <% end %>
       </div>

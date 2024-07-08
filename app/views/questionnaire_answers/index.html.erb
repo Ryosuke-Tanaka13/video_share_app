@@ -6,6 +6,7 @@
       <th>メールアドレス</th>
       <th>回答</th>
       <th>最終更新日時</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -19,6 +20,11 @@
         <td>
           <% latest_answer = answers.max_by(&:updated_at) %>
           <%= latest_answer.updated_at.strftime("%Y-%m-%d %H:%M:%S") if latest_answer.updated_at %>
+        </td>
+        <td>
+          <% answers.each do |answer| %>
+            <%= link_to '削除', video_questionnaire_answer_path(@video, latest_answer.id), method: :delete, data: { confirm: '削除しますか？' } %>
+          <% end %>
         </td>
       </tr>
     <% end %>

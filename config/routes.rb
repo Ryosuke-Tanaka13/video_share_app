@@ -81,7 +81,7 @@ Rails.application.routes.draw do
       resources :replies, only: %i[create update destroy]
     end
 
-    resources :questionnaire_answers, only: [:index, :create]
+    resources :questionnaire_answers, only: [:index, :create, :destroy]
 
     get 'questionnaire_answers/(:viewer_id)/(:user_id)', to: 'questionnaire_answers#show', as: 'video_questionnaire_answer'  
   end
