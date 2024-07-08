@@ -1,8 +1,16 @@
 <% provide(:title,  "ビデオ詳細") %>
+<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+<% if @video.popup_before_video == true %>
+  <%= link_to "popb", popup_before_video_path(@video), remote: true, id: "hiddenPopupBeforeLink", class: "btn", style: "display: none;" if user_signed_in? || system_admin_signed_in? %>
+<% end %>
+<% if @video.popup_after_video == true %>
+  <%= link_to "popa", popup_after_video_path(@video), remote: true, id: "hiddenPopupAfterLink", style: "display: none;" if user_signed_in? || system_admin_signed_in? %>
+<% end %>
+
 <div class="content">
   <div class="video-display-show">
     <!-- vimeoの動画詳細ページのパスから、id部分のみを取得し、数字型に変換したものをsrcの中に記載 -->
-    <iframe src="https://player.vimeo.com/video/<%= @video.data_url[8..17].to_i %>" width="1000px" height="500px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+    <iframe id="vimeoPlayer" src="https://player.vimeo.com/video/<%= @video.data_url[8..17].to_i %>" width="1000px" height="500px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
     </iframe>
   </div>
   <div class="video-title-and-action-show">
@@ -16,4 +24,28 @@
   </div>
 </div>
 
+<!-- 動画コメント ------------------------------------------------------------------------>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <% if account_logged_in? %>
+        <div class="comment-create">
+          <h4 class="text-left">コメントを投稿する</h4>
+            <%= render partial: 'comments/form' %>
+        </div><br>
+      <% end %>
+      <hr>
+      <div class="comment-create">
+        <h4 class="text-left title">コメント</h4>
+      </div>
+      <div id="comments_area">
+        <%= render partial: 'comments/index' if @comments.present? %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 動画コメント ------------------------------------------------------------------------>
+
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="popup_before" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="popup_after" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

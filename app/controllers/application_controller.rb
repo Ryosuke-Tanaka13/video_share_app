@@ -109,4 +109,9 @@ class ApplicationController < ActionController::Base
       redirect_back(fallback_location: root_url)
     end
   end
+
+  def current_organization
+    @current_organization = Organization.find(current_user.organization_id)
+  end
+  helper_method :current_organization
 end

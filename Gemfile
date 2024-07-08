@@ -35,14 +35,18 @@ gem 'bootsnap', '>= 1.9.3', require: false
 gem 'devise'
 gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
+gem 'rails-html-sanitizer', '~> 1.4.3'
 gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
+gem 'font-awesome-rails'
 gem 'omniauth', '1.9.1'
 gem 'omniauth-google-oauth2'
 
 gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
+
+gem 'stripe'
 
 group :development, :test do
   # ERD生成
@@ -72,11 +76,10 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   # 結合テスト用ツール
-  gem 'capybara'
+  gem 'capybara', '3.39.2'
   gem 'launchy', '~> 2.4.3' # 追記
   gem 'selenium-webdriver'
   gem 'turnip'
-  gem 'webdrivers' # 追記
   gem 'webrick'
   # Coverage
   # カバレッジ測定ツール

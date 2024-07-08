@@ -36,15 +36,19 @@
         </div>
         <div class="field">
           <%= f.label :popup_before_video, class: "video-label" %><br>
-          <%= f.select :popup_before_video, [['動画視聴開始時ポップアップ表示',0],['動画視聴開始時ポップアップ非表示',1]], { include_blank: false, selected: 0 }, id:"popup_before_video" %>
+          <%= f.select :popup_before_video, [['動画視聴開始時ポップアップ非表示',0],['動画視聴開始時ポップアップ表示',1]], { include_blank: false, selected: 0 }, id:"popup_before_video" %>
         </div>
         <div class="field">
           <%= f.label :popup_after_video, class: "video-label" %><br>
-          <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ表示',0],['動画視聴終了時ポップアップ非表示',1]], { include_blank: false, selected: 0 }, id:"popup_after_video" %>
+          <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ非表示',0],['動画視聴終了時ポップアップ表示',1]], { include_blank: false, selected: 0 }, id:"popup_after_video" %>
         </div>
-
-        <!-- video_folder中間モデル作成後、folder名一覧をここに表示予定 -->
-        
+        <div class="field">
+          <%= f.label :folders, class: "video-label" %><br>
+          <%= collection_check_boxes(:video, :folder_ids, Folder.current_user_has(current_user).includes([:organization]), :id, :name) do |b| %>
+            <%= b.label { b.check_box + b.text } %>
+          <% end %><br>
+          <%= link_to "フォルダ新規作成はこちら", new_organization_folder_path(organization_id: current_user.organization.id), remote: true %>
+        </div>
         <div class="video-post-actions">
           <%= f.submit "新規投稿", class: "btn btn-success"%>
         </div>
@@ -53,3 +57,4 @@
   <% end %>
 </div>
 
+<div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

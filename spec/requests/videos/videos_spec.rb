@@ -10,8 +10,13 @@ RSpec.describe 'Videos', type: :request do
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   # orgとanother_orgの両方に属す
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
-  let(:video_sample) { create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id) }
-  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id) }
+
+  let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
+  let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
+  let(:video_sample) do
+    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
+  end
+  let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
   let(:another_organization) { create(:another_organization) }
@@ -37,6 +42,8 @@ RSpec.describe 'Videos', type: :request do
     organization_viewer
     organization_viewer2
     organization_viewer3
+    folder_celeb
+    folder_tech
   end
 
   describe 'GET #index' do
@@ -51,7 +58,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -66,7 +73,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -81,7 +88,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -96,7 +103,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -111,7 +118,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -122,7 +129,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to videos_path(organization_id: organization.id)
       end
     end
@@ -134,7 +141,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -145,7 +152,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -163,7 +170,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -178,7 +185,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -189,7 +196,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -201,7 +208,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -212,7 +219,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -237,6 +244,7 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
                   data_url:           '/videos/999999999'
                 }
               }
@@ -254,6 +262,7 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
                   data_url:           '/videos/999999999'
                 }
               })
@@ -279,6 +288,7 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
                   data_url:           '/videos/999999999'
                 }
               }
@@ -296,6 +306,7 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
                   data_url:           '/videos/999999999'
                 }
               })
@@ -373,6 +384,7 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
                   data_url:           '/videos/999999999'
                 }
               }
@@ -398,6 +410,7 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
                   data_url:           '/videos/999999999'
                 }
               }
@@ -419,6 +432,7 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     false,
                   popup_before_video: false,
                   popup_after_video:  false,
+                  folder_ids:         [1],
                   data_url:           '/videos/999999999'
                 }
               }
@@ -440,7 +454,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -455,7 +469,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -470,7 +484,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -485,7 +499,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -499,7 +513,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it '正常値レスポンス' do
-        expect(response).to have_http_status '200'
+        expect(response).to have_http_status :ok
       end
     end
 
@@ -510,7 +524,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to videos_path(organization_id: another_organization.id)
       end
     end
@@ -522,7 +536,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なしのためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to root_path
       end
     end
@@ -533,7 +547,7 @@ RSpec.describe 'Videos', type: :request do
       end
 
       it 'アクセス権限なし(login_setがtrue)のためリダイレクト' do
-        expect(response).to have_http_status ' 302'
+        expect(response).to have_http_status :found
         expect(response).to redirect_to new_viewer_session_path
       end
     end
@@ -557,7 +571,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     true,
                   login_set:          true,
                   popup_before_video: true,
-                  popup_after_video:  true
+                  popup_after_video:  true,
+                  folder_ids:         [1]
                 }
               }
           }.to change { Video.find(video_test.id).title }.from(video_test.title).to('テストビデオ2')
@@ -574,7 +589,8 @@ RSpec.describe 'Videos', type: :request do
                   comment_public:     true,
                   login_set:          true,
                   popup_before_video: true,
-                  popup_after_video:  true
+                  popup_after_video:  true,
+                  folder_ids:         [1]
                 }
               })
           ).to redirect_to video_path(video_test)
@@ -779,14 +795,20 @@ RSpec.describe 'Videos', type: :request do
     describe 'オーナーが現在のログインユーザー' do
       before(:each) do
         sign_in user_owner
-        video_test
+        video_sample
       end
 
-      describe '異常' do
-        it 'オーナーは削除できない' do
+      describe '正常' do
+        it '動画を削除する' do
           expect {
-            delete video_path(video_test), params: { id: video_test.id }
-          }.not_to change(Video, :count)
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          }.to change(Video, :count).by(-1)
+        end
+
+        it 'indexにリダイレクトされる' do
+          expect(
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          ).to redirect_to videos_path(organization_id: organization.id)
         end
       end
     end
@@ -794,14 +816,20 @@ RSpec.describe 'Videos', type: :request do
     describe '動画投稿者が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
-        video_test
+        video_sample
       end
 
-      describe '異常' do
-        it '動画投稿者は削除できない' do
+      describe '正常' do
+        it '動画を削除する' do
           expect {
-            delete video_path(video_test), params: { id: video_test.id }
-          }.not_to change(Video, :count)
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          }.to change(Video, :count).by(-1)
+        end
+
+        it 'indexにリダイレクトされる' do
+          expect(
+            delete(video_path(video_sample), params: { id: video_sample.id })
+          ).to redirect_to videos_path(organization_id: organization.id)
         end
       end
     end
