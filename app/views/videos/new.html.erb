@@ -1,4 +1,4 @@
-<% provide(:title,  "ビデオ投稿") %>
+<% provide(:title, "ビデオ投稿") %>
 <div class="content">
   <%= form_with(model: @video, url:videos_path, local:true ) do |f| %>
     <%= render '/shared/error_messages', object: f.object %>
