@@ -12,7 +12,7 @@ RSpec.describe VideoFolder, type: :model do
 
   describe '正常' do
     it '正常値で保存可能' do
-      expect(video_folder.valid?).to eq(true)
+      expect(video_folder.valid?).to be(true)
     end
   end
 
@@ -20,7 +20,7 @@ RSpec.describe VideoFolder, type: :model do
     describe 'ビデオID' do
       it '空白' do
         video_folder.video_id = ''
-        expect(video_folder.valid?).to eq(false)
+        expect(video_folder.valid?).to be(false)
         expect(video_folder.errors.full_messages).to include('Videoを入力してください')
       end
     end
@@ -28,7 +28,7 @@ RSpec.describe VideoFolder, type: :model do
     describe 'フォルダーID' do
       it '空白' do
         video_folder.folder_id = ''
-        expect(video_folder.valid?).to eq(false)
+        expect(video_folder.valid?).to be(false)
         expect(video_folder.errors.full_messages).to include('Folderを入力してください')
       end
     end

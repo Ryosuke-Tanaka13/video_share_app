@@ -20,7 +20,7 @@ describe VimeoMe2::Video do
       VCR.use_cassette('vimeo-video-delete') do
         @delete_video.destroy
       end
-      expect(@delete_video.video).to eq(nil)
+      expect(@delete_video.video).to be_nil
     end
   end
 end
