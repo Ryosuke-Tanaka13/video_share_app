@@ -2,7 +2,7 @@ Capybara.default_driver    = :selenium_chrome
 Capybara.javascript_driver = :selenium_chrome
 
 Capybara.register_driver :selenium_chrome do |app|
-  options = ::Selenium::WebDriver::Chrome::Options.new
+  options = Selenium::WebDriver::Chrome::Options.new
 
   options.add_preference(:download, default_directory: DownloadHelpers::PATH.to_s)
   options.add_preference(:browser, set_download_behavior: { behavior: 'allow' })

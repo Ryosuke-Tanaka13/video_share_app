@@ -8,7 +8,7 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
-  config.hosts << ENV['RAILS_APP_HOST']
+  config.hosts << ENV.fetch('RAILS_APP_HOST', nil)
   config.hosts << 'localhost'
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
@@ -86,7 +86,7 @@ Rails.application.configure do
   config.active_support.disallowed_deprecation_warnings = []
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter = Logger::Formatter.new
 
   # Use a different logger for distributed setups.
   # require "syslog/logger"

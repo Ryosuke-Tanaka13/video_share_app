@@ -5,8 +5,8 @@ describe VimeoMe2::Video do
   before(:each) do
     # vcrを使って、仮想的にapiに動画データをアップロード。この時のリクエストやレスポンスの詳細は、vimeo-video.ymlに記載してある
     VCR.use_cassette('vimeo-video') do
-      @own_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], '757851426')
-      @delete_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], '757857700')
+      @own_video = VimeoMe2::Video.new(ENV.fetch('VIMEO_API_TOKEN', nil), '757851426')
+      @delete_video = VimeoMe2::Video.new(ENV.fetch('VIMEO_API_TOKEN', nil), '757857700')
     end
   end
 

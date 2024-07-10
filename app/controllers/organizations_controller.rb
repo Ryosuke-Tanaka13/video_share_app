@@ -44,7 +44,7 @@ class OrganizationsController < ApplicationController
     if Video.exists?(organization_id: @organization.id)
       videos = Video.where(organization_id: @organization.id)
       videos.each do |video|
-        vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], video.data_url)
+        vimeo_video = VimeoMe2::Video.new(ENV.fetch('VIMEO_API_TOKEN', nil), video.data_url)
         vimeo_video.destroy
       end
     end
