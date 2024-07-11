@@ -1,3 +1,4 @@
+# rubocop:disable RSpec/PendingWithoutReason
 require 'rails_helper'
 
 RSpec.xdescribe 'VideosSystem', :js, type: :system do
@@ -7,7 +8,6 @@ RSpec.xdescribe 'VideosSystem', :js, type: :system do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, organization_id: organization.id, confirmed_at: Time.now) }
-  # orgにのみ属す
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
 
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
@@ -19,7 +19,6 @@ RSpec.xdescribe 'VideosSystem', :js, type: :system do
   let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
 
-  # orgとviewerの紐付け
   let(:organization_viewer) { create(:organization_viewer) }
 
   before(:each) do
@@ -109,7 +108,6 @@ RSpec.xdescribe 'VideosSystem', :js, type: :system do
 
       it '設定を変更で動画情報が更新される' do
         fill_in 'title_edit', with: 'テストビデオ２'
-        # fill_in 'open_period_edit', with: 'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00'
         select '限定公開', from: 'range_edit'
         select '非公開', from: 'comment_public_edit'
         select 'ログイン必要', from: 'login_set_edit'
@@ -308,3 +306,4 @@ RSpec.xdescribe 'VideosSystem', :js, type: :system do
     end
   end
 end
+# rubocop:enable RSpec/PendingWithoutReason

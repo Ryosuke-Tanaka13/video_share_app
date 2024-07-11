@@ -1,3 +1,4 @@
+# rubocop:disable RSpec/PendingWithoutReason
 require 'rails_helper'
 
 RSpec.xdescribe 'VideoUnsubscribeSystem', :js, type: :system do
@@ -42,3 +43,4 @@ RSpec.xdescribe 'VideoUnsubscribeSystem', :js, type: :system do
     end
   end
 end
+# rubocop:enable RSpec/PendingWithoutReason

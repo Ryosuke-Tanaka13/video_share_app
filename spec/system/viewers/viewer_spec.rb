@@ -1,3 +1,4 @@
+# rubocop:disable RSpec/PendingWithoutReason
 require 'rails_helper'
 
 RSpec.xdescribe 'ViewerSystem', :js, type: :system do
@@ -223,7 +224,7 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.accept
-            expect(page).to have_content 'セレブエンジニアを脱退しました。'
+            expect(page).to have_text 'セレブエンジニアを脱退しました。'
           }.to change(OrganizationViewer, :count).by(-1)
         end
 
@@ -251,8 +252,8 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
         end
 
         it 'レイアウト' do
-          expect(page).to have_content viewer.name
-          expect(page).to have_content viewer1.name
+          expect(page).to have_text viewer.name
+          expect(page).to have_text viewer1.name
         end
       end
     end
@@ -347,3 +348,4 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
     end
   end
 end
+# rubocop:enable RSpec/PendingWithoutReason
