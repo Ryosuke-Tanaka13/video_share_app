@@ -1,4 +1,3 @@
-# spec/requests/organizations/organization_spec.rb
 require 'rails_helper'
 
 RSpec.describe 'Organization', type: :request do
@@ -263,7 +262,21 @@ RSpec.describe 'Organization', type: :request do
                 }
               }
           }.not_to change(Organization, :count)
-            .and not_to change(User, :count)
+          expect {
+            post organizations_path,
+              params: {
+                organization: {
+                  name:  ' ',
+                  email: 'sample1@email.com',
+                  users: {
+                    name:                  'test',
+                    email:                 'sample1@email.com',
+                    password:              'password',
+                    password_confirmation: 'password'
+                  }
+                }
+              }
+          }.not_to change(User, :count)
         end
 
         it '登録失敗するとエラーを出す' do
