@@ -25,12 +25,12 @@ RSpec.describe Video, type: :model do
 
   describe '正常' do
     it '正常値で保存可能' do
-      expect(video_sample.valid?).to eq(true)
+      expect(video_sample.valid?).to be(true)
     end
 
     it '論理削除された動画なら同じタイトルでも保存可能' do
       video_sample.title = 'デリートビデオ'
-      expect(video_sample.valid?).to eq(true)
+      expect(video_sample.valid?).to be(true)
     end
   end
 
@@ -38,13 +38,13 @@ RSpec.describe Video, type: :model do
     describe 'タイトル' do
       it '空白' do
         video_sample.title = ''
-        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.valid?).to be(false)
         expect(video_sample.errors.full_messages).to include('タイトルを入力してください')
       end
 
       it '重複' do
         video_sample.title = 'テストビデオ'
-        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.valid?).to be(false)
         expect(video_sample.errors.full_messages).to include('タイトルはすでに存在します')
       end
     end
@@ -52,7 +52,7 @@ RSpec.describe Video, type: :model do
     describe '組織ID' do
       it '空白' do
         video_sample.organization_id = ''
-        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.valid?).to be(false)
         expect(video_sample.errors.full_messages).to include('組織を入力してください')
       end
     end
@@ -60,7 +60,7 @@ RSpec.describe Video, type: :model do
     describe '投稿者ID' do
       it '空白' do
         video_sample.user_id = ''
-        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.valid?).to be(false)
         expect(video_sample.errors.full_messages).to include('投稿者を入力してください')
       end
     end
@@ -68,13 +68,13 @@ RSpec.describe Video, type: :model do
     describe '動画データ' do
       it '動画データが空白' do
         video_sample.video = nil
-        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.valid?).to be(false)
         expect(video_sample.errors.full_messages).to include('ビデオを入力してください')
       end
 
       it '動画データ以外のファイル' do
         video_sample.video = fixture_file_upload('/default.png')
-        expect(video_sample.valid?).to eq(false)
+        expect(video_sample.valid?).to be(false)
         expect(video_sample.errors.full_messages).to include('ビデオのファイル形式が不正です。')
       end
     end

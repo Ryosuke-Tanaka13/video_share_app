@@ -24,9 +24,9 @@ RSpec.describe 'Videos', type: :request do
   # orgとviewerの紐付け
   let(:organization_viewer) { create(:organization_viewer, organization_id: 1, viewer_id: 1) }
   # orgとviewer1の紐付け
-  let(:organization_viewer2) { create(:organization_viewer2, organization_id: 1, viewer_id: 3) }
+  let(:member_viewer) { create(:member_viewer, organization_id: 1, viewer_id: 3) }
   # another_orgとviewer1の紐付け
-  let(:organization_viewer3) { create(:organization_viewer3, organization_id: 2, viewer_id: 3) }
+  let(:guest_viewer) { create(:guest_viewer, organization_id: 2, viewer_id: 3) }
 
   before(:each) do
     system_admin
@@ -38,8 +38,8 @@ RSpec.describe 'Videos', type: :request do
     viewer
     viewer1
     organization_viewer
-    organization_viewer2
-    organization_viewer3
+    member_viewer
+    guest_viewer
     folder_celeb
     folder_tech
     video_sample

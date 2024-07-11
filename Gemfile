@@ -60,8 +60,8 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'letter_opener_web', '~> 1.0'
-  gem 'pry-rails'
   gem 'pry-nav'
+  gem 'pry-rails'
   gem 'rspec-rails'
 end
 

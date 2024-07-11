@@ -3,6 +3,6 @@ FactoryBot.define do
     questionnaire { nil }
     viewer { nil }
     video { nil }
-    answer { "MyText" }
+    answer { 'MyText' }
   end
 end

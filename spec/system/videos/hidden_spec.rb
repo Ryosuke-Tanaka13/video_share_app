@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'VideoHiddenSystem', type: :system, js: true do
+RSpec.xdescribe 'VideoHiddenSystem', :js, type: :system do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }

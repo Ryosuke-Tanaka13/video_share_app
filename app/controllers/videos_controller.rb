@@ -1,5 +1,5 @@
 class VideosController < ApplicationController
-  include CommentReply 
+  include CommentReply
   helper_method :account_logged_in?
   before_action :ensure_logged_in, except: :show
   before_action :set_organization, only: %i[index]
@@ -61,22 +61,18 @@ class VideosController < ApplicationController
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
   end
 
-  def popup_before 
+  def popup_before
     @video = Video.find_by(id_digest: params[:id])
     @pre_video_questions = @video.questionnaire_items.where.not(pre_question_text: nil)
     @answers = {}
-    respond_to do |format|
-      format.js
-    end
+    respond_to(&:js)
   end
-  
+
   def popup_after
     @video = Video.find_by(id_digest: params[:id])
     @post_video_questions = @video.questionnaire_items.where.not(post_question_text: nil)
     @answers = {}
-    respond_to do |format|
-      format.js
-    end
+    respond_to(&:js)
   end
 
   def edit
@@ -107,7 +103,8 @@ class VideosController < ApplicationController
   end
 
   def video_params
-    params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video, :popup_after_video, :pre_video_questionnaire_id, :post_video_questionnaire_id, folder_ids: [])
+    params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
+      :popup_after_video, :pre_video_questionnaire_id, :post_video_questionnaire_id, folder_ids: [])
   end
 
   def video_search_params
@@ -176,7 +173,7 @@ class VideosController < ApplicationController
 
   def set_user
     @user = current_user if current_user.present?
-  end 
+  end
 
   def set_viewer
     @viewer = current_viewer if current_viewer.present?
@@ -189,22 +186,22 @@ class VideosController < ApplicationController
 
     questions.each do |question|
       item = QuestionnaireItem.create!(
-        video_id: video.id,
-        pre_question_text: type == 'pre' ? question['text'] : nil,
-        pre_question_type: type == 'pre' ? question['type'] : nil,
-        pre_options: type == 'pre' ? question['answers'] : nil,
+        video_id:           video.id,
+        pre_question_text:  type == 'pre' ? question['text'] : nil,
+        pre_question_type:  type == 'pre' ? question['type'] : nil,
+        pre_options:        type == 'pre' ? question['answers'] : nil,
         post_question_text: type == 'post' ? question['text'] : nil,
         post_question_type: type == 'post' ? question['type'] : nil,
-        post_options: type == 'post' ? question['answers'] : nil,
-        required: question['required'] 
+        post_options:       type == 'post' ? question['answers'] : nil,
+        required:           question['required']
       )
 
       QuestionnaireAnswer.create!(
         questionnaire_item: item,
-        user_id: video.user_id,
-        video_id: video.id,
-        pre_answers: type == 'pre' ? [] : nil,
-        post_answers: type == 'post' ? [] : nil
+        user_id:            video.user_id,
+        video_id:           video.id,
+        pre_answers:        type == 'pre' ? [] : nil,
+        post_answers:       type == 'post' ? [] : nil
       )
     end
   end

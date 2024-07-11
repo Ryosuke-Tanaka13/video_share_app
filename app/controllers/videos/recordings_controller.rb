@@ -8,6 +8,7 @@ class Videos::RecordingsController < ApplicationController
   def set_user_id
     @user = current_user
   end
+
   # ログイン中のuserのみ許可
   def ensure_current_user
     unless current_user?

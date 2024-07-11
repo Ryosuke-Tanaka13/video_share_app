@@ -1,6 +1,6 @@
 class Video < ApplicationRecord
   acts_as_paranoid
-  
+
   belongs_to :organization
   belongs_to :user
   has_one_attached :video
@@ -9,7 +9,7 @@ class Video < ApplicationRecord
   has_many :folders, through: :video_folders
   has_many :questionnaire_answers, dependent: :destroy
   has_many :questionnaire_items, dependent: :destroy
-  
+
   belongs_to :pre_video_questionnaire, -> { with_deleted }, class_name: 'Questionnaire', foreign_key: 'pre_video_questionnaire_id', optional: true
   belongs_to :post_video_questionnaire, -> { with_deleted }, class_name: 'Questionnaire', foreign_key: 'post_video_questionnaire_id', optional: true
 
@@ -67,8 +67,9 @@ class Video < ApplicationRecord
     end
   end
 
-  scope :search, ->(search_params) {
+  scope :search, lambda { |search_params|
     return if search_params.blank?
+
     title_like(search_params[:title_like])
       .open_period_from(search_params[:open_period_from])
       .open_period_to(search_params[:open_period_to])
@@ -79,7 +80,7 @@ class Video < ApplicationRecord
   scope :title_like, ->(title) { where('title LIKE ?', "%#{title}%") if title.present? }
   scope :open_period_from, ->(from) { where('? <= open_period', DateTime.parse(from) - 9.hours) if from.present? }
   scope :open_period_to, ->(to) { where('open_period <= ?', DateTime.parse(to) - 9.hours) if to.present? }
-  scope :range, ->(range) {
+  scope :range, lambda { |range|
     if range.present?
       if range == 'all'
         nil

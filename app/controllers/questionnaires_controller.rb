@@ -1,6 +1,6 @@
 class QuestionnairesController < ApplicationController
   before_action :set_user
-  before_action :set_questionnaire, only: [:show, :edit, :update, :destroy, :apply]
+  before_action :set_questionnaire, only: %i[show edit update destroy apply]
   before_action :ensure_logged_in
   before_action :correct_user_id?
 
@@ -18,9 +18,9 @@ class QuestionnairesController < ApplicationController
   end
 
   def create
-    if params[:questionnaire][:pre_video_questionnaire] == "[]"
+    if params[:questionnaire][:pre_video_questionnaire] == '[]'
       render json: { redirect: new_user_questionnaire_path(@user) }
-      flash[:danger] = "エラーが発生しました。質問を入力してください"
+      flash[:danger] = 'エラーが発生しました。質問を入力してください'
       return
     end
 
@@ -29,7 +29,7 @@ class QuestionnairesController < ApplicationController
       render json: { redirect: user_questionnaires_path(@user) }
     else
       render json: { redirect: new_user_questionnaire_path(@user) }
-      flash[:danger] = "エラーが発生しました。質問を入力してください"
+      flash[:danger] = 'エラーが発生しました。質問を入力してください'
     end
   end
 
@@ -40,19 +40,19 @@ class QuestionnairesController < ApplicationController
   def update
     @questionnaire = @user.questionnaires.find(params[:id])
     if @questionnaire.update(questionnaire_params)
-      flash[:success] = "アンケートが更新されました。"
+      flash[:success] = 'アンケートが更新されました。'
       render json: {
         redirect: user_questionnaires_path(
           @user,
-          apply: params[:apply],
-          type: params[:type],
+          apply:              params[:apply],
+          type:               params[:type],
           popup_before_video: params[:popup_before_video],
-          popup_after_video: params[:popup_after_video]
+          popup_after_video:  params[:popup_after_video]
         )
       }
     else
       render json: { redirect: edit_user_questionnaire_path(@user, @questionnaire) }
-      flash[:danger] = "編集内容が無効です。質問を入力してください"
+      flash[:danger] = '編集内容が無効です。質問を入力してください'
     end
   end
 
@@ -85,9 +85,9 @@ class QuestionnairesController < ApplicationController
   end
 
   def parse_questions(questionnaire_data)
-    if questionnaire_data.is_a?(String) && questionnaire_data.strip.empty?
+    if questionnaire_data.kind_of?(String) && questionnaire_data.strip.empty?
       []
-    elsif questionnaire_data.is_a?(String)
+    elsif questionnaire_data.kind_of?(String)
       JSON.parse(questionnaire_data)
     else
       questionnaire_data || []

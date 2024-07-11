@@ -81,7 +81,7 @@ RSpec.configure do |config|
     driven_by :selenium_chrome
   end
 
-  config.before(:each, type: :system, js: true) do
+  config.before(:each, :js, type: :system) do
     driven_by :selenium_chrome
   end
   # arbitrary gems may also be filtered via:

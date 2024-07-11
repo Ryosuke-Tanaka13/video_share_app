@@ -50,7 +50,7 @@ RSpec.describe Reply, type: :model do
     context 'システム管理者の場合' do
       it '空白' do
         system_admin_reply.reply = ''
-        expect(system_admin_reply.valid?).to eq(false)
+        expect(system_admin_reply.valid?).to be(false)
         expect(system_admin_reply.errors.full_messages).to include('Replyを入力してください')
       end
     end
@@ -58,7 +58,7 @@ RSpec.describe Reply, type: :model do
     context '動画投稿者の場合' do
       it '空白' do
         user_reply.reply = ''
-        expect(user_reply.valid?).to eq(false)
+        expect(user_reply.valid?).to be(false)
         expect(user_reply.errors.full_messages).to include('Replyを入力してください')
       end
     end
@@ -66,7 +66,7 @@ RSpec.describe Reply, type: :model do
     context '動画視聴者の場合' do
       it '空白' do
         viewer_reply.reply = ''
-        expect(viewer_reply.valid?).to eq(false)
+        expect(viewer_reply.valid?).to be(false)
         expect(viewer_reply.errors.full_messages).to include('Replyを入力してください')
       end
     end
