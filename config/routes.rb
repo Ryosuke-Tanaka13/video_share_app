@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
@@ -25,8 +23,7 @@ Rails.application.routes.draw do
     passwords: 'system_admins/passwords'
   }
 
-  resources :system_admins, only: %i[show edit update] do
-  end
+  resources :system_admins, only: %i[show edit update]
   # =================================================================
 
   # user関連=======================================================

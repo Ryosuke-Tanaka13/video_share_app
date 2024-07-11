@@ -1,6 +1,7 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'FolderSystem', :js, type: :system do
+RSpec.xdescribe 'FolderSystem', :js, type: :system 
+  # このテストは開発中でスキップされています。
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:system_admin) { create(:system_admin) }

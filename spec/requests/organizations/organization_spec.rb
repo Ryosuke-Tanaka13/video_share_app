@@ -1,3 +1,4 @@
+# spec/requests/organizations/organization_spec.rb
 require 'rails_helper'
 
 RSpec.describe 'Organization', type: :request do
@@ -261,8 +262,8 @@ RSpec.describe 'Organization', type: :request do
                   }
                 }
               }
-          }.to change(Organization, :count).by(0)
-            .and change(User, :count).by(0)
+          }.not_to change(Organization, :count)
+            .and not_to change(User, :count)
         end
 
         it '登録失敗するとエラーを出す' do
@@ -824,7 +825,8 @@ RSpec.describe 'Organization', type: :request do
         it '組織を削除する' do
           expect {
             delete organization_path(organization), params: { id: organization.id }
-          }.to change(Organization, :count).by(-1) && change(Video, :count).by(-1)
+          }.to change(Organization, :count).by(-1)
+            .and change(Video, :count).by(-1)
         end
 
         it 'indexにリダイレクトされる' do

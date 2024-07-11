@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.xdescribe 'VideosSystem', :js, type: :system do
+  # このテストは開発中であり、現在の実装に影響を与える可能性があるためスキップされています。
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
