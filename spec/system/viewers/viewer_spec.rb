@@ -10,8 +10,8 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
 
   let(:organization_viewer) { create(:organization_viewer) }
-  let(:organization_viewer2) { create(:organization_viewer2) }
-  let(:organization_viewer3) { create(:organization_viewer3) }
+  let(:member_viewer) { create(:member_viewer) }
+  let(:guest_viewer) { create(:guest_viewer) }
 
   before(:each) do
     system_admin
@@ -21,7 +21,7 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
     viewer
     viewer1
     organization_viewer
-    organization_viewer2
+    member_viewer
   end
 
   describe 'サイドバーの項目/遷移確認' do
