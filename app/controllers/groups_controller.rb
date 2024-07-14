@@ -21,9 +21,9 @@ class GroupsController < ApplicationController
   def new
     @group = Group.new
     @viewers = Viewer.joins(:organization_viewers)
-                     .where(organization_viewers: { organization_id: current_user.organization_id })
-                     .where(is_valid: true)
-  end
+                      .where(organization_viewers: { organization_id: current_user.organization_id })
+                      .where(is_valid: true)
+    end
 
   def create
     @group = Group.new(group_params)
