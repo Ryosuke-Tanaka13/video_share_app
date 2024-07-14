@@ -2,7 +2,6 @@ class GroupsController < ApplicationController
   layout 'groups', only: %i[index show new edit update create destroy remove_viewer]
   before_action :ensure_logged_in
   before_action :ensure_admin_or_user
-  before_action :not_exist, only: %i[show edit update]
   before_action :set_group, only: %i[show edit update destroy remove_viewer]
   before_action :check_viewer, only: %i[show edit update destroy remove_viewer]
   before_action :check_permission, only: [:destroy]
@@ -21,7 +20,9 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
-    @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
+    @viewers = Viewer.joins(:organization_viewers)
+                     .where(organization_viewers: { organization_id: current_user.organization_id })
+                     .where(is_valid: true)
   end
 
   def create
@@ -77,14 +78,6 @@ class GroupsController < ApplicationController
 
   def set_group
     @group = Group.find_by(uuid: params[:uuid])
-  end
-
-  # set_viewerが退会済であるページは、システム管理者のみ許可
-  def not_exist
-    if current_user && Viewer.find_by(id: current_user.id)&.is_valid == false && !current_system_admin?
-      flash[:danger] = '存在しないアカウントです。'
-      redirect_back(fallback_location: root_url)
-    end
   end
 
   def check_viewer

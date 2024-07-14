@@ -22,9 +22,7 @@ class VideosController < ApplicationController
     elsif current_user.present?
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
     elsif current_viewer.present?
-      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available.select do |video|
-        video.accessible_by?(current_viewer)
-      end
+      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available
     end
   end
 
