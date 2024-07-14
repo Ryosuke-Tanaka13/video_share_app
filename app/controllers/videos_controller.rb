@@ -59,6 +59,11 @@ class VideosController < ApplicationController
     @comment = Comment.new
     @reply = Reply.new
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
+    answers = QuestionnaireAnswer.where(video_id: @video.id)
+    answers.each do |answer|
+      @pre_answers = answers.first.pre_answers unless answer.pre_answers.nil?
+      @post_answers = answers.first.post_answers unless answer.post_answers.nil?
+    end
   end
 
   def popup_before

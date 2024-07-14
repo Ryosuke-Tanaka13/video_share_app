@@ -7,7 +7,6 @@
   <%= link_to "popa", popup_after_video_path(@video), remote: true, id: "hiddenPopupAfterLink", style: "display: none;" %>
 <% end %>
 
-
 <div class="content">
   <div class="video-display-show">
     <video width="1000" height="500" id="mv" controls>
@@ -20,7 +19,9 @@
       <div class="col-md-9">
       <% if user_signed_in? || system_admin_signed_in? %>
         <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" %>
-        <%= link_to 'アンケート確認', video_questionnaire_answers_path(@video), class: 'text-white btn btn-warning' %>
+        <% if @pre_answers.present? || @post_answers.present? %>
+          <%= link_to 'アンケート確認', video_questionnaire_answers_path(@video), class: 'text-white btn btn-warning' %>
+        <% end %>
         <%= @video.hidden_button %>
       <% end %>
       </div>

@@ -1,6 +1,7 @@
 class QuestionnaireAnswersController < ApplicationController
-  before_action :set_user_or_viewer, only: %i[create index]
+  before_action :set_user_or_viewer, only: %i[create index destroy]
   before_action :ensure_logged_in
+  before_action :set_questionnaire_answer, only: %i[destroy]
 
   def create
     video_id = params[:questionnaire_answer][:video_id]
@@ -52,7 +53,7 @@ class QuestionnaireAnswersController < ApplicationController
         @questionnaire_answer.post_answers[item_id.to_s] = answer
       end
     end
-
+    
     if @questionnaire_answer.save
       flash[:success] = '回答が送信されました。'
       redirect_to video_path(@video, answered: true)
@@ -88,6 +89,15 @@ class QuestionnaireAnswersController < ApplicationController
     @post_questionnaire_answers = @questionnaire_answers.select { |qa| qa.post_answers.present? }
   end
 
+  def destroy
+    if @questionnaire_answer.destroy
+      flash[:success] = "回答が削除されました。"
+    else
+      flash[:danger] = "回答の削除に失敗しました。"
+    end
+    redirect_to video_questionnaire_answers_url
+  end
+
   private
 
   def questionnaire_answer_params
@@ -98,6 +108,10 @@ class QuestionnaireAnswersController < ApplicationController
   def set_user_or_viewer
     @user = current_user if user_signed_in?
     @viewer = current_viewer if viewer_signed_in?
+  end
+
+  def set_questionnaire_answer
+    @questionnaire_answer = QuestionnaireAnswer.find(params[:id])
   end
 
   def set_user

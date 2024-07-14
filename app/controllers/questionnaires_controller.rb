@@ -18,7 +18,7 @@ class QuestionnairesController < ApplicationController
   end
 
   def create
-    if params[:questionnaire][:pre_video_questionnaire] == '[]'
+    if params[:questionnaire][:pre_video_questionnaire] == '[]' && params[:questionnaire][:post_video_questionnaire] == '[]'
       render json: { redirect: new_user_questionnaire_path(@user) }
       flash[:danger] = 'エラーが発生しました。質問を入力してください'
       return

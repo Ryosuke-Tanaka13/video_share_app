@@ -18,11 +18,9 @@ document.addEventListener("turbolinks:load", function() {
   // 動画が再生される直前に発火
   if (localVideoPlayer) {
     localVideoPlayer.addEventListener('play', function() {
-      if (firstPlay) {
-        const hiddenLink = document.getElementById('hiddenPopupBeforeLink');
-        if (hiddenLink) {
-          hiddenLink.click();
-        }
+      const hiddenLink = document.getElementById('hiddenPopupBeforeLink');
+      if (firstPlay && hiddenLink) {
+        hiddenLink.click();
         localVideoPlayer.pause(); // 動画を停止
       }
     });
