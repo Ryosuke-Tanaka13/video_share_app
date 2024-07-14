@@ -78,13 +78,13 @@ RSpec.describe 'グループ新規登録', type: :system do
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
-        expect(page).to have_current_path(edit_group_path(group.uuid, organization_id: group.organization_id))
         expect(page).to have_content('視聴グループ名を入力してください')
+        expect(page).to have_current_path(edit_group_path(group.uuid))
       end
     end
 
     context '管理者でログイン' do
-      let!(:group) { create(:group) }
+      let!(:group) { create(:group, organization: organization) }
 
       before(:each) do
         sign_in(system_admin)
@@ -102,8 +102,8 @@ RSpec.describe 'グループ新規登録', type: :system do
         visit edit_group_path(group.uuid)
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
-        expect(page).to have_current_path(edit_group_path(group.uuid, organization_id: group.organization_id))
         expect(page).to have_content('視聴グループ名を入力してください')
+        expect(page).to have_current_path(edit_group_path(group.uuid))
       end
     end
   end
