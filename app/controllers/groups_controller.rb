@@ -24,20 +24,7 @@ class GroupsController < ApplicationController
       .where(organization_viewers: { organization_id: current_user.organization_id })
       .where(is_valid: true)
   end
-  
-  def create
-    @group = Group.new(group_params)
-    @group.organization_id = current_user.organization_id
-    if @group.save
-      redirect_to groups_path
-    else
-      render 'new'
-    end
-  end
-  
-  
-  
-  
+
   def create
     @group = Group.new(group_params)
     @group.organization_id = current_user.organization_id
@@ -78,7 +65,7 @@ class GroupsController < ApplicationController
 
   def remove_viewer
     viewer = Viewer.find(params[:viewer_id])
-    group.viewers.delete(viewer)
+    @group.viewers.delete(viewer)
 
     redirect_to groups_path
   end
