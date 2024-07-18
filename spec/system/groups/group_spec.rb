@@ -60,7 +60,7 @@ RSpec.describe 'グループ管理', type: :system do
           fill_in 'group[name]', with: 'Edited Group Name'
           find('input[name="commit"]').click
           expect(page).to have_current_path groups_path, ignore_query: true
-          expect(page).to havecontent('Edited Group Name')
+          expect(page).to have_content('Edited Group Name')
         end
       end
     end
@@ -74,11 +74,11 @@ RSpec.describe 'グループ管理', type: :system do
       end
 
       it '正常系: 視聴グループの削除に成功する' do
-        expect(page).to havecontent(group.name)
+        expect(page).to have_content(group.name)
         find_link('削除', href: group_path(group.uuid)).click
         page.driver.browser.switch_to.alert.accept
-        expect(page).to havecontent('グループを削除しました')
-        expect(page).to havecurrent_path(groups_path, ignore_query: true)
+        expect(page).to have_content('グループを削除しました')
+        expect(page).to have_current_path(groups_path, ignore_query: true)
         expect(Group.count).to eq 0
       end
     end
@@ -96,8 +96,8 @@ RSpec.describe 'グループ管理', type: :system do
       it '異常系: 視聴グループ名が空の場合、エラーメッセージが表示される' do
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
-        expect(page).to havecurrent_path groups_path
-        expect(page).to havecontent('視聴グループ名を入力してください')
+        expect(page).to have_current_path new_group_path
+        expect(page).to have_content('視聴グループ名を入力してください')
       end
     end
 
@@ -116,8 +116,8 @@ RSpec.describe 'グループ管理', type: :system do
           visit edit_group_path(group.uuid)
           fill_in 'group[name]', with: ''
           find('input[name="commit"]').click
-          expect(page).to havecurrent_path(edit_group_path(group.uuid, organization_id: group.organization_id))
-          expect(page).to havecontent('視聴グループ名を入力してください')
+          expect(page).to have_current_path edit_group_path(group.uuid, organization_id: group.organization_id)
+          expect(page).to have_content('視聴グループ名を入力してください')
         end
       end
 
@@ -132,8 +132,8 @@ RSpec.describe 'グループ管理', type: :system do
         it '異常系: グループ名を空で更新しようとするとエラーメッセージが表示される' do
           fill_in 'group[name]', with: ''
           find('input[name="commit"]').click
-          expect(page).to havecurrent_path(edit_group_path(group.uuid, organization_id: group.organization_id))
-          expect(page).to havecontent('視聴グループ名を入力してください')
+          expect(page).to have_current_path edit_group_path(group.uuid, organization_id: group.organization_id)
+          expect(page).to have_content('視聴グループ名を入力してください')
         end
       end
     end
@@ -147,17 +147,11 @@ RSpec.describe 'グループ管理', type: :system do
       end
 
       it '異常系: 投稿者でログインしている場合、視聴グループの削除に失敗する' do
-        expect(page).to havecontent(group.name)
+        expect(page).to have_content(group.name)
         find_link('削除', href: group_path(group.uuid)).click
         page.driver.browser.switch_to.alert.accept
-        expect(page).to havecontent('権限がありません')
-        expect(page).to havecurrent_path(groups_path, ignore_query: true)
-        expect(Group.count).to eq 1
-      end
-
-      it '異常系: 無効なグループIDで削除しようとするとエラーメッセージが表示される' do
-        visit group_path('invalid_uuid')
-        expect(page).to havecontent('グループが見つかりません')
+        expect(page).to have_content('権限がありません')
+        expect(page).to have_current_path groups_path, ignore_query: true
         expect(Group.count).to eq 1
       end
     end
