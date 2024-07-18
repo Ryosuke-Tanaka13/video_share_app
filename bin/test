@@ -11,6 +11,5 @@ cat <<EOS
 =============================
 EOS
 
-docker-compose run --rm app bin/rails db:migrate RAILS_ENV=test
 # テストの実行
 docker-compose run --rm app /webapp/docker/scripts/test.sh $*;
