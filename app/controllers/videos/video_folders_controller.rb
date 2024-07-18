@@ -1,7 +1,6 @@
 class Videos::VideoFoldersController < VideosController
   before_action :ensure_admin_or_owner_or_correct_user
   before_action :ensure_my_organization
-  skip_before_action :ensure_admin
 
   def destroy
     folder = Folder.find(params[:folder_id])
