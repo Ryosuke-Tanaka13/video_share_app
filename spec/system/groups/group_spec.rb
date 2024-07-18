@@ -96,7 +96,7 @@ RSpec.describe 'グループ管理', type: :system do
       it '異常系: 視聴グループ名が空の場合、エラーメッセージが表示される' do
         fill_in 'group[name]', with: ''
         find('input[name="commit"]').click
-        expect(page).to have_current_path new_group_path
+        expect(page).to have_current_path group_path
         expect(page).to have_content('視聴グループ名を入力してください')
       end
     end
