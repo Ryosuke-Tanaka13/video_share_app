@@ -184,7 +184,6 @@ ActiveRecord::Schema.define(version: 2023_07_08_203829) do
     t.integer "audience_rate"
     t.datetime "open_period"
     t.boolean "range", default: false
-    t.boolean "comment_public", default: false
     t.boolean "login_set", default: false
     t.boolean "popup_before_video", default: false
     t.boolean "popup_after_video", default: false
