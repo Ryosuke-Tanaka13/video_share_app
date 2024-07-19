@@ -1,6 +1,6 @@
 module VideosHelper
   def selected_before_range
-    return ['限定公開', 1] if @video.range
+    ['限定公開', 1] if @video.range
   end
 
   def selected_before_login_set
