@@ -3,7 +3,6 @@ FactoryBot.define do
     title { 'テスト動画1月' }
     open_period { 'Tue, 31 Jan 2023 23:59:00.000000000 JST +09:00' }
     range { true }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -17,7 +16,6 @@ FactoryBot.define do
     title { 'テスト動画1月（論理削除済み）' }
     open_period { 'Tue, 31 Jan 2023 23:59:00.000000000 JST +09:00' }
     range { true }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -32,7 +30,6 @@ FactoryBot.define do
     title { 'テスト動画2月' }
     open_period { 'Tue, 28 Feb 2023 23:59:00.000000000 JST +09:00' }
     range { false }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -46,7 +43,6 @@ FactoryBot.define do
     title { 'テスト動画3月' }
     open_period { 'Fri, 31 Mar 2023 23:59:00.000000000 JST +09:00' }
     range { true }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -60,7 +56,6 @@ FactoryBot.define do
     title { 'テスト動画4月' }
     open_period { 'Sun, 30 Apr 2023 23:59:00.000000000 JST +09:00' }
     range { false }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -74,7 +69,6 @@ FactoryBot.define do
     title { 'テスト動画5月' }
     open_period { 'Wed, 31 May 2023 23:59:00.000000000 JST +09:00' }
     range { true }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -88,7 +82,6 @@ FactoryBot.define do
     title { 'テスト動画1月（組織外）' }
     open_period { 'Tue, 31 Jan 2023 23:59:00.000000000 JST +09:00' }
     range { true }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
@@ -102,7 +95,6 @@ FactoryBot.define do
     title { 'テスト動画2月（組織外）' }
     open_period { 'Tue, 28 Feb 2023 23:59:00.000000000 JST +09:00' }
     range { false }
-    comment_public { false }
     login_set { false }
     popup_before_video { false }
     popup_after_video { false }
