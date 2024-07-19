@@ -1,4 +1,4 @@
-<% provide(:title,  "ビデオ投稿") %>
+<% provide(:title, "ビデオ投稿") %>
 <div class="content">
   <%= form_with(model: @video, url:videos_path, local:true ) do |f| %>
     <%= render '/shared/error_messages', object: f.object %>
@@ -32,11 +32,11 @@
         </div>
         <div class="field">
           <%= f.label :popup_before_video, class: "video-label" %><br>
-          <%= f.select :popup_before_video, [['動画視聴開始時ポップアップ表示',0],['動画視聴開始時ポップアップ非表示',1]], { include_blank: false, selected: 0 }, id:"popup_before_video" %>
+          <%= f.select :popup_before_video, [['動画視聴開始時ポップアップ非表示',0],['動画視聴開始時ポップアップ表示',1]], { include_blank: false, selected: 0 }, id:"popup_before_video" %>
         </div>
         <div class="field">
           <%= f.label :popup_after_video, class: "video-label" %><br>
-          <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ表示',0],['動画視聴終了時ポップアップ非表示',1]], { include_blank: false, selected: 0 }, id:"popup_after_video" %>
+          <%= f.select :popup_after_video, [['動画視聴終了時ポップアップ非表示',0],['動画視聴終了時ポップアップ表示',1]], { include_blank: false, selected: 0 }, id:"popup_after_video" %>
         </div>
         <div class="field">
           <%= f.label :folders, class: "video-label" %><br>
