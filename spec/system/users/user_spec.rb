@@ -37,7 +37,7 @@ RSpec.xdescribe 'UserSystem', type: :system do
         expect(page).to have_link 'レコブル'
         expect(page).to have_link user_owner.name
         expect(page).to have_link 'アンケート作成'
-        expect(page).to have_link '対象Grの設定'
+        expect(page).to have_link '対象グループの設定'
         expect(page).to have_link '動画録画'
         expect(page).to have_link '動画投稿'
         expect(page).to have_link '動画フォルダ一覧'
@@ -50,7 +50,7 @@ RSpec.xdescribe 'UserSystem', type: :system do
         expect(page).to have_link 'レコブル'
         expect(page).to have_link user_owner.name
         expect(page).to have_link 'アンケート作成'
-        expect(page).to have_link '対象Grの設定'
+        expect(page).to have_link '対象グループの設定'
         expect(page).to have_link '動画録画'
         expect(page).to have_link '動画投稿'
         expect(page).to have_link '動画フォルダ一覧'
@@ -106,7 +106,7 @@ RSpec.xdescribe 'UserSystem', type: :system do
         expect(page).to have_link 'レコブル'
         expect(page).to have_link user_staff.name
         expect(page).to have_link 'アンケート作成'
-        expect(page).to have_link '対象Grの設定'
+        expect(page).to have_link '対象グループの設定'
         expect(page).to have_link '動画録画'
         expect(page).to have_link '動画投稿'
         expect(page).to have_link '動画フォルダ一覧'

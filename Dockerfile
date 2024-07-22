@@ -1,11 +1,11 @@
-FROM ruby:3.0.3
+FROM ruby:3.1.4
 
 RUN apt-get update -y && \
-    apt-get install default-mysql-client nodejs npm vim graphviz -y && \
+    apt-get install default-mysql-client vim graphviz -y && \
+    curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs && \
     npm uninstall yarn -g && \
-    npm install yarn -g -y && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
+    npm install yarn -g -y
 
 # ルート直下にwebappという名前で作業ディレクトリを作成（コンテナ内のアプリケーションディレクトリ）
 RUN mkdir /webapp

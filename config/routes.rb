@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       scope module: :organizations do
         resource :unsubscribe, only: %i[show update], as: :organizations_unsubscribe
         resource :admission, only: %i[show update destroy], as: :organizations_admission
+        resource :payment, only: %i[new create], as: :organizations_payment
       end
     end
   end
@@ -70,6 +71,11 @@ Rails.application.routes.draw do
 
   # video関連=========================================================
   resources :videos do
+    member do
+      get 'popup_before'
+      get 'popup_after'
+    end
+
     resources :comments, only: %i[create update destroy] do
       resources :replies, only: %i[create update destroy]
     end
@@ -104,4 +110,7 @@ Rails.application.routes.draw do
     get 'videos/:id/hidden' => 'hiddens#confirm', as: :videos_hidden
     patch 'videos/:id/withdraw' => 'hiddens#withdraw', as: :videos_withdraw
   end
+
+  # 決済機能webhook関連
+  post 'webhooks' => 'webhooks#create'
 end

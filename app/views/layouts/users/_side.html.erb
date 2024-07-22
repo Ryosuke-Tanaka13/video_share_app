@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
   <%= link_to organization_folders_path(organization_id: current_user.organization_id), class:"brand-link" do %>
-    <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
+    <%= image_tag "favicon.ico", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
     <span class="brand-text font-weight-light">レコブル</span>
   <% end %>
 
@@ -20,24 +20,32 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
+          <%= link_to new_video_path, class:"nav-link" do %>
+            <i class="nav-icon fas fa-video"></i>
+            <p>
+              動画投稿
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
           <%= link_to "#", class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
+            <i class="nav-icon fas fa-pen-square"></i>
             <p>
               アンケート作成
             </p>
           <% end %>
         </li>
         <li class="nav-item">
-          <%= link_to groups_path, class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
+          <%= link_to "groups_path", class:"nav-link" do %>
+            <i class="nav-icon fas fa-users-cog"></i>
             <p>
-              対象Grの設定
+              対象グループの設定
             </p>
           <% end %>
         </li>
         <li class="nav-item">
           <%= link_to new_recording_path, class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
+            <i class="nav-icon fas fa-film"></i>
             <p>
               動画録画
             </p>
@@ -45,17 +53,8 @@
         </li>
 
         <li class="nav-item">
-          <%= link_to new_video_path, class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
-            <p>
-              動画投稿
-            </p>
-          <% end %>
-        </li>
-
-        <li class="nav-item">
           <%= link_to organization_folders_path(current_user.organization_id), class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
+            <i class="nav-icon fas fa-file-video"></i>
             <p>
               動画フォルダ一覧
             </p>
@@ -67,7 +66,7 @@
         <% if current_user.role == 'owner' %>
           <li class="nav-item">
             <%= link_to users_path, class:"nav-link" do %>
-              <i class="nav-icon fas fa-th"></i>
+              <i class="nav-icon fas fa-users"></i>
               <p>
                 投稿者一覧
               </p>
@@ -77,7 +76,7 @@
         <!-- /オーナと動画投稿者の条件分岐 -->
         <li class="nav-item">
           <%= link_to viewers_path, class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
+            <i class="nav-icon fas fa-users"></i>
             <p>
               視聴者一覧
             </p>
@@ -85,7 +84,7 @@
         </li>
         <li class="nav-item">
           <%= link_to edit_user_path(current_user), class:"nav-link" do %>
-            <i class="nav-icon fas fa-th"></i>
+            <i class="nav-icon fas fa-user-edit"></i>
             <p>
               アカウント編集
             </p>

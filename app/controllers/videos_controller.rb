@@ -7,7 +7,6 @@ class VideosController < ApplicationController
   before_action :ensure_admin_or_user, only: %i[new create edit update destroy]
   before_action :ensure_user, only: %i[new create]
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
-  before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_my_organization, exept: %i[new create]
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
