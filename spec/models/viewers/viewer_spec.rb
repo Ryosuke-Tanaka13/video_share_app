@@ -138,4 +138,42 @@ RSpec.describe Viewer, type: :model do
       end
     end
   end
+
+  let(:organization) { create(:organization) }
+  let!(:system_admin) { create(:system_admin) }
+  let!(:user_owner) { create(:user_owner, organization: organization) }
+  let!(:viewer1) { create(:viewer1, is_valid: true) }
+  let!(:another_viewer) { create(:another_viewer, is_valid: false) }
+  let!(:organization_viewer1) { create(:organization_viewer, viewer: viewer1, organization: organization) }
+  let!(:organization_viewer2) { create(:organization_viewer2, viewer: another_viewer, organization: organization) }
+
+  describe '投稿者の場合' do
+    context 'for_current_user メソッド' do
+      it '組織に所属している視聴者を返す' do
+        viewers = Viewer.for_current_user(user_owner, organization.id)
+        expect(viewers).to include(viewer1)
+        expect(viewers).not_to include(another_viewer)
+      end
+
+      it '退会済みの視聴者は返さない' do
+        viewers = Viewer.for_current_user(user_owner, organization.id)
+        expect(viewers).not_to include(another_viewer)
+      end
+    end
+  end
+
+  describe 'システム管理者の場合' do
+    context 'for_system_admin メソッド' do
+      it '組織に所属している視聴者を返す' do
+        viewers = Viewer.for_system_admin(organization.id)
+        expect(viewers).to include(viewer1)
+        expect(viewers).not_to include(another_viewer)
+      end
+
+      it '退会済みの視聴者は返さない' do
+        viewers = Viewer.for_system_admin(organization.id)
+        expect(viewers).not_to include(another_viewer)
+      end
+    end
+  end
 end
