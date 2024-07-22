@@ -1,3 +1,4 @@
+# groups_controller
 class GroupsController < ApplicationController
   layout 'groups', only: %i[index show new edit update create destroy remove_viewer]
   before_action :ensure_logged_in
@@ -20,9 +21,8 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
-    @viewers = Viewer.joins(:organization_viewers)
-      .where(organization_viewers: { organization_id: current_user.organization_id })
-      .where(is_valid: true)
+    organization_id = params[:organization_id] || current_user.organization_id
+    @viewers = Viewer.for_current_user(current_user, organization_id)
   end
 
   def create
@@ -36,10 +36,11 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    if current_system_admin
-      @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: params[:organization_id] })
+    organization_id = params[:organization_id] || current_user.organization_id
+    if current_system_admin?
+      @viewers = Viewer.for_system_admin(organization_id)
     else
-      @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
+      @viewers = Viewer.for_current_user(current_user, organization_id)
     end
   end
 
@@ -72,7 +73,7 @@ class GroupsController < ApplicationController
 
   private
 
-  def group_params
+  def group_paramsViewer.joins(:organization_viewers).
     params.require(:group).permit(:name, viewer_ids: [])
   end
 
