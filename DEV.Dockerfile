@@ -20,7 +20,9 @@ RUN bundle install -j4
 
 # ホストのアプリケーションディレクトリ内をすべてコンテナにコピー
 ADD . /webapp
+COPY public/fonts/hiragino.ttc /usr/share/fonts/truetype/
 
+RUN fc-cache -fv
 EXPOSE 3000
 
 CMD bash -c "rm -f tmp/pids/server.pid && bundle exec puma -C config/puma.rb"
