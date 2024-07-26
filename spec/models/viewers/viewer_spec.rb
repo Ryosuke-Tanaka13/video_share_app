@@ -152,12 +152,12 @@ RSpec.describe Viewer, type: :model do
       it '組織に所属している視聴者を返す' do
         viewers = described_class.for_current_user(user_owner, organization.id)
         expect(viewers).to include(viewer1)
-        expect(viewers).not.to include(another_viewer)
+        expect(viewers).not_to include(another_viewer)
       end
 
       it '退会済みの視聴者は返さない' do
         viewers = described_class.for_current_user(user_owner, organization.id)
-        expect(viewers).not.to include(another_viewer)
+        expect(viewers).not_to include(another_viewer)
       end
     end
   end
@@ -167,12 +167,12 @@ RSpec.describe Viewer, type: :model do
       it '組織に所属している視聴者を返す' do
         viewers = described_class.for_system_admin(organization.id)
         expect(viewers).to include(viewer1)
-        expect(viewers).not.to include(another_viewer)
+        expect(viewers).not_to include(another_viewer)
       end
 
       it '退会済みの視聴者は返さない' do
         viewers = described_class.for_system_admin(organization.id)
-        expect(viewers).not.to include(another_viewer)
+        expect(viewers).not_to include(another_viewer)
       end
     end
   end
