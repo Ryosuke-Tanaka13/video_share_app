@@ -145,7 +145,7 @@ RSpec.describe 'グループ管理', type: :system do
         end
     
         it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
-          visit edit_group_path(group.uuid)
+          visit edit_group_path(group.uuid, organization_id: organization.id)
           fill_in 'group_name', with: ''
           find('input[name="commit"]').click
           expect(page).to have_current_path(edit_group_path(group.uuid, organization_id: group.organization_id))
