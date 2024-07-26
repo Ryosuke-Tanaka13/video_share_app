@@ -150,14 +150,14 @@ RSpec.describe Viewer, type: :model do
   describe '投稿者の場合' do
     context 'for_current_user メソッド' do
       it '組織に所属している視聴者を返す' do
-        viewers = Viewer.for_current_user(user_owner, organization.id)
+        viewers = described_class.for_current_user(user_owner, organization.id)
         expect(viewers).to include(viewer1)
-        expect(viewers).not_to include(another_viewer)
+        expect(viewers).not.to include(another_viewer)
       end
 
       it '退会済みの視聴者は返さない' do
-        viewers = Viewer.for_current_user(user_owner, organization.id)
-        expect(viewers).not_to include(another_viewer)
+        viewers = described_class.for_current_user(user_owner, organization.id)
+        expect(viewers).not.to include(another_viewer)
       end
     end
   end
@@ -165,14 +165,14 @@ RSpec.describe Viewer, type: :model do
   describe 'システム管理者の場合' do
     context 'for_system_admin メソッド' do
       it '組織に所属している視聴者を返す' do
-        viewers = Viewer.for_system_admin(organization.id)
+        viewers = described_class.for_system_admin(organization.id)
         expect(viewers).to include(viewer1)
-        expect(viewers).not_to include(another_viewer)
+        expect(viewers).not.to include(another_viewer)
       end
 
       it '退会済みの視聴者は返さない' do
-        viewers = Viewer.for_system_admin(organization.id)
-        expect(viewers).not_to include(another_viewer)
+        viewers = described_class.for_system_admin(organization.id)
+        expect(viewers).not.to include(another_viewer)
       end
     end
   end
