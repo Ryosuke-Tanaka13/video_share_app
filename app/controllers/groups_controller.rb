@@ -54,13 +54,8 @@ class GroupsController < ApplicationController
       redirect_to groups_path(organization_id: @group.organization_id)
       flash[:success] = '視聴グループを編集しました。'
     else
-      if current_system_admin
-        @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: params[:organization_id] })
-      else
-        @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
-      end
       flash[:danger] = '視聴グループ名を入力してください'
-      render 'edit'
+      redirect_to edit_group_path(@group.uuid, organization_id: @group.organization_id)
     end
   end
 
