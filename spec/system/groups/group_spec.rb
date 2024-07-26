@@ -122,31 +122,31 @@ RSpec.describe 'グループ管理', type: :system do
         before(:each) do
           sign_in(user_owner)
           visit new_group_path
-          fill_in 'group[name]', with: 'New Group Name'
+          fill_in 'group_name', with: 'New Group Name'
           find('input[name="commit"]').click
           visit groups_path
         end
-
+    
         it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
           group = Group.find_by(name: 'New Group Name')
           visit edit_group_path(group.uuid)
-          fill_in 'group[name]', with: ''
+          fill_in 'group_name', with: ''
           find('input[name="commit"]').click
           expect(page).to have_current_path(edit_group_path(group.uuid, organization_id: group.organization_id))
           expect(page).to have_content('視聴グループ名を入力してください')
         end
       end
-
+    
       context '管理者でログイン' do
         let!(:group) { create(:group) }
-
+    
         before(:each) do
           sign_in(system_admin)
         end
-
+    
         it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
           visit edit_group_path(group.uuid)
-          fill_in 'group[name]', with: ''
+          fill_in 'group_name', with: ''
           find('input[name="commit"]').click
           expect(page).to have_current_path(edit_group_path(group.uuid, organization_id: group.organization_id))
           expect(page).to have_content('視聴グループ名を入力してください')
