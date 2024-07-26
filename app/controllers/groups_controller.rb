@@ -49,6 +49,16 @@ class GroupsController < ApplicationController
     end
   end
 
+  def update
+    if @group.update(group_params)
+      redirect_to groups_path(organization_id: @group.organization_id)
+      flash[:success] = '視聴グループを編集しました。'
+    else
+      flash[:danger] = '視聴グループ名を入力してください'
+      redirect_to edit_group_path(@group.uuid, organization_id: @group.organization_id)
+    end
+  end
+  
   def destroy
     @group.destroy
     redirect_to groups_path, notice: 'グループを削除しました。'
