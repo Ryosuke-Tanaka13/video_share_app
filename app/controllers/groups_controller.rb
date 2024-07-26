@@ -1,4 +1,4 @@
-# groups_controller
+# groups_controller.rb
 class GroupsController < ApplicationController
   layout 'groups', only: %i[index show new edit update create destroy remove_viewer]
   before_action :ensure_logged_in
@@ -54,8 +54,8 @@ class GroupsController < ApplicationController
       else
         @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
       end
-      redirect_to edit_group_path(@group.uuid, organization_id: @group.organization_id)
       flash[:danger] = '視聴グループ名を入力してください'
+      render 'edit'
     end
   end
 
@@ -73,7 +73,7 @@ class GroupsController < ApplicationController
 
   private
 
-  def group_paramsViewer.joins(:organization_viewers).
+  def group_params
     params.require(:group).permit(:name, viewer_ids: [])
   end
 
