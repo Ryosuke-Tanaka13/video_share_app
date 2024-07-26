@@ -9,8 +9,8 @@ class Viewer < ApplicationRecord
   has_many :groups, through: :viewer_groups, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :confirmable
+    :recoverable, :rememberable, :validatable,
+    :confirmable
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
@@ -29,8 +29,8 @@ class Viewer < ApplicationRecord
   scope :subscribed, -> { where(is_valid: true) }
 
   # 管理者かどうかに応じて適切なViewersを取得するメソッド
-  def self.for_current_user(user, organization_id_param)
-      current_owner_has(user).subscribed
+  def self.for_current_user(user, _organization_id_param)
+    current_owner_has(user).subscribed
   end
 
   def self.for_system_admin(organization_id_param)
