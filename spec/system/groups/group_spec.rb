@@ -126,7 +126,7 @@ RSpec.describe 'グループ管理', type: :system do
           find('input[name="commit"]').click
           visit groups_path
         end
-    
+
         it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
           group = Group.find_by(name: 'New Group Name')
           visit edit_group_path(group.uuid)
@@ -136,14 +136,14 @@ RSpec.describe 'グループ管理', type: :system do
           expect(page).to have_content('視聴グループ名を入力してください')
         end
       end
-    
+
       context '管理者でログイン' do
         let!(:group) { create(:group) }
-    
+
         before(:each) do
           sign_in(system_admin)
         end
-    
+
         it 'グループ名を空で更新しようとするとエラーメッセージが表示される' do
           visit edit_group_path(group.uuid, organization_id: organization.id)
           fill_in 'group_name', with: ''
