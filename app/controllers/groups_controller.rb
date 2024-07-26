@@ -36,7 +36,12 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    organization_id = params[:organization_id] || current_user.organization_id
+    organization_id = params[:organization_id] || current_user&.organization_id
+    if organization_id.nil?
+      flash[:error] = '組織IDが見つかりません'
+      redirect_back(fallback_location: root_path) and return
+    end
+  
     if current_system_admin?
       @viewers = Viewer.for_system_admin(organization_id)
     else

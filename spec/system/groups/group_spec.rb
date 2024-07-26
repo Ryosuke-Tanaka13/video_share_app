@@ -71,7 +71,7 @@ RSpec.describe 'グループ管理', type: :system do
         end
 
         it '正しい情報を入力すればグループの編集ができて一覧画面に移動する' do
-          visit edit_group_path(group.uuid)
+          visit edit_group_path(group.uuid, organization_id: organization.id)
           fill_in 'group[name]', with: 'Edited Group Name'
           find('input[name="commit"]').click
           expect(page).to have_current_path groups_path, ignore_query: true
