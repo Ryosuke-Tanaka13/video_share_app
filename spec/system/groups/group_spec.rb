@@ -132,7 +132,7 @@ RSpec.describe 'グループ管理', type: :system do
           visit edit_group_path(group.uuid)
           fill_in 'group_name', with: ''
           find('input[name="commit"]').click
-          expect(page).to have_current_path(edit_group_path(group.uuid, organization_id: group.organization_id))
+          expect(page).to have_current_path(edit_group_path(group.uuid, organization_id: group.organization_id), ignore_query: true)
           expect(page).to have_content('視聴グループ名を入力してください')
         end
       end
