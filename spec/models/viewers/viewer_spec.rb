@@ -3,14 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Viewer, type: :model do
-  let :viewer do
-    build(:viewer)
-  end
+  let(:viewer) { build(:viewer) }
 
   describe 'バリデーションについて' do
-    subject do
-      viewer
-    end
+    subject { viewer }
 
     it 'バリデーションが通ること' do
       expect(subject).to be_valid
@@ -18,9 +14,7 @@ RSpec.describe Viewer, type: :model do
 
     describe '#email' do
       context '存在しない場合' do
-        before :each do
-          subject.email = nil
-        end
+        before { subject.email = nil }
 
         it 'バリデーションに落ちること' do
           expect(subject).to be_invalid
@@ -33,9 +27,9 @@ RSpec.describe Viewer, type: :model do
       end
 
       context 'uniqueでない場合' do
-        before :each do
-          viewer = create(:viewer)
-          subject.email = viewer.email
+        before do
+          existing_viewer = create(:viewer)
+          subject.email = existing_viewer.email
         end
 
         it 'バリデーションに落ちること' do
@@ -48,16 +42,9 @@ RSpec.describe Viewer, type: :model do
         end
       end
 
-      %i[
-        email0.com
-        あああ.com
-        今井.com
-        @@.com
-      ].each do |email|
+      %i[email0.com あああ.com 今井.com @@.com].each do |email|
         context '不正なemailの場合' do
-          before :each do
-            subject.email = email
-          end
+          before { subject.email = email }
 
           it 'バリデーションに落ちること' do
             expect(subject).to be_invalid
@@ -73,9 +60,7 @@ RSpec.describe Viewer, type: :model do
 
     describe '#name' do
       context '存在しない場合' do
-        before :each do
-          subject.name = nil
-        end
+        before { subject.name = nil }
 
         it 'バリデーションに落ちること' do
           expect(subject).to be_invalid
@@ -88,9 +73,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context '文字数が1文字の場合' do
-        before :each do
-          subject.name = 'a' * 1
-        end
+        before { subject.name = 'a' * 1 }
 
         it 'バリデーションが通ること' do
           expect(subject).to be_valid
@@ -98,9 +81,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context '文字数が10文字の場合' do
-        before :each do
-          subject.name = 'a' * 10
-        end
+        before { subject.name = 'a' * 10 }
 
         it 'バリデーションが通ること' do
           expect(subject).to be_valid
@@ -108,9 +89,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context '文字数が11文字の場合' do
-        before :each do
-          subject.name = 'a' * 11
-        end
+        before { subject.name = 'a' * 11 }
 
         it 'バリデーションに落ちること' do
           expect(subject).to be_invalid
@@ -123,9 +102,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context '空白の場合' do
-        before :each do
-          subject.name = ' '
-        end
+        before { subject.name = ' ' }
 
         it 'バリデーションに落ちること' do
           expect(subject).to be_invalid
