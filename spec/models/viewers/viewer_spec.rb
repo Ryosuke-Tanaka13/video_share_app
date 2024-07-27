@@ -1,9 +1,14 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 RSpec.describe Viewer, type: :model do
   let(:viewer) { build(:viewer) }
+  let(:organization) { create(:organization) }
+  let!(:system_admin) { create(:system_admin) }
+  let!(:user_owner) { create(:user_owner, organization: organization) }
+  let!(:viewer1) { create(:viewer1, is_valid: true) }
+  let!(:another_viewer) { create(:another_viewer, is_valid: false) }
+  let!(:organization_viewer1) { create(:organization_viewer, viewer: viewer1, organization: organization) }
+  let!(:organization_viewer2) { create(:organization_viewer2, viewer: another_viewer, organization: organization) }
 
   describe 'バリデーションについて' do
     subject { viewer }
@@ -14,7 +19,7 @@ RSpec.describe Viewer, type: :model do
 
     describe '#email' do
       context '存在しない場合' do
-        before { subject.email = nil }
+        before(:each) { subject.email = nil }
 
         it 'バリデーションに落ちること' do
           expect(subject).to be_invalid
@@ -27,7 +32,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context 'uniqueでない場合' do
-        before do
+        before(:each) do
           existing_viewer = create(:viewer)
           subject.email = existing_viewer.email
         end
@@ -44,7 +49,7 @@ RSpec.describe Viewer, type: :model do
 
       %i[email0.com あああ.com 今井.com @@.com].each do |email|
         context '不正なemailの場合' do
-          before { subject.email = email }
+          before(:each) { subject.email = email }
 
           it 'バリデーションに落ちること' do
             expect(subject).to be_invalid
@@ -60,7 +65,7 @@ RSpec.describe Viewer, type: :model do
 
     describe '#name' do
       context '存在しない場合' do
-        before { subject.name = nil }
+        before(:each) { subject.name = nil }
 
         it 'バリデーションに落ちること' do
           expect(subject).to be_invalid
@@ -73,7 +78,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context '文字数が1文字の場合' do
-        before { subject.name = 'a' * 1 }
+        before(:each) { subject.name = 'a' * 1 }
 
         it 'バリデーションが通ること' do
           expect(subject).to be_valid
@@ -81,7 +86,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context '文字数が10文字の場合' do
-        before { subject.name = 'a' * 10 }
+        before(:each) { subject.name = 'a' * 10 }
 
         it 'バリデーションが通ること' do
           expect(subject).to be_valid
@@ -89,7 +94,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context '文字数が11文字の場合' do
-        before { subject.name = 'a' * 11 }
+        before(:each) { subject.name = 'a' * 11 }
 
         it 'バリデーションに落ちること' do
           expect(subject).to be_invalid
@@ -102,7 +107,7 @@ RSpec.describe Viewer, type: :model do
       end
 
       context '空白の場合' do
-        before { subject.name = ' ' }
+        before(:each) { subject.name = ' ' }
 
         it 'バリデーションに落ちること' do
           expect(subject).to be_invalid
@@ -115,14 +120,6 @@ RSpec.describe Viewer, type: :model do
       end
     end
   end
-
-  let(:organization) { create(:organization) }
-  let!(:system_admin) { create(:system_admin) }
-  let!(:user_owner) { create(:user_owner, organization: organization) }
-  let!(:viewer1) { create(:viewer1, is_valid: true) }
-  let!(:another_viewer) { create(:another_viewer, is_valid: false) }
-  let!(:organization_viewer1) { create(:organization_viewer, viewer: viewer1, organization: organization) }
-  let!(:organization_viewer2) { create(:organization_viewer2, viewer: another_viewer, organization: organization) }
 
   describe '投稿者の場合' do
     context 'for_current_user メソッド' do
