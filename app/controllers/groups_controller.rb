@@ -1,4 +1,3 @@
-# groups_controller.rb
 class GroupsController < ApplicationController
   layout 'groups', only: %i[index show new edit update create destroy remove_viewer]
   before_action :ensure_logged_in
@@ -41,7 +40,7 @@ class GroupsController < ApplicationController
       flash[:error] = '組織IDが見つかりません'
       redirect_back(fallback_location: root_path) and return
     end
-  
+
     if current_system_admin?
       @viewers = Viewer.for_system_admin(organization_id)
     else
@@ -51,14 +50,14 @@ class GroupsController < ApplicationController
 
   def update
     if @group.update(group_params)
-      redirect_to groups_path(organization_id: @group.organization_id)
       flash[:success] = '視聴グループを編集しました。'
+      redirect_to groups_path(organization_id: @group.organization_id)
     else
       flash[:danger] = '視聴グループ名を入力してください'
       redirect_to edit_group_path(@group.uuid, organization_id: @group.organization_id)
     end
   end
-  
+
   def destroy
     @group.destroy
     redirect_to groups_path, notice: 'グループを削除しました。'
@@ -67,7 +66,6 @@ class GroupsController < ApplicationController
   def remove_viewer
     viewer = Viewer.find(params[:viewer_id])
     @group.viewers.delete(viewer)
-
     redirect_to groups_path
   end
 
