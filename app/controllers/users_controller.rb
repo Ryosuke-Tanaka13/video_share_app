@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_owner, only: %i[new create]
   before_action :ensure_admin_or_user, only: %i[index]
-  before_action :not_exist, only: %i[show edit update]
+  before_action :ensure_user_exists, only: %i[show edit update]
   before_action :ensure_admin_or_owner_in_same_organization_as_set_user_or_correct_user, only: %i[show edit update]
   before_action :set_user, except: %i[index new create]
 
@@ -81,9 +81,10 @@ class UsersController < ApplicationController
     end
   end
 
-  # set_userが退会済であるページは、システム管理者のみ許可
-  def not_exist
-    if User.find(params[:id]).is_valid == false && !current_system_admin?
+  # 退会した投稿者のページは、システム管理者のみ許可
+  def ensure_user_exists
+    user = User.find_by(id: params[:id])
+    if user.nil? || (user.is_valid == false && !current_system_admin?)
       flash[:danger] = '存在しないアカウントです。'
       redirect_back(fallback_location: root_url)
     end
