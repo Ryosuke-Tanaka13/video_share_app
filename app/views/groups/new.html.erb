@@ -1,0 +1,13 @@
+<% provide(:title, "視聴グループ登録") %>
+<% provide(:btn_text, "登録") %>
+
+<div class="card">
+  <%= form_with model: @group, url: groups_path, html: { method: :post }, local: true do |f| %>
+    <div class="card-body">
+      <%= render partial: "form", locals: { f: f } %>
+    </div>
+    <div class="card-footer">
+      <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-success" %><br>
+    </div>
+  <% end %>
+</div>
