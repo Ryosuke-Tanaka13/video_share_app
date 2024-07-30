@@ -1,0 +1,14 @@
+<% provide(:title, "視聴グループ編集") %>
+<% provide(:btn_text, "更新") %>
+
+<div class="card">
+  <%= form_with model: @group, url:group_path(@group.uuid), local: true do |f| %>
+    <div class="card-body">
+      <%= render partial: "form", locals: { f: f, group: @group } %>
+    </div>
+    <div class="card-footer">
+      <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-success" %><br>
+      <%= link_to "一覧画面へ", groups_path(organization_id: @group.organization_id), class: "btn btn-md btn-block btn-secondary" %>
+    </div>
+  <% end %>
+</div>
