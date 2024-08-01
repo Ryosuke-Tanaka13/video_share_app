@@ -10,8 +10,8 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 1 }
     user_id { 1 }
-    organization
-    user
+    association :organization
+    association :user
 
     # afterメソッド。Videoインスタンスをbuildした後、動画をつける。
     after(:build) do |video_sample|
@@ -56,14 +56,14 @@ FactoryBot.define do
   factory :video_it, class: 'Video' do
     title { 'ITビデオ' }
     open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
-    range { false }
+    range { true }
     comment_public { false }
     login_set { true }
     popup_before_video { false }
     popup_after_video { false }
     organization_id { 1 }
     user_id { 1 }
-    organization
+    association :organization
     user
 
     # afterメソッド。Videoインスタンスをbuildした後、動画をつける。

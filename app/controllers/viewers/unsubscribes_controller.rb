@@ -1,6 +1,6 @@
 class Viewers::UnsubscribesController < ViewersController
   before_action :ensure_logged_in
-  before_action :not_exist
+  before_action :ensure_viewer_exists
   before_action :ensure_admin_or_correct_viewer
   before_action :set_viewer
   layout 'viewers_auth'

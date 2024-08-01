@@ -65,6 +65,23 @@ ActiveRecord::Schema.define(version: 2024_07_02_195550) do
     t.index ["organization_id"], name: "index_folders_on_organization_id"
   end
 
+  create_table "group_videos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "video_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_group_videos_on_group_id"
+    t.index ["video_id"], name: "index_group_videos_on_video_id"
+  end
+
+  create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "organization_id"
+    t.string "uuid"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "organization_viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "organization_id", null: false
     t.bigint "viewer_id", null: false
@@ -251,6 +268,15 @@ ActiveRecord::Schema.define(version: 2024_07_02_195550) do
     t.index ["user_id"], name: "index_videos_on_user_id"
   end
 
+  create_table "viewer_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "viewer_id", null: false
+    t.bigint "group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_viewer_groups_on_group_id"
+    t.index ["viewer_id"], name: "index_viewer_groups_on_viewer_id"
+  end
+
   create_table "viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -292,6 +318,8 @@ ActiveRecord::Schema.define(version: 2024_07_02_195550) do
   add_foreign_key "comments", "videos"
   add_foreign_key "comments", "viewers"
   add_foreign_key "folders", "organizations"
+  add_foreign_key "group_videos", "groups"
+  add_foreign_key "group_videos", "videos"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
   add_foreign_key "questionnaire_answers", "videos"
@@ -308,4 +336,6 @@ ActiveRecord::Schema.define(version: 2024_07_02_195550) do
   add_foreign_key "video_folders", "videos"
   add_foreign_key "videos", "organizations"
   add_foreign_key "videos", "users"
+  add_foreign_key "viewer_groups", "groups"
+  add_foreign_key "viewer_groups", "viewers"
 end

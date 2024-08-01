@@ -23,6 +23,7 @@ services:
       - webpacker
     environment:
       WEBPACKER_DEV_SERVER_HOST: webpacker
+      VIMEO_API_TOKEN: ${VIMEO_API_TOKEN}
     # (stdin_open,tty) = コンテナ内でデバックできるようにする
     stdin_open: true
     tty: true

@@ -2,7 +2,7 @@ class ViewersController < ApplicationController
   before_action :ensure_logged_in
   before_action :ensure_admin, only: %i[destroy]
   before_action :ensure_admin_or_user, only: %i[index]
-  before_action :not_exist, only: %i[show edit update]
+  before_action :ensure_viewer_exists, only: %i[show edit update]
   before_action :ensure_admin_or_owner_in_same_organization_as_set_viewer_or_correct_viewer, only: %i[show edit update]
   before_action :set_viewer, except: %i[index]
 
@@ -71,9 +71,10 @@ class ViewersController < ApplicationController
     end
   end
 
-  # set_viewerが退会済であるページは、システム管理者のみ許可
-  def not_exist
-    if Viewer.find(params[:id]).is_valid == false && !current_system_admin?
+  # 視聴者のアカウントが存在しているか確認、退会した視聴者はシステム管理者のみ許可
+  def ensure_viewer_exists
+    viewer = Viewer.find_by(id: params[:id])
+    if viewer.nil? || (viewer.is_valid == false && !current_system_admin?)
       flash[:danger] = '存在しないアカウントです。'
       redirect_back(fallback_location: root_url)
     end

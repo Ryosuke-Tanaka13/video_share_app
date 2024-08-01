@@ -33,12 +33,14 @@ class VideosController < ApplicationController
     @organization = current_user.organization
     @video = Video.new
     @video.video_folders.build
+    @groups = current_user_with_org_and_groups.organization.groups
   end
 
   def create
     @user = current_user
     @video = Video.new(video_params)
     @video.identify_organization_and_user(current_user)
+    @video.groups = Group.where(id: params[:video][:group]) if params[:video][:group]
     if @video.save
       if params[:video][:pre_video_questionnaire_id].present?
         @video.update(pre_video_questionnaire_id: params[:video][:pre_video_questionnaire_id])
@@ -51,8 +53,13 @@ class VideosController < ApplicationController
       flash[:success] = '動画を投稿しました。'
       redirect_to @video
     else
+      @groups = current_user.organization.groups if current_user.present?
       render :new
     end
+  rescue StandardError => e
+    logger.error e.message
+    @groups = current_user.organization.groups if current_user.present?
+    render :new
   end
 
   def show
@@ -108,7 +115,7 @@ class VideosController < ApplicationController
   end
 
   def video_params
-    params.require(:video).permit(:title, :video, :open_period, :range, :comment_public, :login_set, :popup_before_video,
+    params.require(:video).permit(:title, :video, :open_period, :range, :login_set, :popup_before_video,
       :popup_after_video, :pre_video_questionnaire_id, :post_video_questionnaire_id, folder_ids: [])
   end
 
@@ -117,7 +124,7 @@ class VideosController < ApplicationController
   end
 
   def set_organization
-    @organization = Organization.find(params[:organization_id])
+    @organization = Organization.includes(:groups).find(params[:organization_id])
   end
 
   def ensure_user

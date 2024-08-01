@@ -3,6 +3,9 @@ class Video < ApplicationRecord
 
   belongs_to :organization
   belongs_to :user
+  has_many :group_videos
+  has_many :groups, through: :group_videos
+
   has_one_attached :video
   has_many :comments, dependent: :destroy
   has_many :video_folders, dependent: :destroy
@@ -28,9 +31,9 @@ class Video < ApplicationRecord
     video.present?
   end
 
-  scope :user_has, ->(organization_id) { includes(:video_blob).where(organization_id: organization_id) }
-  scope :current_user_has, ->(current_user) { includes(:video_blob).where(organization_id: current_user.organization_id) }
-  scope :current_viewer_has, ->(organization_id) { includes(:video_blob).where(organization_id: organization_id) }
+  scope :user_has, ->(organization_id) { where(organization_id: organization_id) }
+  scope :current_user_has, ->(current_user) { where(organization_id: current_user.organization_id) }
+  scope :current_viewer_has, ->(organization_id) { where(organization_id: organization_id) }
   scope :available, -> { where(is_valid: true) }
 
   def identify_organization_and_user(current_user)
