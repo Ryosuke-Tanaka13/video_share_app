@@ -1,6 +1,8 @@
 class Video < ApplicationRecord
   belongs_to :organization
   belongs_to :user
+  has_many :group_videos
+  has_many :groups, through: :group_videos
 
   has_one_attached :video
   has_many :comments, dependent: :destroy
@@ -15,9 +17,6 @@ class Video < ApplicationRecord
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
     video.present?
   end
-
-  # 動画自体はアプリ内には保存されないので、動画なしを不可, 動画以外を不可とするバリデーションはここでは設定しない
-  # validates :video, presence: true, blob: { content_type: :video }
 
   scope :user_has, ->(organization_id) { where(organization_id: organization_id) }
   scope :current_user_has, ->(current_user) { where(organization_id: current_user.organization_id) }

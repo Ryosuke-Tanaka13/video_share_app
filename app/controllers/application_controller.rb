@@ -110,6 +110,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # 現在のユーザーとその組織、およびその組織のグループを一度のクエリで取得します。
+  # このメソッドは、N+1問題を防ぐために使用します。
+  def current_user_with_org_and_groups
+    @current_user_with_org_and_groups ||= User.includes(organization: :groups).find(current_user.id)
+  end
+
   def current_organization
     @current_organization = Organization.find(current_user.organization_id)
   end

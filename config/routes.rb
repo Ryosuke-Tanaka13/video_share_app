@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :organizations do
     scope module: :organizations do
       resources :folders
+      resources :videos, only: [:index]
     end
     member do
       scope module: :organizations do
@@ -60,6 +61,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :groups, param: :uuid
   # =================================================================
 
   # video関連=========================================================
@@ -77,10 +80,12 @@ Rails.application.routes.draw do
   # =================================================================
 
   # 共通==============================================================
-  # 利用規約
-  get 'use' => 'use#index'
   # トップページ
   root 'use#top'
+  # 利用規約
+  get 'use/terms' => 'use#terms', as: 'use_terms'
+  # プライバシーポリシー
+  get 'use/privacy_policy' => 'use#privacy_policy', as: 'use_privacy_policy'
   # =================================================================
 
   resources :videos do
