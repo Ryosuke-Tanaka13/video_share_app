@@ -7,7 +7,7 @@ RSpec.describe 'グループ新規登録', type: :system do
   let(:viewer) { create(:viewer) }
   let(:viewer1) { create(:viewer1) }
   let(:organization_viewer) { create(:organization_viewer) }
-  let(:member_viewer) { create(:member_viewer) }
+  let(:organization_viewer2) { create(:organization_viewer2) }
 
   before(:each) do
     organization
@@ -16,7 +16,7 @@ RSpec.describe 'グループ新規登録', type: :system do
     viewer
     viewer1
     organization_viewer
-    member_viewer
+    organization_viewer2
   end
 
   describe 'ユーザーがグループを新規登録する' do
@@ -32,8 +32,8 @@ RSpec.describe 'グループ新規登録', type: :system do
         expect(page).to have_content('視聴グループ　新規作成画面へ')
         visit new_group_path
         fill_in 'group[name]', with: 'Group Name'
-        # フォームの選択肢にorganization_viewer.viewer.name, member_viewer.viewer.nameが表示されていることを確認する。
-        expect(page).to have_select('viewer-select', options: [organization_viewer.viewer.name, member_viewer.viewer.name])
+        # フォームの選択肢にorganization_viewer.viewer.name, organization_viewer2.viewer.nameが表示されていることを確認する。
+        expect(page).to have_select('viewer-select', options: [organization_viewer.viewer.name, organization_viewer2.viewer.name])
         select organization_viewer.viewer.name, from: 'viewer-select'
         expect { find('input[name="commit"]').click }.to change(Group, :count).by(1)
         expect(page).to have_current_path groups_path, ignore_query: true

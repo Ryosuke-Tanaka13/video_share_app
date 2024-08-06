@@ -15,9 +15,9 @@ RSpec.describe 'SystemAdmin', type: :request do
   let(:another_viewer) { create(:another_viewer, confirmed_at: Time.now) }
 
   let(:organization_viewer) { create(:organization_viewer) }
-  let(:admin_viewer) { create(:admin_viewer) }
-  let(:member_viewer) { create(:member_viewer) }
-  let(:guest_viewer) { create(:guest_viewer) }
+  let(:organization_viewer1) { create(:organization_viewer1) }
+  let(:organization_viewer2) { create(:organization_viewer2) }
+  let(:organization_viewer3) { create(:organization_viewer3) }
 
   before(:each) do
     system_admin
@@ -31,9 +31,9 @@ RSpec.describe 'SystemAdmin', type: :request do
     another_user_staff
     another_viewer
     organization_viewer
-    admin_viewer
-    member_viewer
-    guest_viewer
+    organization_viewer1
+    organization_viewer2
+    organization_viewer3
   end
 
   # GET index なし
