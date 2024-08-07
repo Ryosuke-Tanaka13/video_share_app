@@ -10,7 +10,7 @@ module Viewers
 
     def callback_for(provider)
       # 先ほどviewer.rbで記述したメソッド(from_omniauth)をここで使っています
-      # 'request.env["omniauth.auth"]'この中にgoogoleアカウントから取得したメールアドレスや、名前と言ったデータが含まれています
+      # 'request.env["omniauth.auth"]'この中に、googoleアカウントから取得したメールアドレスや、名前と言ったデータが含まれています
       @viewer = Viewer.from_omniauth(request.env['omniauth.auth'])
       sign_in_and_redirect @viewer, event: :authentication
       set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?
