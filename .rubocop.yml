@@ -51,6 +51,8 @@ Style/RegexpLiteral:
   AllowInnerSlashes: true
 Style/Documentation:
   Enabled: false
+Style/RedundantConstantBase: 
+  Enabled: false
 
 # レイアウト設定
 Layout/ArgumentAlignment:
@@ -361,7 +363,7 @@ Style/RedundantArgument:
 Style/RedundantArrayConstructor:
   Enabled: true
 Style/RedundantConstantBase:
-  Enabled: true
+  Enabled: false 
 Style/RedundantCurrentDirectoryInPath:
   Enabled: true
 Style/RedundantDoubleSplatHashBraces:
