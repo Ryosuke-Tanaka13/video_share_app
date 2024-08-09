@@ -23,7 +23,7 @@ RSpec.describe 'Videos::Searches', type: :request do
   let(:another_user_owner) { create(:another_user_owner, confirmed_at: Time.now) }
   let(:another_user_staff) { create(:another_user_staff, confirmed_at: Time.now) }
   let(:another_viewer) { create(:another_viewer, confirmed_at: Time.now) }
-  let(:admin_viewer) { create(:admin_viewer) }
+  let(:organization_viewer1) { create(:organization_viewer1) }
   let(:another_video_jan_public_another_user_owner) { create(:another_video_jan_public_another_user_owner) }
   let(:another_video_feb_private_another_user_staff) { create(:another_video_feb_private_another_user_staff) }
 
@@ -48,7 +48,7 @@ RSpec.describe 'Videos::Searches', type: :request do
     another_user_owner
     another_user_staff
     another_viewer
-    admin_viewer
+    organization_viewer1
     another_video_jan_public_another_user_owner
     another_video_feb_private_another_user_staff
   end

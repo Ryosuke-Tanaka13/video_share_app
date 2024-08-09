@@ -1,8 +1,6 @@
-# rubocop:disable RSpec/PendingWithoutReason
 require 'rails_helper'
 
-RSpec.xdescribe 'ViewerSystem', :js, type: :system do
-  # このテストは開発中であり、現在の実装に影響を与える可能性があるためスキップされています。
+RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -12,8 +10,8 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
 
   let(:organization_viewer) { create(:organization_viewer) }
-  let(:member_viewer) { create(:member_viewer) }
-  let(:guest_viewer) { create(:guest_viewer) }
+  let(:organization_viewer2) { create(:organization_viewer2) }
+  let(:organization_viewer3) { create(:organization_viewer3) }
 
   before(:each) do
     system_admin
@@ -23,7 +21,7 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
     viewer
     viewer1
     organization_viewer
-    member_viewer
+    organization_viewer2
   end
 
   describe 'サイドバーの項目/遷移確認' do
@@ -224,7 +222,7 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
           expect {
             expect(page.driver.browser.switch_to.alert.text).to eq 'セレブエンジニアを脱退します。本当によろしいですか？'
             page.driver.browser.switch_to.alert.accept
-            expect(page).to have_text 'セレブエンジニアを脱退しました。'
+            expect(page).to have_content 'セレブエンジニアを脱退しました。'
           }.to change(OrganizationViewer, :count).by(-1)
         end
 
@@ -252,8 +250,8 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
         end
 
         it 'レイアウト' do
-          expect(page).to have_text viewer.name
-          expect(page).to have_text viewer1.name
+          expect(page).to have_content viewer.name
+          expect(page).to have_content viewer1.name
         end
       end
     end
@@ -348,4 +346,3 @@ RSpec.xdescribe 'ViewerSystem', :js, type: :system do
     end
   end
 end
-# rubocop:enable RSpec/PendingWithoutReason

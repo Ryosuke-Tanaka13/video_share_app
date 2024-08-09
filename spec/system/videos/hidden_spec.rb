@@ -1,8 +1,6 @@
-# rubocop:disable RSpec/PendingWithoutReason
 require 'rails_helper'
 
-RSpec.xdescribe 'VideoUnsubscribeSystem', :js, type: :system do
-  # このテストは開発中であり、現在の実装に影響を与える可能性があるためスキップされています。
+RSpec.xdescribe 'VideoUnsubscribeSystem', type: :system, js: true do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
@@ -43,4 +41,3 @@ RSpec.xdescribe 'VideoUnsubscribeSystem', :js, type: :system do
     end
   end
 end
-# rubocop:enable RSpec/PendingWithoutReason

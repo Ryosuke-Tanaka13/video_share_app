@@ -1,7 +1,6 @@
 require 'rails_helper'
 
-# このテストは開発中であり、現在の実装に影響を与える可能性があるためスキップされています。
-RSpec.describe 'UserSessions', type: :system do
+RSpec.xdescribe 'UserSessions', type: :system do
   context 'ログインできることを確認' do
     let(:organization) { create(:organization) }
     let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }

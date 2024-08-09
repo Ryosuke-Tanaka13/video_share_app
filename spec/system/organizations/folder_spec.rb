@@ -1,8 +1,6 @@
-# rubocop:disable RSpec/PendingWithoutReason
 require 'rails_helper'
 
-RSpec.xdescribe 'FolderSystem', :js, type: :system do
-  # このテストは開発中でスキップされています。
+RSpec.xdescribe 'FolderSystem', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:another_organization) { create(:another_organization) }
   let(:system_admin) { create(:system_admin) }
@@ -12,7 +10,6 @@ RSpec.xdescribe 'FolderSystem', :js, type: :system do
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
   let(:folder_other_owner) { create(:folder_other_owner, organization_id: another_user_owner.organization_id) }
-
   # フォルダ選択機能の実装の際にここから追記
   let(:video_sample) do
     create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
@@ -295,4 +292,3 @@ RSpec.xdescribe 'FolderSystem', :js, type: :system do
     end
   end
 end
-# rubocop:enable RSpec/PendingWithoutReason

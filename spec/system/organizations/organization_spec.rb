@@ -1,8 +1,6 @@
-# rubocop:disable RSpec/PendingWithoutReason
 require 'rails_helper'
 
-RSpec.xdescribe 'OrganizationSystem', :js, type: :system do
-  # このテストは開発中であり、現在の実装に影響を与える可能性があるためスキップされています。
+RSpec.xdescribe 'OrganizationSystem', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, confirmed_at: Time.now) }
@@ -428,4 +426,3 @@ RSpec.xdescribe 'OrganizationSystem', :js, type: :system do
     end
   end
 end
-# rubocop:enable RSpec/PendingWithoutReason

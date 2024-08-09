@@ -7,8 +7,8 @@ RSpec.describe Viewer, type: :model do
   let!(:user_owner) { create(:user_owner, organization: organization) }
   let!(:viewer1) { create(:viewer1, is_valid: true) }
   let!(:another_viewer) { create(:another_viewer, is_valid: false) }
-  let!(:admin_viewer) { create(:organization_viewer, viewer: viewer1, organization: organization) }
-  let!(:member_viewer) { create(:member_viewer, viewer: another_viewer, organization: organization) }
+  let!(:organization_viewer1) { create(:organization_viewer, viewer: viewer1, organization: organization) }
+  let!(:organization_viewer2) { create(:organization_viewer2, viewer: another_viewer, organization: organization) }
 
   describe 'バリデーションについて' do
     subject { viewer }
