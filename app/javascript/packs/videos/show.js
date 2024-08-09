@@ -1,6 +1,6 @@
 document.addEventListener('turbolinks:load', function() {
-  let button = $("#toggle-comments-button");
-  let commentsArea = $("#comments_area");
+  const button = $("#toggle-comments-button");
+  const commentsArea = $("#comments_area");
 
   if (button.length && commentsArea.length) {
     button.on("click", function() {
