@@ -9,7 +9,7 @@ class Videos::HiddensController < VideosController
 
   def withdraw
     if @video.update(is_valid: false)
-      vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], @video.data_url)
+      vimeo_video = VimeoMe2::Video.new(ENV.fetch('VIMEO_API_TOKEN', nil), @video.data_url)
       vimeo_video.destroy
       flash[:success] = '削除しました'
       redirect_to videos_url(organization_id: @video.organization.id)

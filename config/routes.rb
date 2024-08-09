@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
@@ -26,16 +24,14 @@ Rails.application.routes.draw do
     passwords: 'system_admins/passwords'
   }
 
-  resources :system_admins, only: %i[show edit update] do
-  end
+  resources :system_admins, only: %i[show edit update]
   # =================================================================
 
   # user関連=======================================================
   devise_for :users, skip: %i[registrations], controllers: {
     sessions:      'users/sessions',
     passwords:     'users/passwords',
-    confirmations: 'users/confirmations',
-    registrations: 'users/registrations'
+    confirmations: 'users/confirmations'
   }
 
   resources :users do
@@ -51,10 +47,11 @@ Rails.application.routes.draw do
 
   # viewer関連==========================================================
   devise_for :viewers, controllers: {
-    sessions:      'viewers/sessions',
-    passwords:     'viewers/passwords',
-    confirmations: 'viewers/confirmations',
-    registrations: 'viewers/registrations'
+    sessions:           'viewers/sessions',
+    passwords:          'viewers/passwords',
+    confirmations:      'viewers/confirmations',
+    registrations:      'viewers/registrations',
+    omniauth_callbacks: 'viewers/omniauth_callbacks'
   }
 
   resources :viewers do

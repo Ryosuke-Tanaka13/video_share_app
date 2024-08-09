@@ -304,3 +304,4 @@ RSpec/LetSetup:
 # instance_doubleを推奨する警告を無効化
 RSpec/VerifiedDoubles:
   Enabled: false
+  

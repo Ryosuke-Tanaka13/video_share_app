@@ -21,7 +21,7 @@ RSpec.describe Video, type: :model do
 
   describe '正常' do
     it '正常値で保存可能' do
-      expect(video_sample.valid?).to eq(true)
+      expect(video_sample.valid?).to be(true)
     end
   end
 
@@ -33,13 +33,13 @@ RSpec.describe Video, type: :model do
 
       it '空白' do
         video_test.title = ''
-        expect(video_test.valid?).to eq(false)
+        expect(video_test.valid?).to be(false)
         expect(video_test.errors.full_messages).to include('タイトルを入力してください')
       end
 
       it '重複' do
         video_test.title = 'ITビデオ'
-        expect(video_test.valid?).to eq(false)
+        expect(video_test.valid?).to be(false)
         expect(video_test.errors.full_messages).to include('タイトルはすでに存在します')
       end
     end
@@ -47,7 +47,7 @@ RSpec.describe Video, type: :model do
     describe '組織ID' do
       it '空白' do
         video_test.organization_id = ''
-        expect(video_test.valid?).to eq(false)
+        expect(video_test.valid?).to be(false)
         expect(video_test.errors.full_messages).to include('組織を入力してください')
       end
     end
@@ -55,7 +55,7 @@ RSpec.describe Video, type: :model do
     describe '投稿者ID' do
       it '空白' do
         video_test.user_id = ''
-        expect(video_test.valid?).to eq(false)
+        expect(video_test.valid?).to be(false)
         expect(video_test.errors.full_messages).to include('投稿者を入力してください')
       end
     end
@@ -63,7 +63,7 @@ RSpec.describe Video, type: :model do
     describe '動画データ' do
       it '空白または動画以外のファイル' do
         video_test.data_url = nil
-        expect(video_test.valid?).to eq(false)
+        expect(video_test.valid?).to be(false)
         expect(video_test.errors.full_messages).to include('ビデオをアップロードしてください')
       end
     end

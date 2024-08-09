@@ -286,7 +286,7 @@ RSpec.describe 'User', type: :request do
                 password_confirmation: 'password'
               }
             }
-        }.to change(User, :count).by(0)
+        }.not_to change(User, :count)
       end
 
       it '登録失敗するとエラーを出す' do

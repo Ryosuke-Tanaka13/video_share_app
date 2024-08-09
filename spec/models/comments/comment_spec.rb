@@ -47,7 +47,7 @@ RSpec.describe Comment, type: :model do
     context 'システム管理者の場合' do
       it '空白' do
         system_admin_comment.comment = ''
-        expect(system_admin_comment.valid?).to eq(false)
+        expect(system_admin_comment.valid?).to be(false)
         expect(system_admin_comment.errors.full_messages).to include('Commentを入力してください')
       end
     end
@@ -55,7 +55,7 @@ RSpec.describe Comment, type: :model do
     context '動画投稿者の場合' do
       it '空白' do
         user_comment.comment = ''
-        expect(user_comment.valid?).to eq(false)
+        expect(user_comment.valid?).to be(false)
         expect(user_comment.errors.full_messages).to include('Commentを入力してください')
       end
     end
@@ -63,7 +63,7 @@ RSpec.describe Comment, type: :model do
     context '動画視聴者の場合' do
       it '空白' do
         viewer_comment.comment = ''
-        expect(viewer_comment.valid?).to eq(false)
+        expect(viewer_comment.valid?).to be(false)
         expect(viewer_comment.errors.full_messages).to include('Commentを入力してください')
       end
     end

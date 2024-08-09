@@ -52,7 +52,7 @@ class Video < ApplicationRecord
   def upload_to_vimeo
     # connect to Vimeo as your own user, this requires upload scope
     # in your OAuth2 token
-    vimeo_client = VimeoMe2::User.new(ENV['VIMEO_API_TOKEN'])
+    vimeo_client = VimeoMe2::User.new(ENV.fetch('VIMEO_API_TOKEN', nil))
     # upload the video by passing the ActionDispatch::Http::UploadedFile
     # to the upload_video() method. The data_url in this model, stores
     # the location of the uploaded video on Vimeo.

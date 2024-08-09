@@ -10,7 +10,8 @@ class Viewer < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable,
-    :confirmable
+    :confirmable,
+    :omniauthable, omniauth_providers: %i[google_oauth2]
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
@@ -27,6 +28,17 @@ class Viewer < ApplicationRecord
 
   # 退会者は省く絞り込み
   scope :subscribed, -> { where(is_valid: true) }
+
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |viewer|
+      # ※deviseのuserカラムに nameやprofile を追加している場合は下のコメントアウトを外して使用
+
+      viewer.name = auth.info.name
+      # viewer.profile = auth.info.profile
+      viewer.email = auth.info.email
+      viewer.password = Devise.friendly_token[0, 20]
+    end
+  end
 
   # 管理者かどうかに応じて適切なViewersを取得するメソッド
   def self.for_current_user(user, _organization_id_param)
