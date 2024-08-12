@@ -39,6 +39,7 @@ RSpec.describe 'Comments', type: :system, js: true do
         login_system_admin(system_admin)
         current_system_admin(system_admin)
         visit video_path(id: user_comment.video_id)
+        click_button 'コメントを表示する'
       end
 
       it 'レイアウト' do
@@ -161,6 +162,7 @@ RSpec.describe 'Comments', type: :system, js: true do
         login(user_staff1)
         current_user(user_staff1)
         visit video_path(id: user_comment.video_id)
+        click_button 'コメントを表示する'
       end
 
       it 'レイアウト' do
@@ -299,6 +301,7 @@ RSpec.describe 'Comments', type: :system, js: true do
         login(viewer)
         current_viewer(viewer)
         visit video_path(id: viewer_comment.video_id)
+        click_button 'コメントを表示する'
       end
 
       it 'レイアウト' do
