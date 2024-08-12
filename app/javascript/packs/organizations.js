@@ -1,27 +1,39 @@
-// This file is automatically compiled by Webpack, along with any other files
-// present in this directory. You're encouraged to place your actual application logic in
-// a relevant structure within app/javascript and only use these pack files to reference
-// that code so it'll be compiled.
+// app/javascript/packs/organizations.js
 
-require("@rails/ujs").start()
-require("turbolinks").start()
-require("@rails/activestorage").start()
-require("channels")
+// Load jQuery before anything else
+const $ = require("jquery");
+window.$ = $;
+window.jQuery = $;
+
+require("@rails/ujs").start();
+require("turbolinks").start();
+require("@rails/activestorage").start();
+require("channels");
 require('admin-lte');
-require("jquery");
 
 import 'bootstrap';
 import '../stylesheets/organizations'; // This file will contain your custom CSS
+// import '../stylesheets/uses/main.scss';
 import "@fortawesome/fontawesome-free/js/all";
 
+// ツールチップの初期化コードをコメントアウトまたは削除
+// document.addEventListener("turbolinks:load", () => {
+//   $('[data-toggle="tooltip"]').tooltip()
+// });
+
 document.addEventListener("turbolinks:load", () => {
-  $('[data-toggle="tooltip"]').tooltip()
+  function controlSubmit() {
+    var agreeTermsCheckbox = document.getElementById("agreeTerms");
+    var submitButton = document.querySelector("[type='submit']");
+    if (agreeTermsCheckbox && submitButton) {
+      submitButton.disabled = !agreeTermsCheckbox.checked;
+
+      // チェックボックスの状態変更を監視し、変更があった場合にボタンの状態を更新
+      agreeTermsCheckbox.addEventListener('change', function() {
+        submitButton.disabled = !this.checked;
+      });
+    }
+  }
+
+  controlSubmit();
 });
-
-
-// Uncomment to copy all static images under ../images to the output folder and reference
-// them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
-// or the `imagePath` JavaScript helper below.
-//
-// const images = require.context('../images', true)
-// const imagePath = (name) => images(name, true)

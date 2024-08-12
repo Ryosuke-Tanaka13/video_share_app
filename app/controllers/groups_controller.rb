@@ -1,21 +1,27 @@
 class GroupsController < ApplicationController
   layout 'groups', only: %i[index show new edit update create destroy remove_viewer]
   before_action :ensure_logged_in
-  before_action :not_exist, only: %i[show edit update]
+  before_action :ensure_admin_or_user
   before_action :set_group, only: %i[show edit update destroy remove_viewer]
-  before_action :authenticate_user!
   before_action :check_viewer, only: %i[show edit update destroy remove_viewer]
   before_action :check_permission, only: [:destroy]
 
   def index
-    @groups = Group.where(organization_id: current_user.organization_id)
+    if current_user
+      @groups = Group.where(organization_id: current_user.organization_id)
+      @select_organization = current_user.organization
+    elsif current_system_admin
+      @groups = Group.where(organization_id: params[:organization_id])
+      @select_organization = Organization.find(params[:organization_id]) if params[:organization_id].present?
+    end
   end
 
   def show; end
 
   def new
     @group = Group.new
-    @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
+    organization_id = params[:organization_id] || current_user.organization_id
+    @viewers = Viewer.for_current_user(current_user, organization_id)
   end
 
   def create
@@ -29,15 +35,26 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
+    organization_id = params[:organization_id] || current_user&.organization_id
+    if organization_id.nil?
+      flash[:error] = '組織IDが見つかりません'
+      redirect_back(fallback_location: root_path) and return
+    end
+
+    if current_system_admin?
+      @viewers = Viewer.for_system_admin(organization_id)
+    else
+      @viewers = Viewer.for_current_user(current_user, organization_id)
+    end
   end
 
   def update
     if @group.update(group_params)
-      redirect_to groups_path
+      flash[:success] = '視聴グループを編集しました。'
+      redirect_to groups_path(organization_id: @group.organization_id)
     else
-      @viewers = Viewer.joins(:organization_viewers).where(organization_viewers: { organization_id: current_user.organization_id })
-      render 'edit'
+      flash[:danger] = '視聴グループ名を入力してください'
+      redirect_to edit_group_path(@group.uuid, organization_id: @group.organization_id)
     end
   end
 
@@ -48,8 +65,7 @@ class GroupsController < ApplicationController
 
   def remove_viewer
     viewer = Viewer.find(params[:viewer_id])
-    group.viewers.delete(viewer)
-
+    @group.viewers.delete(viewer)
     redirect_to groups_path
   end
 
@@ -63,16 +79,8 @@ class GroupsController < ApplicationController
     @group = Group.find_by(uuid: params[:uuid])
   end
 
-  # set_viewerが退会済であるページは、システム管理者のみ許可
-  def not_exist
-    if current_user && Viewer.find_by(id: current_user.id)&.is_valid == false && !current_system_admin?
-      flash[:danger] = '存在しないアカウントです。'
-      redirect_back(fallback_location: root_url)
-    end
-  end
-
   def check_viewer
-    unless @group.organization_id == current_user.organization_id
+    if !current_system_admin? && @group.organization_id != current_user.organization_id
       flash[:danger] = '権限がありません。'
       redirect_back(fallback_location: root_url)
     end

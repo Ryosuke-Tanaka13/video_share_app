@@ -1,7 +1,9 @@
+<!-- app/views/viewers/registrations/new.html.erb -->
+
 <div class="register-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="" class="h2"><b>レコブル</a>
+      <a href="" class="h2"><b>レコブル</b></a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">アカウント登録を行いましょう！</p>
@@ -24,9 +26,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-
           <%= f.password_field :password, autocomplete: "new-password", class:"form-control", placeholder:"パスワード", required: true %>
-
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -42,32 +42,23 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-8">
-            <div class="icheck-primary" onclick="controlSubmit()">
+          <div class="col-12 text-center">
+            <div class="icheck-primary">
               <input type="checkbox" id="agreeTerms" name="terms" required>
               <label for="agreeTerms">
-                <%= link_to "利用規約", use_path %>に同意する
+                <%= link_to "利用規約", use_terms_path %>と
+                <%= link_to "プライバシーポリシー", use_privacy_policy_path %>に同意
               </label>
             </div>
           </div>
           <!-- /.col -->
-          <div>
-            <%= f.submit t('.sign_up'), class:"btn btn-primary btn-block", disabled: true, id:"sign_up_submit" %>
+          <div class="col-12">
+            <%= f.submit 'アカウント登録', class: 'btn btn-primary btn-block', id: 'sign_up_submit' %>
           </div>
           <!-- /.col -->
         </div>
       <% end %>
 
-      <%# <div class="social-auth-links text-center">
-        <a href="#" class="btn btn-block btn-primary">
-          <i class="fab fa-facebook mr-2"></i>
-          Sign up using Facebook
-        </a>
-        <a href="#" class="btn btn-block btn-danger">
-          <i class="fab fa-google-plus mr-2"></i>
-          Sign up using Google+
-        </a>
-      </div> %>
       <br>
       <div>
         <%= render "/shared/links" %>

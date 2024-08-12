@@ -16,9 +16,4 @@ FactoryBot.define do
     customer_id    { 'cus_id_2' }
     subscription_id { 'sub_id_2' }
   end
-
-  factory :test_organization, class: 'Organization' do
-    name           { 'セレブエンジニア' }
-    email          { Faker::Internet.email }
-  end
 end

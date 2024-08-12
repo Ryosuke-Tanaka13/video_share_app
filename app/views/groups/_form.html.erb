@@ -8,7 +8,7 @@
 <!-- 対象グループ情報 -->
 <%= render '/shared/error_messages', object: f.object %>
 <%= f.label :name %>
-<%= f.text_field :name, class: "form-control" %><br>
+<%= f.text_field :name, id: 'group_name', class: "form-control" %><br>
 <%= f.label :viewer %>
 <%= f.collection_select :viewer_ids, @viewers || [], :id, :name, {}, { class: 'form-control select2', id: 'viewer-select', multiple: true, style: "width: 100%" } %>
 

@@ -36,7 +36,7 @@ docker-compose run --rm app yarn install
 # db:setup　← エラーになります！!(大きめのアプリだと外部キー制約エラーが出ます。)
 docker-compose run --rm app rails db:setup
 
-↓↓下記で対応して下さい！
+↓下記で対応して下さい！
 # rails db:create
 docker-compose run --rm app rails db:create
 

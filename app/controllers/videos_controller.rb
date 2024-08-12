@@ -8,6 +8,8 @@ class VideosController < ApplicationController
   before_action :ensure_user, only: %i[new create]
   before_action :ensure_admin_or_owner_or_correct_user, only: %i[update]
   before_action :ensure_my_organization, exept: %i[new create]
+  # 視聴者がログインしている場合、表示されているビデオの視聴グループ＝現在の視聴者の視聴グループでなければ、締め出す下記のメソッド追加予定
+  # before_action :limited_viewer, only: %i[show]
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
 
@@ -21,16 +23,17 @@ class VideosController < ApplicationController
     elsif current_user.present?
       @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
     elsif current_viewer.present?
-      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available.select do |video|
-        video.accessible_by?(current_viewer)
-      end
+      # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
+      session[:organization_id] = params[:organization_id]
+      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available
+      # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
     end
   end
 
   def new
     @video = Video.new
     @video.video_folders.build
-    @groups = current_user.organization.groups if current_user.present?
+    @groups = current_user_with_org_and_groups.organization.groups
   end
 
   def create
@@ -94,7 +97,7 @@ class VideosController < ApplicationController
 
   # 共通メソッド(organization::foldersコントローラにも記載)
   def set_organization
-    @organization = Organization.find(params[:organization_id])
+    @organization = Organization.includes(:groups).find(params[:organization_id])
   end
 
   def ensure_user

@@ -17,7 +17,6 @@ Rails.application.routes.draw do
       end
     end
   end
-  
 
   # =================================================================
 
@@ -84,10 +83,12 @@ Rails.application.routes.draw do
   # =================================================================
 
   # 共通==============================================================
-  # 利用規約
-  get 'use' => 'use#index'
   # トップページ
   root 'use#top'
+  # 利用規約
+  get 'use/terms' => 'use#terms', as: 'use_terms'
+  # プライバシーポリシー
+  get 'use/privacy_policy' => 'use#privacy_policy', as: 'use_privacy_policy'
   # =================================================================
 
   resources :videos do

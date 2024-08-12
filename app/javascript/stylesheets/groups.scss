@@ -1,3 +1,8 @@
 @import "bootstrap";
 @import "admin-lte";
 @import '@fortawesome/fontawesome-free';
+
+.center-message h2 {
+  color: red;
+  text-align: center;
+}
