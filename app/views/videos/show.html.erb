@@ -1,4 +1,4 @@
-<% provide(:title,  "ビデオ詳細") %>
+<% provide(:title, "ビデオ詳細") %>
 <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 <% if @video.popup_before_video == true %>
   <%= link_to "popb", popup_before_video_path(@video), remote: true, id: "hiddenPopupBeforeLink", class: "btn", style: "display: none;" if user_signed_in? || system_admin_signed_in? %>
