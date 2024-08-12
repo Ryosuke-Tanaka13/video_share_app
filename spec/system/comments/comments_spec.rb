@@ -189,7 +189,7 @@ RSpec.describe 'Comments', type: :system, js: true do
         all('div.js-edit-comment-button')[0].click
         comment_textarea = find('textarea.comment-post-error')
         comment_textarea.set('動画投稿者のアップデートコメント')
-        click_button '更新' 
+        click_button '更新'
         expect(page).to have_content '動画投稿者のアップデートコメント'
       end
 
