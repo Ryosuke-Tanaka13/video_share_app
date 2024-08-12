@@ -1,0 +1,35 @@
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <!-- validateプラグインの読み込み -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js" integrity="sha512-37T7leoNS06R80c8Ulq7cdCDU5MNQBwlYoy1TX/WUsLFC2eYNqtKlV0QjH7r8JpG/S0GUMZwebnVFLPd6SU5yg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<!-- 対象グループ情報 -->
+<%= render '/shared/error_messages', object: f.object %>
+<%= f.label :name %>
+<%= f.text_field :name, id: 'group_name', class: "form-control" %><br>
+<%= f.label :viewer %>
+<%= f.collection_select :viewer_ids, @viewers || [], :id, :name, {}, { class: 'form-control select2', id: 'viewer-select', multiple: true, style: "width: 100%" } %>
+
+<script>
+  $(document).ready(function(){
+    let isInitialized = false;
+    function initializeSelect2() { // 要素が表示されるまで待つ
+      $('#viewer-select').select2({
+        width: 'resolve',
+        theme: 'classic',
+        multiple: 'multiple',
+        allowClear: true
+      });
+      isInitialized = true;
+    }
+
+    let checkExist = setInterval(function() {
+      if ($('#viewer-select').length && !isInitialized) {
+        clearInterval(checkExist);
+        initializeSelect2();
+      }
+    }, 100); // 100 ミリ秒ごとにチェックする
+  });
+</script>
