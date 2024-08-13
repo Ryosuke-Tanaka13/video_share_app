@@ -12,7 +12,7 @@ RSpec.describe 'ビデオコメントの表示・非表示', type: :feature, js:
     fill_in 'パスワード', with: viewer.password
     click_button 'ログイン'
 
-    # 動画詳細ページにアクセス
+    # 動画詳細ページアクセス
     visit video_path(video_it)
   end
 
