@@ -12,6 +12,7 @@ class VideosController < ApplicationController
   # before_action :limited_viewer, only: %i[show]
   before_action :ensure_logged_in_viewer, only: %i[show]
   before_action :ensure_admin_for_access_hidden, only: %i[show edit update]
+  before_action :set_groups, only: %i[new edit update]
 
   def index
     # 動画検索機能用に記載
@@ -19,21 +20,20 @@ class VideosController < ApplicationController
     if current_system_admin.present?
       # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
       session[:organization_id] = params[:organization_id]
-      @organization_videos = Video.includes([:video_blob]).user_has(params[:organization_id])
+      @organization_videos = Video.for_system_admin(params[:organization_id])
     elsif current_user.present?
-      @organization_videos = Video.includes([:video_blob]).current_user_has(current_user).available
+      @organization_videos = Video.for_user(current_user)
     elsif current_viewer.present?
       # 動画検索機能用に記載 リセットボタン、検索ボタン押下後paramsにorganization_idが含まれないためsessionに保存
       session[:organization_id] = params[:organization_id]
-      @organization_videos = Video.includes([:video_blob]).current_viewer_has(params[:organization_id]).available
-      # 現在の視聴者の視聴グループに紐づくビデオのみを表示するよう修正が必要(第２フェーズ)
+      @organization_videos = Video.for_viewer(params[:organization_id], current_viewer)
     end
   end
+  
 
   def new
     @video = Video.new
     @video.video_folders.build
-    @groups = current_user_with_org_and_groups.organization.groups
   end
 
   def create
@@ -64,6 +64,7 @@ class VideosController < ApplicationController
   def edit; end
 
   def update
+    @video.groups = Group.where(id: params[:video][:group]) if params[:video][:group]
     if @video.update(video_params)
       flash[:success] = '動画情報を更新しました'
       redirect_to video_url
@@ -147,5 +148,9 @@ class VideosController < ApplicationController
       flash[:danger] = 'すでに削除された動画です。'
       redirect_back(fallback_location: root_url)
     end
+  end
+
+  def set_groups
+    @groups = current_user_with_org_and_groups.organization.groups
   end
 end

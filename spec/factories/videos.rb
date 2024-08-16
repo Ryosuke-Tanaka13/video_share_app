@@ -75,7 +75,7 @@ FactoryBot.define do
   factory :video_it, class: 'Video' do
     title { 'ITビデオ' }
     open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
-    range { true }
+    range { false }
     comment_public { false }
     login_set { true }
     popup_before_video { false }
@@ -100,6 +100,35 @@ FactoryBot.define do
     user_id { 2 }
     organization
     user
+    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
+    data_url { '/videos/444444444' }
+  end
+
+  factory :limited_video, class: 'Video' do
+    title { '限定公開ビデオ' }
+    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    range { true } # 限定公開に設定
+    comment_public { false }
+    login_set { false }
+    popup_before_video { false }
+    popup_after_video { false }
+    organization_id { 1 }
+    user_id { 3 }
+    groups { [FactoryBot.create(:group)] } 
+    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
+    data_url { '/videos/444444444' }
+  end
+
+  factory :public_video, class: 'Video' do
+    title { '一般公開ビデオ' }
+    open_period { 'Sun, 14 Aug 2022 18:06:00.000000000 JST +09:00' }
+    range { false } 
+    comment_public { false }
+    login_set { false }
+    popup_before_video { false }
+    popup_after_video { false }
+    organization_id { 1 }
+    user_id { 3 }
     # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
     data_url { '/videos/444444444' }
   end

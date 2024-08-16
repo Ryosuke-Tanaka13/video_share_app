@@ -67,5 +67,17 @@ RSpec.describe Video, type: :model do
         expect(video_test.errors.full_messages).to include('ビデオをアップロードしてください')
       end
     end
+
+    describe '視聴グループ' do
+      before do
+        video_test.range = true
+      end
+    
+      it '空白' do
+        video_test.groups = []
+        expect(video_test.valid?).to eq(false)
+        expect(video_test.errors.full_messages).to include('視聴グループを選択してください')
+      end
+    end
   end
 end
