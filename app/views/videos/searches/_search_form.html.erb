@@ -15,9 +15,9 @@
       <div class="form-group form-inline">
         <%= f.radio_button :range, "all", value: @search_params[:range] == "all", id: 'search-range-all' %>
         <%= f.label :range_all, "すべての動画", class: 'm-1' %>
-        <%= f.radio_button :range, "true", value: @search_params[:range] == "true", id: 'search-range-true' %>
+        <%= f.radio_button :range, "false", value: @search_params[:range] == "false", id: 'search-range-true' %>
         <%= f.label :range_true, "一般公開のみ", class: 'm-1' %>
-        <%= f.radio_button :range, "false", value: @search_params[:range] == "false", id: 'search-range-false' %>
+        <%= f.radio_button :range, "true", value: @search_params[:range] == "true", id: 'search-range-false' %>
         <%= f.label :range_false, "限定公開のみ", class: 'm-1' %>
       </div>
       <div class="form-group form-inline">
