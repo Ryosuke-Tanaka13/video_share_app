@@ -257,8 +257,6 @@ def audio_output
         # 音声ファイルwavと字幕ファイルsrtを削除
         File.delete(audio_output_path) if File.exist?(audio_output_path)
         # File.delete(srt_path_return) if File.exist?(srt_path_return)
-
-
     end
   end
 end
@@ -514,6 +512,9 @@ end
     #   end
     # end
   
+    srt_path.to_s
+  end
+
 
   def add_subtitles_to_video(video_path, srt_path_return)
     escaped_video_path = Shellwords.escape(video_path)
@@ -531,8 +532,6 @@ end
       puts"Failed to create video with subtitles: #{stderr}"
     end
   end
-
-  # 
 
   def format_time(seconds)
     # 秒を "HH:MM:SS,mmm" 形式にフォーマット
