@@ -212,12 +212,17 @@ def audio_output
   # 音声データをアップロードする際のタイムアウトまでの時間を５分に延長する
   options = { timeout: 1800}
   # 音声ファイルをアップロード
+  options = { resumable: true, chunk_size: chunk_size }
   file = bucket.create_file audio_output_path.to_s, "audio_files/#{audio_file_name}"
   # 音声ファイルのGCSパス
   audio = { uri: "gs://movie_app_bucket/audio_files/#{audio_file_name}" }
   # Speech-to-Text API の設定と実行
   speech = Google::Cloud::Speech.speech
-  config = { encoding: :LINEAR16, sample_rate_hertz: 44100, language_code: "ja-JP" }
+  config = { encoding: :LINEAR16, 
+             sample_rate_hertz: 44100, 
+             language_code: "ja-JP",
+             enable_word_time_offsets: true
+            }
   operation = speech.long_running_recognize config: config, audio: audio
   puts "Transcription operation started, waiting for completion..."
   operation.wait_until_done!
@@ -238,14 +243,14 @@ def audio_output
         result.alternatives.map(&:transcript)
         # resultのalternatives配列のtranscript変数だけを呼び出している
         end
-        srt_path_return = create_srt(transcripts)
+        srt_path_return = create_srt(response.results)
         # convert_srt_to_ass(srt_path_return)
         add_subtitles_to_video(video_path, srt_path_return)
         redirect_to cut_video_url
         flash[:success] = "字幕付き動画作成完了"
         # 音声ファイルwavと字幕ファイルsrtを削除
-        File.delete(audio_output_path) if File.exist?(audio_output_path)
-        File.delete(srt_path_return) if File.exist?(srt_path_return)
+        # File.delete(audio_output_path) if File.exist?(audio_output_path)
+        # File.delete(srt_path_return) if File.exist?(srt_path_return)
 
     end
   end
@@ -328,23 +333,62 @@ end
     
   end
 
-  def create_srt(transcripts)
+  def create_srt(results)
     srt_path = Rails.root.join('public', 'voice', "subtitles#{Time.now.to_i}.srt")
+  
     File.open(srt_path, 'w') do |file|
-    index = 0
-      transcripts.first.scan(/.{1,15}/).each do |chunk|
-        start_time = format_time(index * 5)
-        end_time = format_time((index + 1) * 5)
-        file.puts "#{index + 1}"
-        file.puts "#{start_time} --> #{end_time}"
-        file.puts chunk
-        file.puts
-        index += 1
+      index = 0
+  
+      results.each do |result|
+        result.alternatives.each do |alternative|
+          words = alternative.words
+          current_sentence = ""
+          current_start_time = nil
+          last_word_end_time = nil
+  
+          words.each_with_index do |word, i|
+            word_text = word.word.split('|').first
+            start_time = word.start_time.seconds + word.start_time.nanos * 1e-9
+            end_time = word.end_time.seconds + word.end_time.nanos * 1e-9
+  
+            # タイムスタンプがまだ設定されていない場合、現在の単語の開始時間を設定
+            current_start_time ||= start_time
+  
+            # 文章がまだ短いか、次の単語が現在の文章に続いている場合
+            if current_sentence.empty? || (start_time - last_word_end_time <= 1.0 && current_sentence.length + word_text.length <= 15)
+              current_sentence += " " unless current_sentence.empty?
+              current_sentence += word_text
+            else
+              # 現在の文章をSRTに書き込む
+              file.puts "#{index + 1}"
+              file.puts "#{format_time(current_start_time)} --> #{format_time(last_word_end_time)}"
+              file.puts current_sentence
+              file.puts
+  
+              index += 1
+              current_sentence = word_text
+              current_start_time = start_time
+            end
+  
+            last_word_end_time = end_time
+          end
+  
+          # 最後の文章をSRTに書き込む
+          unless current_sentence.empty?
+            file.puts "#{index + 1}"
+            file.puts "#{format_time(current_start_time)} --> #{format_time(last_word_end_time)}"
+            file.puts current_sentence
+            file.puts
+  
+            index += 1
+          end
+        end
       end
     end
+  
     srt_path.to_s
   end
-
+  
 
   def add_subtitles_to_video(video_path, srt_path_return)
     escaped_video_path = Shellwords.escape(video_path)
@@ -365,11 +409,10 @@ end
 
 
 
-  def format_time(seconds)
-    hours = seconds / 3600
-    minutes = (seconds % 3600) / 60
-    seconds = seconds % 60
-    format("%02d:%02d:%02d,000", hours, minutes, seconds)
+  def format_time(time)
+    # タイムスタンプをSRT形式の 00:00:01,000 に変換
+    seconds = time.to_f
+    Time.at(seconds).utc.strftime('%H:%M:%S,%L')
   end
 
 end
