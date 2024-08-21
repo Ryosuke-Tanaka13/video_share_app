@@ -22,7 +22,7 @@
       <p>オーナー削除済み</p>
     <% end %>
   </div>
-</div>
+</div>    
 
 <!-- 動画コメント ------------------------------------------------------------------------>
 <div class="container">
@@ -31,17 +31,20 @@
       <% if account_logged_in? %>
         <div class="comment-create">
           <h4 class="text-left">コメントを投稿する</h4>
-            <%= render partial: 'comments/form' %>
-        </div><br>
-      <% end %>
+          <%= render partial: 'comments/form' %>
+        </div>
+        <br>
+      <% end %>   
       <hr>
-      <div class="comment-create">
-        <h4 class="text-left title">コメント</h4>
+        
+      <!-- コメント表示・非表示ボタン -->
+      <button id="toggle-comments-button" class="btn btn-secondary">コメントを表示する</button>
+
+      <!-- コメントエリア -->
+      <div id="comments_area" style="display: none;">
+        <%= render partial: 'comments/index' if @comments.present? %>  
       </div>
-      <div id="comments_area">
-        <%= render partial: 'comments/index' if @comments.present? %>
-      </div>
-    </div>
+    </div>  
   </div>
 </div>
 <!-- 動画コメント ------------------------------------------------------------------------>
