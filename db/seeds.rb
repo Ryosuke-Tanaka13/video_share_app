@@ -34,7 +34,8 @@ organization.save!
 # =================================================================
 # user関連==================================================
 user = User.new(
-  email: 'test_user_owner1@gmail.com',
+  email: '
+  ',
   name: 'オーナー1',
   password: 'password',
   role: 0,

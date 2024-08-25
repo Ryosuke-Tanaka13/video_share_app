@@ -198,6 +198,7 @@ def audio_output
   # command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{audio_output_path}"
   command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 1 #{audio_output_path}"
   stdout, stderr, status = Open3.capture3(command)
+  flash[:success] = "音声データ作成中・・・・・"
   if status.success?
     puts "Audio extracted successfully to #{audio_output_path}"
   else
@@ -221,7 +222,12 @@ def audio_output
   config = { encoding: :LINEAR16, 
              sample_rate_hertz: 44100, 
              language_code: "ja-JP",
-             enable_word_time_offsets: true
+             enable_word_time_offsets: true,
+             diarization_config: { 
+               enable_speaker_diarization: true,
+               min_speaker_count: 1,
+               max_speaker_count: 5
+             }
             }
   operation = speech.long_running_recognize config: config, audio: audio
   puts "Transcription operation started, waiting for completion..."
@@ -244,12 +250,13 @@ def audio_output
         # resultのalternatives配列のtranscript変数だけを呼び出している
         end
         srt_path_return = create_srt(response.results)
+        flash[:success] = "文字ファイル作成中・・・・・・"
         # convert_srt_to_ass(srt_path_return)
         add_subtitles_to_video(video_path, srt_path_return)
         redirect_to cut_video_url
         flash[:success] = "字幕付き動画作成完了"
         # 音声ファイルwavと字幕ファイルsrtを削除
-        # File.delete(audio_output_path) if File.exist?(audio_output_path)
+        File.delete(audio_output_path) if File.exist?(audio_output_path)
         # File.delete(srt_path_return) if File.exist?(srt_path_return)
 
     end
@@ -337,58 +344,56 @@ end
     srt_path = Rails.root.join('public', 'voice', "subtitles#{Time.now.to_i}.srt")
   
     File.open(srt_path, 'w') do |file|
-      index = 0
+      index = 1
+      current_speaker = nil
+      current_segment = nil
   
       results.each do |result|
-        result.alternatives.each do |alternative|
-          words = alternative.words
-          current_sentence = ""
-          current_start_time = nil
-          last_word_end_time = nil
+        alternative = result.alternatives.first
+        words = alternative.words
   
-          words.each_with_index do |word, i|
-            word_text = word.word.split('|').first
-            start_time = word.start_time.seconds + word.start_time.nanos * 1e-9
-            end_time = word.end_time.seconds + word.end_time.nanos * 1e-9
+        words.each do |word_info|
+          word_parts = word_info.word.split('|')
+          word = word_parts.first  # ｜の左側だけを使用
+          start_time = word_info.start_time.seconds + word_info.start_time.nanos * 1e-9
+          end_time = word_info.end_time.seconds + word_info.end_time.nanos * 1e-9
+          speaker = word_info.speaker_tag
   
-            # タイムスタンプがまだ設定されていない場合、現在の単語の開始時間を設定
-            current_start_time ||= start_time
-  
-            # 文章がまだ短いか、次の単語が現在の文章に続いている場合
-            if current_sentence.empty? || (start_time - last_word_end_time <= 1.0 && current_sentence.length + word_text.length <= 15)
-              current_sentence += " " unless current_sentence.empty?
-              current_sentence += word_text
-            else
-              # 現在の文章をSRTに書き込む
-              file.puts "#{index + 1}"
-              file.puts "#{format_time(current_start_time)} --> #{format_time(last_word_end_time)}"
-              file.puts current_sentence
-              file.puts
-  
-              index += 1
-              current_sentence = word_text
-              current_start_time = start_time
-            end
-  
-            last_word_end_time = end_time
-          end
-  
-          # 最後の文章をSRTに書き込む
-          unless current_sentence.empty?
-            file.puts "#{index + 1}"
-            file.puts "#{format_time(current_start_time)} --> #{format_time(last_word_end_time)}"
-            file.puts current_sentence
-            file.puts
-  
+          # 新しいセグメントを開始する条件
+          if current_segment.nil?
+            current_segment = {
+              speaker: speaker,
+              start_time: start_time,
+              end_time: end_time,
+              text: word
+            }
+          elsif speaker != current_segment[:speaker] || (start_time - current_segment[:end_time]) > 1.0
+            # 現在のセグメントをファイルに書き込む
+            write_srt_segment(file, index, current_segment)
             index += 1
+  
+            # 新しいセグメントを開始
+            current_segment = {
+              speaker: speaker,
+              start_time: start_time,
+              end_time: end_time,
+              text: word
+            }
+          else
+            # 現在のセグメントを更新
+            current_segment[:end_time] = end_time
+            current_segment[:text] += " #{word}"
           end
         end
       end
+  
+      # 最後のセグメントを書き込む
+      write_srt_segment(file, index, current_segment) unless current_segment.nil?
     end
   
+    puts "SRT file created at #{srt_path}"
     srt_path.to_s
   end
-  
 
   def add_subtitles_to_video(video_path, srt_path_return)
     escaped_video_path = Shellwords.escape(video_path)
@@ -407,12 +412,21 @@ end
     end
   end
 
+  def write_srt_segment(file, index, segment)
+    file.puts "#{index}"
+    file.puts "#{format_time(segment[:start_time])} --> #{format_time(segment[:end_time])}"
+    file.puts "#{segment[:text]}"
+    file.puts
+  end
 
 
-  def format_time(time)
-    # タイムスタンプをSRT形式の 00:00:01,000 に変換
-    seconds = time.to_f
-    Time.at(seconds).utc.strftime('%H:%M:%S,%L')
+  def format_time(seconds)
+    # 秒を "HH:MM:SS,mmm" 形式にフォーマット
+    hours = (seconds / 3600).to_i
+    minutes = ((seconds % 3600) / 60).to_i
+    secs = (seconds % 60).to_i
+    millis = ((seconds - secs) * 1000).to_i
+    format("%02d:%02d:%02d,%03d", hours, minutes, secs, millis)
   end
 
 end
