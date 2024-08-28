@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_02_195550) do
+ActiveRecord::Schema.define(version: 2024_08_28_133308) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 2024_07_02_195550) do
 
   create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.bigint "organization_id"
+    t.integer "organization_id"
     t.string "uuid"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -256,14 +256,7 @@ ActiveRecord::Schema.define(version: 2024_07_02_195550) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "id_digest"
-    t.text "pre_video_questionnaire"
-    t.text "post_video_questionnaire"
-    t.integer "pre_video_questionnaire_id"
-    t.integer "post_video_questionnaire_id"
     t.datetime "deleted_at"
-    t.json "pre_question_items"
-    t.json "post_question_items"
-    t.index ["deleted_at"], name: "index_videos_on_deleted_at"
     t.index ["organization_id"], name: "index_videos_on_organization_id"
     t.index ["user_id"], name: "index_videos_on_user_id"
   end
@@ -322,10 +315,6 @@ ActiveRecord::Schema.define(version: 2024_07_02_195550) do
   add_foreign_key "group_videos", "videos"
   add_foreign_key "organization_viewers", "organizations"
   add_foreign_key "organization_viewers", "viewers"
-  add_foreign_key "questionnaire_answers", "videos"
-  add_foreign_key "questionnaire_answers", "viewers"
-  add_foreign_key "questionnaire_items", "questionnaires"
-  add_foreign_key "questionnaires", "users"
   add_foreign_key "replies", "comments"
   add_foreign_key "replies", "organizations"
   add_foreign_key "replies", "system_admins"
