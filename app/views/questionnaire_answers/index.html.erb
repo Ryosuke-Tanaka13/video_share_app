@@ -23,8 +23,8 @@
         </td>
         <td>
           <% answers.each do |answer| %>
-            <%= link_to '削除', video_questionnaire_answer_path(@video, latest_answer.id), method: :delete, data: { confirm: '削除しますか？' } %>
-          <% end %>
+              <%= link_to '削除', video_questionnaire_answer_path(@video, answer.id), method: :delete, data: { confirm: '削除しますか？' } %>
+          <% end %>     
         </td>
       </tr>
     <% end %>

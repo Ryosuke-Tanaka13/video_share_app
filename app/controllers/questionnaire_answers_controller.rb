@@ -73,7 +73,7 @@ class QuestionnaireAnswersController < ApplicationController
   def index
     @video_id = Base64.decode64(params[:video_id].strip)
     @video = Video.find(@video_id)
-    @questionnaire_answers_grouped = QuestionnaireAnswer.where(video_id: @video_id)
+    @questionnaire_answers_grouped = QuestionnaireAnswer.where(video_id: @video_id).select { |answer| answer.pre_answers.present? || answer.post_answers.present? }
       .group_by { |answer| [answer.viewer_id || '', answer.user_id || ''] }
   end
 
