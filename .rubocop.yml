@@ -238,7 +238,10 @@ RSpec/AnyInstance:
   Enabled: false
 
 # ファイルパスのチェックを無効化
-RSpec/FilePath:
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/SpecFilePathSuffix:
   Enabled: false
 
 # contextのprefixチェックを無効化

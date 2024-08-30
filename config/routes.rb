@@ -44,6 +44,11 @@ Rails.application.routes.draw do
         resource :unsubscribe, only: %i[show update], as: :users_unsubscribe
       end
     end
+    resources :questionnaires do
+      member do
+        get 'apply'
+      end
+    end
   end
 
   post 'users_create', to: 'users#create'
@@ -78,6 +83,10 @@ Rails.application.routes.draw do
     resources :comments, only: %i[create update destroy] do
       resources :replies, only: %i[create update destroy]
     end
+
+    resources :questionnaire_answers, only: [:index, :create, :destroy]
+
+    get 'questionnaire_answers/(:viewer_id)/(:user_id)', to: 'questionnaire_answers#show', as: 'video_questionnaire_answer'
   end
 
   # =================================================================

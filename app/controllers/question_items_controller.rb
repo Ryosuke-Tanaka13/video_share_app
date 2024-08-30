@@ -1,0 +1,2 @@
+class QuestionItemsController < ApplicationController
+end

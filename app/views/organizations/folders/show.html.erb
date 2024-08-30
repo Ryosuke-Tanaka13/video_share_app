@@ -1,10 +1,16 @@
 <% provide(:title, "フォルダ詳細") %>
 <div class="content">
   <% @videos.each do |video| %>
-    <div style="float:left;margin:15px;"> 
+    <div style="float:left;margin:15px;">
       <div class="video-display-index">
-        <iframe src="https://player.vimeo.com/video/<%= video.data_url[8..17].to_i %>" width="200px" height="100px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-        </iframe>
+        <% if current_system_admin || current_user %>
+          <video width="300" height="200" id="mv" controls>
+          <source src="<%= url_for(video.video) %>">
+        <% else %>
+          <video width="300" height="200" id="mv">
+          <source src="<%= url_for(video.video) %>">
+        <% end %>
+        <!-- vimeoの動画表示の場合は<iframe>で対応-->
       </div>
       <div class="video-title-and-action-index">
         <%= link_to video.title, video_path(video) %><br> 

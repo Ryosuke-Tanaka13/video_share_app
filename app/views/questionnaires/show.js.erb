@@ -1,0 +1,5 @@
+<% if params[:pre_page] %>
+  $("#pre-video-questions-container").html("<%= j render partial: 'questions', locals: { questions: @pre_video_questions, type: 'pre_video' } %>");
+<% elsif params[:post_page] %>
+  $("#post-video-questions-container").html("<%= j render partial: 'questions', locals: { questions: @post_video_questions, type: 'post_video' } %>");
+<% end %>

@@ -1,0 +1,5 @@
+<%= render 'form', questionnaire: @questionnaire, user: @user %>
+<%= javascript_pack_tag 'questionnaire_edit', 'data-turbolinks-track': 'reload' %>
+<div class="index-back">
+  <%= link_to "一覧に戻る", user_questionnaires_path(@user), class: 'btn btn-success' %>
+</div>

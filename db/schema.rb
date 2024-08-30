@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_17_090753) do
+ActiveRecord::Schema.define(version: 2024_08_28_135730) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 2024_07_17_090753) do
 
   create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.bigint "organization_id"
+    t.integer "organization_id"
     t.string "uuid"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -101,6 +101,51 @@ ActiveRecord::Schema.define(version: 2024_07_17_090753) do
     t.boolean "payment_success", default: false
     t.string "customer_id"
     t.string "subscription_id"
+  end
+
+  create_table "questionnaire_answers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "viewer_id"
+    t.bigint "video_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "viewer_name"
+    t.string "viewer_email"
+    t.integer "user_id"
+    t.json "pre_answers"
+    t.json "post_answers"
+    t.bigint "questionnaire_item_id"
+    t.index ["user_id"], name: "index_questionnaire_answers_on_user_id"
+    t.index ["video_id"], name: "index_questionnaire_answers_on_video_id"
+    t.index ["viewer_id"], name: "index_questionnaire_answers_on_viewer_id"
+  end
+
+  create_table "questionnaire_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "questionnaire_id"
+    t.string "pre_question_text"
+    t.string "pre_question_type"
+    t.json "pre_options"
+    t.string "post_question_text"
+    t.string "post_question_type"
+    t.json "post_options"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "video_id"
+    t.boolean "required"
+    t.index ["questionnaire_id"], name: "index_questionnaire_items_on_questionnaire_id"
+    t.index ["video_id"], name: "index_questionnaire_items_on_video_id"
+  end
+
+  create_table "questionnaires", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.bigint "user_id", null: false
+    t.text "pre_video_questionnaire"
+    t.text "post_video_questionnaire"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_questionnaires_on_deleted_at"
+    t.index ["user_id"], name: "index_questionnaires_on_user_id"
   end
 
   create_table "replies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -205,12 +250,20 @@ ActiveRecord::Schema.define(version: 2024_07_17_090753) do
     t.boolean "login_set", default: false
     t.boolean "popup_before_video", default: false
     t.boolean "popup_after_video", default: false
-    t.string "data_url", null: false
     t.boolean "is_valid", default: true, null: false
     t.bigint "organization_id", null: false
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "id_digest"
+    t.datetime "deleted_at"
+    t.text "pre_video_questionnaire"
+    t.text "post_video_questionnaire"
+    t.integer "pre_video_questionnaire_id"
+    t.integer "post_video_questionnaire_id"
+    t.json "pre_question_items"
+    t.json "post_question_items"
+    t.index ["deleted_at"], name: "index_videos_on_deleted_at"
     t.index ["organization_id"], name: "index_videos_on_organization_id"
     t.index ["user_id"], name: "index_videos_on_user_id"
   end

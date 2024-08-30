@@ -1,4 +1,6 @@
 class Video < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :organization
   belongs_to :user
   has_many :group_videos
@@ -6,12 +8,23 @@ class Video < ApplicationRecord
 
   has_one_attached :video
   has_many :comments, dependent: :destroy
-
   has_many :video_folders, dependent: :destroy
   has_many :folders, through: :video_folders
+  has_many :questionnaire_answers, dependent: :destroy
+  has_many :questionnaire_items, dependent: :destroy
+
+  belongs_to :pre_video_questionnaire, -> { with_deleted }, class_name: 'Questionnaire', foreign_key: 'pre_video_questionnaire_id', optional: true
+  belongs_to :post_video_questionnaire, -> { with_deleted }, class_name: 'Questionnaire', foreign_key: 'post_video_questionnaire_id', optional: true
 
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }, if: :video_exists?
+  validates :video, presence: true, blob: { content_type: :video }
+
+  after_save :create_id_digest
+
+  def to_param
+    id_digest
+  end
 
   def video_exists?
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
@@ -33,58 +46,33 @@ class Video < ApplicationRecord
   end
 
   def my_upload?(current_user)
-    return true if self.user_id == current_user.id
-
-    false
+    self.user_id == current_user.id
   end
 
-  def ensure_owner?(current_user)
-    return true if current_user.role == 'owner'
-
-    false
+  def login_need?
+    self.login_set == true
   end
 
-  # 下記vimeoへのアップロード機能
-  attr_accessor :video
-
-  before_create :upload_to_vimeo
-
-  def upload_to_vimeo
-    # connect to Vimeo as your own user, this requires upload scope
-    # in your OAuth2 token
-    vimeo_client = VimeoMe2::User.new(ENV['VIMEO_API_TOKEN'])
-    # upload the video by passing the ActionDispatch::Http::UploadedFile
-    # to the upload_video() method. The data_url in this model, stores
-    # the location of the uploaded video on Vimeo.
-
-    # 動画が存在している、拡張子が動画のものであればvimeoにアップロードする。今のところ、許可しているものは左から順にwebm, mov, mp4, mpeg, wmv, avi
-    if self.video.present? && (self.video.content_type == 'video/webm' || self.video.content_type == 'video/quicktime' || self.video.content_type == 'video/mp4' || self.content_type == 'video/mpeg' || self.video.content_type == 'video/x-ms-wmv' || self.video.content_type == 'video/avi')
-      video = vimeo_client.upload_video(self.video)
-      self.data_url = video['uri']
-      true
-    end
-  # アプリ側ではなく、vimeo側に原因があるエラーのとき(容量不足など)
-  rescue VimeoMe2::RequestFailed => e
-    errors.add(:video, e.message)
-    false
+  def valid_true?
+    self.is_valid == true
   end
 
-  validate :video_is_necessary
+  def not_valid?
+    self.is_valid == false
+  end
 
-  def video_is_necessary
-    # (acitvestorageで取り付けたvideoが存在しないまたはファイルの形式が不正) かつ、data_urlが存在しないならば、はじく。
-    # && data_url.nil?を記述しないと、動画情報を更新する際も、動画の投稿が必須となってしまう。
-    if (video.nil? || (video.content_type != 'video/webm' && video.content_type != 'video/quicktime' && video.content_type != 'video/mp4' && video.content_type != 'video/mpeg' && video.content_type != 'video/x-ms-wmv' && video.content_type != 'video/avi')) && data_url.nil?
-      errors.add(:video, 'をアップロードしてください')
+  private
+
+  def create_id_digest
+    if id_digest.nil?
+      new_digest = Base64.encode64(id.to_s)
+      update_column(:id_digest, new_digest)
     end
   end
 
-  # ビデオ検索機能
   scope :search, lambda { |search_params|
-    # 検索フォームが空であれば何もしない
     return if search_params.blank?
 
-    # ひらがな・カタカナは区別しない
     title_like(search_params[:title_like])
       .open_period_from(search_params[:open_period_from])
       .open_period_to(search_params[:open_period_to])
@@ -93,7 +81,6 @@ class Video < ApplicationRecord
   }
 
   scope :title_like, ->(title) { where('title LIKE ?', "%#{title}%") if title.present? }
-  # DBには世界時間で検索されるため9時間マイナスする必要がある
   scope :open_period_from, ->(from) { where('? <= open_period', DateTime.parse(from) - 9.hours) if from.present? }
   scope :open_period_to, ->(to) { where('open_period <= ?', DateTime.parse(to) - 9.hours) if to.present? }
   scope :range, lambda { |range|

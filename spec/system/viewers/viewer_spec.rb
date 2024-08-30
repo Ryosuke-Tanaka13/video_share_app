@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
+RSpec.xdescribe 'ViewerSystem', :js, type: :system do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }
@@ -10,8 +10,8 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
 
   let(:organization_viewer) { create(:organization_viewer) }
-  let(:organization_viewer2) { create(:organization_viewer2) }
-  let(:organization_viewer3) { create(:organization_viewer3) }
+  let(:member_viewer) { create(:member_viewer) }
+  let(:guest_viewer) { create(:guest_viewer) }
 
   before(:each) do
     system_admin
@@ -21,7 +21,7 @@ RSpec.xdescribe 'ViewerSystem', type: :system, js: true do
     viewer
     viewer1
     organization_viewer
-    organization_viewer2
+    member_viewer
   end
 
   describe 'サイドバーの項目/遷移確認' do

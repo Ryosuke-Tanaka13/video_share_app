@@ -17,7 +17,7 @@ RSpec.describe Folder, type: :model do
     it '正常値で保存可能' do
       # folder_celeb = create(:folder_celeb, name: 'セレブエンジニア2')
       # ↑ コメントアウトし、代わりに、buildしたfolder_celebに対して、保存可能かを検証
-      expect(folder_celeb.valid?).to eq(true)
+      expect(folder_celeb.valid?).to be(true)
     end
   end
 
@@ -25,13 +25,13 @@ RSpec.describe Folder, type: :model do
     describe '名前' do
       it '空白' do
         folder_celeb.name = ''
-        expect(folder_celeb.valid?).to eq(false)
+        expect(folder_celeb.valid?).to be(false)
         expect(folder_celeb.errors.full_messages).to include('名前を入力してください')
       end
 
       it '重複' do
         folder_celeb.name = 'テックリーダーズ'
-        expect(folder_celeb.valid?).to eq(false)
+        expect(folder_celeb.valid?).to be(false)
         expect(folder_celeb.errors.full_messages).to include('名前はすでに存在します')
       end
     end
@@ -39,7 +39,7 @@ RSpec.describe Folder, type: :model do
     describe '組織ID' do
       it '空白' do
         folder_celeb.organization_id = ''
-        expect(folder_celeb.valid?).to eq(false)
+        expect(folder_celeb.valid?).to be(false)
         expect(folder_celeb.errors.full_messages).to include('組織を入力してください')
       end
     end

@@ -1,0 +1,69 @@
+<div class="header">
+  <h2 id="form-title">アンケート（動画視聴前）</h2>
+  <!-- 動画視聴前後のアンケートの切り替えボタン -->
+  <div class="toggle-container">
+    <button id="pre-video-toggle" class="toggle-button active">動画視聴前</button>
+    <button id="post-video-toggle" class="toggle-button">動画視聴後</button>
+  </div>
+</div>
+
+<div id="error-messages" style="color: red;"></div>
+<!-- アンケートのフォーム -->
+<%= form_with model: [user, questionnaire], local: true, id: 'dynamic-form', class: 'centered-form' do |f| %>
+  <!-- 質問データを保持するための隠しフィールド -->
+  <input type="hidden" id="pre_video_questionnaire" name="questionnaire[pre_video_questionnaire]" value="<%= @questionnaire.pre_video_questionnaire %>">
+  <input type="hidden" id="post_video_questionnaire" name="questionnaire[post_video_questionnaire]" value="<%= @questionnaire.post_video_questionnaire %>">
+
+  <!-- 動画視聴前の質問コンテナ -->
+  <div id="pre-video-questions-container" class="questions-container"></div>
+  <!-- 動画視聴後の質問コンテナ（初期状態は非表示） -->
+  <div id="post-video-questions-container" class="questions-container" style="display:none;"></div>
+  <button type="button" id="add-question">質問を追加</button>
+    <%= f.submit "保存" %>
+<% end %>
+
+<!-- 質問のテンプレート（新しい質問を追加する際に使用） -->
+<div id="question-template" style="display:none;">
+  <div class="question-field">
+    <div class="question">
+      <div class="question-header">
+        <!-- 質問のタイプ選択（テキスト、ラジオボタン、プルダウン、チェックボックス） -->
+        <label class="question-label"><strong>質問</strong></label>
+        <select name="questions[][type]" class="question-type">
+          <option value="text">テキスト</option>
+          <option value="radio">ラジオボタン</option>
+          <option value="dropdown">プルダウン</option>
+          <option value="checkbox">チェックボックス</option>
+        </select>
+      </div>
+      <div class="question-and-required">
+        <!-- 質問文の入力フィールド -->
+        <input type="text" name="questions[][text]" placeholder="質問を入力" class="question-input">
+        <!-- 質問の必須チェックボックス -->
+        <label class="toggle_label">必須
+          <input class="toggle_input required-checkbox" type="checkbox" value="required" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="question-content">
+        <!-- 質問タイプに応じて表示される入力フィールド（初期は非表示） -->
+        <div class="text-template" style="display:none;"><textarea name="questions[][answer]" rows="3" placeholder="回答を入力"></textarea></div>
+        <div class="radio-template" style="display:none;"></div>
+        <div class="dropdown-template" style="display:none;">
+          <select name="questions[][dropdown_answers][]">
+            <option disabled selected>ここから選択してください</option>
+          </select>
+        </div>
+        <div class="checkbox-template" style="display:none;"></div>
+      </div>
+
+      <!-- 選択肢の追加・リセット用の管理コンテナ -->
+      <div class="options-management" style="display:none;">
+        <input type="text" placeholder="新しい選択肢を入力" class="new-option-text">
+        <button type="button" class="add-option">&#10010;</button>
+        <button type="button" class="reset-options" style="display:none;">リセット</button>
+      </div>
+      <button type="button" class="remove-question">削除</button>
+    </div>
+  </div>
+</div>

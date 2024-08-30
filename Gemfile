@@ -42,9 +42,13 @@ gem 'dotenv-rails'
 gem 'font-awesome-rails'
 
 gem 'activestorage-validator'
-gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
+# gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
+gem 'active_decorator'
 
 gem 'stripe'
+
+gem 'kaminari'
+gem 'paranoia', '~> 2.4'
 
 group :development, :test do
   # ERD生成
@@ -57,6 +61,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'letter_opener_web', '~> 1.0'
+  gem 'pry-nav'
   gem 'pry-rails'
   gem 'pry-remote'
   gem 'rspec-rails'

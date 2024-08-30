@@ -6,14 +6,12 @@
   // これがないと、後述のz-indexが効かない
   position: absolute;
 }
-
 // file_fieldでvideoBoxの範囲を覆い尽くす
 #post{
   @include videoBox;
   background-color: aqua;
   z-index: 1;
 }
-
 // choice_boxクラスでvideoBoxの範囲を覆い尽くす
 .choice_box{
   @include videoBox;
@@ -26,7 +24,6 @@
   border: 2px dashed black;
   position:relative;
 }
-
 #show{
   height: 300px;
   width: 600px;
@@ -39,34 +36,56 @@
     object-fit: cover;
   }
 }
-
 .video-label{
   margin-top:10px;
 }
-
 .video-post-actions{
   margin-top:20px;
 }
-
 .video-info{
   z-index: 3;
 }
-
 // videos#indexページ
 .video-title-and-action-index{
   margin-left:10px;
-}
-
-// videos#search結果表示
-.video-search-result {
-  background-color: #E9FFA5;
-  font-weight: bold;
 }
 
 // videos#showページ
 .video-title-and-action-show{
   margin-left:50px;
 }
+
+// 動画詳細ページのURLコピー関連
+.copy-button {
+  position: relative;                  /* 指定した分だけ相対的に移動 */
+  cursor   : pointer;                  /* カーソルをポインターで表示 */
+}
+.copied {
+  display: none;                        /* 要素を非表示 */
+}
+ /* --- 吹き出し ------------------ */
+.copied-notice {
+  position: absolute;                   /* 親要素を基準 */
+  display: inline;                      /* インライン要素として表示 */
+  padding: 2px;                         /* テキストの前後の余白 */
+  background-color: rgba(255, 127, 127, 0.75);  /* 背景色（透明度） */
+  width:180px;                          /* 吹き出し全体の幅 */
+  left : 30%;                           /* 表示位置 */
+  top : 100%;                           /* 表示位置 */
+  margin-top : 12px;                    /* 表示位置 */
+  font-size: 80%;                       /* 文字サイズ */
+}
+
+.copied-notice:after{
+  border-bottom: 12px solid rgba(255, 127, 127, 0.75);  /* 吹き出し口の高さ・色 */
+  border-left: 10px solid transparent;   /* 吹き出し口の幅１／２ */
+  border-right: 10px solid transparent;  /* 吹き出し口の幅１／２ */
+  top: -12px;                            /* 吹き出し口の位置調整 */
+  left : 5%;                         /* 吹き出し口の横位置 */
+  content: "";                       /* コンテンツの挿入 */
+  position: absolute;                /* 親要素を基準 */
+}
+
 
 // recording の css  以下から
 #recording-container {
@@ -90,6 +109,33 @@
   margin-bottom: 10px;
 }
 // recording の css 以上まで
+.index-back {
+  margin-left: 130px;
+  margin-top: 20px;
+}
+
+/* フラッシュメッセージのスタイル */
+.flash {
+  padding: 1em;
+  margin-bottom: 1em;
+  border-radius: 5px;
+}
+
+.flash-success {
+  background-color: #dff0d8;
+  color: #3c763d;
+  border: 1px solid #d6e9c6;
+}
+
+.required {
+  color: red;
+  margin-left: 20px;
+}
+
+.long-textarea {
+  width: 100%; /* テキストエリアの幅を100%に設定 */
+  max-width: 600px; /* 必要に応じて最大幅を設定 */
+}
 
 //ビデオ一覧 titleの配置
 .container-fluid{

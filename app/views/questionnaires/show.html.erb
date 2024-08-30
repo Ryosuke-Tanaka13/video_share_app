@@ -1,0 +1,20 @@
+<h2>アンケート表示</h2>
+
+<div class="centered-form">
+  <div class="viewer-info">
+    <p><strong>名前:</strong> <%= @questionnaire.name %></p>
+    <p><strong>メールアドレス:</strong> <%= @questionnaire.email %></p>
+  </div>
+
+  <h3>動画視聴前のアンケート</h3>
+  <div id="pre-video-questions-container">
+    <%= render partial: 'questionnaires/questions', locals: { questions: @pre_video_questions, type: 'pre_video' } %>
+    <%= paginate @pre_video_questions, param_name: 'pre_page' %>
+  </div>
+
+  <h3>動画視聴後のアンケート</h3>
+  <div id="post-video-questions-container">
+    <%= render partial: 'questionnaires/questions', locals: { questions: @post_video_questions, type: 'post_video' } %>
+    <%= paginate @post_video_questions, param_name: 'post_page' %>
+  </div>
+</div>

@@ -1,0 +1,292 @@
+document.addEventListener('turbolinks:load', function() {
+  // 各種要素の取得
+  const addQuestionButton = document.getElementById('add-question');
+  const form = document.getElementById('dynamic-form');
+  const formTitle = document.getElementById('form-title');
+  const errorMessages = document.getElementById('error-messages');
+  
+  const preVideoQuestionsContainer = document.getElementById('pre-video-questions-container');
+  const postVideoQuestionsContainer = document.getElementById('post-video-questions-container');
+  const preVideoToggle = document.getElementById('pre-video-toggle');
+  const postVideoToggle = document.getElementById('post-video-toggle');
+  
+  let currentQuestionnaireType = 'pre_video'; // 現在のアンケートタイプ（視聴前/視聴後）
+
+  // 「動画視聴前」ボタンのクリックイベントリスナー
+  if (preVideoToggle) {
+    preVideoToggle.addEventListener('click', function() {
+      toggleQuestionnaire('pre_video');
+    });
+  }
+
+  // 「動画視聴後」ボタンのクリックイベントリスナー
+  if (postVideoToggle) {
+    postVideoToggle.addEventListener('click', function() {
+      toggleQuestionnaire('post_video');
+    });
+  }
+  
+  // アンケートタイプを切り替える関数
+  function toggleQuestionnaire(type) {
+    if (type === 'pre_video') {
+      preVideoQuestionsContainer.style.display = 'block';
+      postVideoQuestionsContainer.style.display = 'none';
+      formTitle.innerText = 'アンケート作成（動画視聴前）';
+      preVideoToggle.classList.add('active');
+      postVideoToggle.classList.remove('active');
+    } else {
+      preVideoQuestionsContainer.style.display = 'none';
+      postVideoQuestionsContainer.style.display = 'block';
+      formTitle.innerText = 'アンケート作成（動画視聴後）';
+      preVideoToggle.classList.remove('active');
+      postVideoToggle.classList.add('active');
+    }
+    currentQuestionnaireType = type; // 現在のタイプを更新
+  }
+
+  // 新しい質問を追加する関数
+  function addQuestion() {
+    const template = document.getElementById('question-template').cloneNode(true); // 質問のテンプレートをクローン
+    template.style.display = 'block';
+    template.removeAttribute('id'); // クローンのIDを削除
+
+    // 現在のアンケートタイプに応じて質問を追加
+    if (currentQuestionnaireType === 'pre_video') {
+      preVideoQuestionsContainer.appendChild(template);
+    } else {
+      postVideoQuestionsContainer.appendChild(template);
+    }
+
+    const selectElement = template.querySelector('.question-type');
+    selectElement.addEventListener('change', function() {
+      updateQuestionContent(this); // 質問タイプが変更されたときの処理
+    });
+
+    template.querySelector('.remove-question').addEventListener('click', function() {
+      template.remove(); // 質問の削除
+    });
+
+    template.querySelector('.add-option').addEventListener('click', function() {
+      const input = template.querySelector('.new-option-text');
+      if (input.value) {
+        const selectType = template.querySelector('.question-type').value;
+        addOptionToQuestion(selectType, input.value, template); // 新しい選択肢の追加
+        input.value = ''; // 入力フィールドをリセット
+      }
+    });
+
+    template.querySelector('.reset-options').addEventListener('click', function() {
+      resetOptions(selectElement); // 選択肢のリセット
+    });
+
+    updateQuestionContent(selectElement); // 初期表示の設定
+  }
+
+  // 質問タイプに応じて表示するコンテンツを更新する関数
+  function updateQuestionContent(select) {
+    const questionField = select.closest('.question-field');
+    const questionContent = questionField.querySelector('.question-content');
+    const type = select.value;
+    const optionsManagement = questionField.querySelector('.options-management');
+    optionsManagement.style.display = (type === 'text') ? 'none' : 'block'; // テキストタイプは選択肢を表示しない
+
+    // 各テンプレートの表示切り替え
+    questionContent.querySelectorAll('div').forEach(div => {
+      div.style.display = 'none';
+      if (div.classList.contains(`${type}-template`)) {
+        div.style.display = 'block';
+      }
+    });
+
+    const resetButton = questionField.querySelector('.reset-options');
+    resetButton.style.display = (type === 'dropdown') ? 'inline-block' : 'none'; // プルダウンタイプのみリセットボタンを表示
+  }
+
+  // 新しい選択肢を質問に追加する関数
+  function addOptionToQuestion(type, optionText, parentQuestion) {
+    const optionContainer = parentQuestion.querySelector(`.${type}-template`);
+    if (type === 'dropdown') {
+      // プルダウンの選択肢追加
+      const select = optionContainer.querySelector('select');
+      const option = document.createElement('option');
+      option.value = optionText;
+      option.textContent = optionText;
+      select.appendChild(option);
+    } else if (type === 'radio' || type === 'checkbox') {
+      // ラジオボタンやチェックボックスの選択肢追加
+      const label = document.createElement('label');
+      label.className = 'option-item';
+      label.innerHTML = `<input type="${type}" name="questions[][answers][]" value="${optionText}"> ${optionText}
+      <span class="delete-option" style="cursor:pointer; margin-left: 8px;">&#10060;</span>`;
+      optionContainer.appendChild(label);
+
+      // 選択肢の削除機能
+      label.querySelector('.delete-option').addEventListener('click', function() {
+        label.remove();
+      });
+    }
+  }
+
+  // プルダウンの選択肢をリセットする関数
+  function resetOptions(selectElement) {
+    const parentQuestion = selectElement.closest('.question-field');
+    const optionContainer = parentQuestion.querySelector('.dropdown-template select');
+    if (optionContainer) {
+      optionContainer.innerHTML = `<option disabled selected>ここから選択してください</option>`; // 初期状態にリセット
+    }
+  }
+
+  // フォームの送信イベントリスナー
+  form.addEventListener('submit', function(e) {
+    e.preventDefault(); // フォーム送信を防止
+    errorMessages.innerHTML = ''; // エラーメッセージをクリア
+    const formData = new FormData(form);
+
+    // 質問データの初期化
+    let preVideoQuestionsData = [];
+    let postVideoQuestionsData = [];
+
+    // 動画視聴前の質問データの収集
+    preVideoQuestionsContainer.querySelectorAll('.question-field').forEach(field => {
+      const questionText = field.querySelector('.question-input').value;
+      const questionType = field.querySelector('.question-type').value;
+      const isRequired = field.querySelector('.required-checkbox').checked;
+      let answers = [];
+
+      if (questionType === 'dropdown') {
+        // ドロップダウンの選択肢を収集
+        const selectElement = field.querySelector('.dropdown-template select');
+        selectElement.querySelectorAll('option').forEach(option => {
+          if (option.value && option.value.trim() !== '' && option.value !== 'ここから選択してください') {
+            answers.push(option.value);
+          }
+        });
+      } else if (questionType === 'radio' || questionType === 'checkbox') {
+        // ラジオボタンやチェックボックスの選択肢を収集
+        const answerInputs = field.querySelectorAll(`input[type="${questionType}"]`);
+        answerInputs.forEach(input => {
+          if (input.value && input.value.trim() !== '' && input.value !== 'required') {  // 修正点
+            answers.push(input.value);
+          }
+        });
+      } else if (questionType === 'text') {
+        // テキストタイプの回答を収集
+        const answer = field.querySelector('.text-template textarea').value;
+        if (answer && answer.trim() !== '') {
+          answers.push(answer);
+        }
+      }
+
+      preVideoQuestionsData.push({
+        text: questionText,
+        type: questionType,
+        answers: answers,
+        required: isRequired
+      });
+    });
+
+    // 動画視聴後の質問データの収集（上記と同様の処理）
+    postVideoQuestionsContainer.querySelectorAll('.question-field').forEach(field => {
+      const questionText = field.querySelector('.question-input').value;
+      const questionType = field.querySelector('.question-type').value;
+      const isRequired = field.querySelector('.required-checkbox').checked;
+      let answers = [];
+
+      if (questionType === 'dropdown') {
+        const selectElement = field.querySelector('.dropdown-template select');
+        selectElement.querySelectorAll('option').forEach(option => {
+          if (option.value && option.value.trim() !== '' && option.value !== 'ここから選択してください') {
+            answers.push(option.value);
+          }
+        });
+      } else if (questionType === 'radio' || questionType === 'checkbox') {
+        const answerInputs = field.querySelectorAll(`input[type="${questionType}"]`);
+        answerInputs.forEach(input => {
+          if (input.value && input.value.trim() !== '' && input.value !== 'required') {  // 修正点
+            answers.push(input.value);
+          }
+        });
+      } else if (questionType === 'text') {
+        const answer = field.querySelector('.text-template textarea').value;
+        if (answer && answer.trim() !== '') {
+          answers.push(answer);
+        }
+      }
+
+      postVideoQuestionsData.push({
+        text: questionText,
+        type: questionType,
+        answers: answers,
+        required: isRequired
+      });
+    });
+
+    // 質問データをフォームに追加
+    formData.append('questionnaire[pre_video_questionnaire]', JSON.stringify(preVideoQuestionsData));
+    formData.append('questionnaire[post_video_questionnaire]', JSON.stringify(postVideoQuestionsData));
+
+    // 追加のパラメータをformDataに追加
+    const urlParams = new URLSearchParams(window.location.search);
+    formData.append('apply', urlParams.get('apply'));
+    formData.append('type', urlParams.get('type'));
+    formData.append('popup_before_video', urlParams.get('popup_before_video'));
+    formData.append('popup_after_video', urlParams.get('popup_after_video'));
+
+    // フォームデータの送信
+    fetch(form.action, {
+      method: form.method,
+      headers: {
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json'
+      },
+      body: formData
+    })
+    .then(response => {
+      const contentType = response.headers.get('content-type');
+      if (!response.ok) {
+        return response.text().then(text => Promise.reject(new Error(text)));
+      } else if (contentType && contentType.includes('application/json')) {
+        return response.json();
+      } else {
+        return response.text().then(text => Promise.reject(new Error('Unexpected response format')));
+      }
+    })
+    .then(data => {
+      if (data.redirect) {
+        window.location.href = data.redirect; // リダイレクト
+      } else if (data.errors) {
+        // エラーメッセージの表示
+        data.errors.forEach(error => {
+          const errorItem = document.createElement('p');
+          errorItem.textContent = error;
+          errorMessages.appendChild(errorItem);
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      const errorItem = document.createElement('p');
+      errorItem.textContent = 'An unexpected error occurred.';
+      errorMessages.appendChild(errorItem);
+    });
+  });
+
+  // 質問追加ボタンにイベントリスナーを追加（重複防止）
+  if (addQuestionButton && !addQuestionButton.hasAttribute('data-event-added')) {
+    addQuestionButton.addEventListener('click', function() {
+      addQuestion();
+    });
+    addQuestionButton.setAttribute('data-event-added', 'true'); // イベントリスナーの追加を記録
+  }
+
+  // 非同期ページネーションの処理
+  $(document).on('click', '.pagination a', function(event) {
+    event.preventDefault();
+    $.getScript(this.href);
+  });
+
+  // Turbolinks キャッシュのリセット処理
+  document.addEventListener("turbolinks:before-cache", function() {
+    $(document).off('click', '.pagination a');
+  });
+});

@@ -81,13 +81,23 @@ RSpec.configure do |config|
     driven_by :selenium_chrome
   end
 
-  config.before(:each, type: :system, js: true) do
+  config.before(:each, :js, type: :system) do
     driven_by :selenium_chrome
   end
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
   config.include FactoryBot::Syntax::Methods
   config.include LoginSupport
+
+  # rspecテストを行っていくとどんどんと保存先のストレージ(tmp/storgae)が、生成された動画で圧迫される。
+  # 下記の設定をすることでテスト終了後はストレージをクリーンアップすることが可能
+  config.after(:suite) do
+    if Rails.env.test?
+      storage_path = ActiveStorage::Blob.service.root
+      Rails.logger.info "Cleaning up storage directory: #{storage_path}"
+      FileUtils.rm_rf(storage_path)
+    end
+  end
 
   # capybaraのダウンロードヘルパーを追加
   config.include DownloadHelpers

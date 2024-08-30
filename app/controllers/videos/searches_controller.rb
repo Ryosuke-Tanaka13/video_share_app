@@ -1,5 +1,6 @@
 class Videos::SearchesController < VideosController
   def search
+    @user = current_user
     @search_params = video_search_params
     if current_system_admin.present?
       @organization_videos = Video.includes([:video_blob]).user_has(session[:organization_id]).search(@search_params)
