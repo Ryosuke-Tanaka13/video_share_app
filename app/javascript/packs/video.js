@@ -4,6 +4,7 @@ document.addEventListener("turbolinks:load", function() {
     const formFields = ['title', 'open_period', 'range', 'comment_public', 'login_set', 'popup_before_video', 'popup_after_video'];
 
     function saveFormData() {
+      // 各フォームフィールドの値をsessionStorageに保存
       formFields.forEach(function(field) {
         const element = document.getElementById(field);
         if (element) {
@@ -13,6 +14,7 @@ document.addEventListener("turbolinks:load", function() {
     }
 
     function restoreFormData() {
+      // 保存されたフォームフィールドの値を復元
       formFields.forEach(function(field) {
         const element = document.getElementById(field);
         if (element && sessionStorage.getItem(field)) {
@@ -22,6 +24,7 @@ document.addEventListener("turbolinks:load", function() {
     }
 
     function clearFormData() {
+      // フォームデータとプレビューをクリア
       formFields.forEach(function(field) {
         sessionStorage.removeItem(field);
       });
@@ -54,7 +57,7 @@ document.addEventListener("turbolinks:load", function() {
       fileReader.readAsDataURL(file);
     });
 
-    // 初期状態をチェックしてボタンを表示/非表示
+    // アンケート選択ボタンの表示/非表示を切り替える
     toggleQuestionnaireButtons();
 
     // ポップアップ表示のフィールドを監視
@@ -67,6 +70,7 @@ document.addEventListener("turbolinks:load", function() {
     });
 
     function toggleQuestionnaireButtons() {
+      // ポップアップの設定に応じて、アンケート選択ボタンの表示を切り替え
       var beforeVideo = $('#popup_before_video').val();
       var afterVideo = $('#popup_after_video').val();
 
@@ -95,10 +99,12 @@ document.addEventListener("turbolinks:load", function() {
         var popupBeforeVideo = document.getElementById('popup_before_video').value;
         var popupAfterVideo = document.getElementById('popup_after_video').value;
 
+        // URLにポップアップの設定をクエリパラメータとして追加
         var url = new URL(link.href);
         url.searchParams.set('popup_before_video', popupBeforeVideo);
         url.searchParams.set('popup_after_video', popupAfterVideo);
 
+        // アンケート選択ページに遷移
         window.location.href = url.toString();
       });
     });
@@ -120,10 +126,7 @@ document.addEventListener("turbolinks:load", function() {
     var popupBeforeVideo = urlParams.get('popup_before_video');
     var popupAfterVideo = urlParams.get('popup_after_video');
 
-    console.log('popupBeforeVideo:', popupBeforeVideo); // デバッグ用ログ
-    console.log('popupAfterVideo:', popupAfterVideo); // デバッグ用ログ
-
-    // セレクトボックスの値を更新
+    // ポップアップの設定に応じてセレクトボックスの値を設定
     if (popupBeforeVideo) {
       document.getElementById('popup_before_video').value = popupBeforeVideo;
     }
@@ -132,39 +135,17 @@ document.addEventListener("turbolinks:load", function() {
       document.getElementById('popup_after_video').value = popupAfterVideo;
     }
 
-    // 要素が存在するかどうか確認するためのデバッグ情報を追加
-    var selectQuestionnaireBefore = document.getElementById('select-questionnaire-before');
-    var selectQuestionnaireAfter = document.getElementById('select-questionnaire-after');
-    console.log('selectQuestionnaireBefore element:', selectQuestionnaireBefore);
-    console.log('selectQuestionnaireAfter element:', selectQuestionnaireAfter);
-
-    if (popupBeforeVideo === '1' && selectQuestionnaireBefore) {
-      console.log('Setting select-questionnaire-before to block');
-      selectQuestionnaireBefore.style.display = 'block';
-      document.getElementById('select-pre-video-questionnaire').innerText = 'アンケートを変更';
-    } else {
-      console.log('popupBeforeVideo condition not met or element not found');
-    }
-
-    if (popupAfterVideo === '1' && selectQuestionnaireAfter) {
-      console.log('Setting select-questionnaire-after to block');
-      selectQuestionnaireAfter.style.display = 'block';
-      document.getElementById('select-post-video-questionnaire').innerText = 'アンケートを変更';
-    } else {
-      console.log('popupAfterVideo condition not met or element not found');
-    }
-
     var preVideoQuestionnaireId = sessionStorage.getItem('preVideoQuestionnaireId');
     var postVideoQuestionnaireId = sessionStorage.getItem('postVideoQuestionnaireId');
 
+    // ビデオ開始前のアンケートIDを設定
     if (preVideoQuestionnaireId) {
       preVideoField.value = preVideoQuestionnaireId;
-      console.log('Pre-video questionnaire ID set:', preVideoField.value);
     }
 
+    // ビデオ終了後のアンケートIDを設定
     if (postVideoQuestionnaireId) {
       postVideoField.value = postVideoQuestionnaireId;
-      console.log('Post-video questionnaire ID set:', postVideoField.value);
     }
 
     sessionStorage.removeItem('preVideoQuestionnaireId');

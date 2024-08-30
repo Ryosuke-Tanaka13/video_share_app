@@ -10,7 +10,7 @@ class CreateQuestionnaireItems < ActiveRecord::Migration[6.1]
       t.json :post_options
       t.datetime :created_at, precision: 6, null: false
       t.datetime :updated_at, precision: 6, null: false
-      t.integer :video_id
+      t.bigint :video_id
       t.boolean :required
       t.index :questionnaire_id
       t.index :video_id

@@ -17,6 +17,7 @@ import "@fortawesome/fontawesome-free/js/all";
 // 追記
 import "./video";
 import "./video_comment";
+import './videos/show';
 import "./video_search_reset";
 import "./video_popup"
 import "./videos/show"

@@ -36,8 +36,10 @@ RSpec.describe 'Comments', :js, type: :system do
   describe '正常' do
     describe 'システム管理者' do
       before(:each) do
-        sign_in system_admin
-        visit video_path(video_it)
+        login_system_admin(system_admin)
+        current_system_admin(system_admin)
+        visit video_path(id: user_comment.video_id)
+        click_button 'コメントを表示する'
       end
 
       it 'レイアウト' do
@@ -157,8 +159,10 @@ RSpec.describe 'Comments', :js, type: :system do
 
     describe '動画投稿者' do
       before(:each) do
-        sign_in user_staff1
-        visit video_path(video_it)
+        login(user_staff1)
+        current_user(user_staff1)
+        visit video_path(id: user_comment.video_id)
+        click_button 'コメントを表示する'
       end
 
       it 'レイアウト' do
@@ -284,7 +288,8 @@ RSpec.describe 'Comments', :js, type: :system do
 
       it '他人の返信の編集、削除不可' do
         system_admin_reply
-        visit video_path(video_it)
+        visit video_path(id: user_comment.video_id)
+        click_button 'コメントを表示する'
         click_button '1 件の返信'
         expect(page).to have_content 'system_adminの返信'
         expect(page).not_to have_css '.js-edit-reply-button'
@@ -294,8 +299,10 @@ RSpec.describe 'Comments', :js, type: :system do
 
     describe '動画視聴者' do
       before(:each) do
-        sign_in viewer
-        visit video_path(video_it)
+        login(viewer)
+        current_viewer(viewer)
+        visit video_path(id: viewer_comment.video_id)
+        click_button 'コメントを表示する'
       end
 
       it 'レイアウト' do
@@ -421,7 +428,8 @@ RSpec.describe 'Comments', :js, type: :system do
 
       it '他人の返信の編集、削除不可' do
         system_admin_reply
-        visit video_path(video_it)
+        visit video_path(id: user_comment.video_id)
+        click_button 'コメントを表示する'
         click_button '1 件の返信'
         expect(page).to have_content 'system_adminの返信'
         expect(page).not_to have_css '.js-edit-reply-button'
@@ -432,7 +440,8 @@ RSpec.describe 'Comments', :js, type: :system do
     describe 'ログインなしユーザ' do
       before(:each) do
         system_admin_reply
-        visit video_path(video_it)
+        visit video_path(video_it.id)
+        click_button 'コメントを表示する'
       end
 
       it 'レイアウト' do

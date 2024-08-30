@@ -7,6 +7,7 @@ class QuestionnairesController < ApplicationController
   def index
     @questionnaires = @user.questionnaires.order(updated_at: :desc).page(params[:page]).per(1)
     @current_questionnaire = @questionnaires.first
+    # 現在のアンケートが存在する場合、動画視聴前と視聴後のアンケートの質問を解析して取得
     if @current_questionnaire
       @pre_video_questions = parse_questions(@current_questionnaire.pre_video_questionnaire)
       @post_video_questions = parse_questions(@current_questionnaire.post_video_questionnaire)
@@ -64,12 +65,14 @@ class QuestionnairesController < ApplicationController
   end
 
   def apply
+    # 選択されたアンケートを適用する
     @questionnaire = Questionnaire.find(params[:id])
+    # JSON形式でアンケートのIDと名前を返す
     respond_to do |format|
       format.json { render json: { id: @questionnaire.id, name: @questionnaire.name } }
     end
   end
-
+  
   private
 
   def set_user
@@ -85,14 +88,18 @@ class QuestionnairesController < ApplicationController
   end
 
   def parse_questions(questionnaire_data)
+    # アンケートデータが文字列でかつ空白文字のみの場合、空の配列を返す
     if questionnaire_data.kind_of?(String) && questionnaire_data.strip.empty?
       []
+    # アンケートデータが文字列の場合、JSON形式で解析して配列として返す
     elsif questionnaire_data.kind_of?(String)
       JSON.parse(questionnaire_data)
+    # アンケートデータが配列の場合、そのまま返す。データがnilの場合は空の配列を返す
     else
       questionnaire_data || []
     end
   end
+  
 
   def correct_user_id?
     unless current_user == User.find(params[:user_id])

@@ -68,8 +68,8 @@ class VideosController < ApplicationController
     @comments = @video.comments.includes(:system_admin, :user, :viewer, :replies).order(created_at: :desc)
     answers = QuestionnaireAnswer.where(video_id: @video.id)
     answers.each do |answer|
-      @pre_answers = answers.first.pre_answers unless answer.pre_answers.nil?
-      @post_answers = answers.first.post_answers unless answer.post_answers.nil?
+      @pre_answers = answer.pre_answers unless answer.pre_answers.nil?
+      @post_answers = answer.post_answers unless answer.post_answers.nil?
     end
   end
 
@@ -191,29 +191,40 @@ class VideosController < ApplicationController
     @viewer = current_viewer if current_viewer.present?
   end
 
+  def set_viewer
+    # 現在の視聴者を設定（視聴者が存在する場合）
+    @viewer = current_viewer if current_viewer.present?
+  end
+
+  # 動画に関連付けるアンケートの質問項目を保存するメソッド
   def save_questionnaire_items(video, type)
+    # アンケートIDの取得
     questionnaire_id = type == 'pre' ? video.pre_video_questionnaire_id : video.post_video_questionnaire_id
     questionnaire = Questionnaire.find(questionnaire_id)
+    
+    # アンケートの質問をJSONから解析して取得
     questions = JSON.parse(type == 'pre' ? questionnaire.pre_video_questionnaire : questionnaire.post_video_questionnaire)
 
+    # 各質問項目を動画に関連付けて保存
     questions.each do |question|
       item = QuestionnaireItem.create!(
         video_id:           video.id,
-        pre_question_text:  type == 'pre' ? question['text'] : nil,
-        pre_question_type:  type == 'pre' ? question['type'] : nil,
-        pre_options:        type == 'pre' ? question['answers'] : nil,
-        post_question_text: type == 'post' ? question['text'] : nil,
-        post_question_type: type == 'post' ? question['type'] : nil,
-        post_options:       type == 'post' ? question['answers'] : nil,
-        required:           question['required']
+        pre_question_text:  type == 'pre' ? question['text'] : nil,   # 動画視聴前の質問文
+        pre_question_type:  type == 'pre' ? question['type'] : nil,   # 動画視聴前の質問タイプ
+        pre_options:        type == 'pre' ? question['answers'] : nil, # 動画視聴前の選択肢
+        post_question_text: type == 'post' ? question['text'] : nil,  # 動画視聴後の質問文
+        post_question_type: type == 'post' ? question['type'] : nil,  # 動画視聴後の質問タイプ
+        post_options:       type == 'post' ? question['answers'] : nil, # 動画視聴後の選択肢
+        required:           question['required']                      # 質問の必須設定
       )
 
+      # 質問項目に対応するアンケート回答を動画に関連付けて作成
       QuestionnaireAnswer.create!(
         questionnaire_item: item,
         user_id:            video.user_id,
         video_id:           video.id,
-        pre_answers:        type == 'pre' ? [] : nil,
-        post_answers:       type == 'post' ? [] : nil
+        pre_answers:        type == 'pre' ? [] : nil, # 動画視聴前の回答（空の配列）
+        post_answers:       type == 'post' ? [] : nil # 動画視聴後の回答（空の配列）
       )
     end
   end
