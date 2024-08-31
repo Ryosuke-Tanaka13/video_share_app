@@ -25,6 +25,7 @@ FactoryBot.define do
     is_valid { false }
     organization_id { 1 }
     user_id { 1 }
+    groups { [FactoryBot.create(:group)] } 
     # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
     data_url { '/videos/invalid_video_jan_public_owner' }
   end
@@ -98,6 +99,7 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 2 }
     user_id { 2 }
+    groups { [FactoryBot.create(:group)] } 
     # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
     data_url { '/videos/another_video_jan_public_another_user_owner' }
   end
