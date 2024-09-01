@@ -12,16 +12,36 @@ class Video < ApplicationRecord
 
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }, if: :video_exists?
-
+  validate :video_is_necessary
+  validate :group_presence
   def video_exists?
     video = Video.where(title: self.title, is_valid: true).where.not(id: self.id)
     video.present?
   end
 
-  scope :user_has, ->(organization_id) { where(organization_id: organization_id) }
-  scope :current_user_has, ->(current_user) { where(organization_id: current_user.organization_id) }
-  scope :current_viewer_has, ->(organization_id) { where(organization_id: organization_id) }
+  def accessible_by?(viewer)
+    if range # rangeがtrueの場合、ビデオは限定公開です
+      viewer_groups_ids = viewer.viewer_groups.pluck(:group_id)
+      self.groups.where(id: viewer_groups_ids).exists?
+    else
+      true # rangeがfalseの場合、ビデオは一般公開です
+    end
+  end
+
+  scope :for_organization, ->(organization_id) { where(organization_id: organization_id) }
   scope :available, -> { where(is_valid: true) }
+
+  scope :for_system_admin, ->(organization_id) {
+    includes(:video_blob).for_organization(organization_id)
+  }
+
+  scope :for_user, ->(user) {
+    includes(:video_blob).for_organization(user.organization_id).available
+  }
+
+  scope :for_viewer, ->(organization_id, viewer) {
+    includes(:video_blob).for_organization(organization_id).available.select { |video| video.accessible_by?(viewer) }
+  }
 
   def identify_organization_and_user(current_user)
     self.organization_id = current_user.organization.id
@@ -78,6 +98,12 @@ class Video < ApplicationRecord
       errors.add(:video, 'をアップロードしてください')
     end
   end
+
+  def group_presence
+    if self.range && self.groups.empty?
+      errors.add(:group, 'を選択してください')
+    end
+  end  
 
   # ビデオ検索機能
   scope :search, lambda { |search_params|

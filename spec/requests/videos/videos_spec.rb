@@ -567,7 +567,7 @@ RSpec.describe 'Videos', type: :request do
                 video: {
                   title:              'テストビデオ2',
                   open_period:        'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00',
-                  range:              true,
+                  range:              false,
                   comment_public:     true,
                   login_set:          true,
                   popup_before_video: true,
@@ -585,7 +585,7 @@ RSpec.describe 'Videos', type: :request do
                 video: {
                   title:              'テストビデオ２',
                   open_period:        'Sun, 14 Aug 2022 18:07:00.000000000 JST +09:00',
-                  range:              true,
+                  range:              false,
                   comment_public:     true,
                   login_set:          true,
                   popup_before_video: true,

@@ -16,10 +16,26 @@
             <%= f.datetime_field :open_period , id:"open_period_edit" %> 
           </div>
           <div class="field">
-            <%= f.label :range, class: "video-label" %><br>   
-            <%= f.select :range, [['一般公開',0],['限定公開',1]], { include_blank: false, selected: selected_before_range }, id:"range_edit" %>  
-          </div> 
-       
+            <%= f.label :range, class: "video-label" %><br>
+            <% if @video.range === true %>
+              <%= f.select :range, [['限定公開',1],['一般公開',0]], { include_blank: false }, id:"range", selected: @video.range %>
+            <% else %>
+              <%= f.select :range, [['一般公開',0],['限定公開',1]], { include_blank: false }, id:"range", selected: @video.range %>
+            <% end %>
+          </div>
+          <div class="field" id="group_field" style="display: <%= @video.range == 1 ? 'block' : 'none' %>;">
+            <% if @groups.any? %>
+              <%= f.label :group, class: "video-label" %><br>
+              <% @groups.each do |group| %>
+                <%= check_box_tag 'video[group][]', group.id, @video.group_ids.include?(group.id) %>
+                <%= label_tag "video_group_#{group.id}", group.name %><br>
+              <% end %>
+            <% else %>
+              <p style="color: red;">公開するグループを選択してください。</p>
+              <%= link_to 'グループを作成する', new_group_path, class: "btn btn-primary" %>
+            <% end %>
+          </div>
+
           <div class="field">
             <%= f.label :comment_public, class: "video-label" %><br>
             <%= f.select :comment_public, [['公開',0],['非公開',1]], { include_blank: false, selected: selected_before_comment_public },  id:"comment_public_edit" %>
