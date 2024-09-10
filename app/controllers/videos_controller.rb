@@ -198,7 +198,6 @@ def audio_output
   # command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{audio_output_path}"
   command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 1 #{audio_output_path}"
   stdout, stderr, status = Open3.capture3(command)
-  flash[:success] = "音声データ作成中・・・・・"
   if status.success?
     puts "Audio extracted successfully to #{audio_output_path}"
   else
@@ -347,16 +346,12 @@ end
       results.each do |result|
         alternative = result.alternatives.first
         words = alternative.words
-  
-
         words.each_with_index do |word_info, i|
           word_parts = word_info.word.split('|')
           word = word_parts.first  # ｜の左側だけを使用
           start_time = word_info.start_time.seconds + word_info.start_time.nanos * 1e-9
           end_time = word_info.end_time.seconds + word_info.end_time.nanos * 1e-9
           speaker = word_info.speaker_tag
-  
-
           # 次の単語が存在する場合、次の単語の開始時間を取得
           next_word_info = words[i + 1] if i + 1 < words.size
           next_start_time = if next_word_info && next_word_info.start_time
@@ -386,6 +381,7 @@ end
               end_time: end_time,
               text: word
             }
+  
           else
             # 現在のセグメントを更新
             if current_segment[:text].length + word.length > max_line_length
@@ -511,7 +507,6 @@ end
     #     file.puts
     #   end
     # end
-  
     srt_path.to_s
   end
 
@@ -533,13 +528,7 @@ end
     end
   end
 
-  def write_srt_segment(file, index, segment)
-    file.puts "#{index}"
-    file.puts "#{format_time(segment[:start_time])} --> #{format_time(segment[:end_time])}"
-    file.puts "#{segment[:text]}"
-    file.puts
-  end
-
+  # 
 
   def format_time(seconds)
     # 秒を "HH:MM:SS,mmm" 形式にフォーマット
