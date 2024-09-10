@@ -198,14 +198,13 @@ def audio_output
   # command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 #{audio_output_path}"
   command = "ffmpeg -i #{video_path} -vn -acodec pcm_s16le -ar 44100 -ac 1 #{audio_output_path}"
   stdout, stderr, status = Open3.capture3(command)
-  flash[:success] = "音声データ作成中・・・・・"
   if status.success?
     puts "Audio extracted successfully to #{audio_output_path}"
   else
     puts "Failed to extract audio: #{stderr}"
   end
   # Google Cloud Storageの設定
-  storage = Google::Cloud::Storage.new
+  storage = Google::Cloud::Storage.new(timeout: 600)
   bucket = storage.bucket 'movie_app_bucket'
   # 音声ファイル名の取得
   audio_file_name = audio_output_path.basename.to_s
@@ -336,8 +335,6 @@ end
   def transcribe_audio
     Google::Cloud::Speech.configure { |config| config.credentials = credentials_path.to_s }
     # Google::Cloud::Storage.configure { |config| config.credentials = credentials_path.to_s }
-   
-    
   end
 
   def create_srt(results)
@@ -345,19 +342,25 @@ end
   
     File.open(srt_path, 'w') do |file|
       index = 1
-      current_speaker = nil
       current_segment = nil
+      max_line_length = 25
   
       results.each do |result|
         alternative = result.alternatives.first
         words = alternative.words
   
-        words.each do |word_info|
+        words.each_with_index do |word_info, i|
           word_parts = word_info.word.split('|')
           word = word_parts.first  # ｜の左側だけを使用
           start_time = word_info.start_time.seconds + word_info.start_time.nanos * 1e-9
           end_time = word_info.end_time.seconds + word_info.end_time.nanos * 1e-9
           speaker = word_info.speaker_tag
+  
+          # 次の単語が存在する場合、次の単語の開始時間を取得
+          next_word_info = words[i + 1] if i + 1 < words.size
+          next_start_time = if next_word_info && next_word_info.start_time
+                              next_word_info.start_time.seconds + next_word_info.start_time.nanos * 1e-9
+                            end
   
           # 新しいセグメントを開始する条件
           if current_segment.nil?
@@ -367,9 +370,13 @@ end
               end_time: end_time,
               text: word
             }
-          elsif speaker != current_segment[:speaker] || (start_time - current_segment[:end_time]) > 1.0
+          elsif speaker != current_segment[:speaker] || (start_time - current_segment[:end_time]) > 0.5
+            # セグメント終了時間が次のセグメント開始時間を超えないよう調整
+            if next_start_time
+              current_segment[:end_time] = [current_segment[:end_time], end_time].min
+            end
             # 現在のセグメントをファイルに書き込む
-            write_srt_segment(file, index, current_segment)
+            write_srt_segment(file, index, current_segment, max_line_length)
             index += 1
   
             # 新しいセグメントを開始
@@ -379,21 +386,133 @@ end
               end_time: end_time,
               text: word
             }
+  
           else
             # 現在のセグメントを更新
-            current_segment[:end_time] = end_time
-            current_segment[:text] += " #{word}"
+            if current_segment[:text].length + word.length > max_line_length
+              # セグメントの長さを確認して分割
+              split_index = current_segment[:text].rindex(/(?:[。！？\n\s])/)
+              split_index ||= current_segment[:text].length
+              # 現在のセグメントをファイルに書き込む
+              write_srt_segment(file, index, current_segment, max_line_length)
+              index += 1
+  
+              # 新しいセグメントを開始
+              current_segment = {
+                speaker: speaker,
+                start_time: start_time,
+                end_time: end_time,
+                text: word
+              }
+            else
+              # セグメントを更新
+              current_segment[:end_time] = end_time
+              current_segment[:text] += word
+            end
           end
         end
       end
   
-      # 最後のセグメントを書き込む
-      write_srt_segment(file, index, current_segment) unless current_segment.nil?
-    end
   
+      # 最後のセグメントを書き込む
+      write_srt_segment(file, index, current_segment, max_line_length) unless current_segment.nil?
+    end
     puts "SRT file created at #{srt_path}"
     srt_path.to_s
   end
+  
+  def write_srt_segment(file, index, segment, max_line_length)
+    file.puts "#{index}"
+    file.puts "#{format_time(segment[:start_time])} --> #{format_time(segment[:end_time])}"
+    file.puts segment[:text]
+    file.puts
+  end
+  
+
+  # def create_srt(results)
+  #   srt_path = Rails.root.join('public', 'voice', "subtitles#{Time.now.to_i}.srt")
+  
+  #   File.open(srt_path, 'w') do |file|
+  #     index = 1
+  #     current_speaker = nil
+  #     current_segment = nil
+  #     max_line_length = 40
+  #     max_display_duration = 5.0 
+
+  #     results.each do |result|
+  #       alternative = result.alternatives.first
+  #       words = alternative.words
+  
+  #       words.each do |word_info|
+  #         word_parts = word_info.word.split('|')
+  #         word = word_parts.first  # ｜の左側だけを使用
+  #         start_time = word_info.start_time.seconds + word_info.start_time.nanos * 1e-9
+  #         end_time = word_info.end_time.seconds + word_info.end_time.nanos * 1e-9
+  #         speaker = word_info.speaker_tag
+  
+  #         # 新しいセグメントを開始する条件
+  #         if current_segment.nil?
+  #           current_segment = {
+  #             speaker: speaker,
+  #             start_time: start_time,
+  #             end_time: end_time,
+  #             text: word
+  #           }
+  #         elsif speaker != current_segment[:speaker] || (start_time - current_segment[:end_time]) > 1.0
+  #           # 現在のセグメントをファイルに書き込む
+  #           write_srt_segment(file, index, current_segment, max_line_length, max_display_duration)
+  #           index += 1
+    
+  #           # 新しいセグメントを開始
+  #           current_segment = {
+  #             speaker: speaker,
+  #             start_time: start_time,
+  #             end_time: end_time,
+  #             text: word
+  #           }
+  #         else
+  #           # 現在のセグメントを更新
+  #           current_segment[:end_time] = end_time
+  #           current_segment[:text] += " #{word}"
+  #         end
+  #       end
+  #     end
+  
+  #     # 最後のセグメントを書き込む
+  #     write_srt_segment(file, index, current_segment, max_line_length, max_display_duration) unless current_segment.nil?
+  #   end
+  
+  #   puts "SRT file created at #{srt_path}"
+  #   srt_path.to_s
+  # end
+
+  # def write_srt_segment(file, index, segment, max_line_length, max_display_duration)
+    #   return if segment.nil?
+    
+    #   # 終了時間を調整して字幕の長さを調整
+    #   adjusted_end_time = segment[:end_time] + 0.5  # 例: 0.5秒追加
+    #   adjusted_end_time = [adjusted_end_time, segment[:start_time] + 1.0].max # 1秒未満にしない
+    #   adjusted_end_time = [adjusted_end_time, segment[:start_time] + max_display_duration].min
+    
+    #   # テキストを分割
+    #   split_texts = segment[:text].scan(/.{1,#{max_line_length}}(?:\s|$)/)
+      
+    #   # セグメントごとに処理
+    #   split_texts.each_with_index do |text, i|
+    #     if i == 0
+    #       file.puts "#{index}"
+    #       file.puts "#{format_time(segment[:start_time])} --> #{format_time(adjusted_end_time)}"
+    #     else
+    #       # 新しいセグメント用のインデックスを追加
+    #       file.puts "#{index + i}"
+    #       file.puts "#{format_time(adjusted_end_time)} --> #{format_time(adjusted_end_time + max_display_duration)}"
+    #       adjusted_end_time += max_display_duration
+    #     end
+    #     file.puts text
+    #     file.puts
+    #   end
+    # end
+  
 
   def add_subtitles_to_video(video_path, srt_path_return)
     escaped_video_path = Shellwords.escape(video_path)
@@ -412,20 +531,15 @@ end
     end
   end
 
-  def write_srt_segment(file, index, segment)
-    file.puts "#{index}"
-    file.puts "#{format_time(segment[:start_time])} --> #{format_time(segment[:end_time])}"
-    file.puts "#{segment[:text]}"
-    file.puts
-  end
-
+  # 
 
   def format_time(seconds)
     # 秒を "HH:MM:SS,mmm" 形式にフォーマット
     hours = (seconds / 3600).to_i
     minutes = ((seconds % 3600) / 60).to_i
     secs = (seconds % 60).to_i
-    millis = ((seconds - secs) * 1000).to_i
+    millis = ((seconds % 1) * 1000).to_i  # 小数点以下の部分をミリ秒に変換
+  
     format("%02d:%02d:%02d,%03d", hours, minutes, secs, millis)
   end
 
