@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= yield(:title) || 'レコブル' %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_pack_tag 'payments', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'payments' %>
+  </head>
+
+  <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
+    <div class="wrapper">
+      <%if current_system_admin.present?%>
+        <%= render "layouts/system_admins/header" %>
+      <%else%>
+        <%= render "layouts/users/header" %>
+      <%end%>
+      <%if current_system_admin.present?%>
+        <%= render "layouts/system_admins/side" %>
+      <%else%>
+        <%= render "layouts/users/side" %>
+      <%end%>
+      <div class="content-wrapper">
+        <%= render "layouts/flash" %>
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0"><%= yield(:title) %></h1>
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </div>
+        <%= render template: "layouts/application" %>
+        <%= debug(params) if Rails.env.development? %>
+    </div>
+    <%= render "layouts/footer" %>
+  </body>
+</html>
