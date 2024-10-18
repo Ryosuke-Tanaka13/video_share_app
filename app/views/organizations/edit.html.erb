@@ -1,0 +1,13 @@
+<% provide(:title, "組織編集") %>
+<% provide(:btn_text, "更新") %>
+
+<div class="card">
+  <div class="card-body">
+    <%= form_with model: @organization, url: organization_path, method: :patch, local: true do |f| %>
+      <%= render partial: "/shared/form", locals: { f: f, organization: @organization } %>
+      
+      <%= f.submit yield(:btn_text), class: "btn btn-md btn-block btn-success" %><br>
+      <%= link_to "詳細画面へ", organization_path(@organization), class: "btn btn-md btn-block btn-secondary" %>
+    <% end %>
+  </div>
+</div> 

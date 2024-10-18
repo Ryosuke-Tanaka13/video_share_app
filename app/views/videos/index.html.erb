@@ -1,0 +1,34 @@
+<% provide(:title,  "ビデオ一覧") %>
+<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+<div class="content">
+  <div class="video-search-form">
+    <%= render partial: 'videos/searches/search_form' %>
+  </div>
+  <div class="video-search-result">
+    <!-- リセットボタン押下であれば検索結果メッセージは表示しない -->
+    <% if params[:video_form_reset] %>
+    <% elsif @search_params.present? && @organization_videos.count != 0 %>
+      <%= @organization_videos.count %>件ヒットしました。
+    <% elsif @search_params.present? %>
+      該当する動画はありませんでした。
+    <% end %>
+  </div>
+  <% @organization_videos.each do |organization_video| %>
+    <div style="float:left;margin:15px;">
+      <div class="video-display-index">
+        <iframe src="https://player.vimeo.com/video/<%= organization_video.data_url[8..17].to_i %>" width="200px" height="100px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+        </iframe>
+      </div>
+      <div class="video-title-and-action-index">
+        <%= link_to organization_video.title, video_path(organization_video) %>
+        <% if organization_video.is_valid == false %>
+          <span>オーナー削除済み</span>
+        <% end %><br>
+        <% if current_system_admin.present? %>   
+          <%= link_to "削除", video_path(organization_video), method: :delete, data:{confirm: "削除しますか？ この動画はvimeoからも完全に削除されます"}, class: "btn btn-danger mt-2" %><br> 
+        <% end %>  
+      </div>
+    </div>
+  <% end %> 
+</div>

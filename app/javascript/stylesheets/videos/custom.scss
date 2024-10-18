@@ -1,0 +1,69 @@
+@mixin videoBox{
+  height: 300px;
+  width: 600px;
+  // ホーバー時に、マウスキーをカーソル型に変形
+  cursor: pointer;
+  // これがないと、後述のz-indexが効かない
+  position: absolute;
+}
+
+// file_fieldでvideoBoxの範囲を覆い尽くす
+#post{
+  @include videoBox;
+  background-color: aqua;
+  z-index: 1;
+}
+
+// choice_boxクラスでvideoBoxの範囲を覆い尽くす
+.choice_box{
+  @include videoBox;
+  background-color: rgb(186, 186, 186);
+  // file_fieldより上に来るように、z-indexを大きくしている
+  z-index: 2;
+  pointer-events: none;
+  line-height: 300px;
+  text-align: center;
+  border: 2px dashed black;
+  position:relative;
+}
+
+#show{
+  height: 300px;
+  width: 600px;
+  border: 2px solid #333;
+  position:absolute;
+  top:300px;
+  video{
+    height: 296px;
+    width: 596px;
+    object-fit: cover;
+  }
+}
+
+.video-label{
+  margin-top:10px;
+}
+
+.video-post-actions{
+  margin-top:20px;
+}
+
+.video-info{
+  z-index: 3;
+}
+
+// videos#indexページ
+.video-title-and-action-index{
+  margin-left:10px;
+}
+
+// videos#search結果表示
+.video-search-result {
+  background-color: #E9FFA5;
+  font-weight: bold;
+}
+
+// videos#showページ
+.video-title-and-action-show{
+  margin-left:50px;
+}

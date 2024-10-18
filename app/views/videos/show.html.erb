@@ -1,0 +1,45 @@
+<% provide(:title,  "ビデオ詳細") %>
+<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+<div class="content">
+  <div class="video-display-show">
+    <!-- vimeoの動画詳細ページのパスから、id部分のみを取得し、数字型に変換したものをsrcの中に記載 -->
+    <iframe src="https://player.vimeo.com/video/<%= @video.data_url[8..17].to_i %>" width="1000px" height="500px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+    </iframe>
+  </div>
+  <div class="video-title-and-action-show">
+    <%= @video.title %><br>
+    <%= link_to "設定", edit_video_path(@video), remote: true, class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
+    <% if @video.is_valid == true %>
+      <%= link_to "削除", videos_hidden_path(@video), class: "btn btn-danger" if system_admin_signed_in? || current_user.present? && current_user.role == "owner" %>
+    <% else %>
+      <p>オーナー削除済み</p>
+    <% end %>
+   <%= link_to "動画編集", video_edit_video_path(@video), class: "btn btn-success" if user_signed_in? || system_admin_signed_in? %>
+  
+  </div>
+</div>
+
+<!-- 動画コメント ------------------------------------------------------------------------>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <% if account_logged_in? %>
+        <div class="comment-create">
+          <h4 class="text-left">コメントを投稿する</h4>
+            <%= render partial: 'comments/form' %>
+        </div><br>
+      <% end %>
+      <hr>
+      <div class="comment-create">
+        <h4 class="text-left title">コメント</h4>
+      </div>
+      <div id="comments_area">
+        <%= render partial: 'comments/index' if @comments.present? %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 動画コメント ------------------------------------------------------------------------>
+
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

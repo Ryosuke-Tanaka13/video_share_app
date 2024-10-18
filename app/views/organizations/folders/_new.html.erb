@@ -1,0 +1,22 @@
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title">フォルダ新規作成</h1>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <%= form_with(model: @folder, url:organization_folders_path,local: false, method: :post) do |f| %>
+            <%= render '/shared/error_messages', object: f.object %>
+            <%= f.label :name %>
+            <%= f.text_field :name, class: "form-control" %>
+            <div class="center">
+              <%= f.submit "新規作成", class: "btn btn-primary" %>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<% provide(:title, "視聴者詳細") %>
+
+<div class="card">
+  <div class="card-body table-responsive p-0">
+    <table class="table table-hover text-nowrap">
+      <tbody>
+        <tr>
+          <th><%= "名前" %></th>
+          <td>
+            <%= @viewer.name %>
+            <% if @viewer.is_valid == false %>(退会)<% end %>
+            <% if @viewer.organization_viewers == [] %>(無所属)<% end %>
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <th><%= "メールアドレス" %></th>
+          <td><%= @viewer.email %></td>
+          <td></td>
+        </tr>
+        <% @organizations.each.with_index(1) do |organization, i| %>
+        <tr>
+          <% if current_system_admin  %>
+            <th><%= "所属組織名#{i}" %></th>
+            <td>
+              <%= link_to organization.name, organization_path(organization) %>
+            </td>
+            <td class='text-right'>
+              <%= link_to "脱退はこちら", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
+            </td>
+          <% elsif current_viewer %>
+            <th><%= "所属組織名#{i}" %></th>
+            <td>
+              <%= organization.name %>
+            </td>
+            <td class='text-right'>
+              <%= link_to "脱退はこちら", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
+            </td>
+          <% elsif current_user&.organization_id == organization.id %></td>
+            <th><%= "所属組織名" %></th>
+            <td>
+              <%= link_to organization.name, organization_path(organization) %>
+            </td>
+            <td class='text-right'>
+              <%= link_to "脱退はこちら", organizations_admission_path(organization, viewer_id: params[:id]), method: :delete, data: { confirm: "#{organization.name}を脱退します。本当によろしいですか？" }, class: "btn btn-sm btn-outline-danger" %>
+            </td>
+          <% end %>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer">
+    <%= link_to "編集", edit_viewer_path, class: "btn btn-md btn-block btn-success" %>
+    <% if current_system_admin || current_viewer %>
+      <%= link_to "退会", viewers_unsubscribe_path(@viewer), class: "btn btn-md btn-block btn-danger" %><br>
+    <% end %>
+  </div>
+</div>
