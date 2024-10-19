@@ -1,0 +1,31 @@
+<h3>動画編集ページ</h3><br>
+<div>
+<h5>動画切り抜き</h5>
+<%= form_with(url: { action: 'cut_video_edit' }, method: :post, local: false, multipart: true) do |form| %>
+  
+  <%= form.label :new_title, '新しいタイトル:' %>
+  <%= form.text_field :new_title, placeholder: '例: タイトルを記入してください' %><br>
+  
+  <%= form.label :start_time, '開始時間（秒）:' %>
+  <%= form.text_field :start_time, placeholder: '例: 10' %><br>
+
+  <%= form.label :duration, '切り抜く時間（秒）:' %>
+  <%= form.text_field :duration, placeholder: '例: 5' %><br>
+
+  <%= form.label :video_file, '動画ファイルを選択:' %>
+  <%= form.file_field :video_file %><br>
+
+  <%= form.submit '動画を切り抜く', class:"btn btn-success" %>
+<% end %> <br>
+</div>
+
+<div>
+<h5>音声データ作成</h5>
+<%= form_with(url: { action: 'audio_output' }, method: :post, local: false, multipart: true) do |form| %>
+
+  <%= form.label :subtitle_file, "字幕を付与するファイルを選択："%>
+  <%= form.file_field :subtitle%><br>
+
+  <%= form.submit '字幕付きデータ作成', class:"btn btn-success" %>
+<% end %>
+</div>
