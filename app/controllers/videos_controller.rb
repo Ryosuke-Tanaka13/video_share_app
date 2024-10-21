@@ -429,7 +429,7 @@ end
     escaped_srt_path_return = Shellwords.escape(srt_path_return)
     output_video_path = Rails.root.join("/app/output/output_with_subtitles#{Time.now.to_i}.mp4")
     escaped_output_video_path = Shellwords.escape(output_video_path.to_s)
-    command = "ffmpeg -i #{escaped_video_path} -vf \"subtitles=#{escaped_srt_path_return}:force_style='fontfile=/usr/share/fonts/truetype/hiragino.ttc'\" -ac 2 #{escaped_output_video_path}"
+    command = "ffmpeg -i #{escaped_video_path} -vf \"subtitles=#{escaped_srt_path_return}:force_style='fontfile=/usr/share/fonts/truetype/Hiragino Sans GB.ttc'\" -ac 2 #{escaped_output_video_path}"
     stdout, stderr, status = Open3.capture3(command)
     puts "FFmpeg command: #{command}"
     puts "FFmpeg stdout: #{stdout}"
