@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
@@ -45,6 +44,11 @@ gem 'activestorage-validator'
 gem 'vimeo_me2', git: 'https://github.com/bo-oz/vimeo_me2.git'
 
 gem 'stripe'
+
+gem 'streamio-ffmpeg'
+gem 'carrierwave'
+gem 'google-cloud-speech'
+gem 'google-cloud-storage'
 
 group :development, :test do
   # ERD生成

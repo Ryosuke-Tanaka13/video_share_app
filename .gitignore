@@ -11,6 +11,7 @@ capybara-*.html
 rerun.txt
 pickle-email-*.html
 .DS_Store
+Hiragino Sans GB.ttc
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -70,3 +71,6 @@ yarn-debug.log*
 /public/uploads
 
 /.env
+
+learned-fusion-389707-0b8d7f8a2ab6.json
+public/fonts/Hiragino Sans GB.ttc

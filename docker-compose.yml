@@ -14,6 +14,9 @@ services:
       - bundle:/usr/local/bundle:cached
       - node_modules:/webapp/node_modules:cached
       - packs:/webapp/public/packs
+      - /Users/shimatanitakahiro/Desktop:/app/output
+      - /Users/shimatanitakahiro/video_share_app/jsonファイルのパス:/app/"jsonファイルのパス"
+      - /Users/shimatanitakahiro/video_share_app/public/fonts/Hiragino Sans GB.ttc:/usr/share/fonts/truetype/Hiragino Sans GB.ttc
     # ports = ホストPCのポート：コンテナポート（コンテナの3000ポートをホストPCの3000ポートにバインディング（繋げるみたいな意味）する。）
     ports:
       - "3000:3000"
@@ -24,6 +27,7 @@ services:
     environment:
       WEBPACKER_DEV_SERVER_HOST: webpacker
       VIMEO_API_TOKEN: ${VIMEO_API_TOKEN}
+      GOOGLE_APPLICATION_CREDENTIALS: /app/"jsonファイルのパス"
     # (stdin_open,tty) = コンテナ内でデバックできるようにする
     stdin_open: true
     tty: true
