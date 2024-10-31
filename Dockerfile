@@ -2,6 +2,7 @@ FROM ruby:3.1.4
 
 RUN apt-get update -y && \
     apt-get install default-mysql-client vim graphviz -y && \
+    apt-get install ffmpeg\
     curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs && \
     npm uninstall yarn -g && \

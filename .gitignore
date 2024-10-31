@@ -71,3 +71,6 @@ yarn-debug.log*
 /public/uploads
 
 /.env
+
+learned-fusion-389707-0b8d7f8a2ab6.json
+public/fonts/Hiragino Sans GB.ttc

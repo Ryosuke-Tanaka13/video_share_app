@@ -167,8 +167,8 @@ class VideosController < ApplicationController
 # ------------------音声出力と音声データ文字起こし、データ統合-----------------------------------------
 def create_bucket
   @storage = Google::Cloud::Storage.new(
-    project_id: 'learned-fusion-389707',
-    credentials: Rails.root.join('gcstoragelearned-fusion-389707-d403d797d105.json'),
+    project_id: '#',
+    credentials: Rails.root.join('#').to_s,
     timeout: 1800
   )
 
@@ -256,7 +256,7 @@ def audio_output
         flash[:success] = "字幕付き動画作成完了"
         # 音声ファイルwavと字幕ファイルsrtを削除
         File.delete(audio_output_path) if File.exist?(audio_output_path)
-        # File.delete(srt_path_return) if File.exist?(srt_path_return)
+        File.delete(srt_path_return) if File.exist?(srt_path_return)
     end
   end
 end
