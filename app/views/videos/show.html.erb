@@ -9,9 +9,14 @@
 
 <div class="content">
   <div class="video-display-show">
-    <!-- vimeoの動画詳細ページのパスから、id部分のみを取得し、数字型に変換したものをsrcの中に記載 -->
-    <iframe id="vimeoPlayer" src="https://player.vimeo.com/video/<%= @video.data_url[8..17].to_i %>" width="1000px" height="500px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-    </iframe>
+    <% if @video.video.attached? %>
+      <video width="1000" height="500" id="mv" controls>
+        <source src="<%= url_for(@video.video) %>" type="<%= @video.video.content_type %>">
+        お使いのブラウザは動画再生に対応していません。
+      </video><br>
+    <% else %>
+      <p>動画がありません</p>
+    <% end %>
   </div>
   <div class="video-title-and-action-show">
     <%= @video.title %><br>

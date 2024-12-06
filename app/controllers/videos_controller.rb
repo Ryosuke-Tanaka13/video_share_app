@@ -73,12 +73,6 @@ class VideosController < ApplicationController
   end
 
   def destroy
-    vimeo_video = VimeoMe2::Video.new(ENV['VIMEO_API_TOKEN'], @video.data_url)
-    vimeo_video.destroy
-    @video.destroy
-    flash[:success] = '削除しました'
-    redirect_to videos_url(organization_id: @video.organization.id)
-  rescue VimeoMe2::RequestFailed
     @video.destroy
     flash[:success] = '削除しました'
     redirect_to videos_url(organization_id: @video.organization.id)
@@ -88,7 +82,7 @@ class VideosController < ApplicationController
 
   def video_params
     params.require(:video).permit(:title, :video, :open_period, :range, :login_set, :popup_before_video,
-      :popup_after_video, { folder_ids: [] }, :data_url)
+      :popup_after_video, { folder_ids: [] })
   end
 
   def video_search_params

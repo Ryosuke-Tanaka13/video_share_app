@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_07_17_090753) do
+ActiveRecord::Schema.define(version: 2024_12_06_025459) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -205,7 +205,6 @@ ActiveRecord::Schema.define(version: 2024_07_17_090753) do
     t.boolean "login_set", default: false
     t.boolean "popup_before_video", default: false
     t.boolean "popup_after_video", default: false
-    t.string "data_url", null: false
     t.boolean "is_valid", default: true, null: false
     t.bigint "organization_id", null: false
     t.bigint "user_id"
