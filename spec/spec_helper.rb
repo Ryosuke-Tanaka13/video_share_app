@@ -82,16 +82,15 @@ RSpec.configure do |config|
   #   Kernel.srand config.seed
 
   # vcrの設定
-  VCR.configure do |c|
-    c.allow_http_connections_when_no_cassette = true
-    c.cassette_library_dir = 'spec/vcr_cassettes'
-    c.hook_into :webmock
-    c.ignore_localhost = false
-  end
+  # VCR.configure do |c|
+  #   c.allow_http_connections_when_no_cassette = true
+  #   c.cassette_library_dir = 'spec/vcr_cassettes'
+  #   c.hook_into :webmock
+  #   c.ignore_localhost = false
+  # end
 
   SimpleCov.start do
     add_filter '/spec/'
     add_group 'Files', '/lib/**/*'
-    track_files 'lib/vimeo_mw2/**/*.rb'
   end
 end

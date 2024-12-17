@@ -9,8 +9,9 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 1 }
     user_id { 1 }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/video_Jan_public_owner' }
+    after(:build) do |video_jan_public_owner|
+      video_jan_public_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
   factory :invalid_video_jan_public_owner, class: 'Video' do
@@ -24,8 +25,9 @@ FactoryBot.define do
     is_valid { false }
     organization_id { 1 }
     user_id { 1 }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/invalid_video_jan_public_owner' }
+    after(:build) do |invalid_video_jan_public_owner|
+      invalid_video_jan_public_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
   factory :video_feb_private_owner, class: 'Video' do
@@ -38,8 +40,9 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 1 }
     user_id { 1 }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/video_feb_private_owner' }
+    after(:build) do |video_feb_private_owner|
+      video_feb_private_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
   factory :video_mar_public_staff, class: 'Video' do
@@ -52,8 +55,9 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 1 }
     user_id { 3 }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { 'videos//video_mar_public_staff' }
+    after(:build) do |video_mar_public_staff|
+      video_mar_public_staff.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
   factory :video_apr_private_staff, class: 'Video' do
@@ -66,8 +70,9 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 1 }
     user_id { 3 }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/video_apr_private_staff' }
+    after(:build) do |video_apr_private_staff|
+      video_apr_private_staff.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
   factory :video_may_public_staff1, class: 'Video' do
@@ -80,8 +85,9 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 1 }
     user_id { 4 }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/video_may_public_staff1' }
+    after(:build) do |video_may_public_staff1|
+      video_may_public_staff1.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
   factory :another_video_jan_public_another_user_owner, class: 'Video' do
@@ -94,8 +100,9 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 2 }
     user_id { 2 }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/another_video_jan_public_another_user_owner' }
+    after(:build) do |another_video_jan_public_another_user_owner|
+      another_video_jan_public_another_user_owner.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 
   factory :another_video_feb_private_another_user_staff, class: 'Video' do
@@ -108,7 +115,8 @@ FactoryBot.define do
     popup_after_video { false }
     organization_id { 2 }
     user_id { 5 }
-    # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-    data_url { '/videos/another_video_feb_private_another_user_staff' }
+    after(:build) do |another_video_feb_private_another_user_staff|
+      another_video_feb_private_another_user_staff.video.attach(io: File.open('spec/fixtures/files/flower.mp4'), filename: 'flower.mp4', content_type: 'video/mp4')
+    end
   end
 end
