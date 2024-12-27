@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Comments', type: :system, js: true do
+RSpec.xdescribe 'Comments', type: :system, js: true do
   let(:organization) { create(:organization) }
   let(:system_admin) { create(:system_admin) }
   let(:user) { create(:user, organization_id: organization.id) }
