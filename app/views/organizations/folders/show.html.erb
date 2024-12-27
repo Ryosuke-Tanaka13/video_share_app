@@ -3,8 +3,14 @@
   <% @videos.each do |video| %>
     <div style="float:left;margin:15px;"> 
       <div class="video-display-index">
-        <iframe src="https://player.vimeo.com/video/<%= video.data_url[8..17].to_i %>" width="200px" height="100px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
-        </iframe>
+        <% if video.video.attached? %>
+          <video width="200" height="100" controls>
+            <source src="<%= url_for(video.video) %>" type="<%= video.video.content_type %>">
+            お使いのブラウザは動画再生に対応していません。
+          </video>
+        <% else %>
+          <p>動画がありません</p>
+        <% end %>
       </div>
       <div class="video-title-and-action-index">
         <%= link_to video.title, video_path(video) %><br> 

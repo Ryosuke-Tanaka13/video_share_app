@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe 'Videos', type: :request do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
-
   let(:organization) { create(:organization) }
   let(:user_owner) { create(:user_owner, organization_id: organization.id, confirmed_at: Time.now) }
   let(:user_staff) { create(:user_staff, organization_id: organization.id, confirmed_at: Time.now) }
@@ -10,11 +9,10 @@ RSpec.describe 'Videos', type: :request do
   let(:viewer) { create(:viewer, confirmed_at: Time.now) }
   # orgとanother_orgの両方に属す
   let(:viewer1) { create(:viewer1, confirmed_at: Time.now) }
-
   let(:folder_celeb) { create(:folder_celeb, organization_id: user_owner.organization_id) }
   let(:folder_tech) { create(:folder_tech, organization_id: user_owner.organization_id) }
   let(:video_sample) do
-    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id, folders: [folder_celeb, folder_tech])
+    create(:video_sample, organization_id: user_owner.organization.id, user_id: user_owner.id)
   end
   let(:video_test) { create(:video_test, organization_id: user_staff.organization.id, user_id: user_staff.id, folders: [folder_celeb]) }
   let(:video_it) { create(:video_it, organization_id: user_owner.organization.id, user_id: user_owner.id) }
@@ -24,11 +22,11 @@ RSpec.describe 'Videos', type: :request do
   let(:another_video) { create(:another_video, organization_id: another_user_owner.organization.id, user_id: another_user_owner.id) }
 
   # orgとviewerの紐付け
-  let(:organization_viewer) { create(:organization_viewer) }
+  let(:organization_viewer) { create(:organization_viewer, organization_id: 1, viewer_id: 1) }
   # orgとviewer1の紐付け
-  let(:organization_viewer2) { create(:organization_viewer2) }
+  let(:organization_viewer2) { create(:organization_viewer2, organization_id: 1, viewer_id: 3) }
   # another_orgとviewer1の紐付け
-  let(:organization_viewer3) { create(:organization_viewer3) }
+  let(:organization_viewer3) { create(:organization_viewer3, organization_id: 2, viewer_id: 3) }
 
   before(:each) do
     system_admin
@@ -44,12 +42,15 @@ RSpec.describe 'Videos', type: :request do
     organization_viewer3
     folder_celeb
     folder_tech
+    video_sample
+    video_test
+    video_it
   end
 
   describe 'GET #index' do
-    describe '正常(動画投稿者)' do
+    describe '正常(オーナー)' do
       before(:each) do
-        sign_in user_staff
+        sign_in user_owner
         get videos_path(organization_id: organization.id)
       end
 
@@ -62,9 +63,9 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(オーナー)' do
+    describe '正常(動画投稿者)' do
       before(:each) do
-        sign_in user_owner
+        sign_in user_staff
         get videos_path(organization_id: organization.id)
       end
 
@@ -94,7 +95,7 @@ RSpec.describe 'Videos', type: :request do
 
     describe '正常(視聴者)' do
       before(:each) do
-        sign_in viewer1
+        sign_in viewer
         get videos_path(organization_id: organization.id)
       end
 
@@ -107,7 +108,7 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(視聴者)' do
+    describe '正常(複数組織に所属の視聴者)' do
       before(:each) do
         sign_in viewer1
         get videos_path(organization_id: another_organization.id)
@@ -124,13 +125,13 @@ RSpec.describe 'Videos', type: :request do
 
     describe '異常(別組織のuser)' do
       before(:each) do
-        sign_in user_owner
-        get videos_path(organization_id: another_organization.id)
+        sign_in another_user_owner
+        get videos_path(organization_id: organization.id)
       end
 
       it 'アクセス権限なしのためリダイレクト' do
         expect(response).to have_http_status :found
-        expect(response).to redirect_to videos_path(organization_id: organization.id)
+        expect(response).to redirect_to videos_path(organization_id: another_organization.id)
       end
     end
 
@@ -148,7 +149,7 @@ RSpec.describe 'Videos', type: :request do
 
     describe '異常(非ログイン)' do
       before(:each) do
-        get videos_path(organization_id: another_organization.id)
+        get videos_path(organization_id: organization.id)
       end
 
       it 'アクセス権限なしのためリダイレクト' do
@@ -231,7 +232,6 @@ RSpec.describe 'Videos', type: :request do
         sign_in user_staff
       end
 
-      # アプリ内でvideosのインスタンスが生成されることを確認(ここではvimeoに動画がアップされることのテストは行えていない)
       describe '正常' do
         it '動画が新規作成される' do
           expect {
@@ -245,7 +245,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_before_video: false,
                   popup_after_video:  false,
                   folder_ids:         [1],
-                  data_url:           '/videos/999999999'
+                  video:              fixture_file_upload('/flower.mp4')
                 }
               }
           }.to change(Video, :count).by(1)
@@ -263,7 +263,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_before_video: false,
                   popup_after_video:  false,
                   folder_ids:         [1],
-                  data_url:           '/videos/999999999'
+                  video:              fixture_file_upload('/flower.mp4')
                 }
               })
           ).to redirect_to video_path(Video.last)
@@ -289,7 +289,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_before_video: false,
                   popup_after_video:  false,
                   folder_ids:         [1],
-                  data_url:           '/videos/999999999'
+                  video:              fixture_file_upload('/flower.mp4')
                 }
               }
           }.to change(Video, :count).by(1)
@@ -307,7 +307,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_before_video: false,
                   popup_after_video:  false,
                   folder_ids:         [1],
-                  data_url:           '/videos/999999999'
+                  video:              fixture_file_upload('/flower.mp4')
                 }
               })
           ).to redirect_to video_path(Video.last)
@@ -324,8 +324,8 @@ RSpec.describe 'Videos', type: :request do
             post videos_path,
               params: {
                 video: {
-                  title:    '',
-                  data_url: '/videos/999999999'
+                  title: '',
+                  video: fixture_file_upload('/flower.mp4')
                 }
               }
           }.not_to change(Video, :count)
@@ -336,19 +336,31 @@ RSpec.describe 'Videos', type: :request do
             post videos_path,
               params: {
                 video: {
-                  title:    'テストビデオ',
-                  data_url: '/videos/999999999'
+                  title: 'サンプルビデオ',
+                  video: fixture_file_upload('/flower.mp4')
                 }
               }
           }.not_to change(Video, :count)
         end
 
-        it '動画が空白または動画以外のファイルだと新規作成されない' do
+        it '動画データが空白だと新規作成されない' do
           expect {
             post videos_path,
               params: {
                 video: {
                   title: 'サンプルビデオ2'
+                }
+              }
+          }.not_to change(Video, :count)
+        end
+
+        it '動画以外のファイルだと新規作成されない' do
+          expect {
+            post videos_path,
+              params: {
+                video: {
+                  title: 'サンプルビデオ2',
+                  video: fixture_file_upload('/default.png')
                 }
               }
           }.not_to change(Video, :count)
@@ -385,7 +397,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_before_video: false,
                   popup_after_video:  false,
                   folder_ids:         [1],
-                  data_url:           '/videos/999999999'
+                  video:              fixture_file_upload('/flower.mp4')
                 }
               }
           }.not_to change(Video, :count)
@@ -411,7 +423,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_before_video: false,
                   popup_after_video:  false,
                   folder_ids:         [1],
-                  data_url:           '/videos/999999999'
+                  video:              fixture_file_upload('/flower.mp4')
                 }
               }
           }.not_to change(Video, :count)
@@ -433,7 +445,7 @@ RSpec.describe 'Videos', type: :request do
                   popup_before_video: false,
                   popup_after_video:  false,
                   folder_ids:         [1],
-                  data_url:           '/videos/999999999'
+                  video:              fixture_file_upload('/flower.mp4')
                 }
               }
           }.not_to change(Video, :count)
@@ -446,7 +458,7 @@ RSpec.describe 'Videos', type: :request do
     describe '正常(動画投稿者)' do
       before(:each) do
         sign_in user_staff
-        get video_path(video_test)
+        get video_path(video_sample)
       end
 
       it 'レスポンスに成功する' do
@@ -461,7 +473,7 @@ RSpec.describe 'Videos', type: :request do
     describe '正常(オーナー)' do
       before(:each) do
         sign_in user_owner
-        get video_path(video_test)
+        get video_path(video_sample)
       end
 
       it 'レスポンスに成功する' do
@@ -475,8 +487,8 @@ RSpec.describe 'Videos', type: :request do
 
     describe '正常(視聴者)' do
       before(:each) do
-        sign_in viewer1
-        get video_path(video_test)
+        sign_in viewer
+        get video_path(video_sample)
       end
 
       it 'レスポンスに成功する' do
@@ -488,10 +500,10 @@ RSpec.describe 'Videos', type: :request do
       end
     end
 
-    describe '正常(視聴者)' do
+    describe '正常(複数組織に所属の視聴者)' do
       before(:each) do
         sign_in viewer1
-        get video_path(another_video)
+        get video_path(video_sample)
       end
 
       it 'レスポンスに成功する' do
@@ -505,7 +517,7 @@ RSpec.describe 'Videos', type: :request do
 
     describe '正常(非ログイン)' do
       before(:each) do
-        get video_path(video_test)
+        get video_path(video_sample)
       end
 
       it 'レスポンスに成功する' do
@@ -520,7 +532,7 @@ RSpec.describe 'Videos', type: :request do
     describe '異常(別組織のuser)' do
       before(:each) do
         sign_in another_user_owner
-        get video_path(video_test)
+        get video_path(video_sample)
       end
 
       it 'アクセス権限なしのためリダイレクト' do
@@ -598,10 +610,6 @@ RSpec.describe 'Videos', type: :request do
       end
 
       describe '異常' do
-        before(:each) do
-          video_it
-        end
-
         it 'タイトルが空白でアップデートされない' do
           expect {
             patch video_path(video_test),
@@ -774,19 +782,18 @@ RSpec.describe 'Videos', type: :request do
     describe 'システム管理者が現在のログインユーザー' do
       before(:each) do
         sign_in system_admin
-        video_sample
       end
 
       describe '正常' do
         it '動画を削除する' do
           expect {
-            delete(video_path(video_sample), params: { id: video_sample.id })
+            delete(video_path(video_test), params: { id: video_test.id })
           }.to change(Video, :count).by(-1)
         end
 
         it 'indexにリダイレクトされる' do
           expect(
-            delete(video_path(video_sample), params: { id: video_sample.id })
+            delete(video_path(video_test), params: { id: video_test.id })
           ).to redirect_to videos_path(organization_id: organization.id)
         end
       end
@@ -795,7 +802,6 @@ RSpec.describe 'Videos', type: :request do
     describe 'オーナーが現在のログインユーザー' do
       before(:each) do
         sign_in user_owner
-        video_sample
       end
 
       describe '正常' do
@@ -816,7 +822,6 @@ RSpec.describe 'Videos', type: :request do
     describe '動画投稿者が現在のログインユーザ' do
       before(:each) do
         sign_in user_staff
-        video_sample
       end
 
       describe '正常' do
@@ -837,7 +842,6 @@ RSpec.describe 'Videos', type: :request do
     describe '視聴者が現在のログインユーザ' do
       before(:each) do
         sign_in viewer
-        video_test
       end
 
       describe '異常' do
@@ -850,10 +854,6 @@ RSpec.describe 'Videos', type: :request do
     end
 
     describe '非ログイン' do
-      before(:each) do
-        video_test
-      end
-
       describe '異常' do
         it '非ログインでは削除できない' do
           expect {

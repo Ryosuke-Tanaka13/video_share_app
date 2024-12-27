@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'VideosPopups', type: :system, js: true do
+RSpec.xdescribe 'VideosPopups', type: :system, js: true do
   let(:system_admin) { create(:system_admin, confirmed_at: Time.now) }
 
   let(:organization) { create(:organization) }

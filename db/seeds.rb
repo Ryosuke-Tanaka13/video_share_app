@@ -120,7 +120,5 @@ Video.create!(
   popup_before_video: false,
   popup_after_video: false,
   organization_id: 1,
-  user_id: 1,
-  # vimeoへの動画データのアップロードは行わず。(vimeoに動画データがなくても、data_urlを仮で設定しておけば、アプリ内ではインスタンスが存在可能)
-  data_url: '/videos/444444444'
+  user_id: 1
 )

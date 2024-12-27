@@ -45,7 +45,8 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  # config.use_transactional_fixtures = trueは、DatabaseCleanerと競合しデータが適切に消去されないため修正
+  config.use_transactional_fixtures = false
 
   config.infer_spec_type_from_file_location!
 
@@ -91,4 +92,9 @@ RSpec.configure do |config|
 
   # capybaraのダウンロードヘルパーを追加
   config.include DownloadHelpers
+  # rspecテストを行っていくとどんどんと保存先のストレージ(tmp/storgae)が、生成された動画で圧迫される。
+  # 下記の設定をすることでテスト終了後はストレージをクリーンアップすることが可能
+  config.after(:all) do
+    FileUtils.rm_rf(ActiveStorage::Blob.service.root) if Rails.env.test?
+  end
 end
