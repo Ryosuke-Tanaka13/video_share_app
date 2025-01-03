@@ -28,6 +28,7 @@ services:
     stdin_open: true
     tty: true
   webpacker:
+
     build:
       context: .
       dockerfile: 'DEV.Dockerfile'

@@ -82,6 +82,21 @@ Rails.application.routes.draw do
 
   # =================================================================
 
+   
+  # aws_s3 関連=======================================================
+  resources :aws_s3 do
+    get 'popup_before', to:'aws_s3#popup_before'
+    get 'popup_after', to:'aws_s3#popup_after'
+    resources :comments, only: %i[create update destroy] do
+      resources :replies, only: %i[create update destroy]
+    end
+  end
+
+  # =============================================================
+
+
+
+
   # 共通==============================================================
   # トップページ
   root 'use#top'
