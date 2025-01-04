@@ -4,11 +4,13 @@ class AwsS3Controller < ApplicationController
   end
 
   def create
-    @aws = AwsS3.(newaws_s3_params)
+    @aws = AwsS3.new
+    # @aws = AwsS3.(newaws_s3_params)
     if @aws.save
       redirect_to aws_s3_path(@aws), notice: '動画が正常にアップロードされました。'
     else
-      render :new
+      render :new, status::unproccessable_entity
+      flash.now[:danger] = "アップロードに失敗しました"
     end
   end
 
