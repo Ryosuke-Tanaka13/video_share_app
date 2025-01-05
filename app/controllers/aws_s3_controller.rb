@@ -4,7 +4,7 @@ class AwsS3Controller < ApplicationController
   end
 
   def create
-    @aws = AwsS3.new
+    @aws = AwsS3.new(aws_s3_params)
     # @aws = AwsS3.(newaws_s3_params)
     if @aws.save
       redirect_to aws_s3_path(@aws), notice: '動画が正常にアップロードされました。'

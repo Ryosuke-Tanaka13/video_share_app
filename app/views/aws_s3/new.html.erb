@@ -17,7 +17,7 @@
     <%= f.file_field :video_file, class:"form-control mb-0" %><br>
 
     <%= f.label :title, "動画タイトル", class: "form-label" %><br>
-    <%= f.text_field :title, id: "aws_s3_title", class:"form-control" %><br>
+    <%= f.text_field :title, id: "aws_s3_title", class:"form-control","direct_upload: true" %><br>
 
     <%= f.label :file_url, "ファイルURL", class: "form-label" %><br>
     <%= f.text_field :file_url, id: "aws_s3_file_url", class:"form-control" %><br>
