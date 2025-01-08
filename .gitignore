@@ -70,3 +70,5 @@ yarn-debug.log*
 /public/uploads
 
 /.env
+
+cors-config.json
