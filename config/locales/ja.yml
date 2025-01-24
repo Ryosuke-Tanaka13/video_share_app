@@ -211,3 +211,9 @@ ja:
       long: "%Y/%m/%d %H:%M"
       short: "%m/%d %H:%M"
     pm: 午後
+  
+  aws_s3:
+    title: 動画タイトル
+    file_url: 動画URL
+    thumbnail_url: サムネイル
+    status: 公開状況

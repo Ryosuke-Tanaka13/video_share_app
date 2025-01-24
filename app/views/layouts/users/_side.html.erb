@@ -61,6 +61,14 @@
           <% end %>
         </li>
 
+         <li class="nav-item">
+          <%= link_to new_aws_s3_path , class:"nav-link" do %>
+            <i class="#"></i>
+            <p>
+              AWS 動画投稿
+            </p>
+          <% end %>
+        </li>
         <!-- オーナと動画投稿者の条件分岐 -->
         <!-- オーナ -->
         <% if current_user.role == 'owner' %>

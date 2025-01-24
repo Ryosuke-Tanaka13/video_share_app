@@ -1,0 +1,41 @@
+<html>
+<!DOCTYPE html>
+<html lang = "ja">
+<head>
+  <meta charset = "utf-8">
+  <title>動画投稿ページ</title>
+  <link rel="stylesheet" href = "/Users/shimatanitakahiro/video_share_app/app/javascript/stylesheets/aws_s3.scss">
+</head>
+
+<body>
+<div class = "container d-flex  justify-content-center align-items-center ">
+ <%= form_with(model: @aws, url: aws_s3_index_path, method: :post, local: true) do |f| %>
+  <h1 class="text-success mb-4">動画投稿ページ</h1>
+
+  <div class="field d-flex flex-column align-items-center w-100 mb-4">
+    <%= f.label :video_file, '動画ファイルを選択:', class:"form-label" %>
+    <%= f.file_field :video_file, class:"form-control mb-0" %><br>
+
+    <%= f.label :title, "動画タイトル", class: "form-label" %><br>
+    <%= f.text_field :title, id: "aws_s3_title", class:"form-control","direct_upload: true" %><br>
+
+    <%= f.label :file_url, "ファイルURL", class: "form-label" %><br>
+    <%= f.text_field :file_url, id: "aws_s3_file_url", class:"form-control" %><br>
+
+    <%= f.label :thumbnail_url, "サムネイルURL", class: "form-label" %><br>
+    <%= f.text_field :thumbnail_url, id: "aws_s3_thumbnail_url", class:"form-control" %><br>
+
+    <%= f.label :status, "ステータス", class: "form-label" %><br>
+    <%= f.text_field :status, id: "aws_s3_status", class:"form-control" %><br>
+
+    <%= f.submit "動画投稿", class: "btn btn-primary btn-signup w-50" %>
+  </div>
+<% end %>
+</div>
+</body>
+
+<footer>
+</footer>
+
+
+</html>
