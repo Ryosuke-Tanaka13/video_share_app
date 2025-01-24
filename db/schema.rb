@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2024_12_30_060543) do
 
+
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -40,13 +41,55 @@ ActiveRecord::Schema.define(version: 2024_12_30_060543) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "title"
-    t.string "file_url"
-    t.string "thumbnail_url"
-    t.string "status"
+  create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "comment", null: false
+    t.bigint "organization_id", null: false
+    t.bigint "video_id", null: false
+    t.bigint "system_admin_id"
+    t.bigint "user_id"
+    t.bigint "viewer_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["organization_id"], name: "index_comments_on_organization_id"
+    t.index ["system_admin_id"], name: "index_comments_on_system_admin_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["video_id"], name: "index_comments_on_video_id"
+    t.index ["viewer_id"], name: "index_comments_on_viewer_id"
+  end
+
+  create_table "folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "organization_id", null: false
+    t.integer "video_folder_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["organization_id"], name: "index_folders_on_organization_id"
+  end
+
+  create_table "group_videos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "video_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_group_videos_on_group_id"
+    t.index ["video_id"], name: "index_group_videos_on_video_id"
+  end
+
+  create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "organization_id"
+    t.string "uuid"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "organization_viewers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "organization_id", null: false
+    t.bigint "viewer_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["organization_id"], name: "index_organization_viewers_on_organization_id"
+    t.index ["viewer_id"], name: "index_organization_viewers_on_viewer_id"
   end
 
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

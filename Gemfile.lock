@@ -195,8 +195,10 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.3-arm64-darwin)
       racc (~> 1.4)
+
     nokogiri (1.16.3-x86_64-darwin)
       racc (~> 1.4)
+
     nokogiri (1.16.3-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
@@ -397,7 +399,10 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin-23
+<<<<<<< HEAD
   x86_64-darwin-23
+=======
+>>>>>>> 2c8eb1f1f9fd0c43f21225edac08b79aca3fe81e
   x86_64-linux
 
 DEPENDENCIES
